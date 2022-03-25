@@ -27,8 +27,8 @@ class Dataset(abc.ABC):
 
     :param url: url from where dataset will be downloaded
     :type url: str
-    :param filename: filename for the downloaded file
-    :type filename: str
+    :param file_path: filename for the downloaded file
+    :type file_path: str
     """
 
     def __init__(self,
