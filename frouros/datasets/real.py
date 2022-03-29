@@ -1,40 +1,33 @@
 """Real datasets module."""
 
-import requests
+from typing import Optional
+
+import numpy as np  # type: ignore
 from frouros.datasets.base import Dataset
 
 
 class Elec2(Dataset):
-    """Elec2 dataset class.
-
-    :param file_path: filepath for the downloaded file
-    :type file_path: str
-    """
+    """Elec2 dataset class."""
 
     def __init__(self,
-                 file_path: str):
-        """Init method."""
+                 file_path: Optional[str] = None):
+        """Init method.
+
+        :param file_path: file path for the downloaded file
+        :type file_path: str
+        """
         super().__init__(url=('https://www.openml.org/data/get_csv/'
                               '2419/electricity-normalized.arff'),
                          file_path=file_path,
                          url_mirrors=None)
 
-    def download(self):
-        """Download dataset.
+    def read_file(self,
+                  **kwargs) -> np.ndarray:
+        """Read file.
 
-        :raises class:`frouros.datasets.base.RequestFileError`:
-        Request file exception
-        :return: None
+        :return: read file
+        :rtype: np.ndarray
         """
-        try:
-            self._get_file(url=self._url)
-        except (requests.exceptions.RequestException,
-                IOError) as e:
-            if self.url_mirrors:
-                for url_mirror in self._url_mirrors:
-                    self._get_file(url=url_mirror)
-                    break
-                else:
-                    raise e
-            else:
-                raise e
+        dataset = np.genfromtxt(fname=self.file_path,
+                                **kwargs)
+        return dataset
