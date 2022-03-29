@@ -1,6 +1,8 @@
 """Dataset base module."""
 
 import abc
+from dataclasses import (dataclass,
+                         field)
 from typing import List, Optional
 import urllib.parse
 from pathlib import Path
@@ -29,6 +31,10 @@ class Dataset(abc.ABC):
     :type url: str
     :param file_path: filename for the downloaded file
     :type file_path: str
+    :param url_mirrors: url mirrors from where dataset can be downloaded
+    :type url_mirrors: Optional[List[str]]
+    :param verbose: flag indicating if more information will be provided during download
+    :type verbose: bool
     """
 
     def __init__(self,
