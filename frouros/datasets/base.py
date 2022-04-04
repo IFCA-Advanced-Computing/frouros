@@ -35,8 +35,6 @@ class Dataset(abc.ABC):
         :param verbose: whether more information will be provided
         during download or not
         :type verbose: bool
-        :raises class:`frouros.datasets.exceptions.DownloadError`:
-        Download file exception
         """
         self.url = url  # type: ignore
         self.file_path: Optional[Path] = (
