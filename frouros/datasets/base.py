@@ -25,7 +25,7 @@ class Dataset(abc.ABC):
         url: Union[str, List[str]],
         file_path: Optional[str] = None,
         verbose: bool = True,
-    ):
+    ) -> None:
         """Init method.
 
         :param url: url or url mirrors from where dataset will be downloaded
@@ -104,8 +104,7 @@ class Dataset(abc.ABC):
 
         :param value: value to be set
         :type value: Union[str, List[str]]
-        :raises class:`frouros.datasets.exceptions.InvalidURLError`:
-        Invalid URL exception
+        :raises InvalidURLError: Invalid URL exception
         """
         urls = [value] if isinstance(value, str) else value
         for url in urls:
@@ -149,13 +148,13 @@ class Dataset(abc.ABC):
         self.file_path.unlink()  # type: ignore
         self.file_path = None
 
-    def _request_file(self, url: str):
+    def _request_file(self, url: str) -> requests.models.Response:
         logger.info("Trying to download data from %s to %s", url, self._file_path)
         request_response = requests.get(url=url, allow_redirects=True, stream=True)
         request_response.raise_for_status()
         return request_response
 
-    def _save_file(self, response):
+    def _save_file(self, response: requests.models.Response) -> None:
         try:
             if self.verbose:
                 pbar = tqdm.tqdm(unit="B", unit_scale=True, total=len(response.content))
@@ -175,8 +174,7 @@ class Dataset(abc.ABC):
     def download(self) -> None:
         """Download dataset.
 
-        :raises class:`frouros.datasets.exceptions.RequestFileError`:
-        Request file exception
+        :raises RequestFileError: Request file exception
         """
         for url in self.url:
             try:
@@ -188,10 +186,10 @@ class Dataset(abc.ABC):
     def load(self, **kwargs) -> Any:
         """Load dataset.
 
-        :raises class:`FileNotFoundError`:
-        File not found exception
-        :raises class:`frouros.datasets.exceptions.LoadError`:
-        Load file exception
+        :param kwargs: dict of kwargs
+        :type kwargs: dict
+        :raises FileNotFoundError: File not found exception
+        :raises LoadError: Load file exception
         :return: loaded dataset
         :rtype: Any
         """
@@ -210,4 +208,10 @@ class Dataset(abc.ABC):
 
     @abc.abstractmethod
     def read_file(self, **kwargs) -> Any:
-        """Read file abstract method."""
+        """Read file abstract method.
+
+        :param kwargs: dict of kwargs
+        :type kwargs: dict
+        :return: read file
+        :rtype: Any
+        """

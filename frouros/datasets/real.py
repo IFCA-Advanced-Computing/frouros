@@ -10,11 +10,11 @@ from frouros.datasets.exceptions import AllNaNValuesError
 class Elec2(Dataset):
     """Elec2 dataset class."""
 
-    def __init__(self, file_path: Optional[str] = None, verbose: bool = True):
+    def __init__(self, file_path: Optional[str] = None, verbose: bool = True) -> None:
         """Init method.
 
         :param file_path: file path for the downloaded file
-        :type file_path: str
+        :type file_path: Optional[str]
         :param verbose: whether more information will be provided
         during download or not
         :type verbose: bool
@@ -28,8 +28,10 @@ class Elec2(Dataset):
     def read_file(self, **kwargs) -> np.ndarray:
         """Read file.
 
+        :param kwargs: dict of kwargs
+        :type kwargs: dict
         :return: read file
-        :rtype: np.ndarray
+        :rtype: numpy.ndarray
         """
         dataset = np.genfromtxt(fname=self.file_path, **kwargs)
         if np.isnan(dataset).all():
