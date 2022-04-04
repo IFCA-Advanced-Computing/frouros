@@ -1,0 +1,47 @@
+[project]
+name = "frouros"
+version = "0.1.0"
+description = "A Python library for drift detection"
+license = "BSD-3-Clause"
+authors = [
+    {name = "Jaime Céspedes Sisniega", email = "cespedes@ifca.unican.es"}
+]
+maintainers = [
+    {name = "Jaime Céspedes Sisniega", email = "cespedes@ifca.unican.es"}
+]
+readme = "README.md"
+keywords = [
+    "drift-detection",
+    "concept-drift",
+    "supervised-drift-detection",
+    "unsupervised-drift-detection",
+    "machine-learning"
+]
+requires-python = ">=3.7,<3.11"
+dependencies = [
+    "numpy>=1.21.0,<1.22",
+    "requests>=2.27.0,<2.28",
+    "scikit-learn>=1.0.0,<1.1",
+    "scipy>=1.7.0,<1.8",
+    "tqdm>=4.63.0,<4.64"
+]
+dynamic = ["version",
+           "description"]
+
+[project.optional-dependencies]
+docs = [
+    "sphinx>=4.4.0,<4.5",
+    "pydata-sphinx-theme>=0.8.0,<0.9",
+    "myst-parser>=0.17.0,<0.18"
+]
+
+[project.urls]
+repository = "https://github.com/jaime-cespedes-sisniega/frouros"
+
+[build-system]
+requires = [
+    "setuptools>=60.10,<61.0",
+    "wheel>=0.37.0<0.38",
+    "toml>=0.10.2,<0.11",
+    "build>=0.7.0,<0.8"]
+build-backend = "setuptools.build_meta"
