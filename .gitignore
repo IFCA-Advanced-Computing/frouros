@@ -130,3 +130,10 @@ dmypy.json
 
 # PyCharm
 .idea
+
+# Sphinx
+docs/_build/
+docs/source/api_reference/auto_generated/
+
+# Tests
+test-result.xml
