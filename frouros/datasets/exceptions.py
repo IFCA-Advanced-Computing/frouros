@@ -1,6 +1,10 @@
 """Dataset exception module."""
 
 
+class AllNaNValuesError(Exception):
+    """All NaN values exception."""
+
+
 class DownloadError(Exception):
     """Download exception."""
 
@@ -17,5 +21,5 @@ class RequestFileError(Exception):
     """Request file exception."""
 
 
-class LoadError(Exception):
-    """Load exception."""
+class ReadFileError(Exception):
+    """Read file exception."""
