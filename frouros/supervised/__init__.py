@@ -1,0 +1,1 @@
+"""Supervised detection methods init."""
