@@ -6,8 +6,8 @@
     <img src="" alt="tests">
   </a>
   <!-- Code coverage -->
-  <a href="">
-    <img src="", alt="coverage"/>
+  <a href="https://codecov.io/gh/jaime-cespedes-sisniega/frouros">
+    <img src="https://codecov.io/gh/jaime-cespedes-sisniega/frouros/branch/main/graph/badge.svg?token=DLKQSWYTYM", alt="coverage"/>
   </a>
   <!-- Documentation -->
   <a href="">
