@@ -3,7 +3,6 @@ show_missing = True
 
 [run]
 source = frouros
-include = */frouros/*
 omit =
     */setup.py
     */frouros/__init__.py
