@@ -20,16 +20,6 @@ def elec2_raw() -> Elec2:
 
 
 @pytest.fixture(scope="function")
-def elec2_delimiter() -> str:
-    """Elec2 raw dataset.
-
-    :return: Elec2 raw dataset
-    :rtype: Elec2
-    """
-    return ","
-
-
-@pytest.fixture(scope="function")
 def elec2(elec2_raw: Elec2) -> np.ndarray:  # pylint: disable=redefined-outer-name
     """Elec2 dataset.
 
@@ -38,4 +28,4 @@ def elec2(elec2_raw: Elec2) -> np.ndarray:  # pylint: disable=redefined-outer-na
     :return: Elec2 dataset
     :rtype: np.ndarray
     """
-    return elec2_raw.load(delimiter=",")
+    return elec2_raw.load()

@@ -3,8 +3,8 @@
 from typing import Optional
 
 import numpy as np  # type: ignore
+from scipy.io import arff
 from frouros.datasets.base import Dataset
-from frouros.datasets.exceptions import AllNaNValuesError
 
 
 class Elec2(Dataset):
@@ -20,7 +20,10 @@ class Elec2(Dataset):
         :type verbose: bool
         """
         super().__init__(
-            url="https://nextcloud.ifca.es/index.php/s/S7xqbSnMjEgegiG/download",
+            url=[
+                "https://www.openml.org/data/download/2419/electricity-normalized.arff",
+                "https://nextcloud.ifca.es/index.php/s/2coqgBEpa82boLS/download",
+            ],
             file_path=file_path,
             verbose=verbose,
         )
@@ -28,12 +31,11 @@ class Elec2(Dataset):
     def read_file(self, **kwargs) -> np.ndarray:
         """Read file.
 
-        :param kwargs: dict of kwargs
-        :type kwargs: dict
+        # :param kwargs: dict of kwargs
+        # :type kwargs: dict
         :return: read file
         :rtype: numpy.ndarray
         """
-        dataset = np.genfromtxt(fname=self.file_path, **kwargs)
-        if np.isnan(dataset).all():
-            raise AllNaNValuesError
+        index = kwargs.get("index", 0)
+        dataset = arff.loadarff(f=self.file_path)[index]
         return dataset

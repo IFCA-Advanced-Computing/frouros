@@ -1,10 +1,6 @@
 """Dataset exception module."""
 
 
-class AllNaNValuesError(Exception):
-    """All NaN values exception."""
-
-
 class DownloadError(Exception):
     """Download exception."""
 

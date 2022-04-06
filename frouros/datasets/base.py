@@ -9,7 +9,6 @@ from pathlib import Path
 import requests
 import tqdm  # type: ignore
 from frouros.datasets.exceptions import (
-    AllNaNValuesError,
     DownloadError,
     InvalidURLError,
     ReadFileError,
@@ -201,7 +200,7 @@ class Dataset(abc.ABC):
             )
         try:
             dataset = self.read_file(**kwargs)
-        except (NotImplementedError, ValueError, TypeError, AllNaNValuesError) as e:
+        except IndexError as e:
             raise ReadFileError(e) from e
         self._remove_temporal_file()
         return dataset

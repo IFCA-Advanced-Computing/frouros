@@ -8,28 +8,28 @@ from frouros.datasets.real import Elec2
 
 
 # Elec2 tests
-def test_elec2_file_not_found_error(elec2_raw: Elec2, elec2_delimiter: str) -> None:
+def test_elec2_file_not_found_error(elec2_raw: Elec2) -> None:
     """Test Elec2 file not found error.
 
     :param elec2_raw: Elec2 raw dataset
     :type elec2_raw: Elec2
-    :param elec2_delimiter: Elec2 load delimiter
-    :type elec2_delimiter: str
+    # :param elec2_delimiter: Elec2 load delimiter
+    # :type elec2_delimiter: str
     """
-    _ = elec2_raw.load(delimiter=elec2_delimiter)
+    _ = elec2_raw.load()
     with pytest.raises(FileNotFoundError):
-        _ = elec2_raw.load(delimiter=elec2_delimiter)
+        _ = elec2_raw.load()
 
 
-def test_elec2_no_verbose(elec2_delimiter: str) -> None:
+def test_elec2_no_verbose() -> None:
     """Test Elec2 no verbose.
 
-    :param elec2_delimiter: Elec2 load delimiter
-    :type elec2_delimiter: str
+    # :param elec2_delimiter: Elec2 load delimiter
+    # :type elec2_delimiter: str
     """
     elec2 = Elec2(verbose=False)
     elec2.download()
-    _ = elec2.load(delimiter=elec2_delimiter)
+    _ = elec2.load()
 
 
 def test_elec2_permission_error() -> None:
@@ -45,7 +45,7 @@ def test_elec2_read_file_error(elec2_raw: Elec2) -> None:
     :type elec2_raw: Elec2
     """
     with pytest.raises(ReadFileError):
-        _ = elec2_raw.load()
+        _ = elec2_raw.load(index=2)
 
 
 def test_elec2_shape(elec2: np.ndarray) -> None:
@@ -54,7 +54,7 @@ def test_elec2_shape(elec2: np.ndarray) -> None:
     :param elec2: Elec2 dataset
     :type elec2: np.ndarray
     """
-    assert elec2.shape == (45313, 9)
+    assert elec2.shape == (45312,)
 
 
 def test_elec2_type(elec2: np.ndarray) -> None:
