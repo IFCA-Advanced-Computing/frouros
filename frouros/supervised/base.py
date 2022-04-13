@@ -1,6 +1,7 @@
 """Supervised base module."""
 
 import abc
+from typing import Callable, Dict, Union
 
 import numpy as np  # type: ignore
 from sklearn.base import BaseEstimator  # type: ignore
@@ -44,7 +45,7 @@ class TargetDelayEstimator(abc.ABC):
         self._estimator = value
         self._fit_method = self._get_fit_method()
 
-    def _get_fit_method(self):
+    def _get_fit_method(self) -> Callable:
         partial_fit = getattr(self.estimator, "partial_fit", None)
         if not callable(partial_fit):
             logger.warning(
@@ -62,17 +63,19 @@ class TargetDelayEstimator(abc.ABC):
         return partial_fit
 
     @staticmethod
-    def _get_number_classes(y):
+    def _get_number_classes(y: np.array) -> int:
         return len(np.unique(y))
 
     @abc.abstractmethod
-    def fit(self, X, y, sample_weight=None) -> BaseEstimator:  # noqa: N803
+    def fit(
+        self, X: np.array, y: np.array, sample_weight: np.array = None  # noqa: N803
+    ) -> BaseEstimator:
         """Fit abstract method."""
 
     @abc.abstractmethod
-    def predict(self, X) -> np.ndarray:  # noqa: N803
+    def predict(self, X: np.array) -> np.ndarray:  # noqa: N803
         """Predict abstract method."""
 
     @abc.abstractmethod
-    def update(self, y):
+    def update(self, y: np.array) -> Dict[str, Union[float, bool]]:
         """Update abstract method."""
