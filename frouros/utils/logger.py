@@ -3,4 +3,4 @@
 import logging
 
 logging.basicConfig(level=logging.INFO)
-logger = logging.getLogger("datasets")
+logger = logging.getLogger("frouros")
