@@ -1,7 +1,7 @@
 """Supervised base module."""
 
 import abc
-from typing import Callable, Dict, Union
+from typing import Callable, Dict, Optional, Union
 
 import numpy as np  # type: ignore
 from sklearn.base import BaseEstimator  # type: ignore
@@ -77,5 +77,5 @@ class TargetDelayEstimator(abc.ABC):
         """Predict abstract method."""
 
     @abc.abstractmethod
-    def update(self, y: np.array) -> Dict[str, Union[float, bool]]:
+    def update(self, y: np.array) -> Dict[str, Optional[Union[float, bool]]]:
         """Update abstract method."""

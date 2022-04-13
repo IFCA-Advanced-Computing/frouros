@@ -1,7 +1,7 @@
 """DDM (Drift detection method) module."""
 
 from collections import deque
-from typing import Callable, List, Union, Tuple
+from typing import Callable, Dict, List, Optional, Union, Tuple
 
 from sklearn.base import BaseEstimator, is_classifier  # type: ignore
 from sklearn.utils.validation import check_array, check_is_fitted  # type: ignore
@@ -120,7 +120,6 @@ class DDM(BaseEstimator, TargetDelayEstimator):
         :type config: DDMConfig
         """
         super().__init__(estimator=estimator)
-        # self.estimator = estimator
         self.error_scorer = error_scorer
         self.config = config
         self.min_error_rate = float("inf")
@@ -244,7 +243,9 @@ class DDM(BaseEstimator, TargetDelayEstimator):
             ],
         )
 
-    def fit(self, X, y, sample_weight=None):  # noqa: N803
+    def fit(
+        self, X: np.array, y: np.array, sample_weight: np.array = None  # noqa: N803
+    ):
         """Fit estimator.
 
         :param X: feature data
@@ -266,7 +267,7 @@ class DDM(BaseEstimator, TargetDelayEstimator):
         self.sample_weight = sample_weight
         return self
 
-    def predict(self, X) -> np.ndarray:  # noqa: N803
+    def predict(self, X: np.array) -> np.ndarray:  # noqa: N803
         """Predict values.
 
         :param X: input data
@@ -286,7 +287,7 @@ class DDM(BaseEstimator, TargetDelayEstimator):
     ) -> List[np.ndarray]:
         return [*map(np.array, zip(*list_))]
 
-    def update(self, y):
+    def update(self, y: np.array) -> Dict[str, Optional[Union[float, bool]]]:
         """Update drift detector.
 
         :param y: input data
@@ -308,11 +309,9 @@ class DDM(BaseEstimator, TargetDelayEstimator):
                 drift, warning = True, True
                 self._drift_insufficient_samples = False
                 self._reset()
-                response = {
-                    "error_rate_plus_std": error_rate_plus_std,
-                    "drift": drift,
-                    "warning": warning,
-                }
+                response = self._generate_update_response(
+                    drift, error_rate_plus_std, warning
+                )
                 return response
 
         self.ground_truth.extend(y)
@@ -350,10 +349,18 @@ class DDM(BaseEstimator, TargetDelayEstimator):
                 else:
                     # In-Control
                     self._normal_case(y)
-
         else:
-            error_rate_plus_std, drift, warning = None, None, None
+            error_rate_plus_std, drift, warning = None, None, None  # type: ignore
 
+        response = self._generate_update_response(drift, error_rate_plus_std, warning)
+        return response
+
+    @staticmethod
+    def _generate_update_response(
+        drift: Optional[bool],
+        error_rate_plus_std: Optional[float],
+        warning: Optional[bool],
+    ) -> Dict[str, Optional[Union[float, bool]]]:
         response = {
             "error_rate_plus_std": error_rate_plus_std,
             "drift": drift,
@@ -361,21 +368,21 @@ class DDM(BaseEstimator, TargetDelayEstimator):
         }
         return response
 
-    def _normal_case(self, y):
+    def _normal_case(self, y: np.array) -> None:
         for _ in range(y.shape[0]):
             self.ground_truth.popleft()
             self.predictions.popleft()
         X, y = self._list_to_arrays(list_=self.actual_context_samples)  # noqa: N806
         self._fit_estimator(X, y)
 
-    def _warning_case(self, X, y):  # noqa: N803
+    def _warning_case(self, X: np.array, y: np.array) -> None:  # noqa: N803
         logger.warning(
             "Warning threshold has been exceeded. "
             "New concept will be learned until drift is detected."
         )
         self.new_context_samples.extend([*zip(X.tolist(), y.tolist())])
 
-    def _drift_case(self, y):
+    def _drift_case(self, y: np.array) -> bool:
         logger.warning("Changing threshold has been exceeded. Drift detected.")
         if is_classifier(self.estimator):
             num_classes = self._get_number_classes(y=y)
@@ -400,7 +407,7 @@ class DDM(BaseEstimator, TargetDelayEstimator):
         warning = True
         return warning
 
-    def _fit_estimator(self, X, y):  # noqa: N803
+    def _fit_estimator(self, X: np.array, y: np.array) -> None:  # noqa: N803
         try:
             self._fit_method(X=X, y=y, sample_weight=self.sample_weight)
         except ValueError as e:
@@ -408,7 +415,7 @@ class DDM(BaseEstimator, TargetDelayEstimator):
                 f"{e}\nHint: Increase min_num_instances value."
             ) from e
 
-    def _calculate_error_rate_plus_std(self):
+    def _calculate_error_rate_plus_std(self) -> Tuple[float, float, float]:
         error_rate = self.error_scorer(
             y_true=self.ground_truth, y_pred=self.predictions
         )
