@@ -29,7 +29,7 @@ def classification_dataset() -> Tuple[np.array, np.array, np.array, np.array]:
     )
     y = df["class"].to_numpy(dtype="str")
 
-    split_idx = 42000
+    split_idx = 43500
 
     X_ref = X[:split_idx]  # noqa: N806
     y_ref = y[:split_idx]
