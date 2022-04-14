@@ -2,6 +2,8 @@
 name = "frouros"
 version = "0.1.0"
 description = "A Python library for drift detection"
+# FIXME: Solve problem reading license
+# license = "BSD-3-Clause"
 authors = [
     {name = "Jaime Céspedes Sisniega", email = "cespedes@ifca.unican.es"}
 ]
@@ -26,7 +28,8 @@ dependencies = [
     "scipy>=1.7.0,<1.8",
     "tqdm>=4.63.0,<4.64",
 ]
-#dynamic = ["description"]
+#dynamic = ["version",
+#           "description"]
 
 [project.optional-dependencies]
 docs = [
@@ -38,12 +41,9 @@ docs = [
 [project.urls]
 repository = "https://github.com/jaime-cespedes-sisniega/frouros"
 
-[project.license]
-file = "LICENSE"
-
 [build-system]
 requires = [
-    "setuptools>=62.1.0,<62.2",
+    "setuptools>=60.10,<61.0",
     "wheel>=0.37.1<0.38",
     "toml>=0.10.2,<0.11",
     "build>=0.7.0,<0.8",
