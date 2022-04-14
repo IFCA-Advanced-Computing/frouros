@@ -1,18 +1,15 @@
 """DDM (Drift detection method) module."""
 
 from collections import deque
-from typing import Callable, Dict, List, Optional, Union, Tuple
+from typing import Callable, Deque, Dict, List, Optional, Union, Tuple  # noqa: TYP001
 
 from sklearn.base import BaseEstimator, is_classifier  # type: ignore
 from sklearn.utils.validation import check_array, check_is_fitted  # type: ignore
 import numpy as np  # type: ignore
 
 from frouros.supervised.base import TargetDelayEstimator
+from frouros.supervised.exceptions import TrainingEstimatorError
 from frouros.utils.logger import logger
-
-
-class TrainingEstimatorError(Exception):
-    """Training estimator exception."""
 
 
 class DDMConfig:
@@ -125,9 +122,9 @@ class DDM(BaseEstimator, TargetDelayEstimator):
         self.min_error_rate = float("inf")
         self.min_std = float("inf")
         self.num_instances = 0
-        self.delayed_predictions = deque[Tuple[np.ndarray, np.ndarray]]()
-        self.ground_truth = deque[Union[str, int, float]]()
-        self.predictions = deque[Union[str, int, float]]()
+        self.delayed_predictions: Deque["Tuple[np.ndarray, np.ndarray]"] = deque()
+        self.ground_truth: Deque["Union[str, int, float]"] = deque()
+        self.predictions: Deque["Union[str, int, float]"] = deque()
         self.actual_context_samples: List[
             Tuple[List[float], Union[str, int, float]]
         ] = []
