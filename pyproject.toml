@@ -44,7 +44,7 @@ file = "LICENSE"
 [build-system]
 requires = [
     "setuptools>=62.1.0,<62.2",
-    "wheel>=0.37.0<0.38",
+    "wheel>=0.37.1<0.38",
     "toml>=0.10.2,<0.11",
     "build>=0.7.0,<0.8",
 ]
