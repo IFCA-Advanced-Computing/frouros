@@ -18,23 +18,22 @@ class KSTest(BaseEstimator, TransformerMixin):
         self.test = None
 
     @property
-    def X_ref_(self) -> np.ndarray:  # noqa: N802
+    def X_ref_(self) -> Optional[np.ndarray]:  # noqa: N802
         """Reference data property.
 
         :return: reference data
-        :rtype: numpy.ndarray
+        :rtype: Optional[numpy.ndarray]
         """
         return self._X_ref_  # pylint: disable=E1101
 
     @X_ref_.setter
-    def X_ref_(self, value: np.ndarray) -> None:  # noqa: N802
+    def X_ref_(self, value: Optional[np.ndarray]) -> None:  # noqa: N802
         """Reference data setter.
 
         :param value: value to be set
-        :type value: numpy.ndarray
+        :type value: Optional[numpy.ndarray]
         """
-        X_ref = check_array(value)  # noqa: N806
-        self.X_ref_ = X_ref
+        self._X_ref_ = check_array(value) if value is not None else value  # noqa: N806
 
     @property
     def test(self) -> Optional[List[Tuple[float, float]]]:
@@ -68,7 +67,6 @@ class KSTest(BaseEstimator, TransformerMixin):
         :return fitted estimator
         :rtype: self
         """
-        X = check_array(X)  # noqa: N806
         self.X_ref_ = X
         return self
 
@@ -87,6 +85,7 @@ class KSTest(BaseEstimator, TransformerMixin):
         """
         check_is_fitted(self, attributes="X_ref_")
         X = check_array(X)  # noqa: N806
+        self.X_ref_: np.ndarray
         if self.X_ref_.shape[1] != X.shape[1]:
             raise MisMatchDimensionError(
                 f"Dimensions of X_ref ({self.X_ref_.shape[1]}) "
