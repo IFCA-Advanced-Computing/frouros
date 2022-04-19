@@ -5,7 +5,9 @@ import numpy as np  # type: ignore
 from scipy.stats import ks_2samp  # type: ignore
 from sklearn.base import BaseEstimator, TransformerMixin  # type: ignore
 
-from frouros.unsupervised.statistical_test.base import StatisticalTestEstimator
+from frouros.unsupervised.statistical_test.base import (  # type: ignore
+    StatisticalTestEstimator,
+)
 
 
 class KSTest(BaseEstimator, TransformerMixin, StatisticalTestEstimator):
