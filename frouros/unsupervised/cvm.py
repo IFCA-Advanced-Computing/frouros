@@ -4,10 +4,9 @@ from typing import List, Optional, Tuple
 import numpy as np  # type: ignore
 from scipy.stats import cramervonmises_2samp  # type: ignore
 from sklearn.base import BaseEstimator, TransformerMixin  # type: ignore
-from sklearn.utils.validation import check_array, check_is_fitted  # type: ignore
+from sklearn.utils.validation import check_array  # type: ignore
 
 from frouros.unsupervised.exceptions import (
-    MisMatchDimensionError,
     InsufficientSamplesError,
 )
 from frouros.unsupervised.base import TestEstimator
@@ -29,16 +28,13 @@ class CVMTest(BaseEstimator, TransformerMixin, TestEstimator):
         else:
             self._X_ref_ = None  # noqa: N806
 
-    def _validation_checks(self, X: np.ndarray) -> None:  # noqa: N803
-        check_is_fitted(self, attributes="X_ref_")
-        X = check_array(X)  # noqa: N806
+    def _specific_checks(self, X: np.ndarray) -> None:  # noqa: N803
         self._check_sufficient_samples(X=X)
-        self.X_ref_: np.ndarray
-        if self.X_ref_.shape[1] != X.shape[1]:
-            raise MisMatchDimensionError(
-                f"Dimensions of X_ref ({self.X_ref_.shape[1]}) "
-                f"and X ({X.shape[1]}) must be equal"
-            )
+
+    @staticmethod
+    def _check_sufficient_samples(X: np.ndarray) -> None:  # noqa: N803
+        if X.shape[0] < 2:
+            raise InsufficientSamplesError("Number of samples must be at least 2.")
 
     @staticmethod
     def _statistical_test(
@@ -50,8 +46,3 @@ class CVMTest(BaseEstimator, TransformerMixin, TestEstimator):
             method=kwargs.get("method", "auto"),
         )
         return test
-
-    @staticmethod
-    def _check_sufficient_samples(X: np.ndarray) -> None:  # noqa: N803
-        if X.shape[0] < 2:
-            raise InsufficientSamplesError("Number of samples must be at least 2.")

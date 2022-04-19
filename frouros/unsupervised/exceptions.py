@@ -1,7 +1,7 @@
 """Unsupervised exception module."""
 
 
-class MisMatchDimensionError(Exception):
+class MismatchDimensionError(Exception):
     """Miss match dimension exception."""
 
 
