@@ -38,4 +38,6 @@ def test_classification(
         _ = pipe.predict(X=np.array([*X_sample]).reshape(1, -1))
 
         # Delayed targets arriving....
-        _ = update_detector(estimator=pipe, y=np.array([y_sample]), detector_name="detector")
+        _ = update_detector(
+            estimator=pipe, y=np.array([y_sample]), detector_name="detector"
+        )
