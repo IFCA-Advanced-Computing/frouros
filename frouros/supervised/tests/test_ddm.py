@@ -9,6 +9,7 @@ from sklearn.preprocessing import StandardScaler  # type: ignore
 import numpy as np  # type: ignore
 
 from frouros.supervised.ddm import DDM, DDMConfig
+from frouros.supervised.utils import update_detector
 
 
 def test_classification(
@@ -37,4 +38,4 @@ def test_classification(
         _ = pipe.predict(X=np.array([*X_sample]).reshape(1, -1))
 
         # Delayed targets arriving....
-        _ = pipe["detector"].update(y=np.array([y_sample]))  # pylint: disable=E1101
+        _ = update_detector(estimator=pipe, y=np.array([y_sample]), detector_name="detector")
