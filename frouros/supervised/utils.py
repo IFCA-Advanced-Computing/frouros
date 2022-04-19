@@ -17,6 +17,9 @@ def update_detector(
     :type estimator: sklearn.base.BaseEstimator
     :param y: target samples
     :type y: np.ndarray
+    :param detector_name: detector´s name
+    :type detector_name: str
+    :raises UpdateDetectorError: update detector error exception
     :return detector update output
     :rtype: Tuple[Any, ...]
     """
