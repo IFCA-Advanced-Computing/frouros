@@ -11,6 +11,7 @@ from sklearn.preprocessing import StandardScaler  # type: ignore
 from frouros.unsupervised.statistical_test.base import (  # type: ignore
     StatisticalTestEstimator,
 )
+from frouros.unsupervised.utils import get_statistical_test
 from frouros.unsupervised.statistical_test.cvm import CVMTest  # type: ignore
 from frouros.unsupervised.statistical_test.ks import KSTest  # type: ignore
 
@@ -37,4 +38,4 @@ def test_statistical_test_detector(
     pipe.fit(X=X_ref, y=y_ref)
 
     _ = pipe.predict(X=np.array([*X_test]))
-    _ = pipe["detector"].test  # pylint: disable=E1101
+    _ = get_statistical_test(estimator=pipe, detector_name="detector")  # pylint: disable=E1101
