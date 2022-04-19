@@ -5,10 +5,10 @@ import numpy as np  # type: ignore
 from scipy.stats import ks_2samp  # type: ignore
 from sklearn.base import BaseEstimator, TransformerMixin  # type: ignore
 
-from frouros.unsupervised.base import TestEstimator
+from frouros.unsupervised.base import StatisticalTestEstimator
 
 
-class KSTest(BaseEstimator, TransformerMixin, TestEstimator):
+class KSTest(BaseEstimator, TransformerMixin, StatisticalTestEstimator):
     """KSTest (Kolmogorov-Smirnov test) algorithm class."""
 
     @staticmethod

@@ -9,13 +9,13 @@ from sklearn.utils.validation import check_array  # type: ignore
 from frouros.unsupervised.exceptions import (
     InsufficientSamplesError,
 )
-from frouros.unsupervised.base import TestEstimator
+from frouros.unsupervised.base import StatisticalTestEstimator
 
 
-class CVMTest(BaseEstimator, TransformerMixin, TestEstimator):
+class CVMTest(BaseEstimator, TransformerMixin, StatisticalTestEstimator):
     """CVMTest (Cramér-von Mises test) algorithm class."""
 
-    @TestEstimator.X_ref_.setter  # type: ignore[attr-defined]
+    @StatisticalTestEstimator.X_ref_.setter  # type: ignore[attr-defined]
     def X_ref_(self, value: Optional[np.ndarray]) -> None:  # noqa: N802
         """Reference data setter.
 

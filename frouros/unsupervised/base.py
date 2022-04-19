@@ -9,7 +9,7 @@ from sklearn.utils.validation import check_array, check_is_fitted  # type: ignor
 from frouros.unsupervised.exceptions import MismatchDimensionError
 
 
-class TestEstimator(abc.ABC):
+class StatisticalTestEstimator(abc.ABC):
     """Abstract class representing a test estimator."""
 
     def __init__(self) -> None:
