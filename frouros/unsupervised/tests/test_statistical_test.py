@@ -8,9 +8,9 @@ from sklearn.linear_model import LogisticRegression  # type: ignore
 from sklearn.pipeline import Pipeline  # type: ignore
 from sklearn.preprocessing import StandardScaler  # type: ignore
 
-from frouros.unsupervised.base import StatisticalTestEstimator
-from frouros.unsupervised.cvm import CVMTest
-from frouros.unsupervised.ks import KSTest
+from frouros.unsupervised.statistical_test.base import StatisticalTestEstimator
+from frouros.unsupervised.statistical_test.cvm import CVMTest
+from frouros.unsupervised.statistical_test.ks import KSTest
 
 
 @pytest.mark.parametrize("detector", [CVMTest(), KSTest()])

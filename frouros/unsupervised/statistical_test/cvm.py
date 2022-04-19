@@ -6,10 +6,10 @@ from scipy.stats import cramervonmises_2samp  # type: ignore
 from sklearn.base import BaseEstimator, TransformerMixin  # type: ignore
 from sklearn.utils.validation import check_array  # type: ignore
 
-from frouros.unsupervised.exceptions import (
+from frouros.unsupervised.statistical_test.exceptions import (
     InsufficientSamplesError,
 )
-from frouros.unsupervised.base import StatisticalTestEstimator
+from frouros.unsupervised.statistical_test.base import StatisticalTestEstimator
 
 
 class CVMTest(BaseEstimator, TransformerMixin, StatisticalTestEstimator):

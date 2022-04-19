@@ -6,7 +6,7 @@ from typing import Any, Optional, List, Tuple
 import numpy as np  # type: ignore
 from sklearn.utils.validation import check_array, check_is_fitted  # type: ignore
 
-from frouros.unsupervised.exceptions import MismatchDimensionError
+from frouros.unsupervised.statistical_test.exceptions import MismatchDimensionError
 
 
 class StatisticalTestEstimator(abc.ABC):
