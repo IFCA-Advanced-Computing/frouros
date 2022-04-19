@@ -9,7 +9,7 @@ import numpy as np  # type: ignore
 from frouros.datasets.real import Elec2
 
 
-@pytest.fixture(scope="function")
+@pytest.fixture(scope="module")
 def dataset() -> Tuple[np.array, np.array, np.array]:
     """Dataset using Elec2.
 
@@ -32,6 +32,6 @@ def dataset() -> Tuple[np.array, np.array, np.array]:
     X_ref = X[:-1]  # noqa: N806
     y_ref = y[:-1]
 
-    X_test = X[-1]  # noqa: N806
+    X_test = X[-2:, :]  # noqa: N806
 
     return X_ref, y_ref, X_test
