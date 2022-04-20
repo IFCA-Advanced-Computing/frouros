@@ -1,4 +1,4 @@
-"""Test statistical test estimators module."""
+"""Test unsupervised methods."""
 
 from typing import Tuple
 
@@ -8,19 +8,18 @@ from sklearn.linear_model import LogisticRegression  # type: ignore
 from sklearn.pipeline import Pipeline  # type: ignore
 from sklearn.preprocessing import StandardScaler  # type: ignore
 
-from frouros.unsupervised.statistical_test.base import (  # type: ignore
-    StatisticalTestEstimator,
-)
-from frouros.unsupervised.utils import get_statistical_test  # type: ignore
-from frouros.unsupervised.statistical_test.cvm import CVMTest  # type: ignore
-from frouros.unsupervised.statistical_test.ks import KSTest  # type: ignore
+from frouros.unsupervised.base import UnsupervisedBaseEstimator
+from frouros.unsupervised.distance_based.emd import EMD
+from frouros.unsupervised.statistical_test.cvm import CVMTest
+from frouros.unsupervised.statistical_test.ks import KSTest
+from frouros.unsupervised.utils import get_statistical_test
 
 
-@pytest.mark.parametrize("detector", [CVMTest(), KSTest()])
-def test_statistical_test_detector(
-    dataset: Tuple[np.array, np.array, np.array], detector: StatisticalTestEstimator
+@pytest.mark.parametrize("detector", [EMD(), CVMTest(), KSTest()])
+def test_unsupervised_method(
+    dataset: Tuple[np.array, np.array, np.array], detector: UnsupervisedBaseEstimator
 ) -> None:
-    """Test feature detector.
+    """Test unsupervised method.
 
     :param dataset: Elec2 raw dataset
     :type dataset: Tuple[numpy.array, numpy.array, numpy.array]
