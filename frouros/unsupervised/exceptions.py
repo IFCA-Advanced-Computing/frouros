@@ -1,6 +1,10 @@
 """Unsupervised exception module."""
 
 
+class DistinctNumberSamplesError(Exception):
+    """Distinct number of samples exception."""
+
+
 class GetStatisticalTestError(Exception):
     """Get statistical test exception."""
 

@@ -4,9 +4,7 @@ from typing import Tuple
 
 from sklearn.base import BaseEstimator  # type: ignore
 
-from frouros.unsupervised.statistical_test.exceptions import (  # type: ignore
-    GetStatisticalTestError,
-)
+from frouros.unsupervised.exceptions import GetStatisticalTestError
 
 
 def get_statistical_test(

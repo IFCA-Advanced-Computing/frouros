@@ -1,5 +1,6 @@
 """KSTest (Kolmogorov-Smirnov test) module."""
-from typing import List, Tuple
+
+from typing import Tuple
 
 import numpy as np  # type: ignore
 from scipy.stats import ks_2samp  # type: ignore
@@ -16,11 +17,11 @@ class KSTest(BaseEstimator, TransformerMixin, StatisticalTestEstimator):
     @staticmethod
     def _statistical_test(
         X_ref_: np.ndarray, X: np.ndarray, **kwargs  # noqa: N803
-    ) -> List[Tuple[float, float]]:
+    ) -> Tuple[float, float]:
         test = ks_2samp(
             data1=X_ref_,
             data2=X,
             alternative=kwargs.get("alternative", "two-sided"),
             mode=kwargs.get("method", "auto"),
         )
-        return test
+        return test.statistic, test.pvalue

@@ -1,14 +1,13 @@
 """CVMTest (Cramér-von Mises test) module."""
-from typing import List, Optional, Tuple
+
+from typing import Optional, Tuple
 
 import numpy as np  # type: ignore
 from scipy.stats import cramervonmises_2samp  # type: ignore
 from sklearn.base import BaseEstimator, TransformerMixin  # type: ignore
 from sklearn.utils.validation import check_array  # type: ignore
 
-from frouros.unsupervised.statistical_test.exceptions import (  # type: ignore
-    InsufficientSamplesError,
-)
+from frouros.unsupervised.exceptions import InsufficientSamplesError
 from frouros.unsupervised.statistical_test.base import (  # type: ignore
     StatisticalTestEstimator,
 )
@@ -41,10 +40,10 @@ class CVMTest(BaseEstimator, TransformerMixin, StatisticalTestEstimator):
     @staticmethod
     def _statistical_test(
         X_ref_: np.ndarray, X: np.ndarray, **kwargs  # noqa: N803
-    ) -> List[Tuple[float, float]]:
+    ) -> Tuple[float, float]:
         test = cramervonmises_2samp(
             x=X_ref_,
             y=X,
             method=kwargs.get("method", "auto"),
         )
-        return test
+        return test.statistic, test.pvalue

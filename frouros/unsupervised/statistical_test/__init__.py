@@ -1,1 +1,1 @@
-"""Unsupervised detection methods init."""
+"""Unsupervised statistical test detection methods' init."""
