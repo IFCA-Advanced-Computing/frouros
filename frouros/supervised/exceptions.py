@@ -1,6 +1,10 @@
 """Supervised exception module."""
 
 
+class NoFitMethodError(Exception):
+    """Not fit method exception."""
+
+
 class TrainingEstimatorError(Exception):
     """Training estimator exception."""
 
