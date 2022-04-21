@@ -1,0 +1,35 @@
+# For more configuration details:
+# https://docs.codecov.io/docs/codecov-yaml
+
+# Check if this file is valid by running in bash:
+# curl --data-binary @.codecov.yml https://codecov.io/validate
+
+# Coverage configuration
+# ----------------------
+codecov:
+  require_ci_to_pass: yes
+
+coverage:
+  precision: 5      # Number of decimal places, between 0 and 5
+  round: nearest    # up, down, or nearest (default is down)
+  range: 70..95     # First number represents red, and second represents green
+                    # (default is 70..100)
+
+github_checks:
+  annotations: true
+
+# Pull request comments:
+# ----------------------
+# Diff is the Coverage Diff of the pull request.
+# Files are the files impacted by the pull request
+comment:
+  layout: diff, files  # accepted in any order: reach, diff, flags, and/or files
+
+# Ignoring Paths
+# --------------
+# which folders/files to ignore
+ignore:
+  - "*/tests/.*"
+  - "setup.cfg"
+  - "setup.py"
+  - "pyproject.toml"
