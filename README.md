@@ -127,3 +127,41 @@ Frouros is a Python library for drift detection.
   </tr>
 </tbody>
 </table>
+
+## Datasets
+
+<table class="tg">
+<thead>
+<tr>
+    <th>Type</th>
+    <th>Dataset</th>
+  </tr>
+</thead>
+<tbody>
+  <tr>
+    <td>
+        <a href="https://github.com/jaime-cespedes-sisniega/frouros/blob/main/frouros/datasets/real.py"> 
+            <div style="height:100%;width:100%">
+                Real
+            </div>
+        </a>
+    </td>
+    <td>
+        <a href="https://github.com/jaime-cespedes-sisniega/frouros/blob/main/frouros/datasets/real.py">  
+            <div style="height:100%;width:100%">
+                Elec2
+            </div>
+        </a>
+    </td>
+  </tr>
+  <tr>
+    <td rowspan="3">
+        <a> 
+            <div style="height:100%;width:100%">
+                Synthetic
+            </div>
+        </a>
+    </td>
+  </tr>
+</tbody>
+</table>
