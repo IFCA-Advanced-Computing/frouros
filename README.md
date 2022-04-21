@@ -61,9 +61,6 @@ Frouros is a Python library for drift detection.
 </thead>
 <tbody>
   <tr>
-    <td colspan="3">&nbsp;</td>
-  </tr>
-  <tr>
     <td>Supervised</td>
     <td>DDM Based</td>
     <td>
