@@ -61,7 +61,13 @@ Frouros is a Python library for drift detection.
 </thead>
 <tbody>
   <tr>
-    <td>Supervised</td>
+    <td>
+        <a href="https://github.com/jaime-cespedes-sisniega/frouros/blob/main/frouros/supervised/base.py"> 
+            <div style="height:100%;width:100%">
+                Supervised
+            </div>
+        </a>
+    </td>
     <td>DDM Based</td>
     <td>
         <a href="https://github.com/jaime-cespedes-sisniega/frouros/blob/main/frouros/supervised/ddm.py">  
@@ -72,35 +78,50 @@ Frouros is a Python library for drift detection.
     </td>
   </tr>
   <tr>
-    <td colspan="3">&nbsp;</td>
-  </tr>
-  <tr>
-    <td rowspan="3">Unsupervised</td>
-    <td rowspan="1">Distance Based</td>
+    <td rowspan="3">
+        <a href="https://github.com/jaime-cespedes-sisniega/frouros/blob/main/frouros/unsupervised/base.py"> 
+            <div style="height:100%;width:100%">
+                Unsupervised
+            </div>
+        </a>
+    </td>
+    <td rowspan="1">
+        <a href="https://github.com/jaime-cespedes-sisniega/frouros/blob/main/frouros/unsupervised/distance_based/base.py"> 
+            <div style="height:100%;width:100%">
+                Distance Based
+            </div>
+        </a>
+    </td>
     <td>
         <a href="https://github.com/jaime-cespedes-sisniega/frouros/blob/main/frouros/unsupervised/distance_based/emd.py"> 
-        <div style="height:100%;width:100%">
-            EMD
-        </div>
+            <div style="height:100%;width:100%">
+                EMD
+            </div>
         </a>
     </td>
   </tr>
   <tr>
-    <td rowspan="2">Statistical Test</td>
+    <td rowspan="2">
+        <a href="https://github.com/jaime-cespedes-sisniega/frouros/blob/main/frouros/unsupervised/statistical_test/base.py"> 
+            <div style="height:100%;width:100%">
+                Statistical Test
+            </div>
+        </a>
+    </td>
     <td>
         <a href="https://github.com/jaime-cespedes-sisniega/frouros/blob/main/frouros/unsupervised/statistical_test/cvm.py"> 
-        <div style="height:100%;width:100%">
-            CVM
-        </div>
+            <div style="height:100%;width:100%">
+                CVM
+            </div>
         </a>
     </td>
   </tr>
   <tr>
     <td>
         <a href="https://github.com/jaime-cespedes-sisniega/frouros/blob/main/frouros/unsupervised/statistical_test/ks.py">
-        <div style="height:100%;width:100%">
-            KS
-        </div>    
+            <div style="height:100%;width:100%">
+                KS
+            </div>    
         </a>
     </td>
   </tr>
