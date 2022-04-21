@@ -64,11 +64,11 @@ Frouros is a Python library for drift detection.
     <td>Supervised</td>
     <td>DDM Based</td>
     <td>
-        <a href="https://github.com/jaime-cespedes-sisniega/frouros/blob/main/frouros/supervised/ddm.py">
-        </a>        
-        <div style="height:100%;width:100%">
-            DDM
-        </div>    
+        <a href="https://github.com/jaime-cespedes-sisniega/frouros/blob/main/frouros/supervised/ddm.py">  
+            <div style="height:100%;width:100%">
+                DDM
+            </div>
+        </a>
     </td>
   </tr>
   <tr>
@@ -78,30 +78,30 @@ Frouros is a Python library for drift detection.
     <td rowspan="3">Unsupervised</td>
     <td rowspan="1">Distance Based</td>
     <td>
-        <a href="https://github.com/jaime-cespedes-sisniega/frouros/blob/main/frouros/unsupervised/distance_based/emd.py">
-        </a>        
+        <a href="https://github.com/jaime-cespedes-sisniega/frouros/blob/main/frouros/unsupervised/distance_based/emd.py"> 
         <div style="height:100%;width:100%">
             EMD
-        </div>    
+        </div>
+        </a>
     </td>
   </tr>
   <tr>
     <td rowspan="2">Statistical Test</td>
     <td>
-        <a href="https://github.com/jaime-cespedes-sisniega/frouros/blob/main/frouros/unsupervised/statistical_test/cvm.py">
-        </a>        
+        <a href="https://github.com/jaime-cespedes-sisniega/frouros/blob/main/frouros/unsupervised/statistical_test/cvm.py"> 
         <div style="height:100%;width:100%">
             CVM
-        </div>    
+        </div>
+        </a>
     </td>
   </tr>
   <tr>
     <td>
         <a href="https://github.com/jaime-cespedes-sisniega/frouros/blob/main/frouros/unsupervised/statistical_test/ks.py">
-        </a>        
         <div style="height:100%;width:100%">
             KS
         </div>    
+        </a>
     </td>
   </tr>
 </tbody>
