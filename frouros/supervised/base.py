@@ -7,11 +7,8 @@ import numpy as np  # type: ignore
 from sklearn.base import BaseEstimator  # type: ignore
 from sklearn.utils.estimator_checks import check_estimator  # type: ignore
 
+from frouros.supervised.exceptions import NoFitMethodError
 from frouros.utils.logger import logger
-
-
-class NoFitMethodError(Exception):
-    """Not fit method exception."""
 
 
 class TargetDelayEstimator(abc.ABC):
