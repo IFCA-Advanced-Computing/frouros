@@ -3,7 +3,6 @@
 from typing import Tuple
 
 import pytest  # type: ignore
-import pandas as pd  # type: ignore
 import numpy as np  # type: ignore
 
 from frouros.datasets.real import Elec2
@@ -20,14 +19,12 @@ def dataset() -> Tuple[np.array, np.array, np.array]:
     elec2.download()
     dataset_ = elec2.load()
 
-    df = pd.DataFrame(dataset_)
-
-    target = "class"
-
-    X = (  # noqa: N806
-        df.loc[:, df.columns != target].apply(pd.to_numeric, errors="coerce").to_numpy()
+    # Two comprehensions lists are faster than iterating over one
+    # (Python doing Python´s things).
+    X = np.array(  # noqa: N806
+        [sample.tolist()[:-1] for sample in dataset_], dtype=np.float16
     )
-    y = df["class"].to_numpy(dtype="str")
+    y = np.array([sample[-1] for sample in dataset_], dtype="str")
 
     X_ref = X[:-1]  # noqa: N806
     y_ref = y[:-1]
