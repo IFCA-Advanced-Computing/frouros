@@ -52,7 +52,7 @@ class DDMConfig:
         :type value: float
         """
         if value <= 0.0:
-            raise ValueError("drift level must be great than 0.0.")
+            raise ValueError("drift level must be greater than 0.0.")
         if value <= self.warning_level:
             raise ValueError("drift level must be greater than warning level.")
         self._drift_level = value
@@ -98,7 +98,7 @@ class DDMConfig:
         self._warning_level = value
 
 
-class DDM(BaseEstimator, TargetDelayEstimator):
+class DDM(TargetDelayEstimator, BaseEstimator):
     """DDM (Drift detection method) algorithm class."""
 
     def __init__(

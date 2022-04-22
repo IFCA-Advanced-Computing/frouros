@@ -9,7 +9,7 @@ from frouros.unsupervised.distance_based.base import (  # type: ignore
 )
 
 
-class EMD(BaseEstimator, TransformerMixin, DistanceBasedEstimator):
+class EMD(DistanceBasedEstimator, BaseEstimator, TransformerMixin):
     """EMD (Earth Mover's Distance) algorithm class."""
 
     @staticmethod

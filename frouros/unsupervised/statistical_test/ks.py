@@ -11,7 +11,7 @@ from frouros.unsupervised.statistical_test.base import (  # type: ignore
 )
 
 
-class KSTest(BaseEstimator, TransformerMixin, StatisticalTestEstimator):
+class KSTest(StatisticalTestEstimator, BaseEstimator, TransformerMixin):
     """KSTest (Kolmogorov-Smirnov test) algorithm class."""
 
     @staticmethod

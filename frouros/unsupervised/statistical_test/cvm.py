@@ -13,7 +13,7 @@ from frouros.unsupervised.statistical_test.base import (  # type: ignore
 )
 
 
-class CVMTest(BaseEstimator, TransformerMixin, StatisticalTestEstimator):
+class CVMTest(StatisticalTestEstimator, BaseEstimator, TransformerMixin):
     """CVMTest (Cramér-von Mises test) algorithm class."""
 
     @StatisticalTestEstimator.X_ref_.setter  # type: ignore[attr-defined]
