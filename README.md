@@ -78,14 +78,14 @@ Frouros is a Python library for drift detection.
     </td>
   </tr>
   <tr>
-    <td rowspan="3">
+    <td rowspan="4">
         <a href="https://github.com/jaime-cespedes-sisniega/frouros/blob/main/frouros/unsupervised/base.py"> 
             <div style="height:100%;width:100%">
                 Unsupervised
             </div>
         </a>
     </td>
-    <td rowspan="1">
+    <td rowspan="2">
         <a href="https://github.com/jaime-cespedes-sisniega/frouros/blob/main/frouros/unsupervised/distance_based/base.py"> 
             <div style="height:100%;width:100%">
                 Distance Based
@@ -99,6 +99,15 @@ Frouros is a Python library for drift detection.
             </div>
         </a>
     </td>
+  </tr>
+  <tr>
+      <td>
+      <a href="https://github.com/jaime-cespedes-sisniega/frouros/blob/main/frouros/unsupervised/distance_based/psi.py"> 
+                <div style="height:100%;width:100%">
+                    PSI
+                </div>
+            </a>
+      </td>
   </tr>
   <tr>
     <td rowspan="2">

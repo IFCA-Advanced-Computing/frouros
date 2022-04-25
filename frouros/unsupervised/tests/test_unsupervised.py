@@ -9,12 +9,12 @@ from sklearn.pipeline import Pipeline  # type: ignore
 from sklearn.preprocessing import StandardScaler  # type: ignore
 
 from frouros.unsupervised.base import UnsupervisedBaseEstimator
-from frouros.unsupervised.distance_based import EMD
+from frouros.unsupervised.distance_based import EMD, PSI
 from frouros.unsupervised.statistical_test import CVMTest, KSTest
 from frouros.unsupervised.utils import get_statistical_test
 
 
-@pytest.mark.parametrize("detector", [EMD(), CVMTest(), KSTest()])
+@pytest.mark.parametrize("detector", [EMD(), PSI(), CVMTest(), KSTest()])
 def test_unsupervised_method(
     dataset: Tuple[np.array, np.array, np.array], detector: UnsupervisedBaseEstimator
 ) -> None:
