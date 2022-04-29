@@ -24,7 +24,7 @@ def update_detector(
     :rtype: Tuple[Any, ...]
     """
     try:
-        output = estimator[detector_name].update(y=np.array([y]))
+        output = estimator[detector_name].update(y=y)
     except KeyError as e:
         raise UpdateDetectorError(e) from e
     return output
