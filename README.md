@@ -76,7 +76,7 @@ Frouros is a Python library for drift detection.
         </a>
     </td>
     <td>
-        <a href="https://github.com/jaime-cespedes-sisniega/frouros/blob/main/frouros/supervised/distance_based/ddm.py">  
+        <a href="https://github.com/jaime-cespedes-sisniega/frouros/blob/main/frouros/supervised/ddm_based/ddm.py">  
             <div style="height:100%;width:100%">
                 DDM
             </div>
@@ -84,7 +84,7 @@ Frouros is a Python library for drift detection.
     </td>
   <tr>
     <td>
-        <a href="https://github.com/jaime-cespedes-sisniega/frouros/blob/main/frouros/supervised/distance_based/eddm.py">  
+        <a href="https://github.com/jaime-cespedes-sisniega/frouros/blob/main/frouros/supervised/ddm_based/eddm.py">  
             <div style="height:100%;width:100%">
                 EDDM
             </div>
