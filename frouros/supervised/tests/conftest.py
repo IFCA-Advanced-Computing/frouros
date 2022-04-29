@@ -8,7 +8,7 @@ import numpy as np  # type: ignore
 from frouros.datasets.real import Elec2
 
 
-@pytest.fixture(scope="function")
+@pytest.fixture(scope="module")
 def classification_dataset() -> Tuple[np.array, np.array, np.array, np.array]:
     """Classification dataset using Elec2.
 
