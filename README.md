@@ -61,13 +61,28 @@ Frouros is a Python library for drift detection.
 </thead>
 <tbody>
   <tr>
-    <td rowspan="2">
+    <td rowspan="3">
         <a href="https://github.com/jaime-cespedes-sisniega/frouros/blob/main/frouros/supervised/base.py"> 
             <div style="height:100%;width:100%">
                 Supervised
             </div>
         </a>
     </td>
+    <td>
+        <a href="https://github.com/jaime-cespedes-sisniega/frouros/blob/main/frouros/supervised/cusum_test/base.py"> 
+            <div style="height:100%;width:100%">
+                CUSUM Test
+            </div>
+        </a>
+    </td>
+   <td>
+        <a href="https://github.com/jaime-cespedes-sisniega/frouros/blob/main/frouros/supervised/cusum_test/page_hinkley.py"> 
+            <div style="height:100%;width:100%">
+                Page Hinkley
+            </div>
+        </a>
+    </td>
+  </tr>
     <td rowspan="2">
         <a href="https://github.com/jaime-cespedes-sisniega/frouros/blob/main/frouros/supervised/ddm_based/base.py">  
             <div style="height:100%;width:100%">
