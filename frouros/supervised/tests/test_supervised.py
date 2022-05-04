@@ -10,25 +10,48 @@ from sklearn.preprocessing import StandardScaler  # type: ignore
 import numpy as np  # type: ignore
 
 from frouros.supervised.base import TargetDelayEstimator
-from frouros.supervised.ddm_based.base import DDMConfig, EDDMConfig
-from frouros.supervised.ddm_based import DDM, EDDM
+from frouros.supervised.cusum_test import PageHinkleyTest, PageHinkleyTestConfig
+from frouros.supervised.ddm_based import DDM, DDMConfig, EDDM, EDDMConfig
 from frouros.supervised.utils import update_detector
+
+
+ESTIMATOR = LogisticRegression
+ESTIMATOR_ARGS = {
+    "solver": "lbfgs",
+    "max_iter": 1000,
+}
+MIN_NUM_INSTANCES = 500
+
+
+def error_scorer(y_true, y_pred):
+    """Error scorer function."""
+    return 1 - accuracy_score(y_true, y_pred)
 
 
 @pytest.mark.parametrize(
     "detector",
     [
+        PageHinkleyTest(
+            estimator=ESTIMATOR(**ESTIMATOR_ARGS),
+            error_scorer=error_scorer,
+            config=PageHinkleyTestConfig(
+                delta=0.005,
+                forgetting_factor=0.9999,
+                lambda_=50,
+                min_num_instances=MIN_NUM_INSTANCES,
+            ),
+        ),
         DDM(
-            estimator=LogisticRegression(solver="lbfgs", max_iter=1000),
-            error_scorer=lambda y_true, y_pred: 1 - accuracy_score(y_true, y_pred),
+            estimator=ESTIMATOR(**ESTIMATOR_ARGS),
+            error_scorer=error_scorer,
             config=DDMConfig(
                 warning_level=2.0,
                 drift_level=3.0,
-                min_num_instances=500,
+                min_num_instances=MIN_NUM_INSTANCES,
             ),
         ),
         EDDM(
-            estimator=LogisticRegression(solver="lbfgs", max_iter=1000),
+            estimator=ESTIMATOR(**ESTIMATOR_ARGS),
             config=EDDMConfig(
                 alpha=0.95,
                 beta=0.9,
