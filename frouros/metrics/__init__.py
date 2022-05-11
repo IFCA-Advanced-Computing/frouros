@@ -1,7 +1,11 @@
 """Metrics init."""
 
-from frouros.metrics.prequential_error.prequential_error import PrequentialError
+from frouros.metrics.prequential_error import (
+    PrequentialError,
+    PrequentialErrorFadingFactor,
+)
 
 __all__ = [
     "PrequentialError",
+    "PrequentialErrorFadingFactor",
 ]
