@@ -1,6 +1,10 @@
 """Supervised exception module."""
 
 
+class ArgumentError(ValueError):
+    """Argument exception."""
+
+
 class NoFitMethodError(Exception):
     """Not fit method exception."""
 
