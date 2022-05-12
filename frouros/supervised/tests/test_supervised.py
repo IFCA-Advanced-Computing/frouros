@@ -4,7 +4,7 @@ from typing import Tuple
 
 import pytest  # type: ignore
 from sklearn.metrics import accuracy_score  # type: ignore
-from sklearn.linear_model import LogisticRegression  # type: ignore
+from sklearn.tree import DecisionTreeClassifier  # type: ignore
 from sklearn.pipeline import Pipeline  # type: ignore
 from sklearn.preprocessing import StandardScaler  # type: ignore
 import numpy as np  # type: ignore
@@ -15,10 +15,9 @@ from frouros.supervised.ddm_based import DDM, DDMConfig, EDDM, EDDMConfig
 from frouros.supervised.utils import update_detector
 
 
-ESTIMATOR = LogisticRegression
+ESTIMATOR = DecisionTreeClassifier
 ESTIMATOR_ARGS = {
-    "solver": "lbfgs",
-    "max_iter": 1000,
+    "random_state": 31,
 }
 MIN_NUM_INSTANCES = 500
 

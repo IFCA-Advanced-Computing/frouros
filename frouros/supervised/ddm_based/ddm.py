@@ -1,12 +1,14 @@
 """DDM (Drift detection method) module."""
 
-from typing import Callable, Dict, Optional, Union, Tuple  # noqa: TYP001
+from inspect import signature
+from typing import Callable, Dict, Optional, List, Tuple, Union  # noqa: TYP001
 
 from sklearn.base import BaseEstimator  # type: ignore
-from sklearn.utils.validation import check_is_fitted  # type: ignore
 import numpy as np  # type: ignore
 
+from frouros.metrics.base import BaseMetric
 from frouros.supervised.ddm_based.base import DDMBaseConfig, DDMBasedEstimator
+from frouros.supervised.exceptions import ArgumentError
 
 
 class DDMConfig(DDMBaseConfig):
@@ -85,6 +87,7 @@ class DDM(DDMBasedEstimator):
         estimator: BaseEstimator,
         error_scorer: Callable,
         config: DDMConfig,
+        metrics: Optional[Union[BaseMetric, List[BaseMetric]]] = None,
     ) -> None:
         """Init method.
 
@@ -94,11 +97,35 @@ class DDM(DDMBasedEstimator):
         :type error_scorer: Callable
         :param config: configuration parameters
         :type config: DDMConfig
+        :param metrics: performance metrics
+        :type metrics: Optional[Union[BaseMetric, List[BaseMetric]]]
         """
-        super().__init__(estimator=estimator, config=config)
+        super().__init__(estimator=estimator, config=config, metrics=metrics)
         self.error_scorer = error_scorer
         self.min_error_rate = float("inf")
         self.min_std = float("inf")
+
+    @property
+    def error_scorer(self) -> Callable:
+        """Error scorer property.
+
+        :return: error scorer function
+        :rtype: Callable
+        """
+        return self._error_scorer
+
+    @error_scorer.setter
+    def error_scorer(self, value: Callable) -> None:
+        """Error scorer setter.
+
+        :param value: value to be set
+        :type value: Callable
+        :raises ArgumentError: Argument error exception
+        """
+        func_parameters = signature(value).parameters
+        if "y_true" not in func_parameters or "y_pred" not in func_parameters:
+            raise ArgumentError("value function must have y_true and y_pred arguments.")
+        self._error_scorer = value
 
     @property
     def min_error_rate(self) -> float:
@@ -173,18 +200,18 @@ class DDM(DDMBasedEstimator):
 
         :param y: input data
         :type y: numpy.ndarray
-        :return predicted values
-        :rtype: numpy.ndarray
+        :return response message
+        :rtype: Dict[str, Optional[Union[float, bool]]]
         """
-        check_is_fitted(self.estimator)
-        X, y_pred = self.delayed_predictions.popleft()  # noqa: N806
-        self.num_instances += y_pred.shape[0]
+        X, y_pred, metrics = self._prepare_update(y=y)  # noqa: N806
 
-        if self._drift_insufficient_samples:
-            drift_completed_flag = self._check_drift_insufficient_samples(X=X, y=y)
-            if drift_completed_flag:
-                response = self._get_update_response(drift=True, warning=False)
-                return response
+        if self._drift_insufficient_samples and self._check_drift_insufficient_samples(
+            X=X, y=y
+        ):
+            response = self._get_update_response(
+                drift=True, warning=True, metrics=metrics
+            )
+            return response  # type: ignore
 
         self.ground_truth.extend(y.tolist())
         self.predictions.extend(y_pred.tolist())
@@ -213,17 +240,19 @@ class DDM(DDMBasedEstimator):
                     min_std=self.min_std,
                     level=self.config.warning_level,  # type: ignore
                 )
-
                 if warning:
                     # Warning
-                    self._warning_case(X, y)
+                    self._warning_case(X=X, y=y)
                 else:
                     # In-Control
-                    self._normal_case(y)
+                    self._normal_case(X=X, y=y)
         else:
             error_rate_plus_std, drift, warning = 0.0, False, False  # type: ignore
 
         response = self._get_update_response(
-            drift=drift, warning=warning, error_rate_plus_std=error_rate_plus_std
+            drift=drift,
+            warning=warning,
+            error_rate_plus_std=error_rate_plus_std,
+            metrics=metrics,
         )
         return response

@@ -2,6 +2,7 @@
 
 import abc
 from collections import deque
+import copy
 from typing import (  # noqa: TYP001
     Any,
     Callable,
@@ -18,12 +19,220 @@ from sklearn.base import BaseEstimator  # type: ignore
 from sklearn.utils.estimator_checks import check_estimator  # type: ignore
 from sklearn.utils.validation import check_array, check_is_fitted  # type: ignore
 
+from frouros.metrics.base import BaseMetric
 from frouros.supervised.exceptions import NoFitMethodError, TrainingEstimatorError
 from frouros.utils.logger import logger
 
 
+class BaseFit(abc.ABC):
+    """Abstract class representing a fit method."""
+
+    def __init__(self, fit_method: Any) -> None:
+        """Init method.
+
+        :param fit_method: fit method to be used
+        :type fit_method: Callable
+        """
+        self.fit_method = fit_method
+        self.new_context_samples: List[Tuple[List[float], Union[str, int, float]]] = []
+
+    def __call__(
+        self,
+        X: np.ndarray,  # noqa: N803
+        y: np.ndarray,
+        sample_weight: Optional[Union[List[int], List[float]]] = None,
+        **kwargs,
+    ) -> None:
+        """__call__ method that invokes the fit method.
+
+        :param X: input data
+        :type X: numpy.ndarray
+        :param y_true ground truth values
+        :type y_true: numpy.ndarray
+        """
+        self.fit_method(X=X, y=y, sample_weight=sample_weight, **kwargs)
+
+    @property
+    def fit_method(self) -> Any:
+        """Fit method property.
+
+        :return: fit method
+        :rtype: Any
+        """
+        return self._fit_method
+
+    @fit_method.setter
+    def fit_method(self, value: Any) -> None:
+        """Fit method setter.
+
+        :param value: value to be set
+        :type value: Any
+        """
+        self._fit_method = value
+
+    @property
+    def new_context_samples(self) -> List[Tuple[List[float], Union[str, int, float]]]:
+        """New context samples property.
+
+        :return: new context samples
+        :rtype: List[Tuple[List[float], Union[str, int, float]]]
+        """
+        return self._new_context_samples
+
+    @new_context_samples.setter
+    def new_context_samples(
+        self, value: List[Tuple[List[float], Union[str, int, float]]]
+    ) -> None:
+        """New context samples setter.
+
+        :param value: value to be set
+        :type value: List[Tuple[List[float], Union[str, int, float]]]
+        """
+        if not isinstance(value, List):
+            raise TypeError("value must be of type List.")
+        self._new_context_samples = value
+
+    @property
+    def fit_context_samples(
+        self,
+    ) -> List[Tuple[List[float], Union[str, int, float]]]:
+        """Fit context samples property.
+
+        :return: fit context samples
+        :rtype: List[Tuple[List[float], Union[str, int, float]]]
+        """
+        return self._fit_context_samples
+
+    @fit_context_samples.setter
+    def fit_context_samples(
+        self, value: List[Tuple[List[float], Union[str, int, float]]]
+    ) -> None:
+        """Fit context samples setter.
+
+        :param value: value to be set
+        :type value: List[Tuple[List[float], Union[str, int, float]]]
+        """
+        if not isinstance(value, List):
+            raise TypeError("value must be of type List.")
+        self._fit_context_samples = value
+
+    def add_fit_context_samples(
+        self,
+        X: np.ndarray,  # noqa: N803
+        y: np.ndarray,
+    ) -> None:
+        """Add samples to be used by the next fit method invocation.
+
+        :param X: input data
+        :type X: numpy.ndarray
+        :param y: ground truth values
+        :type y: numpy.ndarray
+        """
+        self.fit_context_samples.extend([*zip(X.tolist(), y.tolist())])
+
+    def reset(self) -> None:
+        """Reset variables and samples lists."""
+        self.new_context_samples.clear()
+
+    def post_fit_estimator(self):
+        """Method to be executed after the fit method."""
+        self.new_context_samples.clear()
+
+
+class NormalFit(BaseFit):
+    """Normal fit method class."""
+
+    def __init__(self, fit_method: Callable) -> None:
+        """Init method.
+
+        :param fit_method: fit method to be used
+        :type fit_method: Callable
+        """
+        super().__init__(fit_method=fit_method)
+        self.fit_context_samples: List[Tuple[List[float], Union[str, int, float]]] = []
+
+    def __call__(
+        self,
+        X: np.ndarray,  # noqa: N803
+        y: np.ndarray,
+        sample_weight: Optional[Union[List[int], List[float]]] = None,
+        **kwargs,
+    ) -> None:
+        """__call__ method that invokes the fit method.
+
+        :param X: input data
+        :type X: numpy.ndarray
+        :param y: ground truth values
+        :type y: numpy.ndarray
+        :param sample_weight: assigns weights to each sample
+        :type sample_weight: Optional[Union[List[int], List[float]]]
+        """
+        super().__call__(X=X, y=y, sample_weight=sample_weight, **kwargs)
+
+    def reset(self) -> None:
+        """Reset variables and samples lists."""
+        self.fit_context_samples = copy.deepcopy(self.new_context_samples)
+        super().reset()
+
+
+class PartialFit(BaseFit):
+    """Partial fit method class."""
+
+    def __init__(self, fit_method: Callable) -> None:
+        """Init method.
+
+        :param fit_method: fit method to be used
+        :type fit_method: Callable
+        """
+        super().__init__(fit_method=fit_method)
+        self.fit_context_samples: List[Tuple[List[float], Union[str, int, float]]] = []
+        self.classes: List[Union[str, int, float, bool]] = []
+
+    @property
+    def classes(self) -> List[Union[str, int, float, bool]]:
+        """Unique classes property.
+
+        :return: unique classes list
+        :rtype: List[Union[str, int, float, bool]]
+        """
+        return self._classes
+
+    @classes.setter
+    def classes(self, value: List[Union[str, int, float, bool]]) -> None:
+        """Unique classes setter.
+
+        :param value: value to be set
+        :type value: List[Union[str, int, float, bool]]
+        """
+        self._classes = value
+
+    def __call__(
+        self,
+        X: np.ndarray,  # noqa: N803
+        y: np.ndarray,
+        sample_weight: Optional[Union[List[int], List[float]]] = None,
+        **kwargs,
+    ) -> None:
+        """__call__ method that invokes the fit method.
+
+        :param X: input data
+        :type X: numpy.ndarray
+        :param y: ground truth values
+        :type y: numpy.ndarray
+        :param sample_weight: assigns weights to each sample
+        :type sample_weight: Optional[Union[List[int], List[float]]]
+        """
+        self.classes = [*set(self.classes + np.unique(y).tolist())]
+        super().__call__(X=X, y=y, sample_weight=sample_weight, classes=self.classes)
+
+    def post_fit_estimator(self) -> None:
+        """Method to be executed after the fit method."""
+        super().post_fit_estimator()
+        self.fit_context_samples.clear()
+
+
 class SupervisedBaseConfig(abc.ABC):
-    """Abstract class representing a supervised configuration class ."""
+    """Abstract class representing a supervised configuration class."""
 
     def __init__(
         self,
@@ -39,16 +248,16 @@ class SupervisedBaseConfig(abc.ABC):
 
     @property
     def min_num_instances(self) -> int:
-        """Error scorer property.
+        """Minimum number of instances property.
 
-        :return: error scorer to measure error rate
+        :return: minimum number of instances to start looking for changes
         :rtype: int
         """
         return self._min_num_instances
 
     @min_num_instances.setter
     def min_num_instances(self, value: int) -> None:
-        """Error scorer setter.
+        """Minimum number of instances setter.
 
         :param value: value to be set
         :type value: Callable
@@ -59,22 +268,38 @@ class SupervisedBaseConfig(abc.ABC):
 class TargetDelayEstimator(abc.ABC):
     """Abstract class representing a delayed target."""
 
-    def __init__(self, estimator: BaseEstimator, config: SupervisedBaseConfig) -> None:
+    def __init__(
+        self,
+        estimator: BaseEstimator,
+        config: SupervisedBaseConfig,
+        metrics: Optional[Union[BaseMetric, List[BaseMetric]]] = None,
+    ) -> None:
         """Init method.
 
         :param estimator: estimator to be used
         :type estimator: BaseEstimator
         :param config: configuration parameters
         :type config: SupervisedBaseConfig
+        :param metrics: performance metrics
+        :type metrics: Optional[Union[BaseMetric, List[BaseMetric]]]
         """
         self.estimator = estimator
         self.config = config
+        self.metrics: Optional[List[BaseMetric]] = metrics  # type: ignore
         self.delayed_predictions: Deque["Tuple[np.ndarray, np.ndarray]"] = deque()
         self.ground_truth: Deque["Union[str, int, float]"] = deque()
         self.num_instances = 0
         self.predictions: Deque["Union[str, int, float]"] = deque()
         self.sample_weight: Optional[Union[List[int], List[float]]] = None
         self._drift_insufficient_samples = False
+        self._metrics_func: Callable = (
+            (lambda y_true, y_pred: None)
+            if self.metrics is None
+            else lambda y_true, y_pred: {
+                metric.name: metric(y_true=y_true, y_pred=y_pred)
+                for metric in self.metrics  # type: ignore
+            }
+        )
 
     @property
     def config(self) -> SupervisedBaseConfig:
@@ -156,17 +381,47 @@ class TargetDelayEstimator(abc.ABC):
         self._fit_method = self._get_fit_method()
 
     @property
-    def num_instances(self) -> int:
-        """Minimum number of instances property.
+    def metrics(self) -> Optional[List[BaseMetric]]:
+        """Metrics property.
 
-        :return: minimum number of instances to use
-        :rtype: float
+        :return: performance metrics to use
+        :rtype: Optional[List[BaseMetric]]
+        """
+        return self._metrics
+
+    @metrics.setter
+    def metrics(self, value: Union[BaseMetric, List[BaseMetric]]) -> None:
+        """Metrics setter.
+
+        :param value: value to be set
+        :type value: Union[BaseMetric, List[BaseMetric]]
+        :raises TypeError: Type error exception
+        """
+        if isinstance(value, List):
+            if not all(isinstance(e, BaseMetric) for e in value):
+                raise TypeError(
+                    "value must be of type BaseMetric or a list of BaseMetric."
+                )
+            self._metrics = value
+        elif value is None:
+            self._metrics = value
+        elif not isinstance(value, BaseMetric):
+            raise TypeError("value must be of type BaseMetric or a list of BaseMetric.")
+        else:
+            self._metrics = [value]
+
+    @property
+    def num_instances(self) -> int:
+        """Number of instances counter property.
+
+        :return: Number of instances counter value
+        :rtype: int
         """
         return self._num_instances
 
     @num_instances.setter
     def num_instances(self, value: int) -> None:
-        """Minimum number of instances setter.
+        """Number of instances counter setter.
 
         :param value: value to be set
         :type value: int
@@ -212,7 +467,7 @@ class TargetDelayEstimator(abc.ABC):
         """
         self._sample_weight = value
 
-    def _get_fit_method(self) -> Callable:
+    def _get_fit_method(self) -> BaseFit:
         partial_fit = getattr(self.estimator, "partial_fit", None)
         if not callable(partial_fit):
             logger.warning(
@@ -226,8 +481,8 @@ class TargetDelayEstimator(abc.ABC):
                 raise NoFitMethodError(
                     f"{self.estimator} has not partial_fit or fit method."
                 )
-            return fit
-        return partial_fit
+            return NormalFit(fit_method=fit)
+        return PartialFit(fit_method=partial_fit)
 
     def _fit_extra(self, X: np.ndarray, y: np.ndarray) -> None:  # noqa: N803
         pass

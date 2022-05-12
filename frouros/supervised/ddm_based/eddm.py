@@ -1,12 +1,12 @@
 """EDDM (Early drift detection method) module."""
 
 import copy
-from typing import Dict, Optional, Union, Tuple  # noqa: TYP001
+from typing import Dict, Optional, List, Tuple, Union  # noqa: TYP001
 
-from sklearn.base import BaseEstimator  # type: ignore
-from sklearn.utils.validation import check_is_fitted  # type: ignore
 import numpy as np  # type: ignore
+from sklearn.base import BaseEstimator  # type: ignore
 
+from frouros.metrics.base import BaseMetric
 from frouros.supervised.ddm_based.base import DDMBaseConfig, DDMBasedEstimator
 
 
@@ -134,6 +134,7 @@ class EDDM(DDMBasedEstimator):
         self,
         estimator: BaseEstimator,
         config: EDDMConfig,
+        metrics: Optional[Union[BaseMetric, List[BaseMetric]]] = None,
     ) -> None:
         """Init method.
 
@@ -141,8 +142,10 @@ class EDDM(DDMBasedEstimator):
         :type estimator: BaseEstimator
         :param config: configuration parameters
         :type config: EDDMConfig
+        :param metrics: performance metrics
+        :type metrics: Optional[Union[BaseMetric, List[BaseMetric]]]
         """
-        super().__init__(estimator=estimator, config=config)
+        super().__init__(estimator=estimator, config=config, metrics=metrics)
         self.actual_distance_error = 0.0
         self.distance_threshold = 0.0
         self.last_distance_error = copy.copy(self.actual_distance_error)
@@ -150,6 +153,7 @@ class EDDM(DDMBasedEstimator):
         self.mean_distance_error = 0.0
         self.num_misclassified_instances = 0
         self.old_mean_distance_error = copy.copy(self.mean_distance_error)
+        self.std_distance_error = 0.0
         self.variance_distance_error = 0.0
 
     @property
@@ -339,16 +343,23 @@ class EDDM(DDMBasedEstimator):
             raise ValueError("variance must be great or equal than 0.")
         self._variance_distance_error = value
 
-    def _normal_response(self) -> Dict[str, Union[bool, float]]:
+    def _normal_response(
+        self, metrics: Union[BaseMetric, List[BaseMetric]]
+    ) -> Dict[str, Union[bool, float]]:
         response: Dict[str, Union[bool, float]] = self._response(
-            drift=False, warning=False
+            drift=False,
+            warning=False,
+            metrics=metrics,
         )
         return response
 
-    def _response(self, drift: bool, warning: bool) -> Dict[str, Union[bool, float]]:
+    def _response(
+        self, drift: bool, warning: bool, metrics: Union[BaseMetric, List[BaseMetric]]
+    ) -> Dict[str, Union[bool, float]]:
         response: Dict[str, Union[bool, float]] = self._get_update_response(
             drift=drift,
             warning=warning,
+            metrics=metrics,
             distance_threshold=self.distance_threshold,
             max_distance_threshold=self.max_distance_threshold,
             mean_distance_error=self.mean_distance_error,
@@ -356,17 +367,23 @@ class EDDM(DDMBasedEstimator):
         )
         return response
 
-    def update(self, y: np.array) -> Dict[str, Optional[Union[float, bool]]]:
+    def update(self, y: np.ndarray) -> Dict[str, Optional[Union[float, bool]]]:
         """Update drift detector.
 
         :param y: input data
         :type y: numpy.ndarray
-        :return predicted values
-        :rtype: numpy.ndarray
+        :return response message
+        :rtype: Dict[str, Optional[Union[float, bool]]]
         """
-        check_is_fitted(self.estimator)
-        X, y_pred = self.delayed_predictions.popleft()  # noqa: N806
-        self.num_instances += y_pred.shape[0]
+        X, y_pred, metrics = self._prepare_update(y=y)  # noqa: N806
+
+        if self._drift_insufficient_samples and self._check_drift_insufficient_samples(
+            X=X, y=y
+        ):
+            response = self._response(
+                drift=True, warning=True, metrics=metrics  # type: ignore
+            )
+            return response  # type: ignore
 
         try:
             misclassified_idxs = np.argwhere(~(y != y_pred))[0]
@@ -375,7 +392,7 @@ class EDDM(DDMBasedEstimator):
             non_misclassified_instances = True
 
         if non_misclassified_instances:
-            response = self._normal_response()
+            response = self._normal_response(metrics=metrics)  # type: ignore
             return response  # type: ignore
 
         X = X[misclassified_idxs, :]  # noqa: N806
@@ -403,14 +420,8 @@ class EDDM(DDMBasedEstimator):
         )
 
         if self.num_instances < self.config.min_num_instances:
-            response = self._normal_response()
+            response = self._normal_response(metrics=metrics)  # type: ignore
             return response  # type: ignore
-
-        if self._drift_insufficient_samples:
-            drift_completed_flag = self._check_drift_insufficient_samples(X=X, y=y)
-            if drift_completed_flag:
-                response = self._response(drift=True, warning=True)
-                return response  # type: ignore
 
         self.ground_truth.extend(y)
         self.predictions.extend(y_pred)
@@ -419,7 +430,7 @@ class EDDM(DDMBasedEstimator):
             self.num_misclassified_instances
             < self.config.min_num_misclassified_instances  # type: ignore
         ):
-            response = self._normal_response()
+            response = self._normal_response(metrics=metrics)  # type: ignore
             return response  # type: ignore
 
         self.distance_threshold = (
@@ -428,14 +439,16 @@ class EDDM(DDMBasedEstimator):
         )
         if self.distance_threshold > self.max_distance_threshold:
             self.max_distance_threshold = self.distance_threshold
-            response = self._normal_response()
+            response = self._normal_response(metrics=metrics)  # type: ignore
             return response  # type: ignore
 
         p = self.distance_threshold / self.max_distance_threshold
 
         drift, warning = self._check_case(X=X, y=y, p=p)
 
-        response = self._response(drift=drift, warning=warning)
+        response = self._response(
+            drift=drift, warning=warning, metrics=metrics  # type: ignore
+        )
         return response  # type: ignore
 
     def _check_case(
@@ -453,7 +466,7 @@ class EDDM(DDMBasedEstimator):
                 self._warning_case(X=X, y=y)
                 warning = True
             else:
-                self._normal_case(y=y)
+                self._normal_case(X=X, y=y)
                 warning = False
 
         return drift, warning
@@ -467,4 +480,5 @@ class EDDM(DDMBasedEstimator):
         self.mean_distance_error = 0.0
         self.num_misclassified_instances = 0
         self.old_mean_distance_error = copy.copy(self.mean_distance_error)
+        self.std_distance_error = 0.0
         self.variance_distance_error = 0.0
