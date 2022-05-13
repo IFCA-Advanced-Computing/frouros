@@ -10,8 +10,8 @@ from typing import (  # noqa: TYP001
     Dict,
     List,
     Optional,
-    Union,
     Tuple,
+    Union,
 )
 
 import numpy as np  # type: ignore
@@ -20,7 +20,11 @@ from sklearn.utils.estimator_checks import check_estimator  # type: ignore
 from sklearn.utils.validation import check_array, check_is_fitted  # type: ignore
 
 from frouros.metrics.base import BaseMetric
-from frouros.supervised.exceptions import NoFitMethodError, TrainingEstimatorError
+from frouros.supervised.exceptions import (
+    NoFitMethodError,
+    TrainingEstimatorError,
+)
+from frouros.utils.decorators import check_func_parameters
 from frouros.utils.logger import logger
 
 
@@ -271,6 +275,7 @@ class TargetDelayEstimator(abc.ABC):
     def __init__(
         self,
         estimator: BaseEstimator,
+        error_scorer: Callable,
         config: SupervisedBaseConfig,
         metrics: Optional[Union[BaseMetric, List[BaseMetric]]] = None,
     ) -> None:
@@ -278,12 +283,15 @@ class TargetDelayEstimator(abc.ABC):
 
         :param estimator: estimator to be used
         :type estimator: BaseEstimator
+        :param error_scorer: error scorer function
+        :type error_scorer: Callable
         :param config: configuration parameters
         :type config: SupervisedBaseConfig
         :param metrics: performance metrics
         :type metrics: Optional[Union[BaseMetric, List[BaseMetric]]]
         """
         self.estimator = estimator
+        self.error_scorer = error_scorer  # type: ignore
         self.config = config
         self.metrics: Optional[List[BaseMetric]] = metrics  # type: ignore
         self.delayed_predictions: Deque["Tuple[np.ndarray, np.ndarray]"] = deque()
@@ -359,6 +367,25 @@ class TargetDelayEstimator(abc.ABC):
         :type value: Deque["Union[str, int, float]"]
         """
         self._ground_truth = value
+
+    @property
+    def error_scorer(self) -> Callable:
+        """Error scorer property.
+
+        :return: error scorer function
+        :rtype: Callable
+        """
+        return self._error_scorer
+
+    @error_scorer.setter  # type: ignore
+    @check_func_parameters
+    def error_scorer(self, value: Callable) -> None:
+        """Error scorer setter.
+
+        :param value: value to be set
+        :type value: Callable
+        """
+        self._error_scorer = value
 
     @property
     def estimator(self) -> BaseEstimator:

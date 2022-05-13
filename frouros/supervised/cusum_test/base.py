@@ -1,7 +1,6 @@
 """Supervised statistical test base module."""
 
 import abc
-from inspect import signature
 from typing import (  # noqa: TYP001
     Callable,
     Dict,
@@ -13,7 +12,6 @@ from sklearn.base import BaseEstimator  # type: ignore
 import numpy as np  # type: ignore
 
 from frouros.supervised.base import TargetDelayEstimator, SupervisedBaseConfig
-from frouros.supervised.exceptions import ArgumentError
 
 
 class CUSUMTestConfig(SupervisedBaseConfig):
@@ -38,32 +36,9 @@ class CUSUMTestEstimator(TargetDelayEstimator):
         :param config: configuration parameters
         :type config: CUSUMTestConfig
         """
-        super().__init__(estimator=estimator, config=config)
-        self.error_scorer = error_scorer
+        super().__init__(estimator=estimator, error_scorer=error_scorer, config=config)
         self.mean_error_rate = 0.0
         self.sum_ = 0.0
-
-    @property
-    def error_scorer(self) -> Callable:
-        """Error scorer property.
-
-        :return: error scorer function
-        :rtype: Callable
-        """
-        return self._error_scorer
-
-    @error_scorer.setter
-    def error_scorer(self, value: Callable) -> None:
-        """Error scorer setter.
-
-        :param value: value to be set
-        :type value: Callable
-        :raises ArgumentError: Argument error exception
-        """
-        func_parameters = signature(value).parameters
-        if "y_true" not in func_parameters or "y_pred" not in func_parameters:
-            raise ArgumentError("value function must have y_true and y_pred arguments.")
-        self._error_scorer = value
 
     @property
     def mean_error_rate(self) -> float:

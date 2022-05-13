@@ -145,7 +145,12 @@ class EDDM(DDMBasedEstimator):
         :param metrics: performance metrics
         :type metrics: Optional[Union[BaseMetric, List[BaseMetric]]]
         """
-        super().__init__(estimator=estimator, config=config, metrics=metrics)
+        super().__init__(
+            estimator=estimator,
+            error_scorer=lambda y_true, y_pred: y_true != y_pred,
+            config=config,
+            metrics=metrics,
+        )
         self.actual_distance_error = 0.0
         self.distance_threshold = 0.0
         self.last_distance_error = copy.copy(self.actual_distance_error)
@@ -386,7 +391,9 @@ class EDDM(DDMBasedEstimator):
             return response  # type: ignore
 
         try:
-            misclassified_idxs = np.argwhere(~(y != y_pred))[0]
+            misclassified_idxs = np.argwhere(
+                ~self.error_scorer(y_true=y, y_pred=y_pred)
+            )[0]
             non_misclassified_instances = False
         except IndexError:
             non_misclassified_instances = True

@@ -1,6 +1,5 @@
 """DDM (Drift detection method) module."""
 
-from inspect import signature
 from typing import Callable, Dict, Optional, List, Tuple, Union  # noqa: TYP001
 
 from sklearn.base import BaseEstimator  # type: ignore
@@ -8,7 +7,6 @@ import numpy as np  # type: ignore
 
 from frouros.metrics.base import BaseMetric
 from frouros.supervised.ddm_based.base import DDMBaseConfig, DDMBasedEstimator
-from frouros.supervised.exceptions import ArgumentError
 
 
 class DDMConfig(DDMBaseConfig):
@@ -100,32 +98,14 @@ class DDM(DDMBasedEstimator):
         :param metrics: performance metrics
         :type metrics: Optional[Union[BaseMetric, List[BaseMetric]]]
         """
-        super().__init__(estimator=estimator, config=config, metrics=metrics)
-        self.error_scorer = error_scorer
+        super().__init__(
+            estimator=estimator,
+            error_scorer=error_scorer,
+            config=config,
+            metrics=metrics,
+        )
         self.min_error_rate = float("inf")
         self.min_std = float("inf")
-
-    @property
-    def error_scorer(self) -> Callable:
-        """Error scorer property.
-
-        :return: error scorer function
-        :rtype: Callable
-        """
-        return self._error_scorer
-
-    @error_scorer.setter
-    def error_scorer(self, value: Callable) -> None:
-        """Error scorer setter.
-
-        :param value: value to be set
-        :type value: Callable
-        :raises ArgumentError: Argument error exception
-        """
-        func_parameters = signature(value).parameters
-        if "y_true" not in func_parameters or "y_pred" not in func_parameters:
-            raise ArgumentError("value function must have y_true and y_pred arguments.")
-        self._error_scorer = value
 
     @property
     def min_error_rate(self) -> float:
