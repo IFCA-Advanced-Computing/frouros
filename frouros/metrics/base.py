@@ -1,11 +1,10 @@
 """Metrics base module."""
 
 import abc
-from inspect import signature
 from typing import Callable, Optional
 import numpy as np  # type: ignore
 
-from frouros.supervised.exceptions import ArgumentError
+from frouros.utils.decorators import check_func_parameters
 
 
 class BaseMetric(abc.ABC):
@@ -19,7 +18,7 @@ class BaseMetric(abc.ABC):
         :param name: metric´s name
         :type name: Optional[str]
         """
-        self.error_scorer = error_scorer
+        self.error_scorer = error_scorer  # type: ignore
         self.name = type(self).__name__ if name is None else name
 
     @property
@@ -31,17 +30,14 @@ class BaseMetric(abc.ABC):
         """
         return self._error_scorer
 
-    @error_scorer.setter
+    @error_scorer.setter  # type: ignore
+    @check_func_parameters
     def error_scorer(self, value: Callable) -> None:
         """Error scorer setter.
 
         :param value: value to be set
         :type value: Callable
-        :raises ArgumentError: Argument error exception
         """
-        func_parameters = signature(value).parameters
-        if "y_true" not in func_parameters or "y_pred" not in func_parameters:
-            raise ArgumentError("value function must have y_true and y_pred arguments.")
         self._error_scorer = value
 
     @property
