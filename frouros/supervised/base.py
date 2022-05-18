@@ -16,7 +16,6 @@ from typing import (  # noqa: TYP001
 
 import numpy as np  # type: ignore
 from sklearn.base import BaseEstimator  # type: ignore
-from sklearn.utils.estimator_checks import check_estimator  # type: ignore
 from sklearn.utils.validation import check_array, check_is_fitted  # type: ignore
 
 from frouros.metrics.base import BaseMetric
@@ -403,7 +402,7 @@ class TargetDelayEstimator(abc.ABC):
         :param value: value to be set
         :type value: BaseEstimator
         """
-        check_estimator(value)
+        # check_estimator(value)
         self._estimator = value
         self._fit_method = self._get_fit_method()
 

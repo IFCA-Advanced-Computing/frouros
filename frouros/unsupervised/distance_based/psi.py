@@ -1,16 +1,17 @@
 """PSI (Population Stability Index) module."""
 
 import sys
+from typing import Optional
 
 import numpy as np  # type: ignore
-from sklearn.base import BaseEstimator, TransformerMixin  # type: ignore
 
+from frouros.unsupervised.base import UnivariateTest
 from frouros.unsupervised.distance_based.base import (  # type: ignore
     DistanceBasedEstimator,
 )
 
 
-class PSI(DistanceBasedEstimator, BaseEstimator, TransformerMixin):
+class PSI(DistanceBasedEstimator):
     """PSI (Population Stability Index) algorithm class."""
 
     def __init__(self, num_buckets: int = 10) -> None:
@@ -19,9 +20,9 @@ class PSI(DistanceBasedEstimator, BaseEstimator, TransformerMixin):
         :param num_buckets: number of buckets
         :type num_buckets: int
         """
-        super().__init__()
+        super().__init__(test_type=UnivariateTest())
         self.num_buckets = num_buckets
-        self.X_ref_num = None  # pylint: disable=invalid-name
+        self.X_ref_num: Optional[int] = None  # pylint: disable=invalid-name
 
     @property
     def num_buckets(self) -> int:
@@ -37,7 +38,7 @@ class PSI(DistanceBasedEstimator, BaseEstimator, TransformerMixin):
         """Number of buckets setter.
 
         :param value: value to be set
-        :type value: Optional[List[Tuple[float, float]]]
+        :type value: Optional[int]
         :raises ValueError: Value error exception
         """
         if value < 1:
@@ -64,21 +65,27 @@ class PSI(DistanceBasedEstimator, BaseEstimator, TransformerMixin):
 
     def _apply_method(
         self, X_ref_: np.ndarray, X: np.ndarray, **kwargs  # noqa: N803
-    ) -> float:
+    ) -> np.float:
         distance = self._distance(
             X_ref_=X_ref_,
             X=X,
-            func=self._psi,
-            num_buckets=self.num_buckets,
-            X_ref_num=self.X_ref_num,
+            # func=self._psi,
+            # num_buckets=self.num_buckets,
+            # X_ref_num=self.X_ref_num,
             **kwargs
         )
         return distance
 
-    @staticmethod
-    def _distance(X_ref_: np.ndarray, X: np.ndarray, **kwargs) -> float:  # noqa: N803
-        func = kwargs.pop("func")
-        distance = func(X_ref_=X_ref_, X=X, **kwargs)
+    def _distance(
+        self, X_ref_: np.ndarray, X: np.ndarray, **kwargs  # noqa: N803
+    ) -> np.float:
+        # func = kwargs.pop("func")
+        distance = self._psi(
+            X_ref_=X_ref_,
+            X=X,
+            X_ref_num=self.X_ref_num,  # type: ignore
+            num_buckets=self.num_buckets,
+        )
         return distance
 
     @staticmethod

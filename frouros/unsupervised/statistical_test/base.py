@@ -8,7 +8,7 @@ import numpy as np  # type: ignore
 from frouros.unsupervised.base import UnsupervisedBaseEstimator
 
 
-class StatisticalTestEstimator(UnsupervisedBaseEstimator):
+class StatisticalTestBaseEstimator(UnsupervisedBaseEstimator):
     """Abstract class representing a statistical test estimator."""
 
     def _apply_method(

@@ -1,21 +1,101 @@
 """Unsupervised base module."""
 
 import abc
+from collections import namedtuple
 
-from typing import Any, Optional, List, Tuple
+from typing import Callable, Optional, List, Tuple, Union
 import numpy as np  # type: ignore
+from sklearn.base import TransformerMixin  # type: ignore
 from sklearn.utils.validation import check_array, check_is_fitted  # type: ignore
 
 from frouros.unsupervised.exceptions import MismatchDimensionError
 
 
-class UnsupervisedBaseEstimator(abc.ABC):
-    """Abstract class representing an unsupervised estimator."""
+TestResult = namedtuple("TestResult", ["statistic", "pvalue"])
+
+
+class BaseTest(abc.ABC):
+    """Abstract class representing a test type."""
 
     def __init__(self) -> None:
         """Init method."""
+        self.apply_method: Optional[Callable] = None
+
+    @abc.abstractmethod
+    def get_test(
+        self, X_ref_: np.ndarray, X: np.ndarray, **kwargs  # noqa: N803
+    ) -> Union[List[float], List[Tuple[float, float]], Tuple[float, float]]:
+        """Obtain test result.
+
+        :param X_ref_: reference data
+        :type X_ref_: numpy.ndarray
+        :param X: feature data
+        :type X: numpy.ndarray
+        :return test result
+        :rtype: Union[List[float], List[Tuple[float, float]], Tuple[float, float]]
+        """
+
+
+class UnivariateTest(BaseTest):
+    """Class representing a univariate test."""
+
+    def get_test(
+        self, X_ref_: np.ndarray, X: np.ndarray, **kwargs  # noqa: N803
+    ) -> Union[List[np.float], List[Tuple[float, float]]]:
+        """Obtain test result for each feature.
+
+        :param X_ref_: reference data
+        :type X_ref_: numpy.ndarray
+        :param X: feature data
+        :type X: numpy.ndarray
+        :return test result
+        :rtype: Union[List[numpy.float], List[Tuple[float, float]]]
+        """
+        tests = []
+        for i in range(X.shape[1]):
+            test = self.apply_method(  # pylint: disable=not-callable
+                X_ref_=X_ref_[:, i], X=X[:, i], **kwargs  # type: ignore
+            )  # type: ignore
+            tests.append(test)
+        return tests
+
+
+class MultivariateTest(BaseTest):
+    """Class representing a multivariate test."""
+
+    def get_test(
+        self, X_ref_: np.ndarray, X: np.ndarray, **kwargs  # noqa: N803
+    ) -> Tuple[float, float]:
+        """Obtain test result.
+
+        :param X_ref_: reference data
+        :type X_ref_: numpy.ndarray
+        :param X: feature data
+        :type X: numpy.ndarray
+        :return test result
+        :rtype: Tuple[float, float]
+        """
+        test = self.apply_method(  # type: ignore # pylint: disable=not-callable
+            X_ref_=X_ref_, X=X, **kwargs
+        )
+        return test
+
+
+class UnsupervisedBaseEstimator(abc.ABC, TransformerMixin):
+    """Abstract class representing an unsupervised estimator."""
+
+    def __init__(self, test_type: BaseTest) -> None:
+        """Init method.
+
+        :param test_type: type of test to apply
+        :type test_type: BaseTest
+        """
         self.X_ref_ = None  # type: ignore
-        self.test = None
+        self.test: Optional[
+            Union[List[float], List[Tuple[float, float]], Tuple[float, float]]
+        ] = None
+        test_type.apply_method = self._apply_method
+        self.test_type = test_type
 
     @property
     def X_ref_(self) -> Optional[np.ndarray]:  # noqa: N802
@@ -75,29 +155,19 @@ class UnsupervisedBaseEstimator(abc.ABC):
         X: np.ndarray,  # noqa: N803
         y: np.ndarray = None,  # pylint: disable=W0613
         **kwargs,
-    ):
+    ) -> np.ndarray:
         """Transform values.
 
         :param X: feature data
         :type X: numpy.ndarray
         :param y: target data
+        :return transformed feature data
         :rtype: numpy.ndarray
         """
         X = self._common_checks(X=X)  # noqa: N806
         self._specific_checks(X=X)  # noqa: N806
-        self.test = self._get_test(X=X, **kwargs)
+        self.test = self.get_test(X=X, **kwargs)  # type: ignore
         return X
-
-    def _get_test(
-        self, X: np.ndarray, **kwargs  # noqa: N803
-    ) -> List[Tuple[float, float]]:
-        tests = []
-        for i in range(X.shape[1]):
-            test = self._apply_method(
-                X_ref_=self.X_ref_[:, i], X=X[:, i], **kwargs  # type: ignore
-            )  # type: ignore
-            tests.append(test)
-        return tests
 
     def _common_checks(self, X: np.ndarray) -> np.ndarray:  # noqa: N803
         check_is_fitted(self, attributes="X_ref_")
@@ -119,5 +189,18 @@ class UnsupervisedBaseEstimator(abc.ABC):
     @abc.abstractmethod
     def _apply_method(
         self, X_ref_: np.ndarray, X: np.ndarray, **kwargs  # noqa: N803
-    ) -> Any:
+    ) -> Union[Tuple[float, float], float]:
         pass
+
+    def get_test(
+        self, X: np.ndarray, **kwargs  # noqa: N803
+    ) -> Union[List[float], List[Tuple[float, float]], Tuple[float, float]]:
+        """Obtain test result.
+
+        :param X: feature data
+        :type X: numpy.ndarray
+        :return test result
+        :rtype: Union[List[float], List[Tuple[float, float]], Tuple[float, float]]
+        """
+        test = self.test_type.get_test(X_ref_=self.X_ref_, X=X, **kwargs)
+        return test

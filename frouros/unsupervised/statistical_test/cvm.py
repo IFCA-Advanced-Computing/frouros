@@ -4,19 +4,23 @@ from typing import Optional, Tuple
 
 import numpy as np  # type: ignore
 from scipy.stats import cramervonmises_2samp  # type: ignore
-from sklearn.base import BaseEstimator, TransformerMixin  # type: ignore
 from sklearn.utils.validation import check_array  # type: ignore
 
+from frouros.unsupervised.base import UnivariateTest
 from frouros.unsupervised.exceptions import InsufficientSamplesError
 from frouros.unsupervised.statistical_test.base import (  # type: ignore
-    StatisticalTestEstimator,
+    StatisticalTestBaseEstimator,
 )
 
 
-class CVMTest(StatisticalTestEstimator, BaseEstimator, TransformerMixin):
+class CVMTest(StatisticalTestBaseEstimator):
     """CVMTest (Cramér-von Mises test) algorithm class."""
 
-    @StatisticalTestEstimator.X_ref_.setter  # type: ignore[attr-defined]
+    def __init__(self) -> None:
+        """Init method."""
+        super().__init__(test_type=UnivariateTest())
+
+    @StatisticalTestBaseEstimator.X_ref_.setter  # type: ignore[attr-defined]
     def X_ref_(self, value: Optional[np.ndarray]) -> None:  # noqa: N802
         """Reference data setter.
 

@@ -2,18 +2,23 @@
 
 import numpy as np  # type: ignore
 from scipy.stats import wasserstein_distance  # type: ignore
-from sklearn.base import BaseEstimator, TransformerMixin  # type: ignore
 
+from frouros.unsupervised.base import UnivariateTest
 from frouros.unsupervised.distance_based.base import (  # type: ignore
     DistanceBasedEstimator,
 )
 
 
-class EMD(DistanceBasedEstimator, BaseEstimator, TransformerMixin):
+class EMD(DistanceBasedEstimator):
     """EMD (Earth Mover's Distance) algorithm class."""
 
-    @staticmethod
-    def _distance(X_ref_: np.ndarray, X: np.ndarray, **kwargs) -> float:  # noqa: N803
+    def __init__(self) -> None:
+        """Init method."""
+        super().__init__(test_type=UnivariateTest())
+
+    def _distance(
+        self, X_ref_: np.ndarray, X: np.ndarray, **kwargs  # noqa: N803
+    ) -> np.float:
         distance = wasserstein_distance(
             u_values=X_ref_,
             v_values=X,

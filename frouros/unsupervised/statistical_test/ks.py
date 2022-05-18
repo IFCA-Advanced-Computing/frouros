@@ -4,15 +4,17 @@ from typing import Tuple
 
 import numpy as np  # type: ignore
 from scipy.stats import ks_2samp  # type: ignore
-from sklearn.base import BaseEstimator, TransformerMixin  # type: ignore
 
-from frouros.unsupervised.statistical_test.base import (  # type: ignore
-    StatisticalTestEstimator,
-)
+from frouros.unsupervised.base import UnivariateTest
+from frouros.unsupervised.statistical_test.base import StatisticalTestBaseEstimator
 
 
-class KSTest(StatisticalTestEstimator, BaseEstimator, TransformerMixin):
+class KSTest(StatisticalTestBaseEstimator):
     """KSTest (Kolmogorov-Smirnov test) algorithm class."""
+
+    def __init__(self) -> None:
+        """Init method."""
+        super().__init__(test_type=UnivariateTest())
 
     @staticmethod
     def _statistical_test(

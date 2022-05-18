@@ -1,6 +1,7 @@
 """Unsupervised distance based base module."""
 
 import abc
+from typing import Tuple, Union
 
 import numpy as np  # type: ignore
 
@@ -12,11 +13,13 @@ class DistanceBasedEstimator(UnsupervisedBaseEstimator):
 
     def _apply_method(
         self, X_ref_: np.ndarray, X: np.ndarray, **kwargs  # noqa: N803
-    ) -> float:
+    ) -> Union[Tuple[float, float], np.float]:
         distance = self._distance(X_ref_=X_ref_, X=X, **kwargs)
         return distance
 
-    @staticmethod
+    # @staticmethod
     @abc.abstractmethod
-    def _distance(X_ref_: np.ndarray, X: np.ndarray, **kwargs) -> float:  # noqa: N803
+    def _distance(
+        self, X_ref_: np.ndarray, X: np.ndarray, **kwargs  # noqa: N803
+    ) -> Union[Tuple[np.float, np.float], np.float]:
         pass
