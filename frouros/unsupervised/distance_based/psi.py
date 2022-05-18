@@ -69,9 +69,6 @@ class PSI(DistanceBasedEstimator):
         distance = self._distance(
             X_ref_=X_ref_,
             X=X,
-            # func=self._psi,
-            # num_buckets=self.num_buckets,
-            # X_ref_num=self.X_ref_num,
             **kwargs
         )
         return distance
@@ -79,7 +76,6 @@ class PSI(DistanceBasedEstimator):
     def _distance(
         self, X_ref_: np.ndarray, X: np.ndarray, **kwargs  # noqa: N803
     ) -> np.float:
-        # func = kwargs.pop("func")
         distance = self._psi(
             X_ref_=X_ref_,
             X=X,
