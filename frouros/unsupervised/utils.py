@@ -1,4 +1,4 @@
-"""Supervised util functions."""
+"""Unsupervised util functions."""
 
 from typing import Tuple
 
