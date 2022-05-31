@@ -91,7 +91,7 @@ class ParallelDetectors(BaseEstimator, TransformerMixin):
         :type value: List[UnsupervisedBaseEstimator]
         :raises TypeError: Type error exception
         """
-        if not all(isinstance(x, UnsupervisedBaseEstimator) for x in value):
+        if not all(isinstance(x[1], UnsupervisedBaseEstimator) for x in value):
             raise TypeError("value elements must be of type UnsupervisedBaseEstimator.")
         self._detectors = value
 
