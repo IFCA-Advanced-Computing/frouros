@@ -1,4 +1,6 @@
-"""Parallel detectors module."""
+"""Abstract class .... module."""
+
+import abc
 
 from typing import List, Optional
 from joblib import Parallel  # type: ignore
@@ -10,8 +12,8 @@ import numpy as np  # type: ignore
 from frouros.unsupervised.base import UnsupervisedBaseEstimator
 
 
-class ParallelDetectors(BaseEstimator, TransformerMixin):
-    """Parallel detectors transformation."""
+class BaseDetectors(abc.ABC, BaseEstimator, TransformerMixin):
+    """Abstract class ."""
 
     def __init__(
         self,
@@ -46,11 +48,11 @@ class ParallelDetectors(BaseEstimator, TransformerMixin):
         :return fitted estimator
         :rtype: self
         """
-        _ = Parallel(
-            n_jobs=self.n_jobs,
-            verbose=self.verbose,
-            prefer="threads",
-        )(delayed(detector.fit)(X=X, y=y) for _, detector in self.detectors)
+        X_preprocessed = self.preprocess_x(X=X)  # noqa: N806
+        _ = Parallel(n_jobs=self.n_jobs, verbose=self.verbose, prefer="threads",)(
+            delayed(detector.fit)(X=X_preprocessed, y=y)
+            for _, detector in self.detectors
+        )
         return self
 
     def transform(
@@ -67,11 +69,11 @@ class ParallelDetectors(BaseEstimator, TransformerMixin):
         :return transformed feature data
         :rtype: numpy.ndarray
         """
-        _ = Parallel(
-            n_jobs=self.n_jobs,
-            verbose=self.verbose,
-            prefer="threads",
-        )(delayed(detector.transform)(X=X, **kwargs) for _, detector in self.detectors)
+        X_preprocessed = self.preprocess_x(X=X)  # noqa: N806
+        _ = Parallel(n_jobs=self.n_jobs, verbose=self.verbose, prefer="threads",)(
+            delayed(detector.transform)(X=X_preprocessed, **kwargs)
+            for _, detector in self.detectors
+        )
         return X
 
     @property
@@ -136,3 +138,13 @@ class ParallelDetectors(BaseEstimator, TransformerMixin):
         if not isinstance(value, int):
             raise TypeError("value must be of type int.")
         self._verbose = value
+
+    @abc.abstractmethod
+    def preprocess_x(self, X: np.ndarray) -> np.ndarray:  # noqa: N803
+        """Abstract preprocess X method.
+
+        :param X: feature data
+        :type X: numpy.ndarray
+        :return: preprocessed feature data
+        :rtype: numpy.ndarray
+        """
