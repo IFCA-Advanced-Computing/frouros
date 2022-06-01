@@ -9,11 +9,30 @@ from frouros.datasets.real import Elec2
 
 
 @pytest.fixture(scope="module")
-def dataset() -> Tuple[np.array, np.array, np.array]:
+def dataset_categorical() -> Tuple[np.ndarray, np.ndarray]:
+    """Dataset using categorical variables.
+
+    :return: dataset
+    :rtype: Tuple[np.ndarray, np.ndarray]
+    """
+    X_ref = np.array(  # noqa: N806
+        [["a", "A"], ["a", "B"], ["b", "B"], ["a", "C"], ["a", "A"], ["b", "C"]],
+        dtype=object,
+    )
+    X_test = np.array(  # noqa: N806
+        [["b", "A"], ["c", "B"], ["c", "A"], ["c", "A"], ["b", "C"], ["b", "C"]],
+        dtype=object,
+    )
+
+    return X_ref, X_test
+
+
+@pytest.fixture(scope="module")
+def dataset_elec2() -> Tuple[np.ndarray, np.ndarray, np.ndarray]:
     """Dataset using Elec2.
 
     :return: dataset
-    :rtype: Tuple[np.array, np.array, np.array]
+    :rtype: Tuple[np.ndarray, np.ndarray, np.ndarray]
     """
     elec2 = Elec2()
     elec2.download()

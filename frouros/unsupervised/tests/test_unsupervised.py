@@ -11,20 +11,47 @@ from sklearn.preprocessing import StandardScaler  # type: ignore
 
 from frouros.unsupervised.base import UnsupervisedBaseEstimator
 from frouros.unsupervised.distance_based import EMD, PSI, MMD
-from frouros.unsupervised.statistical_test import CVMTest, KSTest
+from frouros.unsupervised.statistical_test import ChiSquaredTest, CVMTest, KSTest
 from frouros.unsupervised.utils import get_statistical_test
+
+
+@pytest.mark.parametrize("detector", [ChiSquaredTest()])
+def test_categorical_features(
+    dataset_categorical: Tuple[np.ndarray, np.ndarray], detector: ChiSquaredTest
+) -> None:
+    """Test categorical features method.
+
+    :param dataset_categorical: categorical dataset
+    :type dataset_categorical: Tuple[numpy.ndarray, numpy.ndarray]
+    :param detector: detector test
+    :type detector: ChiSquaredTest
+    """
+    X_ref, X_test = dataset_categorical  # noqa: N806
+
+    detector_features = ChiSquaredTest()
+    detector_features.fit(X=X_ref)
+    detector_features.transform(X=X_test)
+
+    for (statistic, p_value), (expected_statistic, expected_p_value) in zip(
+        detector_features.test, [(np.inf, 0.0), (1.0, 0.60653)]
+    ):
+        assert np.isclose(statistic, expected_statistic)
+        assert np.isclose(p_value, expected_p_value)
 
 
 @pytest.mark.parametrize("detector", [EMD(), PSI(), CVMTest(), KSTest()])
 def test_univariate_test(
-    dataset: Tuple[np.array, np.array, np.array], detector: UnsupervisedBaseEstimator
+    dataset_elec2: Tuple[np.ndarray, np.ndarray, np.ndarray],
+    detector: UnsupervisedBaseEstimator,
 ) -> None:
     """Test univariate method.
 
-    :param dataset: Elec2 raw dataset
-    :type dataset: Tuple[numpy.array, numpy.array, numpy.array]
+    :param dataset_elec2: Elec2 raw dataset
+    :type dataset_elec2: Tuple[numpy.ndarray, numpy.ndarray, numpy.ndarray]
+    :param detector: detector test
+    :type detector: UnsupervisedBaseEstimator
     """
-    X_ref, y_ref, X_test = dataset  # noqa: N806
+    X_ref, y_ref, X_test = dataset_elec2  # noqa: N806
 
     pipe = Pipeline(
         [
@@ -49,12 +76,16 @@ def test_distance_based_multivariate_different_distribution_test(
     detector: UnsupervisedBaseEstimator,
     num_samples: int = 500,
 ) -> None:
-    """Test c multivariate different distribution method.
+    """Test multivariate different distribution method.
 
     :param multivariate_distribution_p: mean and covariance matrix of distribution p
     :type multivariate_distribution_p: Tuple[numpy.ndarray, numpy.ndarray]
     :param multivariate_distribution_q: mean and covariance matrix of distribution q
     :type multivariate_distribution_q: Tuple[numpy.ndarray, numpy.ndarray]
+    :param detector: detector test
+    :type detector: UnsupervisedBaseEstimator
+    :param num_samples: number of random samples
+    :type num_samples: int
     """
     np.random.seed(seed=31)
     X_ref = np.random.multivariate_normal(  # noqa: N806
@@ -84,6 +115,10 @@ def test_distance_based_multivariate_same_distribution_test(
 
     :param multivariate_distribution_p: mean and covariance matrix of distribution p
     :type multivariate_distribution_p: Tuple[numpy.ndarray, numpy.ndarray]
+    :param detector: detector test
+    :type detector: UnsupervisedBaseEstimator
+    :param num_samples: number of random samples
+    :type num_samples: int
     """
     np.random.seed(seed=31)
     X_ref = np.random.multivariate_normal(  # noqa: N806

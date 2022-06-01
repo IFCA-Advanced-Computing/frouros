@@ -5,7 +5,7 @@ from collections import namedtuple
 
 from typing import Callable, Optional, List, Tuple, Union
 import numpy as np  # type: ignore
-from sklearn.base import TransformerMixin  # type: ignore
+from sklearn.base import BaseEstimator, TransformerMixin  # type: ignore
 from sklearn.utils.validation import check_array, check_is_fitted  # type: ignore
 
 from frouros.unsupervised.exceptions import MismatchDimensionError
@@ -81,7 +81,7 @@ class MultivariateTest(BaseTest):
         return test
 
 
-class UnsupervisedBaseEstimator(abc.ABC, TransformerMixin):
+class UnsupervisedBaseEstimator(abc.ABC, BaseEstimator, TransformerMixin):
     """Abstract class representing an unsupervised estimator."""
 
     def __init__(self, test_type: BaseTest) -> None:
@@ -113,7 +113,7 @@ class UnsupervisedBaseEstimator(abc.ABC, TransformerMixin):
         :param value: value to be set
         :type value: Optional[numpy.ndarray]
         """
-        self._X_ref_ = check_array(value) if value is not None else value  # noqa: N806
+        self._X_ref_ = check_array(value, dtype=None) if value is not None else value
 
     @property
     def test(self) -> Optional[List[Tuple[float, float]]]:
@@ -171,7 +171,7 @@ class UnsupervisedBaseEstimator(abc.ABC, TransformerMixin):
 
     def _common_checks(self, X: np.ndarray) -> np.ndarray:  # noqa: N803
         check_is_fitted(self, attributes="X_ref_")
-        X = check_array(X)  # noqa: N806
+        X = check_array(X, dtype=None)  # noqa: N806
         self._check_dimensions(X=X)
         return X
 
