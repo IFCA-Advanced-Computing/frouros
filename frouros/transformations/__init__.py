@@ -1,7 +1,8 @@
-"""Pipeline init."""
+"""Transformations init."""
 
-from .parallel_detectors import ParallelDetectors
+from .detectors import CategoricalDetectors, NumericalDetectors
 
 __all__ = [
-    "ParallelDetectors",
+    "CategoricalDetectors",
+    "NumericalDetectors",
 ]
