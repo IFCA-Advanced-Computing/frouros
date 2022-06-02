@@ -41,9 +41,8 @@ class CVMTest(StatisticalTestBaseEstimator):
         if X.shape[0] < 2:
             raise InsufficientSamplesError("Number of samples must be at least 2.")
 
-    @staticmethod
     def _statistical_test(
-        X_ref_: np.ndarray, X: np.ndarray, **kwargs  # noqa: N803
+        self, X_ref_: np.ndarray, X: np.ndarray, **kwargs  # noqa: N803
     ) -> Tuple[float, float]:
         test = cramervonmises_2samp(
             x=X_ref_,

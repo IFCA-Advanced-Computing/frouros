@@ -17,9 +17,8 @@ class StatisticalTestBaseEstimator(UnsupervisedBaseEstimator):
         statistical_test = self._statistical_test(X_ref_=X_ref_, X=X, **kwargs)
         return statistical_test
 
-    @staticmethod
     @abc.abstractmethod
     def _statistical_test(
-        X_ref_: np.ndarray, X: np.ndarray, **kwargs  # noqa: N803
+        self, X_ref_: np.ndarray, X: np.ndarray, **kwargs  # noqa: N803
     ) -> Tuple[float, float]:
         pass

@@ -55,5 +55,5 @@ class ChiSquaredTest(StatisticalTestBaseEstimator):
         for value in possible_values:
             f_exp[value] = X_ref_counter.get(value, 0)
             f_obs[value] = X_counter.get(value, 0)
-        f_exp, f_obs = [*map(list, [f_exp.values(), f_obs.values()])]
-        return f_exp, f_obs
+        f_exp_values, f_obs_values = [*map(list, [f_exp.values(), f_obs.values()])]  # type: ignore
+        return f_exp_values, f_obs_values  # type: ignore

@@ -28,12 +28,11 @@ def test_categorical_features(
     """
     X_ref, X_test = dataset_categorical  # noqa: N806
 
-    detector_features = ChiSquaredTest()
-    detector_features.fit(X=X_ref)
-    detector_features.transform(X=X_test)
+    detector.fit(X=X_ref)
+    detector.transform(X=X_test)
 
     for (statistic, p_value), (expected_statistic, expected_p_value) in zip(
-        detector_features.test, [(np.inf, 0.0), (1.0, 0.60653)]
+        detector.test, [(np.inf, 0.0), (1.0, 0.60653)]  # type: ignore
     ):
         assert np.isclose(statistic, expected_statistic)
         assert np.isclose(p_value, expected_p_value)

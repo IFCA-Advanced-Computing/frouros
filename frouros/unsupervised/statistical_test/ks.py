@@ -16,9 +16,8 @@ class KSTest(StatisticalTestBaseEstimator):
         """Init method."""
         super().__init__(test_type=UnivariateTest())
 
-    @staticmethod
     def _statistical_test(
-        X_ref_: np.ndarray, X: np.ndarray, **kwargs  # noqa: N803
+        self, X_ref_: np.ndarray, X: np.ndarray, **kwargs  # noqa: N803
     ) -> Tuple[float, float]:
         test = ks_2samp(
             data1=X_ref_,
