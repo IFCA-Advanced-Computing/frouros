@@ -13,6 +13,7 @@ from frouros.supervised.base import TargetDelayEstimator
 from frouros.supervised.cusum_test import PageHinkleyTest, PageHinkleyTestConfig
 from frouros.supervised.ddm_based import DDM, DDMConfig, EDDM, EDDMConfig
 from frouros.supervised.utils import update_detector
+from frouros.supervised.window_based import ADWIN, ADWINConfig
 
 
 ESTIMATOR = DecisionTreeClassifier
@@ -30,6 +31,16 @@ def error_scorer(y_true, y_pred):
 @pytest.mark.parametrize(
     "detector",
     [
+        ADWIN(
+            estimator=ESTIMATOR(**ESTIMATOR_ARGS),
+            error_scorer=error_scorer,
+            config=ADWINConfig(
+                clock=32,
+                delta=0.15,
+                m=5,
+                min_num_instances=MIN_NUM_INSTANCES,
+            ),
+        ),
         PageHinkleyTest(
             estimator=ESTIMATOR(**ESTIMATOR_ARGS),
             error_scorer=error_scorer,
