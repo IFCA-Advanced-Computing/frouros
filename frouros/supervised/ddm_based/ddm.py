@@ -170,18 +170,20 @@ class DDM(DDMBasedEstimator):
     ) -> bool:
         return error_rate_plus_std > min_error_rate + level * min_std
 
-    def _reset(self) -> None:
+    def _reset(self, *args, **kwargs) -> None:
         super()._reset()
         self.min_error_rate = float("inf")
         self.min_std = float("inf")
 
-    def update(self, y: np.ndarray) -> Dict[str, Optional[Union[float, bool]]]:
+    def update(
+        self, y: np.ndarray
+    ) -> Dict[str, Optional[Union[float, bool, Dict[str, float]]]]:
         """Update drift detector.
 
         :param y: input data
         :type y: numpy.ndarray
         :return response message
-        :rtype: Dict[str, Optional[Union[float, bool]]]
+        :rtype: Dict[str, Optional[Union[float, bool, Dict[str, float]]]]
         """
         X, y_pred, metrics = self._prepare_update(y=y)  # noqa: N806
 

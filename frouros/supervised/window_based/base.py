@@ -21,6 +21,10 @@ class WindowBaseConfig(SupervisedBaseConfig):
 class WindowBasedEstimator(TargetDelayEstimator):
     """Abstract class representing a window based estimator."""
 
+    def _clear_target_values(self):
+        self.ground_truth.clear()
+        self.predictions.clear()
+
     def _prepare_update(
         self, y: np.ndarray
     ) -> Tuple[np.ndarray, Optional[Dict[str, float]]]:
@@ -32,11 +36,13 @@ class WindowBasedEstimator(TargetDelayEstimator):
         return y_pred, metrics
 
     @abc.abstractmethod
-    def update(self, y: np.array) -> Dict[str, Optional[Union[float, bool]]]:
+    def update(
+        self, y: np.array
+    ) -> Dict[str, Optional[Union[float, bool, Dict[str, float]]]]:
         """Update drift detector.
 
         :param y: input data
         :type y: numpy.ndarray
         :return response message
-        :rtype: Dict[str, Optional[Union[float, bool]]]
+        :rtype: Dict[str, Optional[Union[float, bool, Dict[str, float]]]]
         """

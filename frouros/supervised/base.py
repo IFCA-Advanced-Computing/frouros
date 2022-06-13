@@ -535,19 +535,8 @@ class TargetDelayEstimator(abc.ABC):
         for attr_name, (_, attr_value) in specific_attributes.items():
             setattr(self, attr_name, attr_value)
 
-    def _reset(self) -> None:
-        self.num_instances = 0
-        self._drift_insufficient_samples = False
-        self.sample_weight = None
-
-        map(
-            lambda x: x.clear(),  # type: ignore
-            [
-                self.delayed_predictions,
-                self.ground_truth,
-                self.predictions,
-            ],
-        )
+    def _reset(self, *args, **kwargs) -> None:
+        pass
 
     def fit(
         self,
@@ -592,5 +581,7 @@ class TargetDelayEstimator(abc.ABC):
         return y_pred
 
     @abc.abstractmethod
-    def update(self, y: np.array) -> Dict[str, Optional[Union[float, bool]]]:
+    def update(
+        self, y: np.array
+    ) -> Dict[str, Optional[Union[float, bool, Dict[str, float]]]]:
         """Update abstract method."""
