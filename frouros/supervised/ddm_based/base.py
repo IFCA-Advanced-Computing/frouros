@@ -120,8 +120,19 @@ class DDMBasedEstimator(TargetDelayEstimator):
         metrics = self._metrics_func(y_true=y, y_pred=y_pred)
         return X, y_pred, metrics
 
-    def _reset(self) -> None:
-        super()._reset()
+    def _reset(self, *args, **kwargs) -> None:
+        self.num_instances = 0
+        self._drift_insufficient_samples = False
+        self.sample_weight = None
+
+        map(
+            lambda x: x.clear(),  # type: ignore
+            [
+                self.delayed_predictions,
+                self.ground_truth,
+                self.predictions,
+            ],
+        )
         self._fit_method.reset()
 
     def _warning_case(self, X: np.array, y: np.array) -> None:  # noqa: N803
@@ -134,11 +145,13 @@ class DDMBasedEstimator(TargetDelayEstimator):
         )
 
     @abc.abstractmethod
-    def update(self, y: np.array) -> Dict[str, Optional[Union[float, bool]]]:
+    def update(
+        self, y: np.array
+    ) -> Dict[str, Optional[Union[float, bool, Dict[str, float]]]]:
         """Update drift detector.
 
         :param y: input data
         :type y: numpy.ndarray
         :return response message
-        :rtype: Dict[str, Optional[Union[float, bool]]]
+        :rtype: Dict[str, Optional[Union[float, bool, Dict[str, float]]]]
         """

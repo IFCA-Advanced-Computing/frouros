@@ -372,13 +372,15 @@ class EDDM(DDMBasedEstimator):
         )
         return response
 
-    def update(self, y: np.ndarray) -> Dict[str, Optional[Union[float, bool]]]:
+    def update(
+        self, y: np.ndarray
+    ) -> Dict[str, Optional[Union[float, bool, Dict[str, float]]]]:
         """Update drift detector.
 
         :param y: input data
         :type y: numpy.ndarray
         :return response message
-        :rtype: Dict[str, Optional[Union[float, bool]]]
+        :rtype: Dict[str, Optional[Union[float, bool, Dict[str, float]]]]
         """
         X, y_pred, metrics = self._prepare_update(y=y)  # noqa: N806
 
@@ -478,7 +480,7 @@ class EDDM(DDMBasedEstimator):
 
         return drift, warning
 
-    def _reset(self) -> None:
+    def _reset(self, *args, **kwargs) -> None:
         super()._reset()
         self.actual_distance_error = 0.0
         self.distance_threshold = 0.0

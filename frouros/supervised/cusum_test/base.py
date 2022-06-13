@@ -80,11 +80,13 @@ class CUSUMTestEstimator(TargetDelayEstimator):
         self._sum = value
 
     @abc.abstractmethod
-    def update(self, y: np.array) -> Dict[str, Optional[Union[float, bool]]]:
+    def update(
+        self, y: np.array
+    ) -> Dict[str, Optional[Union[float, bool, Dict[str, float]]]]:
         """Update drift detector.
 
         :param y: input data
         :type y: numpy.ndarray
         :return predicted values
-        :rtype: Dict[str, Optional[Union[float, bool]]]
+        :rtype: Dict[str, Optional[Union[float, bool, Dict[str, float]]]]
         """

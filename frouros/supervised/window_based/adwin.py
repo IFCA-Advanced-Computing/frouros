@@ -546,13 +546,15 @@ class ADWIN(WindowBasedEstimator):
         )
         return epsilon
 
-    def update(self, y: np.ndarray) -> Dict[str, Optional[Union[float, bool]]]:
+    def update(
+        self, y: np.ndarray
+    ) -> Dict[str, Optional[Union[float, bool, Dict[str, float]]]]:
         """Update drift detector.
 
         :param y: input data
         :type y: numpy.ndarray
         :return response message
-        :rtype: Dict[str, Optional[Union[float, bool]]]
+        :rtype: Dict[str, Optional[Union[float, bool, Dict[str, float]]]]
         """
         # pylint: disable=too-many-locals, too-many-nested-blocks
         # NOTE: Refactor function
@@ -632,7 +634,7 @@ class ADWIN(WindowBasedEstimator):
         self.ground_truth.clear()
         self.predictions.clear()
 
-    def _reset(self):
+    def _reset(self, *args, **kwargs):
         self.buckets = deque([Bucket(m=self.config.m)])
         self.total = 0.0
         self.variance = 0.0

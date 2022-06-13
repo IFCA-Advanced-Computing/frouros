@@ -99,13 +99,15 @@ class PageHinkleyTestConfig(CUSUMTestConfig):
 class PageHinkleyTest(CUSUMTestEstimator):
     """Page Hinkley test algorithm class."""
 
-    def update(self, y: np.ndarray) -> Dict[str, Optional[Union[float, bool]]]:
+    def update(
+        self, y: np.ndarray
+    ) -> Dict[str, Optional[Union[float, bool, Dict[str, float]]]]:
         """Update drift detector.
 
         :param y: input data
         :type y: numpy.ndarray
-        :return predicted values
-        :rtype: numpy.ndarray
+        :return response message
+        :rtype: Dict[str, Optional[Union[float, bool, Dict[str, float]]]]
         """
         check_is_fitted(self.estimator)
         _, y_pred = self.delayed_predictions.popleft()  # noqa: N806
