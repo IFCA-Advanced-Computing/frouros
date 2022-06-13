@@ -13,7 +13,7 @@ from frouros.supervised.base import TargetDelayEstimator
 from frouros.supervised.cusum_test import PageHinkleyTest, PageHinkleyTestConfig
 from frouros.supervised.ddm_based import DDM, DDMConfig, EDDM, EDDMConfig
 from frouros.supervised.utils import update_detector
-from frouros.supervised.window_based import ADWIN, ADWINConfig
+from frouros.supervised.window_based import ADWIN, ADWINConfig, KSWIN, KSWINConfig
 
 
 ESTIMATOR = DecisionTreeClassifier
@@ -39,6 +39,16 @@ def error_scorer(y_true, y_pred):
                 delta=0.15,
                 m=5,
                 min_num_instances=MIN_NUM_INSTANCES,
+            ),
+        ),
+        KSWIN(
+            estimator=ESTIMATOR(**ESTIMATOR_ARGS),
+            error_scorer=error_scorer,
+            config=KSWINConfig(
+                alpha=0.005,
+                seed=31,
+                min_num_instances=100,
+                num_test_instances=30,
             ),
         ),
         PageHinkleyTest(
