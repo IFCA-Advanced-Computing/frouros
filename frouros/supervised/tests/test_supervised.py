@@ -9,9 +9,10 @@ from sklearn.pipeline import Pipeline  # type: ignore
 from sklearn.preprocessing import StandardScaler  # type: ignore
 import numpy as np  # type: ignore
 
-from frouros.supervised.base import TargetDelayEstimator
+from frouros.supervised.base import SupervisedBaseEstimator
 from frouros.supervised.cusum_test import PageHinkleyTest, PageHinkleyTestConfig
 from frouros.supervised.ddm_based import DDM, DDMConfig, EDDM, EDDMConfig
+from frouros.supervised.statistical_test import STEPD, SPEPDConfig
 from frouros.supervised.utils import update_detector
 from frouros.supervised.window_based import ADWIN, ADWINConfig, KSWIN, KSWINConfig
 
@@ -79,11 +80,19 @@ def error_scorer(y_true, y_pred):
                 min_num_misclassified_instances=500,
             ),
         ),
+        STEPD(
+            estimator=ESTIMATOR(**ESTIMATOR_ARGS),
+            config=SPEPDConfig(
+                alpha_d=0.003,
+                alpha_w=0.05,
+                min_num_instances=30,
+            ),
+        ),
     ],
 )
 def test_supervised_method(
     classification_dataset: Tuple[np.array, np.array, np.array, np.array],
-    detector: TargetDelayEstimator,
+    detector: SupervisedBaseEstimator,
 ) -> None:
     """Test supervised dataset.
 
