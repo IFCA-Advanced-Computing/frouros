@@ -2,6 +2,7 @@
 
 import abc
 from typing import (  # noqa: TYP001
+    Callable,
     Dict,
     List,
     Optional,
@@ -10,11 +11,15 @@ from typing import (  # noqa: TYP001
 )
 
 import numpy as np  # type: ignore
-from sklearn.base import is_classifier  # type: ignore
+from sklearn.base import BaseEstimator, is_classifier  # type: ignore
 from sklearn.utils.validation import check_is_fitted  # type: ignore
 
-from frouros.supervised.base import TargetDelayEstimator, SupervisedBaseConfig
-from frouros.supervised.exceptions import TrainingEstimatorError
+from frouros.metrics.base import BaseMetric
+from frouros.supervised.base import (
+    SupervisedBaseConfig,
+    SupervisedBaseEstimatorReFit,
+)
+from frouros.utils.decorators import check_func_parameters
 from frouros.utils.logger import logger
 
 
@@ -22,39 +27,52 @@ class DDMBaseConfig(SupervisedBaseConfig):
     """Class representing a DDM based configuration class."""
 
 
-class DDMBasedEstimator(TargetDelayEstimator):
+class DDMBasedEstimator(SupervisedBaseEstimatorReFit):
     """Abstract class representing a DDM based estimator."""
 
-    @staticmethod
-    def _add_context_samples(
-        samples_list: List[Tuple[List[float], Union[str, int, float]]],
-        X: np.ndarray,  # noqa: N803
-        y: np.ndarray,
+    def __init__(
+        self,
+        estimator: BaseEstimator,
+        error_scorer: Callable,
+        config: SupervisedBaseConfig,
+        metrics: Optional[Union[BaseMetric, List[BaseMetric]]] = None,
     ) -> None:
-        samples_list.extend([*zip(X.tolist(), y.tolist())])
+        """Init method.
 
-    def _check_drift_insufficient_samples(
-        self, X: np.ndarray, y: np.ndarray  # noqa: N803
-    ) -> bool:
-        self._add_context_samples(
-            samples_list=self._fit_method.new_context_samples, X=X, y=y
+        :param estimator: estimator to be used
+        :type estimator: BaseEstimator
+        :param error_scorer: error scorer function
+        :type error_scorer: Callable
+        :param config: configuration parameters
+        :type config: SupervisedBaseConfig
+        :param metrics: performance metrics
+        :type metrics: Optional[Union[BaseMetric, List[BaseMetric]]]
+        """
+        super().__init__(
+            estimator=estimator,
+            config=config,
+            metrics=metrics,
         )
-        _, y_new_context = self._list_to_arrays(
-            list_=self._fit_method.new_context_samples
-        )
-        num_classes = self._get_number_classes(y=y_new_context)
-        if num_classes > 1:
-            self._complete_delayed_drift()
-            return True
-        return False
+        self.error_scorer = error_scorer  # type: ignore
 
-    def _complete_delayed_drift(self) -> None:
-        logger.warning(
-            "Changing threshold has been exceeded. "
-            "Drift detected with delay because there was only one class."
-        )
-        self._drift_insufficient_samples = False
-        self._reset()
+    @property
+    def error_scorer(self) -> Callable:
+        """Error scorer property.
+
+        :return: error scorer function
+        :rtype: Callable
+        """
+        return self._error_scorer
+
+    @error_scorer.setter  # type: ignore
+    @check_func_parameters
+    def error_scorer(self, value: Callable) -> None:
+        """Error scorer setter.
+
+        :param value: value to be set
+        :type value: Callable
+        """
+        self._error_scorer = value
 
     def _drift_case(self, X: np.ndarray, y: np.ndarray) -> None:  # noqa: N803
         logger.warning("Changing threshold has been exceeded. Drift detected.")
@@ -67,39 +85,13 @@ class DDMBasedEstimator(TargetDelayEstimator):
         if not is_classifier(self.estimator):
             self._fit_estimator(X=X_new_context, y=y_new_context)
             self._reset()
+        self._check_number_classes(
+            X_new_context=X_new_context, y_new_context=y_new_context
+        )
 
-        num_classes = self._get_number_classes(y=y_new_context)
-        if num_classes > 1:
-            self._fit_estimator(X=X_new_context, y=y_new_context)
-            self._reset()
-        else:
-            logger.warning(
-                "Classifier estimator needs at least 2 different "
-                "classes, but only %s was found. Samples "
-                "will be collected until this is to be fulfilled.",
-                num_classes,
-            )
-            self._drift_insufficient_samples = True
-
-    def _fit_estimator(self, X: np.array, y: np.array) -> None:  # noqa: N803
-        try:
-            self._fit_method(X=X, y=y, sample_weight=self.sample_weight)
-        except ValueError as e:
-            raise TrainingEstimatorError(
-                f"{e}\nHint: Increase min_num_instances value."
-            ) from e
-
-    def _fit_extra(self, X: np.ndarray, y: np.ndarray) -> None:  # noqa: N803
-        pass
-
-    @staticmethod
-    def _list_to_arrays(
-        list_: List[Tuple[np.array, Union[str, int, float]]]
-    ) -> List[np.ndarray]:
-        return [*map(np.array, zip(*list_))]
-
-    def _normal_case(self, X: np.ndarray, y: np.ndarray) -> None:  # noqa: N803
-        for _ in range(y.shape[0]):
+    def _normal_case(self, *args, **kwargs) -> None:  # noqa: N803
+        X, y = kwargs.get("X"), kwargs.get("y")  # noqa: N806
+        for _ in range(y.shape[0]):  # type: ignore
             self.ground_truth.popleft()
             self.predictions.popleft()
         self._fit_method.add_fit_context_samples(X=X, y=y)

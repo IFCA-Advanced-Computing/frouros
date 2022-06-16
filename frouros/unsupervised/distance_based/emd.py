@@ -18,7 +18,7 @@ class EMD(DistanceBasedEstimator):
 
     def _distance(
         self, X_ref_: np.ndarray, X: np.ndarray, **kwargs  # noqa: N803
-    ) -> np.float:
+    ) -> float:
         distance = wasserstein_distance(
             u_values=X_ref_,
             v_values=X,

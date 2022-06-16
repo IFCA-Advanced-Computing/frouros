@@ -76,7 +76,7 @@ class MMD(DistanceBasedEstimator):
 
     def _distance(
         self, X_ref_: np.ndarray, X: np.ndarray, **kwargs  # noqa: N803
-    ) -> Tuple[np.float, np.float]:
+    ) -> Tuple[float, float]:
         test = self._mmd(X_ref_=X_ref_, X=X, **kwargs)
         return test.statistic, test.pvalue
 
@@ -106,7 +106,7 @@ class MMD(DistanceBasedEstimator):
         X_ref_num_samples: int,
         mmd_statistic: float,
         num_permutations: int,
-    ) -> np.float:
+    ) -> float:
         np.random.seed(seed=self.random_state)
         mmd_permutations = []
         for _ in range(num_permutations):
@@ -128,7 +128,7 @@ class MMD(DistanceBasedEstimator):
 
     def _mmd_statistic(
         self, X: np.ndarray, X_num_samples: int, X_ref_num_samples: int  # noqa: N803
-    ) -> np.float:
+    ) -> float:
         k_matrix = self.kernel(X=X, Y=X)
         k_x = k_matrix[:X_ref_num_samples, :X_ref_num_samples]
         k_y = k_matrix[X_num_samples:, X_num_samples:]

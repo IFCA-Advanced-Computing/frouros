@@ -41,7 +41,7 @@ class UnivariateTest(BaseTest):
 
     def get_test(
         self, X_ref_: np.ndarray, X: np.ndarray, **kwargs  # noqa: N803
-    ) -> Union[List[np.float], List[Tuple[float, float]]]:
+    ) -> Union[List[float], List[Tuple[float, float]]]:
         """Obtain test result for each feature.
 
         :param X_ref_: reference data

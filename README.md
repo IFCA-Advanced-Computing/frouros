@@ -61,7 +61,7 @@ Frouros is a Python library for drift detection.
 </thead>
 <tbody>
   <tr>
-    <td rowspan="5">
+    <td rowspan="6">
         <a href="https://github.com/jaime-cespedes-sisniega/frouros/blob/main/frouros/supervised/base.py"> 
             <div style="height:100%;width:100%">
                 Supervised
@@ -126,6 +126,21 @@ Frouros is a Python library for drift detection.
             <div style="height:100%;width:100%">
                 KSWIN
             </div>
+        </a>
+    </td>
+  </tr>
+  <td rowspan="1">
+        <a href="https://github.com/jaime-cespedes-sisniega/frouros/blob/main/frouros/supervised/statistical_test/base.py">  
+            <div style="height:100%;width:100%">
+                Statistical Test
+            </div>
+        </a>
+    </td>
+    <td>
+        <a href="https://github.com/jaime-cespedes-sisniega/frouros/blob/main/frouros/supervised/statistical_test/stepd.py">
+            <div style="height:100%;width:100%">
+                STEPD
+            </div>    
         </a>
     </td>
   </tr>

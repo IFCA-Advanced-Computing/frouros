@@ -1,4 +1,4 @@
-"""Supervised statistical test base module."""
+"""Supervised cusum test base module."""
 
 import abc
 from typing import (  # noqa: TYP001
@@ -11,15 +11,16 @@ from typing import (  # noqa: TYP001
 from sklearn.base import BaseEstimator  # type: ignore
 import numpy as np  # type: ignore
 
-from frouros.supervised.base import TargetDelayEstimator, SupervisedBaseConfig
+from frouros.utils.decorators import check_func_parameters
+from frouros.supervised.base import SupervisedBaseEstimator, SupervisedBaseConfig
 
 
 class CUSUMTestConfig(SupervisedBaseConfig):
     """Class representing a CUSUM (cumulative sum) test configuration class ."""
 
 
-class CUSUMTestEstimator(TargetDelayEstimator):
-    """Page Hinkley test algorithm class."""
+class CUSUMTestEstimator(SupervisedBaseEstimator):
+    """CUSUM test algorithm class."""
 
     def __init__(
         self,
@@ -36,9 +37,29 @@ class CUSUMTestEstimator(TargetDelayEstimator):
         :param config: configuration parameters
         :type config: CUSUMTestConfig
         """
-        super().__init__(estimator=estimator, error_scorer=error_scorer, config=config)
+        super().__init__(estimator=estimator, config=config)
+        self.error_scorer = error_scorer  # type: ignore
         self.mean_error_rate = 0.0
         self.sum_ = 0.0
+
+    @property
+    def error_scorer(self) -> Callable:
+        """Error scorer property.
+
+        :return: error scorer function
+        :rtype: Callable
+        """
+        return self._error_scorer
+
+    @error_scorer.setter  # type: ignore
+    @check_func_parameters
+    def error_scorer(self, value: Callable) -> None:
+        """Error scorer setter.
+
+        :param value: value to be set
+        :type value: Callable
+        """
+        self._error_scorer = value
 
     @property
     def mean_error_rate(self) -> float:
