@@ -19,27 +19,6 @@ class StatisticalTestConfig(SupervisedBaseConfig):
 class StatisticalTestEstimator(SupervisedBaseEstimator):
     """Statistical test algorithm class."""
 
-    # def __init__(
-    #     self,
-    #     estimator: BaseEstimator,
-    #     config: StatisticalTestConfig,
-    #     metrics: Optional[Union[BaseMetric, List[BaseMetric]]] = None,
-    # ) -> None:
-    #     """Init method.
-    #
-    #     :param estimator: sklearn estimator
-    #     :type estimator: BaseEstimator
-    #     :param config: configuration parameters
-    #     :type config: StatisticalTestConfig:
-    #     :param metrics: performance metrics
-    #     :type metrics: metrics: Optional[Union[BaseMetric, List[BaseMetric]]]
-    #     """
-    #     super().__init__(
-    #         estimator=estimator,
-    #         config=config,
-    #         metrics=metrics,
-    #     )
-
     @abc.abstractmethod
     def update(
         self, y: np.array
