@@ -24,7 +24,6 @@ from frouros.supervised.exceptions import (
     NoFitMethodError,
     TrainingEstimatorError,
 )
-from frouros.utils.decorators import check_func_parameters
 from frouros.utils.logger import logger
 
 
@@ -269,13 +268,12 @@ class SupervisedBaseConfig(abc.ABC):
         self._min_num_instances = value
 
 
-class TargetDelayEstimator(abc.ABC):
+class SupervisedBaseEstimator(abc.ABC):
     """Abstract class representing a delayed target."""
 
     def __init__(
         self,
         estimator: BaseEstimator,
-        error_scorer: Callable,
         config: SupervisedBaseConfig,
         metrics: Optional[Union[BaseMetric, List[BaseMetric]]] = None,
     ) -> None:
@@ -283,15 +281,12 @@ class TargetDelayEstimator(abc.ABC):
 
         :param estimator: estimator to be used
         :type estimator: BaseEstimator
-        :param error_scorer: error scorer function
-        :type error_scorer: Callable
         :param config: configuration parameters
         :type config: SupervisedBaseConfig
         :param metrics: performance metrics
         :type metrics: Optional[Union[BaseMetric, List[BaseMetric]]]
         """
         self.estimator = estimator
-        self.error_scorer = error_scorer  # type: ignore
         self.config = config
         self.metrics: Optional[List[BaseMetric]] = metrics  # type: ignore
         self.delayed_predictions: Deque["Tuple[np.ndarray, np.ndarray]"] = deque()
@@ -367,25 +362,6 @@ class TargetDelayEstimator(abc.ABC):
         :type value: Deque["Union[str, int, float]"]
         """
         self._ground_truth = value
-
-    @property
-    def error_scorer(self) -> Callable:
-        """Error scorer property.
-
-        :return: error scorer function
-        :rtype: Callable
-        """
-        return self._error_scorer
-
-    @error_scorer.setter  # type: ignore
-    @check_func_parameters
-    def error_scorer(self, value: Callable) -> None:
-        """Error scorer setter.
-
-        :param value: value to be set
-        :type value: Callable
-        """
-        self._error_scorer = value
 
     @property
     def estimator(self) -> BaseEstimator:
@@ -585,3 +561,87 @@ class TargetDelayEstimator(abc.ABC):
         self, y: np.array
     ) -> Dict[str, Optional[Union[float, bool, Dict[str, float]]]]:
         """Update abstract method."""
+
+
+class SupervisedBaseEstimatorReFit(SupervisedBaseEstimator):
+    """Abstract class representing a re-fit estimator."""
+
+    def _check_drift_insufficient_samples(
+        self, X: np.ndarray, y: np.ndarray  # noqa: N803
+    ) -> bool:
+        self._add_context_samples(
+            samples_list=self._fit_method.new_context_samples, X=X, y=y
+        )
+        _, y_new_context = self._list_to_arrays(
+            list_=self._fit_method.new_context_samples
+        )
+        num_classes = self._get_number_classes(y=y_new_context)
+        if num_classes > 1:
+            self._complete_delayed_drift()
+            return True
+        return False
+
+    def _check_number_classes(
+        self, X_new_context: np.ndarray, y_new_context: np.ndarray  # noqa: N803
+    ) -> None:
+        num_classes = self._get_number_classes(y=y_new_context)
+        if num_classes > 1:
+            self._fit_estimator(X=X_new_context, y=y_new_context)
+            self._reset()
+        else:
+            logger.warning(
+                "Classifier estimator needs at least 2 different "
+                "classes, but only %s was found. Samples "
+                "will be collected until this is to be fulfilled.",
+                num_classes,
+            )
+            self._drift_insufficient_samples = True
+
+    def _complete_delayed_drift(self) -> None:
+        logger.warning(
+            "Changing threshold has been exceeded. "
+            "Drift detected with delay because there was only one class."
+        )
+        self._drift_insufficient_samples = False
+        self._reset()
+
+    @staticmethod
+    def _list_to_arrays(
+        list_: List[Tuple[np.array, Union[str, int, float]]]
+    ) -> List[np.ndarray]:
+        return [*map(np.array, zip(*list_))]
+
+    @abc.abstractmethod
+    def _drift_case(self, X: np.ndarray, y: np.ndarray) -> None:  # noqa: N803
+        pass
+
+    @abc.abstractmethod
+    def _warning_case(self, X: np.array, y: np.array) -> None:  # noqa: N803
+        pass
+
+    @abc.abstractmethod
+    def _normal_case(self, *args, **kwargs) -> None:
+        pass
+
+    @abc.abstractmethod
+    def _reset(self, *args, **kwargs) -> None:
+        pass
+
+    def _fit_estimator(self, X: np.array, y: np.array) -> None:  # noqa: N803
+        try:
+            self._fit_method(X=X, y=y, sample_weight=self.sample_weight)
+        except ValueError as e:
+            raise TrainingEstimatorError(
+                f"{e}\nHint: Increase min_num_instances value."
+            ) from e
+
+    def _fit_extra(self, X: np.ndarray, y: np.ndarray) -> None:  # noqa: N803
+        pass
+
+    @staticmethod
+    def _add_context_samples(
+        samples_list: List[Tuple[List[float], Union[str, int, float]]],
+        X: np.ndarray,  # noqa: N803
+        y: np.ndarray,
+    ) -> None:
+        samples_list.extend([*zip(X.tolist(), y.tolist())])

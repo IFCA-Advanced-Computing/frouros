@@ -65,13 +65,13 @@ class PSI(DistanceBasedEstimator):
 
     def _apply_method(
         self, X_ref_: np.ndarray, X: np.ndarray, **kwargs  # noqa: N803
-    ) -> np.float:
+    ) -> float:
         distance = self._distance(X_ref_=X_ref_, X=X, **kwargs)
         return distance
 
     def _distance(
         self, X_ref_: np.ndarray, X: np.ndarray, **kwargs  # noqa: N803
-    ) -> np.float:
+    ) -> float:
         distance = self._psi(
             X_ref_=X_ref_,
             X=X,

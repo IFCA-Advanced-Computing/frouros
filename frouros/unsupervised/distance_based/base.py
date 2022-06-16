@@ -13,12 +13,12 @@ class DistanceBasedEstimator(UnsupervisedBaseEstimator):
 
     def _apply_method(
         self, X_ref_: np.ndarray, X: np.ndarray, **kwargs  # noqa: N803
-    ) -> Union[Tuple[float, float], np.float]:
+    ) -> Union[Tuple[float, float], float]:
         distance = self._distance(X_ref_=X_ref_, X=X, **kwargs)
         return distance
 
     @abc.abstractmethod
     def _distance(
         self, X_ref_: np.ndarray, X: np.ndarray, **kwargs  # noqa: N803
-    ) -> Union[Tuple[np.float, np.float], np.float]:
+    ) -> Union[Tuple[float, float], float]:
         pass
