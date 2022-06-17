@@ -89,11 +89,11 @@ class Dataset(abc.ABC):
         self._file_path = value
 
     @property
-    def url(self) -> List[str]:
+    def url(self) -> Union[str, List[str]]:
         """URL property.
 
         :return: URL from where dataset will be downloaded
-        :rtype: List[str]
+        :rtype: Union[str, List[str]]
         """
         return self._url
 
@@ -149,7 +149,10 @@ class Dataset(abc.ABC):
 
     def _request_file(self, url: str) -> requests.models.Response:
         logger.info("Trying to download data from %s to %s", url, self._file_path)
-        request_response = requests.get(url=url, allow_redirects=True, stream=True)
+        request_head = requests.head(url=url)
+        if request_head.status_code != 200:
+            raise requests.exceptions.RequestException()
+        request_response = requests.get(url=url, stream=True)
         request_response.raise_for_status()
         return request_response
 
@@ -178,9 +181,11 @@ class Dataset(abc.ABC):
         for url in self.url:
             try:
                 self._get_file(url=url)
-            except requests.exceptions.RequestException as e:
-                raise DownloadError(e) from e
-            break
+                break
+            except requests.exceptions.RequestException:
+                logger.warning("File cannot be downloaded from %s", url)
+        else:
+            raise DownloadError("File cannot be downloaded from any of the urls.")
 
     def load(self, **kwargs) -> Any:
         """Load dataset.
