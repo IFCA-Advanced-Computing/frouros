@@ -160,3 +160,7 @@ class Dataset(abc.ABC):
         :return: read file
         :rtype: Any
         """
+
+
+class Generator(abc.ABC):
+    """Abstract class representing a dataset generator."""
