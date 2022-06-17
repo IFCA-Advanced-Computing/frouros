@@ -24,7 +24,6 @@ dependencies = [
     "requests>=2.27.0,<2.28",
     "scikit-learn>=1.0.0,<1.1",
     "scipy>=1.7.0,<1.8",
-    "tqdm>=4.63.0,<4.64",
     "scipy>=1.7.3,<1.8"
 ]
 #dynamic = ["version",

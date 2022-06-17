@@ -21,17 +21,6 @@ def test_elec2_file_not_found_error(elec2_raw: Elec2) -> None:
         _ = elec2_raw.load()
 
 
-def test_elec2_no_verbose() -> None:
-    """Test Elec2 no verbose.
-
-    # :param elec2_delimiter: Elec2 load delimiter
-    # :type elec2_delimiter: str
-    """
-    elec2 = Elec2(verbose=False)
-    elec2.download()
-    _ = elec2.load()
-
-
 def test_elec2_permission_error() -> None:
     """Test Elec2 permission error."""
     with pytest.raises(PermissionError):
