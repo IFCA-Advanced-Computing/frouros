@@ -250,9 +250,16 @@ Frouros is a Python library for drift detection.
   </tr>
   <tr>
     <td rowspan="3">
-        <a> 
+        <a href="https://github.com/jaime-cespedes-sisniega/frouros/blob/main/frouros/datasets/synthetic.py"> 
             <div style="height:100%;width:100%">
                 Synthetic
+            </div>
+        </a>
+    </td>
+    <td>
+        <a href="https://github.com/jaime-cespedes-sisniega/frouros/blob/main/frouros/datasets/synthetic.py">  
+            <div style="height:100%;width:100%">
+                SEA
             </div>
         </a>
     </td>

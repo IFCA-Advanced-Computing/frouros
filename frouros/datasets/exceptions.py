@@ -5,6 +5,10 @@ class DownloadError(Exception):
     """Download exception."""
 
 
+class InvalidBlockError(Exception):
+    """Invalid block exception."""
+
+
 class InvalidFilePathError(Exception):
     """Invalid file path exception."""
 
