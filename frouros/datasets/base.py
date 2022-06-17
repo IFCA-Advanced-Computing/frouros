@@ -7,7 +7,6 @@ import urllib.parse
 from pathlib import Path
 
 import requests
-import tqdm  # type: ignore
 from frouros.datasets.exceptions import (
     DownloadError,
     InvalidURLError,
@@ -23,7 +22,6 @@ class Dataset(abc.ABC):
         self,
         url: Union[str, List[str]],
         file_path: Optional[str] = None,
-        verbose: bool = True,
     ) -> None:
         """Init method.
 
@@ -31,9 +29,6 @@ class Dataset(abc.ABC):
         :type url: Union[str, List[str]]
         :param file_path: file path for the downloaded file
         :type file_path: str
-        :param verbose: whether more information will be provided
-        during download or not
-        :type verbose: bool
         """
         self.url = url  # type: ignore
         self.file_path: Optional[Path] = (
@@ -41,34 +36,6 @@ class Dataset(abc.ABC):
             if file_path
             else Path(tempfile.NamedTemporaryFile(delete=False).name)
         )
-        self.verbose = verbose
-        self.chunk_size = None
-
-    @property
-    def chunk_size(self) -> Optional[int]:
-        """Chunk size property.
-
-        :return: chunk size to use in writing the dataset
-        :rtype: Optional[int]
-        """
-        return self._chunk_size
-
-    @chunk_size.setter
-    def chunk_size(self, value: Optional[int]) -> None:
-        """Chunk size setter.
-
-        :param value: value to be set
-        :type value: Optional[int]
-        """
-        self._chunk_size: Optional[int]
-        if value:
-            if not isinstance(value, int):
-                raise TypeError("chunk_size must be int.")
-            if value <= 0:
-                raise ValueError("chunk_size must be greater than 0.")
-            self._chunk_size = value
-        else:
-            self._chunk_size = None
 
     @property
     def file_path(self) -> Optional[Path]:
@@ -89,11 +56,11 @@ class Dataset(abc.ABC):
         self._file_path = value
 
     @property
-    def url(self) -> List[str]:
+    def url(self) -> Union[str, List[str]]:
         """URL property.
 
         :return: URL from where dataset will be downloaded
-        :rtype: List[str]
+        :rtype: Union[str, List[str]]
         """
         return self._url
 
@@ -110,25 +77,6 @@ class Dataset(abc.ABC):
             if not self._check_valid_url(url=url):
                 raise InvalidURLError(f"{value} is not a valid URL.")
         self._url = urls
-
-    @property
-    def verbose(self) -> bool:
-        """Verbose property.
-
-        :return: URL´s mirrors from where dataset can be downloaded
-        :rtype: bool
-        """
-        return self._verbose
-
-    @verbose.setter
-    def verbose(self, value: bool) -> None:
-        """Verbose setter.
-
-        :param value: value to be set
-        :type value: bool
-        """
-        self._verbose = value
-        self._chunk_size = 1024 if self.verbose else None
 
     @staticmethod
     def _check_valid_url(url: str) -> bool:
@@ -149,20 +97,16 @@ class Dataset(abc.ABC):
 
     def _request_file(self, url: str) -> requests.models.Response:
         logger.info("Trying to download data from %s to %s", url, self._file_path)
-        request_response = requests.get(url=url, allow_redirects=True, stream=True)
+        request_head = requests.head(url=url)
+        if request_head.status_code != 200:
+            raise requests.exceptions.RequestException()
+        request_response = requests.get(url=url, stream=True)
         request_response.raise_for_status()
         return request_response
 
     def _save_file(self, response: requests.models.Response) -> None:
         try:
-            if self.verbose:
-                pbar = tqdm.tqdm(unit="B", unit_scale=True, total=len(response.content))
-                for chunk in response.iter_content(chunk_size=self.chunk_size):
-                    if chunk:
-                        self._write_file(content=chunk)
-                        pbar.update(n=len(chunk))
-            else:
-                self._write_file(content=response.content)
+            self._write_file(content=response.content)
         except IOError as e:
             raise e
 
@@ -178,9 +122,11 @@ class Dataset(abc.ABC):
         for url in self.url:
             try:
                 self._get_file(url=url)
-            except requests.exceptions.RequestException as e:
-                raise DownloadError(e) from e
-            break
+                break
+            except requests.exceptions.RequestException:
+                logger.warning("File cannot be downloaded from %s", url)
+        else:
+            raise DownloadError("File cannot be downloaded from any of the urls.")
 
     def load(self, **kwargs) -> Any:
         """Load dataset.

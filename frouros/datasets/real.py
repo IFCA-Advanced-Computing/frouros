@@ -10,14 +10,11 @@ from frouros.datasets.base import Dataset
 class Elec2(Dataset):
     """Elec2 dataset class."""
 
-    def __init__(self, file_path: Optional[str] = None, verbose: bool = True) -> None:
+    def __init__(self, file_path: Optional[str] = None) -> None:
         """Init method.
 
         :param file_path: file path for the downloaded file
         :type file_path: Optional[str]
-        :param verbose: whether more information will be provided
-        during download or not
-        :type verbose: bool
         """
         super().__init__(
             url=[
@@ -25,7 +22,6 @@ class Elec2(Dataset):
                 "https://nextcloud.ifca.es/index.php/s/2coqgBEpa82boLS/download",
             ],
             file_path=file_path,
-            verbose=verbose,
         )
 
     def read_file(self, **kwargs) -> np.ndarray:
