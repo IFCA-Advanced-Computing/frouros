@@ -28,9 +28,28 @@ class DDMConfig(DDMBaseConfig):
         to start looking for changes
         :type min_num_instances: int
         """
-        super().__init__(min_num_instances=min_num_instances)
+        super().__init__()
         self.warning_level = warning_level
         self.drift_level = drift_level
+        self.min_num_instances = min_num_instances
+
+    @property
+    def min_num_instances(self) -> int:
+        """Minimum number of instances property.
+
+        :return: minimum number of instances to start looking for changes
+        :rtype: int
+        """
+        return self._min_num_instances
+
+    @min_num_instances.setter
+    def min_num_instances(self, value: int) -> None:
+        """Minimum number of instances setter.
+
+        :param value: value to be set
+        :type value: Callable
+        """
+        self._min_num_instances = value
 
     @property
     def drift_level(self) -> float:

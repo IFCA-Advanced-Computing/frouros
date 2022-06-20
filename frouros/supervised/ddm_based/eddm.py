@@ -19,7 +19,6 @@ class EDDMConfig(DDMBaseConfig):
         beta: float = 0.9,
         level: float = 2.0,
         min_num_misclassified_instances: int = 30,
-        min_num_instances: int = 30,
     ) -> None:
         """Init method.
 
@@ -31,11 +30,8 @@ class EDDMConfig(DDMBaseConfig):
         :param min_num_misclassified_instances: minimum numbers of instances
         to start looking for changes
         :type min_num_misclassified_instances: int
-        :param min_num_instances: minimum numbers of instances
-        to start looking for changes
-        :type min_num_instances: int
         """
-        super().__init__(min_num_instances=min_num_instances)
+        super().__init__()
         self.alpha = alpha
         self.beta = beta
         self.level = level
@@ -151,35 +147,14 @@ class EDDM(DDMBasedEstimator):
             config=config,
             metrics=metrics,
         )
-        self.actual_distance_error = 0.0
         self.distance_threshold = 0.0
-        self.last_distance_error = copy.copy(self.actual_distance_error)
+        self.last_distance_error = 0.0
         self.max_distance_threshold = float("-inf")
         self.mean_distance_error = 0.0
         self.num_misclassified_instances = 0
         self.old_mean_distance_error = copy.copy(self.mean_distance_error)
         self.std_distance_error = 0.0
         self.variance_distance_error = 0.0
-
-    @property
-    def actual_distance_error(self) -> float:
-        """Actual distance error property.
-
-        :return: actual distance error
-        :rtype: float
-        """
-        return self._actual_distance_error
-
-    @actual_distance_error.setter
-    def actual_distance_error(self, value: float) -> None:
-        """Actual distance error setter.
-
-        :param value: value to be set
-        :type value: float
-        """
-        if value < 0:
-            raise ValueError("actual_distance_error must be great or equal than 0.")
-        self._actual_distance_error = value
 
     @property
     def distance_threshold(self) -> float:
@@ -394,7 +369,7 @@ class EDDM(DDMBasedEstimator):
 
         try:
             misclassified_idxs = np.argwhere(
-                ~self.error_scorer(y_true=y, y_pred=y_pred)
+                self.error_scorer(y_true=y, y_pred=y_pred)
             )[0]
             non_misclassified_instances = False
         except IndexError:
@@ -410,11 +385,8 @@ class EDDM(DDMBasedEstimator):
 
         self.num_misclassified_instances += misclassified_idxs.size
 
-        self.last_distance_error = self.actual_distance_error
-        self.actual_distance_error = self.num_instances - 1
-
         # Welford´s method to compute incremental mean and standard deviation
-        distance = self.actual_distance_error - self.last_distance_error
+        distance = self.num_instances - self.last_distance_error
         self.old_mean_distance_error = self.mean_distance_error
         self.mean_distance_error += (
             distance - self.mean_distance_error
@@ -427,10 +399,7 @@ class EDDM(DDMBasedEstimator):
             if self.num_misclassified_instances > 0
             else 0.0
         )
-
-        if self.num_instances < self.config.min_num_instances:
-            response = self._normal_response(metrics=metrics)  # type: ignore
-            return response  # type: ignore
+        self.last_distance_error = self.num_instances
 
         self.ground_truth.extend(y)
         self.predictions.extend(y_pred)
@@ -482,9 +451,8 @@ class EDDM(DDMBasedEstimator):
 
     def _reset(self, *args, **kwargs) -> None:
         super()._reset()
-        self.actual_distance_error = 0.0
         self.distance_threshold = 0.0
-        self.last_distance_error = copy.copy(self.actual_distance_error)
+        self.last_distance_error = 0.0
         self.max_distance_threshold = float("-inf")
         self.mean_distance_error = 0.0
         self.num_misclassified_instances = 0
