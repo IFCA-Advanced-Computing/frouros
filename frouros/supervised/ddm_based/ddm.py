@@ -223,36 +223,40 @@ class DDM(DDMBasedEstimator):
                 self.min_error_rate = error_rate
                 self.min_std = std
 
-            drift = self._check_threshold(
+            drift_flag = self._check_threshold(
                 error_rate_plus_std=error_rate_plus_std,
                 min_error_rate=self.min_error_rate,
                 min_std=self.min_std,
                 level=self.config.drift_level,  # type: ignore
             )
 
-            if drift:
+            if drift_flag:
                 # Out-of-Control
                 self._drift_case(X=X, y=y)
-                warning = True
+                self.drift = True
+                self.warning = True
             else:
-                warning = self._check_threshold(
+                warning_flag = self._check_threshold(
                     error_rate_plus_std=error_rate_plus_std,
                     min_error_rate=self.min_error_rate,
                     min_std=self.min_std,
                     level=self.config.warning_level,  # type: ignore
                 )
-                if warning:
+                if warning_flag:
                     # Warning
                     self._warning_case(X=X, y=y)
+                    self.warning = True
                 else:
                     # In-Control
                     self._normal_case(X=X, y=y)
+                    self.warning = False
+                self.drift = False
         else:
-            error_rate_plus_std, drift, warning = 0.0, False, False  # type: ignore
+            error_rate_plus_std, self.drift, self.warning = 0.0, False, False
 
         response = self._get_update_response(
-            drift=drift,
-            warning=warning,
+            drift=self.drift,
+            warning=self.warning,
             error_rate_plus_std=error_rate_plus_std,
             metrics=metrics,
         )

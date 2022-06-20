@@ -54,6 +54,8 @@ class DDMBasedEstimator(SupervisedBaseEstimatorReFit):
             metrics=metrics,
         )
         self.error_scorer = error_scorer  # type: ignore
+        self.drift = False
+        self.warning = False
 
     @property
     def error_scorer(self) -> Callable:
@@ -75,7 +77,8 @@ class DDMBasedEstimator(SupervisedBaseEstimatorReFit):
         self._error_scorer = value
 
     def _drift_case(self, X: np.ndarray, y: np.ndarray) -> None:  # noqa: N803
-        logger.warning("Changing threshold has been exceeded. Drift detected.")
+        if not self.drift:  # Check if drift message has already been shown
+            logger.warning("Changing threshold has been exceeded. Drift detected.")
         self._add_context_samples(
             samples_list=self._fit_method.new_context_samples, X=X, y=y
         )
@@ -126,12 +129,15 @@ class DDMBasedEstimator(SupervisedBaseEstimatorReFit):
             ],
         )
         self._fit_method.reset()
+        self.drift = False
+        self.warning = False
 
     def _warning_case(self, X: np.array, y: np.array) -> None:  # noqa: N803
-        logger.warning(
-            "Warning threshold has been exceeded. "
-            "New concept will be learned until drift is detected."
-        )
+        if not self.warning:  # Check if warning message has already been shown
+            logger.warning(
+                "Warning threshold has been exceeded. "
+                "New concept will be learned until drift is detected."
+            )
         self._add_context_samples(
             samples_list=self._fit_method.new_context_samples, X=X, y=y
         )
