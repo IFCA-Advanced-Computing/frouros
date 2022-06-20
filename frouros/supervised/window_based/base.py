@@ -22,6 +22,37 @@ from frouros.utils.decorators import check_func_parameters
 class WindowBaseConfig(SupervisedBaseConfig):
     """Class representing a window based configuration class."""
 
+    def __init__(
+        self,
+        min_num_instances: int = 30,
+    ) -> None:
+        """Init method.
+
+        :param min_num_instances: minimum numbers of instances
+        to start looking for changes
+        :type min_num_instances: int
+        """
+        super().__init__()
+        self.min_num_instances = min_num_instances
+
+    @property
+    def min_num_instances(self) -> int:
+        """Minimum number of instances property.
+
+        :return: minimum number of instances to start looking for changes
+        :rtype: int
+        """
+        return self._min_num_instances
+
+    @min_num_instances.setter
+    def min_num_instances(self, value: int) -> None:
+        """Minimum number of instances setter.
+
+        :param value: value to be set
+        :type value: Callable
+        """
+        self._min_num_instances = value
+
 
 class WindowBasedEstimator(SupervisedBaseEstimator):
     """Abstract class representing a window based estimator."""
