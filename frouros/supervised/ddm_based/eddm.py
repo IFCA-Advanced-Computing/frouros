@@ -147,9 +147,7 @@ class EDDM(DDMBasedEstimator):
             config=config,
             metrics=metrics,
         )
-        # self.actual_distance_error = 0.0
         self.distance_threshold = 0.0
-        # self.last_distance_error = copy.copy(self.actual_distance_error)
         self.last_distance_error = 0.0
         self.max_distance_threshold = float("-inf")
         self.mean_distance_error = 0.0
@@ -157,26 +155,6 @@ class EDDM(DDMBasedEstimator):
         self.old_mean_distance_error = copy.copy(self.mean_distance_error)
         self.std_distance_error = 0.0
         self.variance_distance_error = 0.0
-
-    # @property
-    # def actual_distance_error(self) -> float:
-    #     """Actual distance error property.
-    #
-    #     :return: actual distance error
-    #     :rtype: float
-    #     """
-    #     return self._actual_distance_error
-    #
-    # @actual_distance_error.setter
-    # def actual_distance_error(self, value: float) -> None:
-    #     """Actual distance error setter.
-    #
-    #     :param value: value to be set
-    #     :type value: float
-    #     """
-    #     if value < 0:
-    #         raise ValueError("actual_distance_error must be great or equal than 0.")
-    #     self._actual_distance_error = value
 
     @property
     def distance_threshold(self) -> float:
@@ -473,9 +451,7 @@ class EDDM(DDMBasedEstimator):
 
     def _reset(self, *args, **kwargs) -> None:
         super()._reset()
-        # self.actual_distance_error = 0.0
         self.distance_threshold = 0.0
-        # self.last_distance_error = copy.copy(self.actual_distance_error)
         self.last_distance_error = 0.0
         self.max_distance_threshold = float("-inf")
         self.mean_distance_error = 0.0
