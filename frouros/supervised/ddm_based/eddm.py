@@ -435,19 +435,19 @@ class EDDM(DDMBasedEstimator):
         if p < self.config.beta:  # type: ignore
             # Out-of-Control
             self._drift_case(X=X, y=y)
-            drift = True
-            warning = True
+            self.drift = True
+            self.warning = True
         else:
-            drift = False
             if p < self.config.alpha:  # type: ignore
                 # Warning
                 self._warning_case(X=X, y=y)
-                warning = True
+                self.warning = True
             else:
                 self._normal_case(X=X, y=y)
-                warning = False
+                self.warning = False
+            self.drift = False
 
-        return drift, warning
+        return self.drift, self.warning
 
     def _reset(self, *args, **kwargs) -> None:
         super()._reset()
