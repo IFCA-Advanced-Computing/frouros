@@ -25,8 +25,8 @@ class DistanceBasedEstimator(UnsupervisedBaseEstimator):
         pass
 
 
-class DistanceSamplingBasedEstimator(DistanceBasedEstimator):
-    """Abstract class representing a distance sampling based estimator."""
+class DistanceProbabilityBasedEstimator(DistanceBasedEstimator):
+    """Abstract class representing a distance probability based estimator."""
 
     def __init__(self, num_points: int = 1000) -> None:
         """Init method.
