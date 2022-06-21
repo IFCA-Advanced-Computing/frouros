@@ -45,10 +45,11 @@ def dataset_elec2() -> Tuple[np.ndarray, np.ndarray, np.ndarray]:
     )
     y = np.array([sample[-1] for sample in dataset_], dtype="str")
 
-    X_ref = X[:-1]  # noqa: N806
-    y_ref = y[:-1]
+    idx = X.shape[0] // 2
+    X_ref = X[:idx]  # noqa: N806
+    y_ref = y[:idx]
 
-    X_test = X[-2:, :]  # noqa: N806
+    X_test = X[idx:, :]  # noqa: N806
 
     return X_ref, y_ref, X_test
 
