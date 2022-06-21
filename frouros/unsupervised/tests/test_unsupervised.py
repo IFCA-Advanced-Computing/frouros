@@ -10,7 +10,7 @@ from sklearn.pipeline import Pipeline  # type: ignore
 from sklearn.preprocessing import StandardScaler  # type: ignore
 
 from frouros.unsupervised.base import UnsupervisedBaseEstimator
-from frouros.unsupervised.distance_based import EMD, PSI, JS, MMD
+from frouros.unsupervised.distance_based import EMD, PSI, JS, KL, MMD
 from frouros.unsupervised.statistical_test import ChiSquaredTest, CVMTest, KSTest
 from frouros.unsupervised.utils import get_statistical_test
 
@@ -38,7 +38,7 @@ def test_categorical_features(
         assert np.isclose(p_value, expected_p_value)
 
 
-@pytest.mark.parametrize("detector", [EMD(), PSI(), CVMTest(), KSTest(), JS()])
+@pytest.mark.parametrize("detector", [EMD(), PSI(), CVMTest(), KSTest(), JS(), KL()])
 def test_univariate_test(
     dataset_elec2: Tuple[np.ndarray, np.ndarray, np.ndarray],
     detector: UnsupervisedBaseEstimator,
