@@ -28,27 +28,27 @@ class DistanceBasedEstimator(UnsupervisedBaseEstimator):
 class DistanceProbabilityBasedEstimator(DistanceBasedEstimator):
     """Abstract class representing a distance probability based estimator."""
 
-    def __init__(self, num_points: int = 1000) -> None:
+    def __init__(self, num_bins: int = 100) -> None:
         """Init method.
 
-        :param num_points: number of points in which to divide data
-        :type num_points: int
+        :param num_bins: number of bins in which to divide probabilities
+        :type num_bins: int
         """
         super().__init__(test_type=UnivariateTest())
-        self.num_points = num_points
+        self.num_bins = num_bins
 
     @property
-    def num_points(self) -> int:
-        """Number of points property.
+    def num_bins(self) -> int:
+        """Number of bins property.
 
-        :return: number of points in which to divide data
+        :return: number of bins in which to divide probabilities
         :rtype: int
         """
-        return self._num_points
+        return self._num_bins
 
-    @num_points.setter
-    def num_points(self, value: int) -> None:
-        """Number of points setter.
+    @num_bins.setter
+    def num_bins(self, value: int) -> None:
+        """Number of bins setter.
 
         :param value: value to be set
         :type value: int
@@ -56,7 +56,7 @@ class DistanceProbabilityBasedEstimator(DistanceBasedEstimator):
         """
         if value < 1:
             raise ValueError("value must be greater than 0.")
-        self._num_points = value
+        self._num_bins = value
 
     @abc.abstractmethod
     def _distance(
@@ -72,7 +72,14 @@ class DistanceProbabilityBasedEstimator(DistanceBasedEstimator):
         )
         X_rv_histogram = rv_histogram(np.histogram(X, bins="auto"))  # noqa: N806
         X_merge = np.concatenate([X_ref_, X])  # noqa: N806
-        points = np.linspace(np.min(X_merge), np.max(X_merge), self.num_points)
-        X_ref_rvs = [X_ref_rv_histogram.pdf(point) for point in points]  # noqa: N806
-        X_rvs = [X_rv_histogram.pdf(point) for point in points]  # noqa: N806
+        bins = np.linspace(np.min(X_merge), np.max(X_merge), self.num_bins)
+        X_ref_rvs = [  # noqa: N806
+            X_ref_rv_histogram.cdf(bins[i])
+            - X_ref_rv_histogram.cdf(bins[i - 1])  # noqa: N806
+            for i in range(1, len(bins[1:]) + 1)
+        ]
+        X_rvs = [  # noqa: N806
+            X_rv_histogram.cdf(bins[i]) - X_rv_histogram.cdf(bins[i - 1])  # noqa: N806
+            for i in range(1, len(bins[1:]) + 1)
+        ]
         return X_ref_rvs, X_rvs
