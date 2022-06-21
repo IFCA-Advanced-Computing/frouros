@@ -3,7 +3,7 @@
 import abc
 from collections import namedtuple
 
-from typing import Callable, Optional, List, Tuple, Union
+from typing import Any, Callable, Dict, Optional, List, Tuple, Union
 import numpy as np  # type: ignore
 from sklearn.base import BaseEstimator, TransformerMixin  # type: ignore
 from sklearn.utils.validation import check_array, check_is_fitted  # type: ignore
@@ -161,6 +161,7 @@ class UnsupervisedBaseEstimator(abc.ABC, BaseEstimator, TransformerMixin):
         :param X: feature data
         :type X: numpy.ndarray
         :param y: target data
+        :type y: numpy.ndarray
         :return transformed feature data
         :rtype: numpy.ndarray
         """
@@ -168,6 +169,26 @@ class UnsupervisedBaseEstimator(abc.ABC, BaseEstimator, TransformerMixin):
         self._specific_checks(X=X)  # noqa: N806
         self.test = self.get_test(X=X, **kwargs)  # type: ignore
         return X
+
+    def fit_transform(
+        self,
+        X: np.ndarray,  # noqa: N803
+        y: Optional[np.ndarray] = None,
+        **fit_params: Dict[str, Any],
+    ) -> np.ndarray:
+        """Override fit_transform from TransformerMixin.
+
+        This will avoid to use transform when fit and return X_ref_ instead.
+
+        :param X: feature data
+        :type X: numpy.ndarray
+        :param y: target data
+        :type y: numpy.ndarray
+        :param fit_params: dict of additional fit parameters
+        :return X_ref_ data
+        :rtype: numpy.ndarray
+        """
+        return self.fit(X=X, **fit_params).X_ref_
 
     def _common_checks(self, X: np.ndarray) -> np.ndarray:  # noqa: N803
         check_is_fitted(self, attributes="X_ref_")
