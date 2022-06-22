@@ -12,9 +12,34 @@ class HistogramIntersection(DistanceBasedEstimator):
     """Histogram intersection algorithm class."""
 
     def __init__(self, num_bins: int = 100) -> None:
-        """Init method."""
+        """Init method.
+
+        :param num_bins: number of bins in which to divide probabilities
+        :type num_bins: int
+        """
         super().__init__(test_type=UnivariateTest())
         self.num_bins = num_bins
+
+    @property
+    def num_bins(self) -> int:
+        """Number of bins property.
+
+        :return: number of bins in which to divide probabilities
+        :rtype: int
+        """
+        return self._num_bins
+
+    @num_bins.setter
+    def num_bins(self, value: int) -> None:
+        """Number of bins setter.
+
+        :param value: value to be set
+        :type value: int
+        :raises ValueError: Value error exception
+        """
+        if value < 1:
+            raise ValueError("value must be greater than 0.")
+        self._num_bins = value
 
     @staticmethod
     def _histogram_intersection(
