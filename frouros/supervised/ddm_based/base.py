@@ -26,6 +26,70 @@ from frouros.utils.logger import logger
 class DDMBaseConfig(SupervisedBaseConfig):
     """Class representing a DDM based configuration class."""
 
+    def __init__(
+        self,
+        warning_level: float = 2.0,
+        drift_level: float = 3.0,
+        min_num_instances: int = 30,
+    ) -> None:
+        """Init method.
+
+        :param warning_level: warning level factor
+        :type warning_level: float
+        :param drift_level: drift level factor
+        :type drift_level: float
+        :param min_num_instances: minimum numbers of instances
+        to start looking for changes
+        :type min_num_instances: int
+        """
+        super().__init__(min_num_instances=min_num_instances)
+        self.warning_level = warning_level
+        self.drift_level = drift_level
+
+    @property
+    def drift_level(self) -> float:
+        """Drift level property.
+
+        :return: drift level to use in detecting drift
+        :rtype: float
+        """
+        return self._drift_level  # type: ignore
+
+    @drift_level.setter
+    def drift_level(self, value: float) -> None:
+        """Drift level setter.
+
+        :param value: value to be set
+        :type value: float
+        :raises ValueError: Value error exception
+        """
+        if value <= 0.0:
+            raise ValueError("drift level must be greater than 0.0.")
+        if value <= self.warning_level:
+            raise ValueError("drift level must be greater than warning level.")
+        self._drift_level = value
+
+    @property
+    def warning_level(self) -> float:
+        """Warning level property.
+
+        :return: warning level to use in detecting drift
+        :rtype: float
+        """
+        return self._warning_level
+
+    @warning_level.setter
+    def warning_level(self, value: float) -> None:
+        """Warning level setter.
+
+        :param value: value to be set
+        :type value: float
+        :raises ValueError: Value error exception
+        """
+        if value <= 0.0:
+            raise ValueError("warning level must be greater than 0.0.")
+        self._warning_level = value
+
 
 class DDMBasedEstimator(SupervisedBaseEstimatorReFit):
     """Abstract class representing a DDM based estimator."""
@@ -34,7 +98,7 @@ class DDMBasedEstimator(SupervisedBaseEstimatorReFit):
         self,
         estimator: BaseEstimator,
         error_scorer: Callable,
-        config: SupervisedBaseConfig,
+        config: DDMBaseConfig,
         metrics: Optional[Union[BaseMetric, List[BaseMetric]]] = None,
     ) -> None:
         """Init method.
@@ -44,7 +108,7 @@ class DDMBasedEstimator(SupervisedBaseEstimatorReFit):
         :param error_scorer: error scorer function
         :type error_scorer: Callable
         :param config: configuration parameters
-        :type config: SupervisedBaseConfig
+        :type config: DDMBaseConfig
         :param metrics: performance metrics
         :type metrics: Optional[Union[BaseMetric, List[BaseMetric]]]
         """
@@ -94,9 +158,6 @@ class DDMBasedEstimator(SupervisedBaseEstimatorReFit):
 
     def _normal_case(self, *args, **kwargs) -> None:  # noqa: N803
         X, y = kwargs.get("X"), kwargs.get("y")  # noqa: N806
-        for _ in range(y.shape[0]):  # type: ignore
-            self.ground_truth.popleft()
-            self.predictions.popleft()
         self._fit_method.add_fit_context_samples(X=X, y=y)
         X, y = self._list_to_arrays(  # noqa: N806
             list_=self._fit_method.fit_context_samples
@@ -119,15 +180,7 @@ class DDMBasedEstimator(SupervisedBaseEstimatorReFit):
         self.num_instances = 0
         self._drift_insufficient_samples = False
         self.sample_weight = None
-
-        map(
-            lambda x: x.clear(),  # type: ignore
-            [
-                self.delayed_predictions,
-                self.ground_truth,
-                self.predictions,
-            ],
-        )
+        self.delayed_predictions.clear()
         self._fit_method.reset()
         self.drift = False
         self.warning = False
@@ -153,3 +206,124 @@ class DDMBasedEstimator(SupervisedBaseEstimatorReFit):
         :return response message
         :rtype: Dict[str, Optional[Union[float, bool, Dict[str, float]]]]
         """
+
+
+class DDMErrorBasedEstimator(DDMBasedEstimator):
+    """Abstract class representing a DDM error based estimator."""
+
+    def __init__(
+        self,
+        estimator: BaseEstimator,
+        error_scorer: Callable,
+        config: DDMBaseConfig,
+        metrics: Optional[Union[BaseMetric, List[BaseMetric]]] = None,
+    ) -> None:
+        """Init method.
+
+        :param estimator: sklearn estimator
+        :type estimator: BaseEstimator
+        :param error_scorer: error scorer function
+        :type error_scorer: Callable
+        :param config: configuration parameters
+        :type config: DDMBaseConfig
+        :param metrics: performance metrics
+        :type metrics: Optional[Union[BaseMetric, List[BaseMetric]]]
+        """
+        super().__init__(
+            estimator=estimator,
+            error_scorer=error_scorer,
+            config=config,
+            metrics=metrics,
+        )
+        self.error_rate = 0
+        self.min_error_rate = float("inf")
+        self.min_std = float("inf")
+
+    @property
+    def error_rate(self) -> float:
+        """Error rate property.
+
+        :return: error rate to use
+        :rtype: float
+        """
+        return self._error_rate
+
+    @error_rate.setter
+    def error_rate(self, value: float) -> None:
+        """Error rate setter.
+
+        :param value: value to be set
+        :type value: float
+        """
+        self._error_rate = value
+
+    @property
+    def min_error_rate(self) -> float:
+        """Minimum error rate property.
+
+        :return: minimum error rate to use
+        :rtype: float
+        """
+        return self._min_error_rate
+
+    @min_error_rate.setter
+    def min_error_rate(self, value: float) -> None:
+        """Minimum error rate setter.
+
+        :param value: value to be set
+        :type value: float
+        """
+        if value < 0:
+            raise ValueError("min_error_rate must be great or equal than 0.")
+        self._min_error_rate = value
+
+    @property
+    def min_error_rate_plus_std(self) -> float:
+        """Minimum error rate + std property.
+
+        :return: minimum error rate + std to determine if a change is happening
+        :rtype: float
+        """
+        return self.min_error_rate + self.min_std
+
+    @property
+    def min_std(self) -> float:
+        """Minimum standard deviation property.
+
+        :return: minimum standard deviation to use
+        :rtype: float
+        """
+        return self._min_std
+
+    @min_std.setter
+    def min_std(self, value: float) -> None:
+        """Minimum standard deviation setter.
+
+        :param value: value to be set
+        :type value: float
+        """
+        if value < 0:
+            raise ValueError("min_std must be great or equal than 0.")
+        self._min_std = value
+
+    def _calculate_error_rate_plus_std(self) -> Tuple[float, float]:
+        std = np.sqrt(self.error_rate * (1 - self.error_rate) / self.num_instances)
+        error_rate_plus_std = self.error_rate + std
+        return error_rate_plus_std, std
+
+    def _check_min_values(self, error_rate_plus_std: float, std: float) -> None:
+        if error_rate_plus_std < self.min_error_rate_plus_std:
+            self.min_error_rate = self.error_rate
+            self.min_std = std
+
+    @staticmethod
+    def _check_threshold(
+        error_rate_plus_std: float, min_error_rate: float, min_std: float, level: float
+    ) -> bool:
+        return error_rate_plus_std > min_error_rate + level * min_std
+
+    def _reset(self, *args, **kwargs) -> None:
+        super()._reset()
+        self.error_rate = 0
+        self.min_error_rate = float("inf")
+        self.min_std = float("inf")

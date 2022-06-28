@@ -381,7 +381,6 @@ class EDDM(DDMBasedEstimator):
 
         X = X[misclassified_idxs, :]  # noqa: N806
         y = y[misclassified_idxs]
-        y_pred = y_pred[misclassified_idxs]
 
         self.num_misclassified_instances += misclassified_idxs.size
 
@@ -400,9 +399,6 @@ class EDDM(DDMBasedEstimator):
             else 0.0
         )
         self.last_distance_error = self.num_instances
-
-        self.ground_truth.extend(y)
-        self.predictions.extend(y_pred)
 
         if (
             self.num_misclassified_instances

@@ -1,8 +1,10 @@
 """Supervised window based base module."""
 
 import abc
+from collections import deque
 from typing import (  # noqa: TYP001
     Callable,
+    Deque,
     Dict,
     List,
     Optional,
@@ -21,37 +23,6 @@ from frouros.utils.decorators import check_func_parameters
 
 class WindowBaseConfig(SupervisedBaseConfig):
     """Class representing a window based configuration class."""
-
-    def __init__(
-        self,
-        min_num_instances: int = 30,
-    ) -> None:
-        """Init method.
-
-        :param min_num_instances: minimum numbers of instances
-        to start looking for changes
-        :type min_num_instances: int
-        """
-        super().__init__()
-        self.min_num_instances = min_num_instances
-
-    @property
-    def min_num_instances(self) -> int:
-        """Minimum number of instances property.
-
-        :return: minimum number of instances to start looking for changes
-        :rtype: int
-        """
-        return self._min_num_instances
-
-    @min_num_instances.setter
-    def min_num_instances(self, value: int) -> None:
-        """Minimum number of instances setter.
-
-        :param value: value to be set
-        :type value: Callable
-        """
-        self._min_num_instances = value
 
 
 class WindowBasedEstimator(SupervisedBaseEstimator):
@@ -77,6 +48,8 @@ class WindowBasedEstimator(SupervisedBaseEstimator):
         """
         super().__init__(estimator=estimator, config=config, metrics=metrics)
         self.error_scorer = error_scorer  # type: ignore
+        self.ground_truth: Deque["Union[str, int, float]"] = deque()
+        self.predictions: Deque["Union[str, int, float]"] = deque()
 
     @property
     def error_scorer(self) -> Callable:
@@ -96,6 +69,42 @@ class WindowBasedEstimator(SupervisedBaseEstimator):
         :type value: Callable
         """
         self._error_scorer = value
+
+    @property
+    def ground_truth(self) -> Deque["Union[str, int, float]"]:
+        """Ground truth property.
+
+        :return: ground truth deque
+        :rtype: Deque["Union[str, int, float]"]
+        """
+        return self._ground_truth
+
+    @ground_truth.setter
+    def ground_truth(self, value: Deque["Union[str, int, float]"]) -> None:
+        """Ground truth setter.
+
+        :param value: value to be set
+        :type value: Deque["Union[str, int, float]"]
+        """
+        self._ground_truth = value
+
+    @property
+    def predictions(self) -> Deque["Union[str, int, float]"]:
+        """Predictions property.
+
+        :return: predictions deque
+        :rtype: Deque["Union[str, int, float]"]
+        """
+        return self._predictions
+
+    @predictions.setter
+    def predictions(self, value: Deque["Union[str, int, float]"]) -> None:
+        """Predictions setter.
+
+        :param value: value to be set
+        :type value: Deque["Union[str, int, float]"]
+        """
+        self._predictions = value
 
     def _clear_target_values(self):
         self.ground_truth.clear()
