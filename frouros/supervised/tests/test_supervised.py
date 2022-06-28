@@ -11,7 +11,14 @@ import numpy as np  # type: ignore
 
 from frouros.supervised.base import SupervisedBaseEstimator
 from frouros.supervised.cusum_test import PageHinkleyTest, PageHinkleyTestConfig
-from frouros.supervised.ddm_based import DDM, DDMConfig, EDDM, EDDMConfig
+from frouros.supervised.ddm_based import (
+    DDM,
+    DDMConfig,
+    EDDM,
+    EDDMConfig,
+    RDDM,
+    RDDMConfig,
+)
 from frouros.supervised.statistical_test import STEPD, SPEPDConfig
 from frouros.supervised.utils import update_detector
 from frouros.supervised.window_based import ADWIN, ADWINConfig, KSWIN, KSWINConfig
@@ -78,6 +85,18 @@ def error_scorer(y_true, y_pred):
                 beta=0.9,
                 level=2.0,
                 min_num_misclassified_instances=500,
+            ),
+        ),
+        RDDM(
+            estimator=ESTIMATOR(**ESTIMATOR_ARGS),
+            error_scorer=error_scorer,
+            config=RDDMConfig(
+                warning_level=1.773,
+                drift_level=2.258,
+                max_concept_size=40000,
+                min_concept_size=7000,
+                max_num_instances_warning=1400,
+                min_num_instances=129,
             ),
         ),
         STEPD(

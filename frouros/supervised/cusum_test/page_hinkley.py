@@ -120,8 +120,6 @@ class PageHinkleyTest(CUSUMTestEstimator):
             error_rate - self.mean_error_rate - self.config.delta  # type: ignore
         )
 
-        self.ground_truth.extend(y.tolist())
-        self.predictions.extend(y_pred.tolist())
         if (
             self.num_instances > self.config.min_num_instances  # type: ignore
             and self.sum_ >= self.config.lambda_  # type: ignore

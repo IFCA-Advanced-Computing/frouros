@@ -239,7 +239,7 @@ class SupervisedBaseConfig(abc.ABC):
 
     def __init__(
         self,
-        min_num_instances: int = 30,
+        min_num_instances: int,
     ) -> None:
         """Init method.
 
@@ -263,7 +263,7 @@ class SupervisedBaseConfig(abc.ABC):
         """Minimum number of instances setter.
 
         :param value: value to be set
-        :type value: Callable
+        :type value: int
         """
         self._min_num_instances = value
 
@@ -290,9 +290,7 @@ class SupervisedBaseEstimator(abc.ABC):
         self.config = config
         self.metrics: Optional[List[BaseMetric]] = metrics  # type: ignore
         self.delayed_predictions: Deque["Tuple[np.ndarray, np.ndarray]"] = deque()
-        self.ground_truth: Deque["Union[str, int, float]"] = deque()
         self.num_instances = 0
-        self.predictions: Deque["Union[str, int, float]"] = deque()
         self.sample_weight: Optional[Union[List[int], List[float]]] = None
         self._drift_insufficient_samples = False
         self._metrics_func: Callable = (
@@ -344,24 +342,6 @@ class SupervisedBaseEstimator(abc.ABC):
         :type value: Deque["Tuple[np.ndarray, np.ndarray]"]
         """
         self._delayed_predictions = value
-
-    @property
-    def ground_truth(self) -> Deque["Union[str, int, float]"]:
-        """Ground truth property.
-
-        :return: ground truth deque
-        :rtype: Deque["Union[str, int, float]"]
-        """
-        return self._ground_truth
-
-    @ground_truth.setter
-    def ground_truth(self, value: Deque["Union[str, int, float]"]) -> None:
-        """Ground truth setter.
-
-        :param value: value to be set
-        :type value: Deque["Union[str, int, float]"]
-        """
-        self._ground_truth = value
 
     @property
     def estimator(self) -> BaseEstimator:
@@ -433,24 +413,6 @@ class SupervisedBaseEstimator(abc.ABC):
         if value < 0:
             raise ValueError("num_instances must be greater or equal than 0.")
         self._num_instances = value
-
-    @property
-    def predictions(self) -> Deque["Union[str, int, float]"]:
-        """Predictions property.
-
-        :return: predictions deque
-        :rtype: Deque["Union[str, int, float]"]
-        """
-        return self._predictions
-
-    @predictions.setter
-    def predictions(self, value: Deque["Union[str, int, float]"]) -> None:
-        """Predictions setter.
-
-        :param value: value to be set
-        :type value: Deque["Union[str, int, float]"]
-        """
-        self._predictions = value
 
     @property
     def sample_weight(self) -> Optional[Union[List[int], List[float]]]:
