@@ -218,12 +218,16 @@ class STEPD(SupervisedBaseEstimatorReFit, StatisticalTestEstimator):
         return X, y_pred, metrics
 
     def update(
-        self, y: np.ndarray
+        self,
+        y: np.ndarray,
+        X: np.ndarray = None,  # noqa: N803
     ) -> Dict[str, Optional[Union[float, bool, Dict[str, float]]]]:
         """Update drift detector.
 
         :param y: input data
         :type y: numpy.ndarray
+        :param X: feature data
+        :type X: Optional[numpy.ndarray]
         :return response message
         :rtype: Dict[str, Optional[Union[float, bool, Dict[str, float]]]]
         """

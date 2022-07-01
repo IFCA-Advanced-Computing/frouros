@@ -25,6 +25,7 @@ class EDDMConfig(DDMBaseConfig):
         :param alpha: warning zone value
         :type alpha: float
         :param beta: change zone value
+        :type beta: float
         :param level: level factor
         :type level: float
         :param min_num_misclassified_instances: minimum numbers of instances
@@ -348,12 +349,16 @@ class EDDM(DDMBasedEstimator):
         return response
 
     def update(
-        self, y: np.ndarray
+        self,
+        y: np.ndarray,
+        X: np.ndarray = None,  # noqa: N803
     ) -> Dict[str, Optional[Union[float, bool, Dict[str, float]]]]:
         """Update drift detector.
 
         :param y: input data
         :type y: numpy.ndarray
+        :param X: feature data
+        :type X: Optional[numpy.ndarray]
         :return response message
         :rtype: Dict[str, Optional[Union[float, bool, Dict[str, float]]]]
         """

@@ -1,1 +1,0 @@
-"""Supervised test init."""

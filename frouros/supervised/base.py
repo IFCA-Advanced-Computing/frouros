@@ -90,6 +90,7 @@ class BaseFit(abc.ABC):
 
         :param value: value to be set
         :type value: List[Tuple[List[float], Union[str, int, float]]]
+        :raises TypeError: Type error exception
         """
         if not isinstance(value, List):
             raise TypeError("value must be of type List.")
@@ -114,6 +115,7 @@ class BaseFit(abc.ABC):
 
         :param value: value to be set
         :type value: List[Tuple[List[float], Union[str, int, float]]]
+        :raises TypeError: Type error exception
         """
         if not isinstance(value, List):
             raise TypeError("value must be of type List.")
@@ -520,7 +522,9 @@ class SupervisedBaseEstimator(abc.ABC):
 
     @abc.abstractmethod
     def update(
-        self, y: np.array
+        self,
+        y: np.ndarray,
+        X: np.ndarray = None,  # noqa: N803
     ) -> Dict[str, Optional[Union[float, bool, Dict[str, float]]]]:
         """Update abstract method."""
 
