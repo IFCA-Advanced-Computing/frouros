@@ -154,6 +154,29 @@ Frouros is a Python library for drift detection in Machine Learning problems.
     </td>
   </tr>
   <tr>
+    <td rowspan="1">
+        <a href="https://github.com/jaime-cespedes-sisniega/frouros/blob/main/frouros/semi_supervised/base.py"> 
+            <div style="height:100%;width:100%">
+                Semi-supervised
+            </div>
+        </a>
+    </td>
+    <td rowspan="1">
+        <a href="https://github.com/jaime-cespedes-sisniega/frouros/blob/main/frouros/semi_supervised/margin_density_based/base.py"> 
+            <div style="height:100%;width:100%">
+                Margin Density Based
+            </div>
+        </a>
+    </td>
+    <td>
+        <a href="https://github.com/jaime-cespedes-sisniega/frouros/blob/main/frouros/semi_supervised/margin_density_based/md3.py"> 
+            <div style="height:100%;width:100%">
+                MD3-SVM
+            </div>
+        </a>
+    </td>
+  </tr>
+  <tr>
     <td rowspan="9">
         <a href="https://github.com/jaime-cespedes-sisniega/frouros/blob/main/frouros/unsupervised/base.py"> 
             <div style="height:100%;width:100%">
