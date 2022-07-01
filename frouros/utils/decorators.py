@@ -4,7 +4,7 @@ from functools import wraps
 from inspect import signature
 from typing import Any
 
-from frouros.supervised.exceptions import ArgumentError
+from frouros.common.exceptions import ArgumentError
 
 
 def check_func_parameters(func: Any) -> Any:
