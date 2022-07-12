@@ -16,6 +16,7 @@ keywords = [
     "concept-drift",
     "supervised-drift-detection",
     "unsupervised-drift-detection",
+    "semi-supervised-drift-detection",
     "machine-learning"
 ]
 requires-python = ">=3.8,<3.11"
