@@ -1,4 +1,4 @@
-"""Package ssetup file."""
+"""Package setup file."""
 
 import codecs
 
@@ -29,8 +29,8 @@ def setup_package():
         include_package_data=True,
         install_requires=pyproject["project"]["dependencies"],
         keywords=pyproject["project"]["keywords"],
-        # FIXME: Solve problem reading license from pyproject.toml
-        # license=pyproject["project"]["license"],
+        classifiers=pyproject["project"]["classifiers"],
+        license=pyproject["project"]["license"],
         long_description=long_description(),
         maintainer_email=pyproject["project"]["maintainers"][0]["email"],
         maintainer=pyproject["project"]["maintainers"][0]["name"],

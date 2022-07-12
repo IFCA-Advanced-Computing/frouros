@@ -2,8 +2,7 @@
 name = "frouros"
 version = "0.1.0"
 description = "A Python library for drift detection in Machine Learning problems"
-# FIXME: Solve problem reading license
-# license = "BSD-3-Clause"
+license = "BSD-3-Clause"
 authors = [
     {name = "Jaime Céspedes Sisniega", email = "cespedes@ifca.unican.es"}
 ]
@@ -33,8 +32,6 @@ dependencies = [
     "scikit-learn>=1.0.0,<1.1",
     "scipy>=1.8.0,<1.9"
 ]
-#dynamic = ["version",
-#           "description"]
 
 [project.optional-dependencies]
 docs = [
