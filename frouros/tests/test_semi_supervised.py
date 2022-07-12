@@ -4,39 +4,48 @@ from typing import Tuple
 
 import pytest  # type: ignore
 from sklearn.metrics import accuracy_score  # type: ignore
-from sklearn.tree import DecisionTreeClassifier  # type: ignore
 from sklearn.pipeline import Pipeline  # type: ignore
-from sklearn.preprocessing import StandardScaler  # type: ignore
+from sklearn.tree import DecisionTreeClassifier  # type: ignore
 import numpy as np  # type: ignore
 
 from frouros.common.update import update_detector
 from frouros.supervised.base import SupervisedBaseEstimator
 from frouros.semi_supervised.margin_density_based import (
+    MD3RS,
+    MD3RSConfig,
     MD3SVM,
-    MD3Config,
+    MD3SVMConfig,
 )
-
-
-ESTIMATOR = DecisionTreeClassifier
-ESTIMATOR_ARGS = {
-    "C": 1.0,
-    "penalty": "l2",
-    "loss": "hinge",
-}
 
 
 @pytest.mark.parametrize(
     "detector",
     [
+        MD3RS(
+            estimator=DecisionTreeClassifier(random_state=31),
+            metric_scorer=accuracy_score,
+            config=MD3RSConfig(
+                chunk_size=2500,
+                sensitivity=2.0,
+                num_folds=5,
+                ratio_random_features=0.5,
+                margin_uncertainty=0.5,
+            ),
+            random_state=31,
+        ),
         MD3SVM(
             metric_scorer=accuracy_score,
-            config=MD3Config(
+            config=MD3SVMConfig(
                 chunk_size=2500,
                 sensitivity=2.0,
                 num_folds=5,
             ),
             random_state=31,
-            svm_args=ESTIMATOR_ARGS,  # type: ignore
+            svm_args={
+                "C": 1.0,
+                "penalty": "l2",
+                "loss": "hinge",
+            },
         ),
     ],
 )
@@ -52,7 +61,7 @@ def test_semi_supervised_method(
     """
     X_ref, y_ref, X_test, y_test = classification_dataset  # noqa: N806
 
-    pipe = Pipeline([("scaler", StandardScaler()), ("detector", detector)])
+    pipe = Pipeline([("detector", detector)])
 
     pipe.fit(X=X_ref, y=y_ref)
 
