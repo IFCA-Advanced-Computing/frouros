@@ -10,7 +10,14 @@ from sklearn.preprocessing import StandardScaler  # type: ignore
 import numpy as np  # type: ignore
 
 from frouros.supervised.base import SupervisedBaseEstimator
-from frouros.supervised.cusum_test import PageHinkleyTest, PageHinkleyTestConfig
+from frouros.supervised.cusum_based import (
+    CUSUM,
+    CUSUMConfig,
+    GeometricMovingAverage,
+    GeometricMovingAverageConfig,
+    PageHinkley,
+    PageHinkleyConfig,
+)
 from frouros.supervised.ddm_based import (
     DDM,
     DDMConfig,
@@ -29,6 +36,10 @@ ESTIMATOR_ARGS = {
     "random_state": 31,
 }
 MIN_NUM_INSTANCES = 500
+CUMSUM_ARGS = {
+    "delta": 0.005,
+    "lambda_": 50,
+}
 
 
 def error_scorer(y_true, y_pred):
@@ -59,14 +70,30 @@ def error_scorer(y_true, y_pred):
                 num_test_instances=30,
             ),
         ),
-        PageHinkleyTest(
+        CUSUM(
             estimator=ESTIMATOR(**ESTIMATOR_ARGS),
             error_scorer=error_scorer,
-            config=PageHinkleyTestConfig(
-                delta=0.005,
-                forgetting_factor=0.9999,
-                lambda_=50,
+            config=CUSUMConfig(
                 min_num_instances=MIN_NUM_INSTANCES,
+                **CUMSUM_ARGS,
+            ),
+        ),
+        GeometricMovingAverage(
+            estimator=ESTIMATOR(**ESTIMATOR_ARGS),
+            error_scorer=error_scorer,
+            config=GeometricMovingAverageConfig(
+                min_num_instances=MIN_NUM_INSTANCES,
+                lambda_=1.0,
+                alpha=0.99,
+            ),
+        ),
+        PageHinkley(
+            estimator=ESTIMATOR(**ESTIMATOR_ARGS),
+            error_scorer=error_scorer,
+            config=PageHinkleyConfig(
+                min_num_instances=MIN_NUM_INSTANCES,
+                **CUMSUM_ARGS,
+                alpha=0.9999,
             ),
         ),
         DDM(
