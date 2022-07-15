@@ -4,9 +4,11 @@ from typing import Tuple
 
 import pytest  # type: ignore
 import numpy as np  # type: ignore
+from sklearn.metrics import accuracy_score  # type: ignore
 
 from frouros.datasets.real import Elec2
 from frouros.datasets.synthetic import SEA
+from frouros.metrics.prequential_error import PrequentialError
 
 
 # Elec2 fixtures
@@ -145,3 +147,15 @@ def multivariate_distribution_q() -> Tuple[np.ndarray, np.ndarray]:
     cov = 3 * np.eye(2) - 1
 
     return mean, cov
+
+
+@pytest.fixture(scope="module")
+def prequential_error():
+    """Prequential error.
+
+    :return: prequential error
+    :rtype: PrequentialError
+    """
+    return PrequentialError(
+        error_scorer=lambda y_true, y_pred: 1 - accuracy_score(y_true, y_pred)
+    )
