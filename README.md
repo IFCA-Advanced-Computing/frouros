@@ -61,14 +61,14 @@ Frouros is a Python library for drift detection in Machine Learning problems.
 </thead>
 <tbody>
   <tr>
-    <td rowspan="8">
+    <td rowspan="9">
         <a href="https://github.com/jaime-cespedes-sisniega/frouros/blob/main/frouros/supervised/base.py"> 
             <div style="height:100%;width:100%">
                 Supervised
             </div>
         </a>
     </td>
-    <td rowspan="2">
+    <td rowspan="3">
         <a href="https://github.com/jaime-cespedes-sisniega/frouros/blob/main/frouros/supervised/cusum_based/base.py"> 
             <div style="height:100%;width:100%">
                 CUSUM Based
@@ -82,6 +82,15 @@ Frouros is a Python library for drift detection in Machine Learning problems.
             </div>
         </a>
     </td>
+  <tr>
+    <td>
+        <a href="https://github.com/jaime-cespedes-sisniega/frouros/blob/main/frouros/supervised/cusum_based/geometric_moving_average.py">  
+            <div style="height:100%;width:100%">
+                Geometric Moving Average
+            </div>
+        </a>
+    </td>
+  </tr>
   <tr>
     <td>
         <a href="https://github.com/jaime-cespedes-sisniega/frouros/blob/main/frouros/supervised/cusum_based/page_hinkley.py">  
