@@ -55,7 +55,7 @@ def classification_dataset() -> Tuple[np.array, np.array, np.array, np.array]:
     :return: classification dataset
     :rtype: Tuple[np.array, np.array, np.array, np.array]
     """
-    elec2 = Elec2()
+    elec2 = Elec2()  # pylint: disable=redefined-outer-name
     elec2.download()
     dataset = elec2.load()
 
@@ -103,7 +103,7 @@ def dataset_elec2() -> Tuple[np.ndarray, np.ndarray, np.ndarray]:
     :return: dataset
     :rtype: Tuple[np.ndarray, np.ndarray, np.ndarray]
     """
-    elec2 = Elec2()
+    elec2 = Elec2()  # pylint: disable=redefined-outer-name
     elec2.download()
     dataset_ = elec2.load()
 
