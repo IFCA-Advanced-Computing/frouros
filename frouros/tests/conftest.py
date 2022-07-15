@@ -46,7 +46,6 @@ def sea() -> SEA:
     return generator
 
 
-
 @pytest.fixture(scope="module")
 def classification_dataset() -> Tuple[np.array, np.array, np.array, np.array]:
     """Classification dataset using Elec2.
