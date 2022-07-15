@@ -30,7 +30,8 @@ def setup_package():
         install_requires=pyproject["project"]["dependencies"],
         keywords=pyproject["project"]["keywords"],
         classifiers=pyproject["project"]["classifiers"],
-        license=pyproject["project"]["license"],
+        # FIXME: Find a way not to hardcode license
+        license="BSD-3-Clause",
         long_description=long_description(),
         maintainer_email=pyproject["project"]["maintainers"][0]["email"],
         maintainer=pyproject["project"]["maintainers"][0]["name"],
