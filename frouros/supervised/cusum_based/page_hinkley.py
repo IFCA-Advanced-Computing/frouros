@@ -1,30 +1,24 @@
-"""Page Hinkley test module."""
+"""Page Hinkley module."""
 
-from typing import Dict, Optional, Union  # noqa: TYP001
 
-from sklearn.utils.validation import check_is_fitted  # type: ignore
-import numpy as np  # type: ignore
-
-from frouros.supervised.cusum_test.base import (
-    CUSUMTestEstimator,
-    CUSUMTestConfig,
+from frouros.supervised.cusum_based.base import (
+    CUSUMBaseEstimator,
+    CUSUMBaseConfig,
 )
 
 
-class PageHinkleyTestConfig(CUSUMTestConfig):
-    """Page Hinkley test configuration class."""
+class PageHinkleyConfig(CUSUMBaseConfig):
+    """Page Hinkley configuration class."""
 
     def __init__(
         self,
         delta: float = 0.005,
-        forgetting_factor: float = 0.9999,
-        lambda_: int = 50,
+        lambda_: float = 50.0,
         min_num_instances: int = 30,
+        alpha: float = 0.9999,
     ) -> None:
         """Init method.
 
-        :param forgetting_factor: forgetting factor value
-        :type forgetting_factor: float
         :param delta: delta value
         :type delta: float
         :param lambda_: lambda value
@@ -32,105 +26,39 @@ class PageHinkleyTestConfig(CUSUMTestConfig):
         :param min_num_instances: minimum numbers of instances
         to start looking for changes
         :type min_num_instances: int
+        :param alpha: forgetting factor value
+        :type alpha: float
         """
-        super().__init__(min_num_instances=min_num_instances)
-        self.delta = delta
-        self.forgetting_factor = forgetting_factor
-        self.lambda_ = lambda_
+        super().__init__(
+            min_num_instances=min_num_instances, delta=delta, lambda_=lambda_
+        )
+        self.alpha = alpha
 
     @property
-    def delta(self) -> float:
-        """Delta property.
-
-        :return: delta to use
-        :rtype: float
-        """
-        return self._delta
-
-    @delta.setter
-    def delta(self, value: float) -> None:
-        """Delta setter.
-
-        :param value: value to be set
-        :type value: Callable
-        """
-        self._delta = value
-
-    @property
-    def forgetting_factor(self) -> float:
+    def alpha(self) -> float:
         """Forgetting factor property.
 
         :return: forgetting factor value
         :rtype: float
         """
-        return self._forgetting_factor
+        return self._alpha
 
-    @forgetting_factor.setter
-    def forgetting_factor(self, value: float) -> None:
+    @alpha.setter
+    def alpha(self, value: float) -> None:
         """Forgetting factor setter.
 
         :param value: forgetting factor value
         :type value: float
         """
-        self._forgetting_factor = value
-
-    @property
-    def lambda_(self) -> float:
-        """Lambda property.
-
-        :return: lambda to use
-        :rtype: float
-        """
-        return self._lambda
-
-    @lambda_.setter
-    def lambda_(self, value: float) -> None:
-        """Lambda setter.
-
-        :param value: value to be set
-        :type value: float
-        :raises ValueError: Value error exception
-        """
-        if value < 0:
-            raise ValueError("min_error_rate must be great or equal than 0.")
-        self._lambda = value
+        if not 0.0 <= value <= 1.0:
+            raise ValueError("alpha must be in the range [0, 1].")
+        self._alpha = value
 
 
-class PageHinkleyTest(CUSUMTestEstimator):
-    """Page Hinkley test algorithm class."""
+class PageHinkley(CUSUMBaseEstimator):
+    """Page Hinkley algorithm class."""
 
-    def update(
-        self,
-        y: np.ndarray,
-        X: np.ndarray = None,  # noqa: N803
-    ) -> Dict[str, Optional[Union[float, bool, Dict[str, float]]]]:
-        """Update drift detector.
-
-        :param y: input data
-        :type y: numpy.ndarray
-        :param X: feature data
-        :type X: Optional[numpy.ndarray]
-        :return response message
-        :rtype: Dict[str, Optional[Union[float, bool, Dict[str, float]]]]
-        """
-        check_is_fitted(self.estimator)
-        _, y_pred = self.delayed_predictions.popleft()  # noqa: N806
-        self.num_instances += y_pred.shape[0]
-
-        error_rate = self.error_scorer(y_true=y, y_pred=y_pred)
-
-        self.mean_error_rate += (error_rate - self.mean_error_rate) / self.num_instances
-        self.sum_ = self.config.forgetting_factor * self.sum_ + (  # type: ignore
+    def _update_sum(self, error_rate: float) -> None:
+        self.sum_ = self.config.alpha * self.sum_ + (  # type: ignore
             error_rate - self.mean_error_rate - self.config.delta  # type: ignore
         )
-
-        if (
-            self.num_instances > self.config.min_num_instances  # type: ignore
-            and self.sum_ >= self.config.lambda_  # type: ignore
-        ):
-            response = self._get_update_response(drift=True, warning=True)
-            self._reset()
-            return response
-
-        response = self._get_update_response(drift=False, warning=False)
-        return response

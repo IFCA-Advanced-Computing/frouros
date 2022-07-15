@@ -1,8 +1,11 @@
-"""Supervised statistical test detection methods' init."""
+"""Supervised CUSUM based detection methods' init."""
 
-from .page_hinkley import PageHinkleyTest, PageHinkleyTestConfig
+from .cusum import CUSUM, CUSUMConfig
+from .page_hinkley import PageHinkley, PageHinkleyConfig
 
 __all__ = [
-    "PageHinkleyTest",
-    "PageHinkleyTestConfig",
+    "CUSUM",
+    "CUSUMConfig",
+    "PageHinkley",
+    "PageHinkleyConfig",
 ]
