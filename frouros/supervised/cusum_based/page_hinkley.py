@@ -4,10 +4,12 @@
 from frouros.supervised.cusum_based.base import (
     CUSUMBaseEstimator,
     CUSUMBaseConfig,
+    DeltaConfig,
+    AlphaConfig,
 )
 
 
-class PageHinkleyConfig(CUSUMBaseConfig):
+class PageHinkleyConfig(CUSUMBaseConfig, DeltaConfig, AlphaConfig):
     """Page Hinkley configuration class."""
 
     def __init__(
@@ -29,30 +31,11 @@ class PageHinkleyConfig(CUSUMBaseConfig):
         :param alpha: forgetting factor value
         :type alpha: float
         """
-        super().__init__(
-            min_num_instances=min_num_instances, delta=delta, lambda_=lambda_
+        CUSUMBaseConfig.__init__(
+            self, min_num_instances=min_num_instances, lambda_=lambda_
         )
-        self.alpha = alpha
-
-    @property
-    def alpha(self) -> float:
-        """Forgetting factor property.
-
-        :return: forgetting factor value
-        :rtype: float
-        """
-        return self._alpha
-
-    @alpha.setter
-    def alpha(self, value: float) -> None:
-        """Forgetting factor setter.
-
-        :param value: forgetting factor value
-        :type value: float
-        """
-        if not 0.0 <= value <= 1.0:
-            raise ValueError("alpha must be in the range [0, 1].")
-        self._alpha = value
+        DeltaConfig.__init__(self, delta=delta)
+        AlphaConfig.__init__(self, alpha=alpha)
 
 
 class PageHinkley(CUSUMBaseEstimator):
