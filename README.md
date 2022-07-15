@@ -76,9 +76,9 @@ Frouros is a Python library for drift detection in Machine Learning problems.
         </a>
     </td>
    <td>
-        <a href="https://github.com/jaime-cespedes-sisniega/frouros/blob/main/frouros/supervised/cusum_based/cumsum.py"> 
+        <a href="https://github.com/jaime-cespedes-sisniega/frouros/blob/main/frouros/supervised/cusum_based/cusum.py"> 
             <div style="height:100%;width:100%">
-                CUMSUM
+                CUSUM
             </div>
         </a>
     </td>
