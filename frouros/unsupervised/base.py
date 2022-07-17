@@ -225,7 +225,9 @@ class UnsupervisedBaseEstimator(abc.ABC, BaseEstimator, TransformerMixin):
 
     def _common_checks(self, X: np.ndarray) -> np.ndarray:  # noqa: N803
         check_is_fitted(self, attributes="X_ref_")
-        X = check_array(X, dtype=self.data_type.output_type)  # type: ignore # noqa: N806
+        X = check_array(  # noqa: N806
+            X, dtype=self.data_type.output_type  # type: ignore # noqa: N806
+        )
         self._check_dimensions(X=X)
         return X
 
