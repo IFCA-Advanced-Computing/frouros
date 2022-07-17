@@ -18,7 +18,7 @@ from frouros.unsupervised.distance_based import (
     KL,
     MMD,
 )
-from frouros.unsupervised.statistical_test import ChiSquaredTest, CVMTest, KSTest
+from frouros.unsupervised.statistical_test import ChiSquaredTest, CVMTest, KSTest, TTest
 from frouros.unsupervised.utils import get_statistical_test
 
 
@@ -46,7 +46,8 @@ def test_categorical_features(
 
 
 @pytest.mark.parametrize(
-    "detector", [EMD(), PSI(), CVMTest(), KSTest(), JS(), KL(), HistogramIntersection()]
+    "detector",
+    [EMD(), PSI(), CVMTest(), KSTest(), JS(), KL(), HistogramIntersection(), TTest()],
 )
 def test_univariate_test(
     dataset_elec2: Tuple[np.ndarray, np.ndarray, np.ndarray],
