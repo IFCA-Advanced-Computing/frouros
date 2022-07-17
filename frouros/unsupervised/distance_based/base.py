@@ -6,7 +6,11 @@ from typing import Tuple, Union
 import numpy as np  # type: ignore
 from scipy.stats import rv_histogram  # type: ignore
 
-from frouros.unsupervised.base import UnivariateTest, UnsupervisedBaseEstimator
+from frouros.unsupervised.base import (
+    NumericalData,
+    UnivariateTestType,
+    UnsupervisedBaseEstimator,
+)
 
 
 class DistanceBasedEstimator(UnsupervisedBaseEstimator):
@@ -34,7 +38,7 @@ class DistanceProbabilityBasedEstimator(DistanceBasedEstimator):
         :param num_bins: number of bins in which to divide probabilities
         :type num_bins: int
         """
-        super().__init__(test_type=UnivariateTest())
+        super().__init__(data_type=NumericalData(), test_type=UnivariateTestType())
         self.num_bins = num_bins
 
     @property

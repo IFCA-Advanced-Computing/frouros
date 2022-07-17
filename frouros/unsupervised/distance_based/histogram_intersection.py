@@ -2,7 +2,7 @@
 
 import numpy as np  # type: ignore
 
-from frouros.unsupervised.base import UnivariateTest
+from frouros.unsupervised.base import NumericalData, UnivariateTestType
 from frouros.unsupervised.distance_based.base import (  # type: ignore
     DistanceBasedEstimator,
 )
@@ -17,7 +17,7 @@ class HistogramIntersection(DistanceBasedEstimator):
         :param num_bins: number of bins in which to divide probabilities
         :type num_bins: int
         """
-        super().__init__(test_type=UnivariateTest())
+        super().__init__(data_type=NumericalData(), test_type=UnivariateTestType())
         self.num_bins = num_bins
 
     @property

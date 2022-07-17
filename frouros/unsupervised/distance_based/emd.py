@@ -3,7 +3,7 @@
 import numpy as np  # type: ignore
 from scipy.stats import wasserstein_distance  # type: ignore
 
-from frouros.unsupervised.base import UnivariateTest
+from frouros.unsupervised.base import NumericalData, UnivariateTestType
 from frouros.unsupervised.distance_based.base import (  # type: ignore
     DistanceBasedEstimator,
 )
@@ -14,7 +14,7 @@ class EMD(DistanceBasedEstimator):
 
     def __init__(self) -> None:
         """Init method."""
-        super().__init__(test_type=UnivariateTest())
+        super().__init__(data_type=NumericalData(), test_type=UnivariateTestType())
 
     def _distance(
         self, X_ref_: np.ndarray, X: np.ndarray, **kwargs  # noqa: N803

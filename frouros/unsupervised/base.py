@@ -14,7 +14,7 @@ from frouros.unsupervised.exceptions import MismatchDimensionError
 TestResult = namedtuple("TestResult", ["statistic", "pvalue"])
 
 
-class BaseTest(abc.ABC):
+class BaseTestType(abc.ABC):
     """Abstract class representing a test type."""
 
     def __init__(self) -> None:
@@ -36,7 +36,7 @@ class BaseTest(abc.ABC):
         """
 
 
-class UnivariateTest(BaseTest):
+class UnivariateTestType(BaseTestType):
     """Class representing a univariate test."""
 
     def get_test(
@@ -60,7 +60,7 @@ class UnivariateTest(BaseTest):
         return tests
 
 
-class MultivariateTest(BaseTest):
+class MultivariateTestType(BaseTestType):
     """Class representing a multivariate test."""
 
     def get_test(
@@ -81,14 +81,42 @@ class MultivariateTest(BaseTest):
         return test
 
 
+class BaseDataType(abc.ABC):
+    """Abstract class representing a data type."""
+
+    @abc.abstractmethod
+    def __init__(self) -> None:
+        """Init method."""
+
+
+class CategoricalData(BaseDataType):
+    """Class representing categorical data."""
+
+    def __init__(self) -> None:
+        """Init method."""
+        super().__init__()
+        self.output_type = None
+
+
+class NumericalData(BaseDataType):
+    """Class representing numerical data."""
+
+    def __init__(self) -> None:
+        """Init method."""
+        super().__init__()
+        self.output_type = np.float32
+
+
 class UnsupervisedBaseEstimator(abc.ABC, BaseEstimator, TransformerMixin):
     """Abstract class representing an unsupervised estimator."""
 
-    def __init__(self, test_type: BaseTest) -> None:
+    def __init__(self, test_type: BaseTestType, data_type: BaseDataType) -> None:
         """Init method.
 
         :param test_type: type of test to apply
-        :type test_type: BaseTest
+        :type test_type: BaseTestType
+        :param data_type: type of data to use
+        :type data_type: BaseDataType
         """
         self.X_ref_ = None  # type: ignore
         self.test: Optional[
@@ -96,6 +124,7 @@ class UnsupervisedBaseEstimator(abc.ABC, BaseEstimator, TransformerMixin):
         ] = None
         test_type.apply_method = self._apply_method
         self.test_type = test_type
+        self.data_type = data_type
 
     @property
     def X_ref_(self) -> Optional[np.ndarray]:  # noqa: N802
@@ -113,7 +142,11 @@ class UnsupervisedBaseEstimator(abc.ABC, BaseEstimator, TransformerMixin):
         :param value: value to be set
         :type value: Optional[numpy.ndarray]
         """
-        self._X_ref_ = check_array(value, dtype=None) if value is not None else value
+        self._X_ref_ = (
+            check_array(value, dtype=self.data_type.output_type)  # type: ignore
+            if value is not None
+            else value
+        )
 
     @property
     def test(self) -> Optional[List[Tuple[float, float]]]:
@@ -192,7 +225,7 @@ class UnsupervisedBaseEstimator(abc.ABC, BaseEstimator, TransformerMixin):
 
     def _common_checks(self, X: np.ndarray) -> np.ndarray:  # noqa: N803
         check_is_fitted(self, attributes="X_ref_")
-        X = check_array(X, dtype=None)  # noqa: N806
+        X = check_array(X, dtype=self.data_type.output_type)  # type: ignore # noqa: N806
         self._check_dimensions(X=X)
         return X
 
