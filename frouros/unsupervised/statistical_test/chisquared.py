@@ -6,7 +6,7 @@ from typing import List, Tuple
 import numpy as np  # type: ignore
 from scipy.stats import chisquare  # type: ignore
 
-from frouros.unsupervised.base import UnivariateTest
+from frouros.unsupervised.base import CategoricalData, UnivariateTestType
 from frouros.unsupervised.statistical_test.base import (  # type: ignore
     StatisticalTestBaseEstimator,
 )
@@ -18,7 +18,7 @@ class ChiSquaredTest(StatisticalTestBaseEstimator):
 
     def __init__(self) -> None:
         """Init method."""
-        super().__init__(test_type=UnivariateTest())
+        super().__init__(data_type=CategoricalData(), test_type=UnivariateTestType())
 
     def _specific_checks(self, X: np.ndarray) -> None:  # noqa: N803
         self._check_equal_number_samples(X_ref_=self.X_ref_, X=X)
