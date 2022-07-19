@@ -23,6 +23,8 @@ from frouros.supervised.ddm_based import (
     DDMConfig,
     EDDM,
     EDDMConfig,
+    HDDMA,
+    HDDMAConfig,
     RDDM,
     RDDMConfig,
 )
@@ -39,6 +41,10 @@ MIN_NUM_INSTANCES = 500
 CUMSUM_ARGS = {
     "delta": 0.005,
     "lambda_": 50,
+}
+HDDMA_ARGS = {
+    "alpha_w": 0.005,
+    "alpha_d": 0.001,
 }
 
 
@@ -111,7 +117,25 @@ def error_scorer(y_true, y_pred):
                 alpha=0.95,
                 beta=0.9,
                 level=2.0,
-                min_num_misclassified_instances=500,
+                min_num_misclassified_instances=MIN_NUM_INSTANCES,
+            ),
+        ),
+        HDDMA(
+            estimator=ESTIMATOR(**ESTIMATOR_ARGS),
+            error_scorer=error_scorer,
+            config=HDDMAConfig(
+                **HDDMA_ARGS,
+                two_sided_test=False,
+                min_num_instances=MIN_NUM_INSTANCES,
+            ),
+        ),
+        HDDMA(
+            estimator=ESTIMATOR(**ESTIMATOR_ARGS),
+            error_scorer=error_scorer,
+            config=HDDMAConfig(
+                **HDDMA_ARGS,
+                two_sided_test=True,
+                min_num_instances=MIN_NUM_INSTANCES,
             ),
         ),
         RDDM(
