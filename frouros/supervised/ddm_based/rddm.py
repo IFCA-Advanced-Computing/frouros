@@ -159,7 +159,7 @@ class RDDM(DDMErrorBasedEstimator):
             X=X, y=y
         ):
             response = self._get_update_response(
-                drift=True, warning=True, metrics=metrics
+                drift=True, warning=False, metrics=metrics
             )
             return response  # type: ignore
 
@@ -185,9 +185,9 @@ class RDDM(DDMErrorBasedEstimator):
             if drift_flag:
                 # Out-of-Control
                 self._drift_case(X=X, y=y)
-                self.drift = True
                 self.rddm_drift = True
-                self.warning = True
+                self.drift = True
+                self.warning = False
                 if self.num_warnings == 0:
                     self.predictions.maintain_last_element()
             else:

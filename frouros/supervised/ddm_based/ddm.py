@@ -34,7 +34,7 @@ class DDM(DDMErrorBasedEstimator):
             X=X, y=y
         ):
             response = self._get_update_response(
-                drift=True, warning=True, metrics=metrics
+                drift=True, warning=False, metrics=metrics
             )
             return response  # type: ignore
 
@@ -57,7 +57,7 @@ class DDM(DDMErrorBasedEstimator):
                 # Out-of-Control
                 self._drift_case(X=X, y=y)
                 self.drift = True
-                self.warning = True
+                self.warning = False
             else:
                 warning_flag = self._check_threshold(
                     error_rate_plus_std=error_rate_plus_std,

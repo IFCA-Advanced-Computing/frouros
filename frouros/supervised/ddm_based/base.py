@@ -156,7 +156,7 @@ class DDMBasedEstimator(SupervisedBaseEstimatorReFit):
             X_new_context=X_new_context, y_new_context=y_new_context
         )
 
-    def _normal_case(self, *args, **kwargs) -> None:  # noqa: N803
+    def _normal_case(self, *args, **kwargs) -> None:
         X, y = kwargs.get("X"), kwargs.get("y")  # noqa: N806
         self._fit_method.add_fit_context_samples(X=X, y=y)
         X, y = self._list_to_arrays(  # noqa: N806
