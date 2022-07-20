@@ -61,7 +61,7 @@ Frouros is a Python library for drift detection in Machine Learning problems.
 </thead>
 <tbody>
   <tr>
-    <td rowspan="10">
+    <td rowspan="11">
         <a href="https://github.com/jaime-cespedes-sisniega/frouros/blob/main/frouros/supervised/base.py"> 
             <div style="height:100%;width:100%">
                 Supervised
@@ -100,7 +100,7 @@ Frouros is a Python library for drift detection in Machine Learning problems.
         </a>
     </td>
   </tr>
-    <td rowspan="4">
+    <td rowspan="5">
         <a href="https://github.com/jaime-cespedes-sisniega/frouros/blob/main/frouros/supervised/ddm_based/base.py">  
             <div style="height:100%;width:100%">
                 DDM Based
@@ -128,6 +128,15 @@ Frouros is a Python library for drift detection in Machine Learning problems.
         <a href="https://github.com/jaime-cespedes-sisniega/frouros/blob/main/frouros/supervised/ddm_based/hddm.py">  
             <div style="height:100%;width:100%">
                 HDDM-A
+            </div>
+        </a>
+    </td>
+  </tr>
+  <tr>
+    <td>
+        <a href="https://github.com/jaime-cespedes-sisniega/frouros/blob/main/frouros/supervised/ddm_based/hddm.py">  
+            <div style="height:100%;width:100%">
+                HDDM-W
             </div>
         </a>
     </td>
