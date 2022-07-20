@@ -25,6 +25,8 @@ from frouros.supervised.ddm_based import (
     EDDMConfig,
     HDDMA,
     HDDMAConfig,
+    HDDMW,
+    HDDMWConfig,
     RDDM,
     RDDMConfig,
 )
@@ -42,9 +44,13 @@ CUMSUM_ARGS = {
     "delta": 0.005,
     "lambda_": 50,
 }
-HDDMA_ARGS = {
+HDDM_ARGS = {
     "alpha_w": 0.005,
     "alpha_d": 0.001,
+}
+HDDMW_ARGS = {
+    **HDDM_ARGS,
+    "lambda_": 0.05,
 }
 
 
@@ -124,7 +130,7 @@ def error_scorer(y_true, y_pred):
             estimator=ESTIMATOR(**ESTIMATOR_ARGS),
             error_scorer=error_scorer,
             config=HDDMAConfig(
-                **HDDMA_ARGS,
+                **HDDM_ARGS,
                 two_sided_test=False,
                 min_num_instances=MIN_NUM_INSTANCES,
             ),
@@ -133,7 +139,25 @@ def error_scorer(y_true, y_pred):
             estimator=ESTIMATOR(**ESTIMATOR_ARGS),
             error_scorer=error_scorer,
             config=HDDMAConfig(
-                **HDDMA_ARGS,
+                **HDDM_ARGS,
+                two_sided_test=True,
+                min_num_instances=MIN_NUM_INSTANCES,
+            ),
+        ),
+        HDDMW(
+            estimator=ESTIMATOR(**ESTIMATOR_ARGS),
+            error_scorer=error_scorer,
+            config=HDDMWConfig(
+                **HDDM_ARGS,
+                two_sided_test=False,
+                min_num_instances=MIN_NUM_INSTANCES,
+            ),
+        ),
+        HDDMW(
+            estimator=ESTIMATOR(**ESTIMATOR_ARGS),
+            error_scorer=error_scorer,
+            config=HDDMWConfig(
+                **HDDM_ARGS,
                 two_sided_test=True,
                 min_num_instances=MIN_NUM_INSTANCES,
             ),
