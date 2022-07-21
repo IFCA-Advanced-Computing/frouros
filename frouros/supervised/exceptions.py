@@ -1,6 +1,10 @@
 """Supervised exception module."""
 
 
+class InvalidAverageRunLengthError(Exception):
+    """Invalid average run length exception."""
+
+
 class NoFitMethodError(Exception):
     """Not fit method exception."""
 
