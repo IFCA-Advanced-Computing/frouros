@@ -12,7 +12,7 @@ class IncrementalStat(abc.ABC):
         """Update abstract method."""
 
 
-class IncrementalMean(IncrementalStat):
+class Mean(IncrementalStat):
     """Incremental mean class."""
 
     def __init__(self) -> None:

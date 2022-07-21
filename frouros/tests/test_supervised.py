@@ -21,6 +21,8 @@ from frouros.supervised.cusum_based import (
 from frouros.supervised.ddm_based import (
     DDM,
     DDMConfig,
+    ECDDWT,
+    ECDDWTConfig,
     EDDM,
     EDDMConfig,
     HDDMA,
@@ -114,6 +116,15 @@ def error_scorer(y_true, y_pred):
             config=DDMConfig(
                 warning_level=2.0,
                 drift_level=3.0,
+                min_num_instances=MIN_NUM_INSTANCES,
+            ),
+        ),
+        ECDDWT(
+            estimator=ESTIMATOR(**ESTIMATOR_ARGS),
+            error_scorer=error_scorer,
+            config=ECDDWTConfig(
+                lambda_=0.2,
+                warning_level=0.5,
                 min_num_instances=MIN_NUM_INSTANCES,
             ),
         ),

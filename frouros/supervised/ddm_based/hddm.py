@@ -8,7 +8,7 @@ import numpy as np  # type: ignore
 
 from frouros.metrics.base import BaseMetric
 from frouros.supervised.ddm_based.base import DDMBaseConfig, DDMBasedEstimator
-from frouros.utils.stats import EWMA, IncrementalMean
+from frouros.utils.stats import EWMA, Mean
 
 
 class HDDMBaseConfig(DDMBaseConfig):
@@ -166,8 +166,8 @@ class HoeffdingOneSidedTest:
         """Init method."""
         self.alpha_d = alpha_d
         self.alpha_w = alpha_w
-        self.x = IncrementalMean()
-        self.z = IncrementalMean()
+        self.x = Mean()
+        self.z = Mean()
 
     def _check_mean_increase(self, m: int, alpha: float) -> bool:
         threshold = np.sqrt(
@@ -215,8 +215,8 @@ class HoeffdingOneSidedTest:
 
     def reset(self) -> None:
         """Reset x and z incremental variables."""
-        self.x = IncrementalMean()
-        self.z = IncrementalMean()
+        self.x = Mean()
+        self.z = Mean()
 
     def set_initial_cut_mean(self) -> None:
         """Copy value of z to x if x has no values."""
@@ -246,12 +246,12 @@ class HoeffdingTwoSidedTest(HoeffdingOneSidedTest):
         :type alpha_w: float
         """
         super().__init__(alpha_d=alpha_d, alpha_w=alpha_w)
-        self.y = IncrementalMean()
+        self.y = Mean()
 
     def reset(self) -> None:
         """Reset x, z and y incremental variables."""
         super().reset()
-        self.y = IncrementalMean()
+        self.y = Mean()
 
     def _check_mean_decrease(self, m: int, alpha: float) -> bool:
         threshold = np.sqrt(
