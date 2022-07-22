@@ -306,9 +306,9 @@ Frouros is a Python library for drift detection in Machine Learning problems.
         </a>
     </td>
     <td>
-        <a href="https://github.com/jaime-cespedes-sisniega/frouros/blob/main/frouros/unsupervised/statistical_test/chisquared.py"> 
+        <a href="https://github.com/jaime-cespedes-sisniega/frouros/blob/main/frouros/unsupervised/statistical_test/chisquare.py"> 
             <div style="height:100%;width:100%">
-                Chi-Squared
+                Chi-Square
             </div>
         </a>
     </td>
