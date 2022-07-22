@@ -4,7 +4,7 @@ import collections
 from typing import List, Tuple
 
 import numpy as np  # type: ignore
-from scipy.stats import chi2_contingency, chisquare  # type: ignore
+from scipy.stats import chi2_contingency  # type: ignore
 
 from frouros.unsupervised.base import CategoricalData, UnivariateTestType, TestResult
 from frouros.unsupervised.statistical_test.base import (  # type: ignore
