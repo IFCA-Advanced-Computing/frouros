@@ -57,17 +57,22 @@ def classification_dataset() -> Tuple[np.array, np.array, np.array, np.array]:
     """
     concept_samples = 100
     generator = SEA(seed=31)
-    concept_1 = generator.generate_dataset(block=1, noise=0.0, num_samples=concept_samples, )
-    concept_2 = generator.generate_dataset(block=4, noise=0.0, num_samples=concept_samples, )
-    concept_3 = generator.generate_dataset(block=3, noise=0.0, num_samples=concept_samples, )
-    concept_4 = generator.generate_dataset(block=2, noise=0.0, num_samples=concept_samples, )
 
-    X, y = [], []
-    for concept in [concept_1, concept_2, concept_3, concept_4]:
-        for X_sample, y_sample in concept:
+    concepts = [
+        generator.generate_dataset(
+            block=block,
+            noise=0.0,
+            num_samples=concept_samples,
+        )
+        for block in [1, 4, 3, 2]
+    ]
+
+    X, y = [], []  # noqa: N806
+    for concept in concepts:
+        for X_sample, y_sample in concept:  # noqa: N806
             X.append(X_sample)
             y.append(y_sample)
-    X = np.array(X)
+    X = np.array(X)  # noqa: N806
     y = np.array(y)
 
     split_idx = concept_samples

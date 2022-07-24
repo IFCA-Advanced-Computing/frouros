@@ -5,8 +5,6 @@ from typing import Tuple
 import pytest  # type: ignore
 from sklearn.metrics import accuracy_score  # type: ignore
 from sklearn.tree import DecisionTreeClassifier  # type: ignore
-from sklearn.pipeline import Pipeline  # type: ignore
-from sklearn.preprocessing import StandardScaler  # type: ignore
 import numpy as np  # type: ignore
 
 from frouros.supervised.base import SupervisedBaseEstimator
@@ -33,7 +31,6 @@ from frouros.supervised.ddm_based import (
     RDDMConfig,
 )
 from frouros.supervised.statistical_test import STEPD, STEPDConfig
-from frouros.supervised.utils import update_detector
 from frouros.supervised.window_based import ADWIN, ADWINConfig, KSWIN, KSWINConfig
 
 
