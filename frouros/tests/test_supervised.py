@@ -32,7 +32,7 @@ from frouros.supervised.ddm_based import (
     RDDM,
     RDDMConfig,
 )
-from frouros.supervised.statistical_test import STEPD, SPEPDConfig
+from frouros.supervised.statistical_test import STEPD, STEPDConfig
 from frouros.supervised.utils import update_detector
 from frouros.supervised.window_based import ADWIN, ADWINConfig, KSWIN, KSWINConfig
 
@@ -62,7 +62,7 @@ def error_scorer(y_true, y_pred):
 
 
 @pytest.mark.parametrize(
-    "detector",
+    "model_detector",
     [
         ADWIN(
             estimator=ESTIMATOR(**ESTIMATOR_ARGS),
@@ -187,7 +187,7 @@ def error_scorer(y_true, y_pred):
         ),
         STEPD(
             estimator=ESTIMATOR(**ESTIMATOR_ARGS),
-            config=SPEPDConfig(
+            config=STEPDConfig(
                 alpha_d=0.003,
                 alpha_w=0.05,
                 min_num_instances=30,
@@ -197,24 +197,20 @@ def error_scorer(y_true, y_pred):
 )
 def test_supervised_method(
     classification_dataset: Tuple[np.array, np.array, np.array, np.array],
-    detector: SupervisedBaseEstimator,
+    model_detector: SupervisedBaseEstimator,
 ) -> None:
     """Test supervised dataset.
 
-    :param classification_dataset: Elec2 raw dataset
+    :param classification_dataset: dataset generated using SEA
     :type classification_dataset: Tuple[numpy.array, numpy.array,
     numpy.array, numpy.array]
     """
     X_ref, y_ref, X_test, y_test = classification_dataset  # noqa: N806
 
-    pipe = Pipeline([("scaler", StandardScaler()), ("detector", detector)])
-
-    pipe.fit(X=X_ref, y=y_ref)
+    model_detector.fit(X=X_ref, y=y_ref)
 
     for X_sample, y_sample in zip(X_test, y_test):  # noqa: N806
-        _ = pipe.predict(X=np.array([*X_sample]).reshape(1, -1))
+        _ = model_detector.predict(X=np.array([*X_sample]).reshape(1, -1))
 
         # Delayed targets arriving....
-        _ = update_detector(
-            estimator=pipe, y=np.array([y_sample]), detector_name="detector"
-        )
+        _ = model_detector.update(y=np.array([y_sample]))
