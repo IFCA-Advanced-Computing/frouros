@@ -23,6 +23,7 @@ from frouros.supervised.exceptions import InvalidAverageRunLengthError
 from frouros.utils.decorators import check_func_parameters
 from frouros.utils.logger import logger
 from frouros.utils.stats import Mean
+from frouros.utils.validation import check_is_one_sample
 
 
 class DDMBaseConfig(SupervisedBaseConfig):
@@ -174,8 +175,9 @@ class DDMBasedEstimator(SupervisedBaseEstimatorReFit):
         self, y: np.ndarray
     ) -> Tuple[np.ndarray, np.ndarray, Optional[Dict[str, float]]]:
         check_is_fitted(self.estimator)
+        check_is_one_sample(array=y)
         X, y_pred = self.delayed_predictions.popleft()  # noqa: N806
-        self.num_instances += y_pred.shape[0]
+        self.num_instances += 1
 
         metrics = self._metrics_func(y_true=y, y_pred=y_pred)
         return X, y_pred, metrics

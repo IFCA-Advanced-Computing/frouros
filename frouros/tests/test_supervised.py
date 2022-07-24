@@ -33,6 +33,8 @@ from frouros.supervised.ddm_based import (
 from frouros.supervised.statistical_test import STEPD, STEPDConfig
 from frouros.supervised.window_based import ADWIN, ADWINConfig, KSWIN, KSWINConfig
 
+from frouros.common.exceptions import OneSampleError
+
 
 ESTIMATOR = DecisionTreeClassifier
 ESTIMATOR_ARGS = {
@@ -58,8 +60,7 @@ def error_scorer(y_true, y_pred):
     return 1 - accuracy_score(y_true, y_pred)
 
 
-@pytest.mark.parametrize(
-    "model_detector",
+supervised_methods = (
     [
         ADWIN(
             estimator=ESTIMATOR(**ESTIMATOR_ARGS),
@@ -192,6 +193,9 @@ def error_scorer(y_true, y_pred):
         ),
     ],
 )
+
+
+@pytest.mark.parametrize("model_detector", *supervised_methods)
 def test_supervised_method(
     classification_dataset: Tuple[np.array, np.array, np.array, np.array],
     model_detector: SupervisedBaseEstimator,
@@ -211,3 +215,42 @@ def test_supervised_method(
 
         # Delayed targets arriving....
         _ = model_detector.update(y=np.array([y_sample]))
+
+
+@pytest.mark.parametrize("model_detector", *supervised_methods)
+def test_not_supported_multi_sample_predict(
+    classification_dataset: Tuple[np.array, np.array, np.array, np.array],
+    model_detector: SupervisedBaseEstimator,
+) -> None:
+    """Test not supported multiple sample predict.
+
+    :param classification_dataset: dataset generated using SEA
+    :type classification_dataset: Tuple[numpy.array, numpy.array,
+    numpy.array, numpy.array]
+    """
+    X_ref, y_ref, X_test, _ = classification_dataset  # noqa: N806
+
+    model_detector.fit(X=X_ref, y=y_ref)
+
+    with pytest.raises(OneSampleError):
+        model_detector.predict(X=X_test)
+
+
+@pytest.mark.parametrize("model_detector", *supervised_methods)
+def test_not_supported_multi_sample_update(
+    classification_dataset: Tuple[np.array, np.array, np.array, np.array],
+    model_detector: SupervisedBaseEstimator,
+) -> None:
+    """Test not supported multiple sample update.
+
+    :param classification_dataset: dataset generated using SEA
+    :type classification_dataset: Tuple[numpy.array, numpy.array,
+    numpy.array, numpy.array]
+    """
+    X_ref, y_ref, X_test, y_test = classification_dataset  # noqa: N806
+
+    model_detector.fit(X=X_ref, y=y_ref)
+    model_detector.predict(X=X_test[0, :].reshape(1, -1))
+
+    with pytest.raises(OneSampleError):
+        model_detector.update(y=y_test)
