@@ -50,23 +50,32 @@ def sea() -> SEA:
 
 @pytest.fixture(scope="module")
 def classification_dataset() -> Tuple[np.array, np.array, np.array, np.array]:
-    """Classification dataset using Elec2.
+    """Classification dataset using SEA generator.
 
     :return: classification dataset
     :rtype: Tuple[np.array, np.array, np.array, np.array]
     """
-    elec2 = Elec2()  # pylint: disable=redefined-outer-name
-    elec2.download()
-    dataset = elec2.load()
+    concept_samples = 100
+    generator = SEA(seed=31)
 
-    # Two comprehensions lists are faster than iterating over one
-    # (Python doing Python´s things).
-    X = np.array(  # noqa: N806
-        [sample.tolist()[:-1] for sample in dataset], dtype=np.float16
-    )
-    y = np.array([sample[-1] for sample in dataset], dtype="str")
+    concepts = [
+        generator.generate_dataset(
+            block=block,
+            noise=0.0,
+            num_samples=concept_samples,
+        )
+        for block in [1, 4, 3, 2]
+    ]
 
-    split_idx = 43500
+    X, y = [], []  # noqa: N806
+    for concept in concepts:
+        for X_sample, y_sample in concept:  # noqa: N806
+            X.append(X_sample)
+            y.append(y_sample)
+    X = np.array(X)  # noqa: N806
+    y = np.array(y)
+
+    split_idx = concept_samples
 
     X_ref = X[:split_idx]  # noqa: N806
     y_ref = y[:split_idx]

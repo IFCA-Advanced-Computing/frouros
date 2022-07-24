@@ -55,6 +55,10 @@ class ECDDWT(DDMBasedEstimator):
     ) -> bool:
         return self.z.mean > self.p.mean + warning_level * control_limit * z_variance
 
+    def _get_specific_response_attributes(self):
+        attributes = {"p_mean": self.p.mean, "z_mean": self.z.mean}
+        return attributes
+
     def _reset(self, *args, **kwargs) -> None:
         super()._reset()
         self.p = Mean()
@@ -76,22 +80,20 @@ class ECDDWT(DDMBasedEstimator):
         """
         X, y_pred, metrics = self._prepare_update(y=y)  # noqa: N806
 
-        if (
-            self._drift_insufficient_samples
-            and not self._check_drift_insufficient_samples(X=X, y=y)
-        ):
-            response = self._get_update_response(
-                drift=True,
-                warning=False,
-                p_mean=self.p.mean,
-                z_mean=self.z.mean,
-                metrics=metrics,
-            )
-            return response  # type: ignore
+        if self._drift_insufficient_samples:
+            self._insufficient_samples_case(X=X, y=y)
+            if not self._check_drift_sufficient_samples:
+                # Drift has been detected but there are no enough samples
+                # to train a new model from scratch
+                return self._insufficient_samples_response(metrics=metrics)
+            # There are enough samples to train a new model from scratch
+            self._complete_delayed_drift()
 
         error_rate = self.error_scorer(y_true=y, y_pred=y_pred)
         self.p.update(value=error_rate)
         self.z.update(value=error_rate)
+
+        specific_attributes = self._get_specific_response_attributes()
 
         if self.num_instances >= self.config.min_num_instances:
             error_rate_variance = self.p.mean * (1 - self.p.mean)
@@ -129,13 +131,9 @@ class ECDDWT(DDMBasedEstimator):
                     self.warning = False
                 self.drift = False
         else:
+            self._normal_case(X=X, y=y)
             self.drift, self.warning = False, False
 
-        response = self._get_update_response(
-            drift=self.drift,
-            warning=self.warning,
-            p_mean=self.p.mean,
-            z_mean=self.z.mean,
-            metrics=metrics,
+        return self._update_response(
+            specific_attributes=specific_attributes, metrics=metrics
         )
-        return response

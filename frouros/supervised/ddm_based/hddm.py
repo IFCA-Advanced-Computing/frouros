@@ -360,16 +360,20 @@ class HDDMA(DDMBasedEstimator):
         """
         X, y_pred, metrics = self._prepare_update(y=y)  # noqa: N806
 
-        if self._drift_insufficient_samples and self._check_drift_insufficient_samples(
-            X=X, y=y
-        ):
-            response = self._get_update_response(
-                drift=True,
-                warning=False,
-                **self.test_type.get_update_variables(),
-                metrics=metrics,
-            )
-            return response  # type: ignore
+        if self._drift_insufficient_samples:
+            self._insufficient_samples_case(X=X, y=y)
+            if not self._check_drift_sufficient_samples:
+                # Drift has been detected but there are no enough samples
+                # to train a new model from scratch
+                response = self._get_update_response(
+                    drift=True,
+                    warning=False,
+                    **self.test_type.get_update_variables(),
+                    metrics=metrics,
+                )
+                return response  # type: ignore
+            # There are enough samples to train a new model from scratch
+            self._complete_delayed_drift()
 
         error_rate = self.error_scorer(y_true=y, y_pred=y_pred)
         self.test_type.z.update(value=error_rate)
@@ -406,6 +410,7 @@ class HDDMA(DDMBasedEstimator):
                 self.drift = False
                 update_variables = self.test_type.get_update_variables()
         else:
+            self._normal_case(X=X, y=y)
             update_variables, self.drift, self.warning = (
                 self.test_type.get_update_variables(),
                 False,
@@ -713,16 +718,20 @@ class HDDMW(DDMBasedEstimator):
         """
         X, y_pred, metrics = self._prepare_update(y=y)  # noqa: N806
 
-        if self._drift_insufficient_samples and self._check_drift_insufficient_samples(
-            X=X, y=y
-        ):
-            response = self._get_update_response(
-                drift=True,
-                warning=False,
-                **self.test_type.get_update_variables(),
-                metrics=metrics,
-            )
-            return response  # type: ignore
+        if self._drift_insufficient_samples:
+            self._insufficient_samples_case(X=X, y=y)
+            if not self._check_drift_sufficient_samples:
+                # Drift has been detected but there are no enough samples
+                # to train a new model from scratch
+                response = self._get_update_response(
+                    drift=True,
+                    warning=False,
+                    **self.test_type.get_update_variables(),
+                    metrics=metrics,
+                )
+                return response  # type: ignore
+            # There are enough samples to train a new model from scratch
+            self._complete_delayed_drift()
 
         error_rate = self.error_scorer(y_true=y, y_pred=y_pred)
         self.test_type.update_stats(
@@ -750,6 +759,7 @@ class HDDMW(DDMBasedEstimator):
                 self.drift = False
                 update_variables = self.test_type.get_update_variables()
         else:
+            self._normal_case(X=X, y=y)
             update_variables, self.drift, self.warning = (
                 self.test_type.get_update_variables(),
                 False,

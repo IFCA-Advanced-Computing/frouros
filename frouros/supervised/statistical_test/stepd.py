@@ -18,13 +18,13 @@ from frouros.utils.decorators import check_func_parameters
 from frouros.utils.logger import logger
 
 
-class SPEPDConfig(StatisticalTestConfig):
+class STEPDConfig(StatisticalTestConfig):
     """STEPD (Statistical test of equal proportions) configuration class."""
 
     def __init__(
         self,
-        alpha_d: float,
-        alpha_w: float,
+        alpha_d: float = 0.003,
+        alpha_w: float = 0.05,
         min_num_instances: int = 30,
     ) -> None:
         """Init method.
@@ -114,6 +114,8 @@ class STEPD(SupervisedBaseEstimatorReFit, StatisticalTestEstimator):
         self.correct_total = 0
         self.min_num_instances = 2 * self.config.min_num_instances
         self.window_accuracy = AccuracyQueue(max_len=self.config.min_num_instances)
+        self.drift = False
+        self.warning = False
         self._distribution = norm()
 
     @property
@@ -233,13 +235,17 @@ class STEPD(SupervisedBaseEstimatorReFit, StatisticalTestEstimator):
         """
         X, y_pred, metrics = self._prepare_update(y=y)  # noqa: N806
 
-        if self._drift_insufficient_samples and self._check_drift_insufficient_samples(
-            X=X, y=y
-        ):
-            response = self._get_update_response(
-                drift=True, warning=True, metrics=metrics
-            )
-            return response  # type: ignore
+        if self._drift_insufficient_samples:
+            self._insufficient_samples_case(X=X, y=y)
+            if not self._check_drift_sufficient_samples:
+                # Drift has been detected but there are no enough samples
+                # to train a new model from scratch
+                response = self._get_update_response(
+                    drift=True, warning=False, statistical_test=None, metrics=metrics
+                )
+                return response  # type: ignore
+            # There are enough samples to train a new model from scratch
+            self._complete_delayed_drift()
 
         accuracy = self.accuracy_scorer(y_true=y, y_pred=y_pred)
 
@@ -254,32 +260,34 @@ class STEPD(SupervisedBaseEstimatorReFit, StatisticalTestEstimator):
 
             if p_value < self.config.alpha_d:  # type: ignore
                 # Drift case
-                drift = True
-                warning = True
                 self._drift_case(X=X, y=y)
-            elif p_value < self.config.alpha_w:  # type: ignore
-                # Warning case
-                drift = False
-                warning = True
-                # Warning
-                self._warning_case(X=X, y=y)
+                self.drift = True
+                self.warning = False
             else:
-                # In-Control
-                drift, warning = False, False
-                self._normal_case()
+                if p_value < self.config.alpha_w:  # type: ignore
+                    # Warning case
+                    self._warning_case(X=X, y=y)
+                    self.warning = True
+                else:
+                    # In-Control
+                    self._normal_case(X=X, y=y)
+                    self.warning = False
+                self.drift = False
         else:
-            statistical_test, drift, warning = None, False, False
+            self._normal_case(X=X, y=y)
+            statistical_test, self.drift, self.warning = None, False, False
 
         response = self._get_update_response(
-            drift=drift,
-            warning=warning,
+            drift=self.drift,
+            warning=self.warning,
             statistical_test=statistical_test,
             metrics=metrics,
         )
         return response
 
     def _drift_case(self, X: np.ndarray, y: np.ndarray) -> None:  # noqa: N803
-        logger.warning("Changing threshold has been exceeded. Drift detected.")
+        if not self.drift:  # Check if drift message has already been shown
+            logger.warning("Changing threshold has been exceeded. Drift detected.")
         self._add_context_samples(
             samples_list=self._fit_method.new_context_samples, X=X, y=y
         )
@@ -291,13 +299,21 @@ class STEPD(SupervisedBaseEstimatorReFit, StatisticalTestEstimator):
         )
 
     def _warning_case(self, X: np.array, y: np.array) -> None:  # noqa: N803
-        logger.warning(
-            "Warning threshold has been exceeded. "
-            "New concept will be learned until drift is detected."
-        )
+        if not self.warning:  # Check if warning message has already been shown
+            logger.warning(
+                "Warning threshold has been exceeded. "
+                "New concept will be learned until drift is detected."
+            )
         self._add_context_samples(
             samples_list=self._fit_method.new_context_samples, X=X, y=y
         )
 
     def _normal_case(self, *args, **kwargs) -> None:
-        self._fit_method.reset()
+        X, y = kwargs.get("X"), kwargs.get("y")  # noqa: N806
+        self._fit_method.add_fit_context_samples(X=X, y=y)
+        X, y = self._list_to_arrays(  # noqa: N806
+            list_=self._fit_method.fit_context_samples
+        )
+        self._fit_estimator(X=X, y=y)
+        # Remove warning samples if performance returns to normality
+        self._fit_method.post_fit_estimator()
