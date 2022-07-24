@@ -11,7 +11,7 @@ from typing import (  # noqa: TYP001
 )
 
 import numpy as np  # type: ignore
-from sklearn.base import BaseEstimator, is_classifier  # type: ignore
+from sklearn.base import BaseEstimator, clone, is_classifier  # type: ignore
 from sklearn.utils.validation import check_is_fitted  # type: ignore
 
 from frouros.metrics.base import BaseMetric
@@ -22,6 +22,7 @@ from frouros.supervised.base import (
 from frouros.supervised.exceptions import InvalidAverageRunLengthError
 from frouros.utils.decorators import check_func_parameters
 from frouros.utils.logger import logger
+from frouros.utils.stats import Mean
 
 
 class DDMBaseConfig(SupervisedBaseConfig):
@@ -151,6 +152,8 @@ class DDMBasedEstimator(SupervisedBaseEstimatorReFit):
             list_=self._fit_method.new_context_samples
         )
         if not is_classifier(self.estimator):
+            # Construct a new unfitted estimator with the same parameters
+            self.estimator = clone(estimator=self.estimator)
             self._fit_estimator(X=X_new_context, y=y_new_context)
             self._reset()
         self._check_number_classes(
@@ -183,8 +186,19 @@ class DDMBasedEstimator(SupervisedBaseEstimatorReFit):
         self.sample_weight = None
         self.delayed_predictions.clear()
         self._fit_method.reset()
-        self.drift = False
-        self.warning = False
+
+    def _update_response(
+        self,
+        specific_attributes: Dict[str, float],
+        metrics: Optional[Dict[str, float]],
+    ) -> Dict[str, Optional[Union[float, bool, Dict[str, float]]]]:
+        response = self._get_update_response(
+            drift=self.drift,
+            warning=self.warning,
+            **specific_attributes,
+            metrics=metrics,
+        )
+        return response
 
     def _warning_case(self, X: np.array, y: np.array) -> None:  # noqa: N803
         if not self.warning:  # Check if warning message has already been shown
@@ -240,25 +254,25 @@ class DDMErrorBasedEstimator(DDMBasedEstimator):
             config=config,
             metrics=metrics,
         )
-        self.error_rate = 0
+        self.error_rate = Mean()
         self.min_error_rate = float("inf")
         self.min_std = float("inf")
 
     @property
-    def error_rate(self) -> float:
+    def error_rate(self) -> Mean:
         """Error rate property.
 
         :return: error rate to use
-        :rtype: float
+        :rtype: Mean
         """
         return self._error_rate
 
     @error_rate.setter
-    def error_rate(self, value: float) -> None:
+    def error_rate(self, value: Mean) -> None:
         """Error rate setter.
 
         :param value: value to be set
-        :type value: float
+        :type value: Mean
         """
         self._error_rate = value
 
@@ -312,13 +326,15 @@ class DDMErrorBasedEstimator(DDMBasedEstimator):
         self._min_std = value
 
     def _calculate_error_rate_plus_std(self) -> Tuple[float, float]:
-        std = np.sqrt(self.error_rate * (1 - self.error_rate) / self.num_instances)
-        error_rate_plus_std = self.error_rate + std
+        std = np.sqrt(
+            self.error_rate.mean * (1 - self.error_rate.mean) / self.num_instances
+        )
+        error_rate_plus_std = self.error_rate.mean + std
         return error_rate_plus_std, std
 
-    def _check_min_values(self, error_rate_plus_std: float, std: float) -> None:
+    def _update_min_values(self, error_rate_plus_std: float, std: float) -> None:
         if error_rate_plus_std < self.min_error_rate_plus_std:
-            self.min_error_rate = self.error_rate
+            self.min_error_rate = self.error_rate.mean
             self.min_std = std
 
     @staticmethod
@@ -327,9 +343,13 @@ class DDMErrorBasedEstimator(DDMBasedEstimator):
     ) -> bool:
         return error_rate_plus_std > min_error_rate + level * min_std
 
+    def _get_specific_response_attributes(self):
+        attributes = {"error_rate": self._error_rate.mean}
+        return attributes
+
     def _reset(self, *args, **kwargs) -> None:
         super()._reset()
-        self.error_rate = 0
+        self.error_rate = Mean()
         self.min_error_rate = float("inf")
         self.min_std = float("inf")
 

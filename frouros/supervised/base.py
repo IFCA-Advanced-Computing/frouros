@@ -15,7 +15,7 @@ from typing import (  # noqa: TYP001
 )
 
 import numpy as np  # type: ignore
-from sklearn.base import BaseEstimator  # type: ignore
+from sklearn.base import BaseEstimator, clone  # type: ignore
 from sklearn.utils.estimator_checks import check_estimator  # type: ignore
 from sklearn.utils.validation import check_array, check_is_fitted  # type: ignore
 
@@ -139,7 +139,12 @@ class BaseFit(abc.ABC):
         """Reset variables and samples lists."""
         self.new_context_samples.clear()
 
-    def post_fit_estimator(self):
+    def pre_fit_initial_estimator(
+        self, X: np.ndarray, y: np.ndarray  # noqa: N803
+    ) -> None:
+        """Method to be executed before the initial fit method."""
+
+    def post_fit_estimator(self) -> None:
         """Method to be executed after the fit method."""
         self.new_context_samples.clear()
 
@@ -178,6 +183,12 @@ class NormalFit(BaseFit):
         """Reset variables and samples lists."""
         self.fit_context_samples = copy.deepcopy(self.new_context_samples)
         super().reset()
+
+    def pre_fit_initial_estimator(
+        self, X: np.ndarray, y: np.ndarray  # noqa: N803
+    ) -> None:
+        """Method to be executed before the initial fit method."""
+        self.add_fit_context_samples(X=X, y=y)
 
 
 class PartialFit(BaseFit):
@@ -458,6 +469,9 @@ class SupervisedBaseEstimator(abc.ABC):
     def _get_number_classes(y: np.array) -> int:
         return len(np.unique(y))
 
+    def _get_specific_response_attributes(self):
+        pass
+
     @staticmethod
     def _get_update_response(
         drift: bool,
@@ -497,6 +511,7 @@ class SupervisedBaseEstimator(abc.ABC):
         :rtype: self
         """
         self.sample_weight = sample_weight
+        self._fit_method.pre_fit_initial_estimator(X=X, y=y)
         try:
             self._fit_method(X=X, y=y, sample_weight=self.sample_weight)
         except ValueError as e:
@@ -532,18 +547,12 @@ class SupervisedBaseEstimator(abc.ABC):
 class SupervisedBaseEstimatorReFit(SupervisedBaseEstimator):
     """Abstract class representing a re-fit estimator."""
 
-    def _check_drift_insufficient_samples(
-        self, X: np.ndarray, y: np.ndarray  # noqa: N803
-    ) -> bool:
-        self._add_context_samples(
-            samples_list=self._fit_method.new_context_samples, X=X, y=y
-        )
+    def _check_drift_sufficient_samples(self) -> bool:
         _, y_new_context = self._list_to_arrays(
             list_=self._fit_method.new_context_samples
         )
         num_classes = self._get_number_classes(y=y_new_context)
         if num_classes > 1:
-            self._complete_delayed_drift()
             return True
         return False
 
@@ -552,6 +561,9 @@ class SupervisedBaseEstimatorReFit(SupervisedBaseEstimator):
     ) -> None:
         num_classes = self._get_number_classes(y=y_new_context)
         if num_classes > 1:
+            # Construct a new unfitted estimator with the same parameters
+            self.estimator = clone(estimator=self.estimator)
+            # Fit new estimator with the next context samples
             self._fit_estimator(X=X_new_context, y=y_new_context)
             self._reset()
         else:
@@ -565,11 +577,26 @@ class SupervisedBaseEstimatorReFit(SupervisedBaseEstimator):
 
     def _complete_delayed_drift(self) -> None:
         logger.warning(
-            "Changing threshold has been exceeded. "
-            "Drift detected with delay because there was only one class."
+            "Delayed drift has been completed because there was only one class."
         )
         self._drift_insufficient_samples = False
         self._reset()
+
+    def _insufficient_samples_case(
+        self, X: np.ndarray, y: np.ndarray  # noqa: N803
+    ) -> None:
+        self._add_context_samples(
+            samples_list=self._fit_method.new_context_samples, X=X, y=y
+        )
+
+    def _insufficient_samples_response(self, metrics: Dict[str, Any]) -> Dict[str, Any]:
+        response = self._get_update_response(
+            drift=True,
+            warning=False,
+            **self._get_specific_response_attributes(),
+            metrics=metrics,
+        )
+        return response
 
     @staticmethod
     def _list_to_arrays(

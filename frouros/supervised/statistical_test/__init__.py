@@ -1,8 +1,8 @@
 """Supervised statistical test detection methods' init."""
 
-from .stepd import STEPD, SPEPDConfig
+from .stepd import STEPD, STEPDConfig
 
 __all__ = [
     "STEPD",
-    "SPEPDConfig",
+    "STEPDConfig",
 ]
