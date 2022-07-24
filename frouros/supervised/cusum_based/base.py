@@ -13,6 +13,7 @@ from sklearn.utils.validation import check_is_fitted  # type: ignore
 import numpy as np  # type: ignore
 
 from frouros.utils.decorators import check_func_parameters
+from frouros.utils.validation import check_is_one_sample
 from frouros.supervised.base import SupervisedBaseEstimator, SupervisedBaseConfig
 
 
@@ -234,8 +235,9 @@ class CUSUMBaseEstimator(SupervisedBaseEstimator):
         :rtype: Dict[str, Optional[Union[float, bool, Dict[str, float]]]]
         """
         check_is_fitted(self.estimator)
+        check_is_one_sample(array=y)
         _, y_pred = self.delayed_predictions.popleft()  # noqa: N806
-        self.num_instances += y_pred.shape[0]
+        self.num_instances += 1
 
         error_rate = self.error_scorer(y_true=y, y_pred=y_pred)
 

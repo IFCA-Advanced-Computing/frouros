@@ -25,6 +25,7 @@ from frouros.supervised.exceptions import (
     TrainingEstimatorError,
 )
 from frouros.utils.logger import logger
+from frouros.utils.validation import check_is_one_sample
 
 
 class BaseFit(abc.ABC):
@@ -521,7 +522,7 @@ class SupervisedBaseEstimator(abc.ABC):
         self._fit_extra(X=X, y=y)
         return self
 
-    def predict(self, X: np.array) -> np.ndarray:  # noqa: N803
+    def predict(self, X: np.ndarray) -> np.ndarray:  # noqa: N803
         """Predict values.
 
         :param X: input data
@@ -531,6 +532,7 @@ class SupervisedBaseEstimator(abc.ABC):
         """
         check_is_fitted(self.estimator)
         X = check_array(X)  # noqa: N806
+        check_is_one_sample(array=X)
         y_pred = self.estimator.predict(X=X)
         self.delayed_predictions.append((X, y_pred))
         return y_pred
