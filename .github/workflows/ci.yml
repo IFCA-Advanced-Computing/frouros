@@ -1,9 +1,9 @@
 name: CI
 
 on:
-  push:
+  pull_request:
     branches:
-      - main
+      - "*"
 
 jobs:
   build:
@@ -33,14 +33,14 @@ jobs:
         run: |
           python -m venv .venv
           source .venv/bin/activate
-          pip install "pytest>=7.1.1,<7.2"
+          pip install "pytest>=7.1.2,<7.2"
           pip install -e .
 
       - name: Run tox
         run: tox
 
       - name: Upload coverage to Codecov
-        uses: codecov/codecov-action@v2
+        uses: codecov/codecov-action@v3
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           fail_ci_if_error: true

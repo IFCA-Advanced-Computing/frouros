@@ -61,29 +61,46 @@ Frouros is a Python library for drift detection in Machine Learning problems.
 </thead>
 <tbody>
   <tr>
-    <td rowspan="7">
+    <td rowspan="12">
         <a href="https://github.com/jaime-cespedes-sisniega/frouros/blob/main/frouros/supervised/base.py"> 
             <div style="height:100%;width:100%">
                 Supervised
             </div>
         </a>
     </td>
-    <td>
-        <a href="https://github.com/jaime-cespedes-sisniega/frouros/blob/main/frouros/supervised/cusum_test/base.py"> 
+    <td rowspan="3">
+        <a href="https://github.com/jaime-cespedes-sisniega/frouros/blob/main/frouros/supervised/cusum_based/base.py"> 
             <div style="height:100%;width:100%">
-                CUSUM Test
+                CUSUM Based
             </div>
         </a>
     </td>
    <td>
-        <a href="https://github.com/jaime-cespedes-sisniega/frouros/blob/main/frouros/supervised/cusum_test/page_hinkley.py"> 
+        <a href="https://github.com/jaime-cespedes-sisniega/frouros/blob/main/frouros/supervised/cusum_based/cusum.py"> 
+            <div style="height:100%;width:100%">
+                CUSUM
+            </div>
+        </a>
+    </td>
+  <tr>
+    <td>
+        <a href="https://github.com/jaime-cespedes-sisniega/frouros/blob/main/frouros/supervised/cusum_based/geometric_moving_average.py">  
+            <div style="height:100%;width:100%">
+                Geometric Moving Average
+            </div>
+        </a>
+    </td>
+  </tr>
+  <tr>
+    <td>
+        <a href="https://github.com/jaime-cespedes-sisniega/frouros/blob/main/frouros/supervised/cusum_based/page_hinkley.py">  
             <div style="height:100%;width:100%">
                 Page Hinkley
             </div>
         </a>
     </td>
   </tr>
-    <td rowspan="3">
+    <td rowspan="6">
         <a href="https://github.com/jaime-cespedes-sisniega/frouros/blob/main/frouros/supervised/ddm_based/base.py">  
             <div style="height:100%;width:100%">
                 DDM Based
@@ -99,9 +116,36 @@ Frouros is a Python library for drift detection in Machine Learning problems.
     </td>
   <tr>
     <td>
+        <a href="https://github.com/jaime-cespedes-sisniega/frouros/blob/main/frouros/supervised/ddm_based/ecdd.py">  
+            <div style="height:100%;width:100%">
+                ECDD-WT
+            </div>
+        </a>
+    </td>
+  </tr>
+  <tr>
+    <td>
         <a href="https://github.com/jaime-cespedes-sisniega/frouros/blob/main/frouros/supervised/ddm_based/eddm.py">  
             <div style="height:100%;width:100%">
                 EDDM
+            </div>
+        </a>
+    </td>
+  </tr>
+  <tr>
+    <td>
+        <a href="https://github.com/jaime-cespedes-sisniega/frouros/blob/main/frouros/supervised/ddm_based/hddm.py">  
+            <div style="height:100%;width:100%">
+                HDDM-A
+            </div>
+        </a>
+    </td>
+  </tr>
+  <tr>
+    <td>
+        <a href="https://github.com/jaime-cespedes-sisniega/frouros/blob/main/frouros/supervised/ddm_based/hddm.py">  
+            <div style="height:100%;width:100%">
+                HDDM-W
             </div>
         </a>
     </td>
@@ -186,7 +230,7 @@ Frouros is a Python library for drift detection in Machine Learning problems.
   </tr>
   </tr>
   <tr>
-    <td rowspan="9">
+    <td rowspan="10">
         <a href="https://github.com/jaime-cespedes-sisniega/frouros/blob/main/frouros/unsupervised/base.py"> 
             <div style="height:100%;width:100%">
                 Unsupervised
@@ -254,7 +298,7 @@ Frouros is a Python library for drift detection in Machine Learning problems.
       </td>
   </tr>
   <tr>
-    <td rowspan="3">
+    <td rowspan="4">
         <a href="https://github.com/jaime-cespedes-sisniega/frouros/blob/main/frouros/unsupervised/statistical_test/base.py"> 
             <div style="height:100%;width:100%">
                 Statistical Test
@@ -262,9 +306,9 @@ Frouros is a Python library for drift detection in Machine Learning problems.
         </a>
     </td>
     <td>
-        <a href="https://github.com/jaime-cespedes-sisniega/frouros/blob/main/frouros/unsupervised/statistical_test/chisquared.py"> 
+        <a href="https://github.com/jaime-cespedes-sisniega/frouros/blob/main/frouros/unsupervised/statistical_test/chisquare.py"> 
             <div style="height:100%;width:100%">
-                Chi-Squared
+                Chi-Square
             </div>
         </a>
     </td>
@@ -283,6 +327,15 @@ Frouros is a Python library for drift detection in Machine Learning problems.
         <a href="https://github.com/jaime-cespedes-sisniega/frouros/blob/main/frouros/unsupervised/statistical_test/ks.py">
             <div style="height:100%;width:100%">
                 KS
+            </div>    
+        </a>
+    </td>
+  </tr>
+  <tr>
+    <td>
+        <a href="https://github.com/jaime-cespedes-sisniega/frouros/blob/main/frouros/unsupervised/statistical_test/t_test.py">
+            <div style="height:100%;width:100%">
+                T-test
             </div>    
         </a>
     </td>

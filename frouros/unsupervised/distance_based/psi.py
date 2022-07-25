@@ -5,7 +5,7 @@ from typing import Optional
 
 import numpy as np  # type: ignore
 
-from frouros.unsupervised.base import UnivariateTest
+from frouros.unsupervised.base import NumericalData, UnivariateTestType
 from frouros.unsupervised.distance_based.base import (  # type: ignore
     DistanceBasedEstimator,
 )
@@ -20,7 +20,7 @@ class PSI(DistanceBasedEstimator):
         :param num_buckets: number of buckets
         :type num_buckets: int
         """
-        super().__init__(test_type=UnivariateTest())
+        super().__init__(data_type=NumericalData(), test_type=UnivariateTestType())
         self.num_buckets = num_buckets
         self.X_ref_num: Optional[int] = None  # pylint: disable=invalid-name
 

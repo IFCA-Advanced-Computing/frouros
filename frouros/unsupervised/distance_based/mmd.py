@@ -5,7 +5,7 @@ from typing import Optional, Tuple
 import numpy as np  # type: ignore
 from sklearn.gaussian_process.kernels import Kernel, RBF  # type: ignore
 
-from frouros.unsupervised.base import MultivariateTest, TestResult
+from frouros.unsupervised.base import NumericalData, MultivariateTestType, TestResult
 from frouros.unsupervised.distance_based.base import DistanceBasedEstimator
 
 
@@ -27,7 +27,7 @@ class MMD(DistanceBasedEstimator):
         :param random_state: random state value
         :type random_state: Optional[int]
         """
-        super().__init__(test_type=MultivariateTest())
+        super().__init__(data_type=NumericalData(), test_type=MultivariateTestType())
         self.kernel = kernel
         self.num_permutations = num_permutations
         self.random_state = random_state

@@ -8,6 +8,7 @@ from sklearn.base import BaseEstimator  # type: ignore
 from frouros.metrics.base import BaseMetric
 from frouros.supervised.ddm_based.base import DDMBaseConfig, DDMErrorBasedEstimator
 from frouros.utils.data_structures import CircularQueue
+from frouros.utils.stats import Mean
 
 
 class RDDMConfig(DDMBaseConfig):
@@ -139,7 +140,7 @@ class RDDM(DDMErrorBasedEstimator):
         super()._reset()
         self.rddm_drift = False
 
-    def update(
+    def update(  # pylint: disable=too-many-branches
         self,
         y: np.ndarray,
         X: np.ndarray = None,  # noqa: N803
@@ -155,25 +156,26 @@ class RDDM(DDMErrorBasedEstimator):
         """
         X, y_pred, metrics = self._prepare_update(y=y)  # noqa: N806
 
-        if self._drift_insufficient_samples and self._check_drift_insufficient_samples(
-            X=X, y=y
-        ):
-            response = self._get_update_response(
-                drift=True, warning=True, metrics=metrics
-            )
-            return response  # type: ignore
+        if self._drift_insufficient_samples:
+            self._insufficient_samples_case(X=X, y=y)
+            if not self._check_drift_sufficient_samples:
+                # Drift has been detected but there are no enough samples
+                # to train a new model from scratch
+                return self._insufficient_samples_response(metrics=metrics)
+            # There are enough samples to train a new model from scratch
+            self._complete_delayed_drift()
 
         if self.rddm_drift:
             self._rdd_drift_case()
 
-        error_rate_sample = self.error_scorer(y_true=y, y_pred=y_pred)
-        self.predictions.enqueue(value=error_rate_sample)
-        self.error_rate += (error_rate_sample - self.error_rate) / self.num_instances
+        error_rate = self.error_scorer(y_true=y, y_pred=y_pred)
+        self.predictions.enqueue(value=error_rate)
+        self.error_rate.update(value=error_rate)
 
         if self.num_instances >= self.config.min_num_instances:
             error_rate_plus_std, std = self._calculate_error_rate_plus_std()
 
-            self._check_min_values(error_rate_plus_std=error_rate_plus_std, std=std)
+            self._update_min_values(error_rate_plus_std=error_rate_plus_std, std=std)
 
             drift_flag = self._check_threshold(
                 error_rate_plus_std=error_rate_plus_std,
@@ -185,9 +187,9 @@ class RDDM(DDMErrorBasedEstimator):
             if drift_flag:
                 # Out-of-Control
                 self._drift_case(X=X, y=y)
-                self.drift = True
                 self.rddm_drift = True
-                self.warning = True
+                self.drift = True
+                self.warning = False
                 if self.num_warnings == 0:
                     self.predictions.maintain_last_element()
             else:
@@ -213,6 +215,7 @@ class RDDM(DDMErrorBasedEstimator):
                 else:
                     # In-Control
                     self._normal_case(X=X, y=y)
+                    self.drift = False
                     self.warning = False
                     self.num_warnings = 0
                 if (
@@ -220,8 +223,8 @@ class RDDM(DDMErrorBasedEstimator):
                     and not self.warning
                 ):
                     self.rddm_drift = True
-                self.drift = False
         else:
+            self._normal_case(X=X, y=y)
             error_rate_plus_std, self.drift, self.warning = 0.0, False, False
 
         response = self._get_update_response(
@@ -237,9 +240,7 @@ class RDDM(DDMErrorBasedEstimator):
         pos = self.predictions.first
         for _ in range(self.predictions.count):
             self.num_instances += 1
-            self.error_rate += (
-                self.predictions[pos] - self.error_rate
-            ) / self.num_instances
+            self.error_rate.update(value=self.predictions[pos])
             error_rate_plus_std, std = self._calculate_error_rate_plus_std()
 
             if (
@@ -247,7 +248,7 @@ class RDDM(DDMErrorBasedEstimator):
                 and self.num_instances >= self.config.min_num_instances
                 and error_rate_plus_std < self.min_error_rate_plus_std
             ):
-                self.min_error_rate = self.error_rate
+                self.min_error_rate = self.error_rate.mean
                 self.min_std = std
 
             pos = (pos + 1) % self.config.min_concept_size  # type: ignore
@@ -255,7 +256,7 @@ class RDDM(DDMErrorBasedEstimator):
         self.drift = False
 
     def _reset_stats(self):
-        self.error_rate = 0
+        self.error_rate = Mean()
         self.min_error_rate = float("inf")
         self.min_std = float("inf")
         self.num_warnings = 0

@@ -1,11 +1,13 @@
 """Unsupervised statistical test detection methods' init."""
 
-from .chisquared import ChiSquaredTest
+from .chisquare import ChiSquareTest
 from .cvm import CVMTest
 from .ks import KSTest
+from .t_test import TTest
 
 __all__ = [
-    "ChiSquaredTest",
+    "ChiSquareTest",
     "CVMTest",
     "KSTest",
+    "TTest",
 ]

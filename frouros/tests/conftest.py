@@ -4,29 +4,78 @@ from typing import Tuple
 
 import pytest  # type: ignore
 import numpy as np  # type: ignore
+from sklearn.metrics import accuracy_score  # type: ignore
 
 from frouros.datasets.real import Elec2
+from frouros.datasets.synthetic import SEA
+from frouros.metrics.prequential_error import PrequentialError
+
+
+# Elec2 fixtures
+@pytest.fixture(scope="function")
+def elec2_raw() -> Elec2:
+    """Elec2 raw dataset.
+
+    :return: Elec2 raw dataset
+    :rtype: Elec2
+    """
+    dataset = Elec2()
+    dataset.download()
+    return dataset
+
+
+@pytest.fixture(scope="function")
+def elec2(elec2_raw: Elec2) -> np.ndarray:  # pylint: disable=redefined-outer-name
+    """Elec2 dataset.
+
+    :param elec2_raw: Elec2 raw dataset
+    :type elec2_raw: Elec2
+    :return: Elec2 dataset
+    :rtype: np.ndarray
+    """
+    return elec2_raw.load()
+
+
+# SEA fixtures
+@pytest.fixture(scope="function")
+def sea() -> SEA:
+    """SEA dataset generator.
+
+    :return: SEA dataset generator
+    :rtype: SEA
+    """
+    generator = SEA()
+    return generator
 
 
 @pytest.fixture(scope="module")
 def classification_dataset() -> Tuple[np.array, np.array, np.array, np.array]:
-    """Classification dataset using Elec2.
+    """Classification dataset using SEA generator.
 
     :return: classification dataset
     :rtype: Tuple[np.array, np.array, np.array, np.array]
     """
-    elec2 = Elec2()
-    elec2.download()
-    dataset = elec2.load()
+    concept_samples = 100
+    generator = SEA(seed=31)
 
-    # Two comprehensions lists are faster than iterating over one
-    # (Python doing Python´s things).
-    X = np.array(  # noqa: N806
-        [sample.tolist()[:-1] for sample in dataset], dtype=np.float16
-    )
-    y = np.array([sample[-1] for sample in dataset], dtype="str")
+    concepts = [
+        generator.generate_dataset(
+            block=block,
+            noise=0.0,
+            num_samples=concept_samples,
+        )
+        for block in [1, 4, 3, 2]
+    ]
 
-    split_idx = 43500
+    X, y = [], []  # noqa: N806
+    for concept in concepts:
+        for X_sample, y_sample in concept:  # noqa: N806
+            X.append(X_sample)
+            y.append(y_sample)
+    X = np.array(X)  # noqa: N806
+    y = np.array(y)
+
+    split_idx = concept_samples
 
     X_ref = X[:split_idx]  # noqa: N806
     y_ref = y[:split_idx]
@@ -63,7 +112,7 @@ def dataset_elec2() -> Tuple[np.ndarray, np.ndarray, np.ndarray]:
     :return: dataset
     :rtype: Tuple[np.ndarray, np.ndarray, np.ndarray]
     """
-    elec2 = Elec2()
+    elec2 = Elec2()  # pylint: disable=redefined-outer-name
     elec2.download()
     dataset_ = elec2.load()
 
@@ -107,3 +156,15 @@ def multivariate_distribution_q() -> Tuple[np.ndarray, np.ndarray]:
     cov = 3 * np.eye(2) - 1
 
     return mean, cov
+
+
+@pytest.fixture(scope="module")
+def prequential_error():
+    """Prequential error.
+
+    :return: prequential error
+    :rtype: PrequentialError
+    """
+    return PrequentialError(
+        error_scorer=lambda y_true, y_pred: 1 - accuracy_score(y_true, y_pred)
+    )

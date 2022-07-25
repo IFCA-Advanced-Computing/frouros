@@ -11,7 +11,7 @@ from typing import (  # noqa: TYP001
 )
 
 import numpy as np  # type: ignore
-from sklearn.base import BaseEstimator, is_classifier  # type: ignore
+from sklearn.base import BaseEstimator, clone, is_classifier  # type: ignore
 from sklearn.utils.validation import check_is_fitted  # type: ignore
 
 from frouros.metrics.base import BaseMetric
@@ -19,8 +19,11 @@ from frouros.supervised.base import (
     SupervisedBaseConfig,
     SupervisedBaseEstimatorReFit,
 )
+from frouros.supervised.exceptions import InvalidAverageRunLengthError
 from frouros.utils.decorators import check_func_parameters
 from frouros.utils.logger import logger
+from frouros.utils.stats import Mean
+from frouros.utils.validation import check_is_one_sample
 
 
 class DDMBaseConfig(SupervisedBaseConfig):
@@ -98,7 +101,7 @@ class DDMBasedEstimator(SupervisedBaseEstimatorReFit):
         self,
         estimator: BaseEstimator,
         error_scorer: Callable,
-        config: DDMBaseConfig,
+        config: SupervisedBaseConfig,
         metrics: Optional[Union[BaseMetric, List[BaseMetric]]] = None,
     ) -> None:
         """Init method.
@@ -108,7 +111,7 @@ class DDMBasedEstimator(SupervisedBaseEstimatorReFit):
         :param error_scorer: error scorer function
         :type error_scorer: Callable
         :param config: configuration parameters
-        :type config: DDMBaseConfig
+        :type config: SupervisedBaseConfig
         :param metrics: performance metrics
         :type metrics: Optional[Union[BaseMetric, List[BaseMetric]]]
         """
@@ -150,13 +153,15 @@ class DDMBasedEstimator(SupervisedBaseEstimatorReFit):
             list_=self._fit_method.new_context_samples
         )
         if not is_classifier(self.estimator):
+            # Construct a new unfitted estimator with the same parameters
+            self.estimator = clone(estimator=self.estimator)
             self._fit_estimator(X=X_new_context, y=y_new_context)
             self._reset()
         self._check_number_classes(
             X_new_context=X_new_context, y_new_context=y_new_context
         )
 
-    def _normal_case(self, *args, **kwargs) -> None:  # noqa: N803
+    def _normal_case(self, *args, **kwargs) -> None:
         X, y = kwargs.get("X"), kwargs.get("y")  # noqa: N806
         self._fit_method.add_fit_context_samples(X=X, y=y)
         X, y = self._list_to_arrays(  # noqa: N806
@@ -170,8 +175,9 @@ class DDMBasedEstimator(SupervisedBaseEstimatorReFit):
         self, y: np.ndarray
     ) -> Tuple[np.ndarray, np.ndarray, Optional[Dict[str, float]]]:
         check_is_fitted(self.estimator)
+        check_is_one_sample(array=y)
         X, y_pred = self.delayed_predictions.popleft()  # noqa: N806
-        self.num_instances += y_pred.shape[0]
+        self.num_instances += 1
 
         metrics = self._metrics_func(y_true=y, y_pred=y_pred)
         return X, y_pred, metrics
@@ -182,8 +188,19 @@ class DDMBasedEstimator(SupervisedBaseEstimatorReFit):
         self.sample_weight = None
         self.delayed_predictions.clear()
         self._fit_method.reset()
-        self.drift = False
-        self.warning = False
+
+    def _update_response(
+        self,
+        specific_attributes: Dict[str, float],
+        metrics: Optional[Dict[str, float]],
+    ) -> Dict[str, Optional[Union[float, bool, Dict[str, float]]]]:
+        response = self._get_update_response(
+            drift=self.drift,
+            warning=self.warning,
+            **specific_attributes,
+            metrics=metrics,
+        )
+        return response
 
     def _warning_case(self, X: np.array, y: np.array) -> None:  # noqa: N803
         if not self.warning:  # Check if warning message has already been shown
@@ -239,25 +256,25 @@ class DDMErrorBasedEstimator(DDMBasedEstimator):
             config=config,
             metrics=metrics,
         )
-        self.error_rate = 0
+        self.error_rate = Mean()
         self.min_error_rate = float("inf")
         self.min_std = float("inf")
 
     @property
-    def error_rate(self) -> float:
+    def error_rate(self) -> Mean:
         """Error rate property.
 
         :return: error rate to use
-        :rtype: float
+        :rtype: Mean
         """
         return self._error_rate
 
     @error_rate.setter
-    def error_rate(self, value: float) -> None:
+    def error_rate(self, value: Mean) -> None:
         """Error rate setter.
 
         :param value: value to be set
-        :type value: float
+        :type value: Mean
         """
         self._error_rate = value
 
@@ -311,13 +328,15 @@ class DDMErrorBasedEstimator(DDMBasedEstimator):
         self._min_std = value
 
     def _calculate_error_rate_plus_std(self) -> Tuple[float, float]:
-        std = np.sqrt(self.error_rate * (1 - self.error_rate) / self.num_instances)
-        error_rate_plus_std = self.error_rate + std
+        std = np.sqrt(
+            self.error_rate.mean * (1 - self.error_rate.mean) / self.num_instances
+        )
+        error_rate_plus_std = self.error_rate.mean + std
         return error_rate_plus_std, std
 
-    def _check_min_values(self, error_rate_plus_std: float, std: float) -> None:
+    def _update_min_values(self, error_rate_plus_std: float, std: float) -> None:
         if error_rate_plus_std < self.min_error_rate_plus_std:
-            self.min_error_rate = self.error_rate
+            self.min_error_rate = self.error_rate.mean
             self.min_std = std
 
     @staticmethod
@@ -326,8 +345,102 @@ class DDMErrorBasedEstimator(DDMBasedEstimator):
     ) -> bool:
         return error_rate_plus_std > min_error_rate + level * min_std
 
+    def _get_specific_response_attributes(self):
+        attributes = {"error_rate": self._error_rate.mean}
+        return attributes
+
     def _reset(self, *args, **kwargs) -> None:
         super()._reset()
-        self.error_rate = 0
+        self.error_rate = Mean()
         self.min_error_rate = float("inf")
         self.min_std = float("inf")
+
+
+class ECDDBaseConfig(SupervisedBaseConfig):
+    """Class representing a ECDD configuration class."""
+
+    average_run_length_map = {
+        100: lambda p: 2.76
+        - 6.23 * p
+        + 18.12 * np.power(p, 3)
+        - 312.45 * np.power(p, 5)
+        + 1002.18 * np.power(p, 7),
+        400: lambda p: 3.97
+        - 6.56 * p
+        + 48.73 * np.power(p, 3)
+        - 330.13 * np.power(p, 5)
+        + 848.18 * np.power(p, 7),
+        1000: lambda p: 1.17
+        + 7.56 * p
+        - 21.24 * np.power(p, 3)
+        + 112.12 * np.power(p, 5)
+        - 987.23 * np.power(p, 7),
+    }
+
+    def __init__(
+        self,
+        lambda_: float = 0.2,
+        average_run_length: int = 400,
+        warning_level: float = 0.5,
+        min_num_instances: int = 30,
+    ) -> None:
+        """Init method.
+
+        :param average_run_length: expected time between false positive detections
+        :type average_run_length: int
+        :param lambda_: weight given to recent data compared to older data
+        :type lambda_: float
+        :param min_num_instances: minimum numbers of instances
+        to start looking for changes
+        :type min_num_instances: int
+        """
+        super().__init__(min_num_instances=min_num_instances)
+        try:
+            self.control_limit_func = self.average_run_length_map[average_run_length]
+        except KeyError as e:
+            raise InvalidAverageRunLengthError(
+                "average_run_length must be 100, 400 or 1000."
+            ) from e
+        self.lambda_ = lambda_
+        self.warning_level = warning_level
+
+    @property
+    def lambda_(self) -> float:
+        """Weight recent data property.
+
+        :return: weight given to recent data
+        :rtype: float
+        """
+        return self._lambda_
+
+    @lambda_.setter
+    def lambda_(self, value: float) -> None:
+        """Weight recent data setter.
+
+        :param value: value to be set
+        :type value: float
+        """
+        if not 0.0 <= value <= 1.0:
+            raise ValueError("lambda_ must be in the range [0, 1].")
+        self._lambda_ = value
+
+    @property
+    def warning_level(self) -> float:
+        """Warning level property.
+
+        :return: warning level to use in detecting drift
+        :rtype: float
+        """
+        return self._warning_level
+
+    @warning_level.setter
+    def warning_level(self, value: float) -> None:
+        """Warning level setter.
+
+        :param value: value to be set
+        :type value: float
+        :raises ValueError: Value error exception
+        """
+        if not 0.0 < value < 1.0:
+            raise ValueError("warning level must be in the range (0.0, 1.0).")
+        self._warning_level = value

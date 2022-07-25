@@ -364,13 +364,17 @@ class EDDM(DDMBasedEstimator):
         """
         X, y_pred, metrics = self._prepare_update(y=y)  # noqa: N806
 
-        if self._drift_insufficient_samples and self._check_drift_insufficient_samples(
-            X=X, y=y
-        ):
-            response = self._response(
-                drift=True, warning=True, metrics=metrics  # type: ignore
-            )
-            return response  # type: ignore
+        if self._drift_insufficient_samples:
+            self._insufficient_samples_case(X=X, y=y)
+            if not self._check_drift_sufficient_samples:
+                # Drift has been detected but there are no enough samples
+                # to train a new model from scratch
+                response = self._response(
+                    drift=True, warning=False, metrics=metrics  # type: ignore
+                )
+                return response  # type: ignore
+            # There are enough samples to train a new model from scratch
+            self._complete_delayed_drift()
 
         try:
             misclassified_idxs = np.argwhere(
@@ -409,6 +413,7 @@ class EDDM(DDMBasedEstimator):
             self.num_misclassified_instances
             < self.config.min_num_misclassified_instances  # type: ignore
         ):
+            self._normal_case(X=X, y=y)
             response = self._normal_response(metrics=metrics)  # type: ignore
             return response  # type: ignore
 
@@ -437,7 +442,7 @@ class EDDM(DDMBasedEstimator):
             # Out-of-Control
             self._drift_case(X=X, y=y)
             self.drift = True
-            self.warning = True
+            self.warning = False
         else:
             if p < self.config.alpha:  # type: ignore
                 # Warning

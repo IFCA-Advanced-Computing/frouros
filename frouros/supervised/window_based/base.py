@@ -19,6 +19,7 @@ import numpy as np  # type: ignore
 from frouros.metrics.base import BaseMetric
 from frouros.supervised.base import SupervisedBaseEstimator, SupervisedBaseConfig
 from frouros.utils.decorators import check_func_parameters
+from frouros.utils.validation import check_is_one_sample
 
 
 class WindowBaseConfig(SupervisedBaseConfig):
@@ -114,8 +115,9 @@ class WindowBasedEstimator(SupervisedBaseEstimator):
         self, y: np.ndarray
     ) -> Tuple[np.ndarray, Optional[Dict[str, float]]]:
         check_is_fitted(self.estimator)
+        check_is_one_sample(array=y)
         _, y_pred = self.delayed_predictions.popleft()  # noqa: N806
-        self.num_instances += y_pred.shape[0]
+        self.num_instances += 1
 
         metrics = self._metrics_func(y_true=y, y_pred=y_pred)
         return y_pred, metrics

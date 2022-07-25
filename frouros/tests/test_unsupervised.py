@@ -18,13 +18,13 @@ from frouros.unsupervised.distance_based import (
     KL,
     MMD,
 )
-from frouros.unsupervised.statistical_test import ChiSquaredTest, CVMTest, KSTest
+from frouros.unsupervised.statistical_test import ChiSquareTest, CVMTest, KSTest, TTest
 from frouros.unsupervised.utils import get_statistical_test
 
 
-@pytest.mark.parametrize("detector", [ChiSquaredTest()])
+@pytest.mark.parametrize("detector", [ChiSquareTest()])
 def test_categorical_features(
-    dataset_categorical: Tuple[np.ndarray, np.ndarray], detector: ChiSquaredTest
+    dataset_categorical: Tuple[np.ndarray, np.ndarray], detector: ChiSquareTest
 ) -> None:
     """Test categorical features method.
 
@@ -39,14 +39,15 @@ def test_categorical_features(
     detector.transform(X=X_test)
 
     for (statistic, p_value), (expected_statistic, expected_p_value) in zip(
-        detector.test, [(np.inf, 0.0), (1.0, 0.60653)]  # type: ignore
+        detector.test, [(7.19999, 0.0273237), (0.53333, 0.7659283)]  # type: ignore
     ):
         assert np.isclose(statistic, expected_statistic)
         assert np.isclose(p_value, expected_p_value)
 
 
 @pytest.mark.parametrize(
-    "detector", [EMD(), PSI(), CVMTest(), KSTest(), JS(), KL(), HistogramIntersection()]
+    "detector",
+    [EMD(), PSI(), CVMTest(), KSTest(), JS(), KL(), HistogramIntersection(), TTest()],
 )
 def test_univariate_test(
     dataset_elec2: Tuple[np.ndarray, np.ndarray, np.ndarray],
