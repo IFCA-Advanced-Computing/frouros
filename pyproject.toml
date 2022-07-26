@@ -46,8 +46,10 @@ pytorch = [
     ]
 
 [project.urls]
+homepage = "https://frouros.readthedocs.io"
 repository = "https://github.com/IFCA/frouros"
-download = "https://pypi.org/project/frouros/#files"
+documentation = "https://frouros.readthedocs.io"
+# download = "https://pypi.org/project/frouros/#files"
 
 [build-system]
 requires = [
