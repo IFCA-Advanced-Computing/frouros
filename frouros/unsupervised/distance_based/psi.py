@@ -56,7 +56,7 @@ class PSI(DistanceBasedEstimator):
         :type X: numpy.ndarray
         :param y: target data
         :type y: numpy.ndarray
-        :return fitted estimator
+        :return: fitted estimator
         :rtype: self
         """
         super().fit(X=X, y=y)

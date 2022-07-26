@@ -17,7 +17,7 @@ def get_statistical_test(
     :param detector_name: detector´s name
     :type detector_name: str
     :raises GetStatisticalTestError: get statistical test error exception
-    :return detector statistical test value
+    :return: detector statistical test value
     :rtype: Tuple[Any, ...]
     """
     try:

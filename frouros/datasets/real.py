@@ -27,8 +27,8 @@ class Elec2(Dataset):
     def read_file(self, **kwargs) -> np.ndarray:
         """Read file.
 
-        # :param kwargs: dict of kwargs
-        # :type kwargs: dict
+        :param kwargs: dict of kwargs
+        :type kwargs: dict
         :return: read file
         :rtype: numpy.ndarray
         """

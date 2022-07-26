@@ -117,7 +117,7 @@ class Dataset(abc.ABC):
     def download(self) -> None:
         """Download dataset.
 
-        :raises RequestFileError: Request file exception
+        :raises DownloadError: Download exception
         """
         for url in self.url:
             try:
@@ -134,7 +134,7 @@ class Dataset(abc.ABC):
         :param kwargs: dict of kwargs
         :type kwargs: dict
         :raises FileNotFoundError: File not found exception
-        :raises LoadError: Load file exception
+        :raises ReadFileError: Read file exception
         :return: loaded dataset
         :rtype: Any
         """

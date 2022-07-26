@@ -51,6 +51,6 @@ class PrequentialErrorBase(BaseMetric):
         :type y_true: numpy.ndarray
         :param y_pred: predicted values
         :type y_pred: numpy.ndarray
-        :return cumulative error
-        :rtype Union[int, float]
+        :return: cumulative error
+        :rtype: Union[int, float]
         """

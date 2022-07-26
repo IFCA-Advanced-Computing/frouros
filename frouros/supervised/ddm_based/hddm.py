@@ -178,7 +178,7 @@ class HoeffdingOneSidedTest:
     def check_cases(self) -> Tuple[bool, bool]:
         """Check drift and warning cases.
 
-        :return drift and warning flags
+        :return: drift and warning flags
         :rtype: Tuple[bool, bool]
         """
         m = self.z.num_values - self.x.num_values
@@ -197,7 +197,7 @@ class HoeffdingOneSidedTest:
     def get_update_variables(self) -> Dict[str, float]:
         """Get update variables to be included in the response.
 
-        :return dict with the variables
+        :return: dict with the variables
         :rtype: Dict[str, float]
         """
         variables = {"x_mean": self.x.mean, "z_mean": self.z.mean}
@@ -208,7 +208,7 @@ class HoeffdingOneSidedTest:
 
         :param num_values: number of values
         :type num_values: int
-        :return Hoeffding's error value
+        :return: Hoeffding's error value
         :rtype: float
         """
         return np.sqrt(np.log(1 / self.alpha_d) / (2 * num_values))
@@ -262,7 +262,7 @@ class HoeffdingTwoSidedTest(HoeffdingOneSidedTest):
     def check_cases(self) -> Tuple[bool, bool]:
         """Check drift and warning cases.
 
-        :return drift and warning flags
+        :return: drift and warning flags
         :rtype: Tuple[bool, bool]
         """
         drift_increase, warning_increase = super().check_cases()
@@ -283,7 +283,7 @@ class HoeffdingTwoSidedTest(HoeffdingOneSidedTest):
     def get_update_variables(self) -> Dict[str, float]:
         """Get update variables to be included in the response.
 
-        :return dict with the variables
+        :return: dict with the variables
         :rtype: Dict[str, float]
         """
         variables = {**super().get_update_variables(), "y_mean": self.y.mean}
@@ -355,7 +355,7 @@ class HDDMA(DDMBasedEstimator):
         :type y: numpy.ndarray
         :param X: feature data
         :type X: Optional[numpy.ndarray]
-        :return response message
+        :return: response message
         :rtype: Dict[str, Optional[Union[float, bool, Dict[str, float]]]]
         """
         X, y_pred, metrics = self._prepare_update(y=y)  # noqa: N806
@@ -519,7 +519,7 @@ class McDiarmidOneSidedTest:
     def check_changes(self) -> Tuple[bool, bool]:
         """Check drift and warning cases.
 
-        :return drift and warning flags
+        :return: drift and warning flags
         :rtype: Tuple[bool, bool]
         """
         drift = self._check_mean_increase(alpha=self.alpha_d)
@@ -529,7 +529,7 @@ class McDiarmidOneSidedTest:
     def get_update_variables(self) -> Dict[str, float]:
         """Get update variables to be included in the response.
 
-        :return dict with the variables
+        :return: dict with the variables
         :rtype: Dict[str, float]
         """
         variables = {
@@ -602,7 +602,7 @@ class McDiarmidTwoSidedTest(McDiarmidOneSidedTest):
     def check_changes(self) -> Tuple[bool, bool]:
         """Check drift and warning cases.
 
-        :return drift and warning flags
+        :return: drift and warning flags
         :rtype: Tuple[bool, bool]
         """
         drift_increase, warning_increase = super().check_changes()
@@ -621,7 +621,7 @@ class McDiarmidTwoSidedTest(McDiarmidOneSidedTest):
     def get_update_variables(self) -> Dict[str, float]:
         """Get update variables to be included in the response.
 
-        :return dict with the variables
+        :return: dict with the variables
         :rtype: Dict[str, float]
         """
         variables = {
@@ -713,7 +713,7 @@ class HDDMW(DDMBasedEstimator):
         :type y: numpy.ndarray
         :param X: feature data
         :type X: Optional[numpy.ndarray]
-        :return response message
+        :return: response message
         :rtype: Dict[str, Optional[Union[float, bool, Dict[str, float]]]]
         """
         X, y_pred, metrics = self._prepare_update(y=y)  # noqa: N806

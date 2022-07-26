@@ -20,7 +20,7 @@ def update_detector(
     :param detector_name: detector´s name
     :type detector_name: str
     :raises UpdateDetectorError: update detector error exception
-    :return detector update output
+    :return: detector update output
     :rtype: Tuple[Any, ...]
     """
     try:

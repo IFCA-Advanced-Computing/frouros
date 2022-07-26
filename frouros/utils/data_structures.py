@@ -37,7 +37,7 @@ class CircularQueue:
     def count(self) -> int:
         """Number of total elements property.
 
-        :return Number of total elements
+        :return: Number of total elements
         :rtype: int
         """
         return self._count
@@ -58,7 +58,7 @@ class CircularQueue:
     def first(self) -> int:
         """First queue index property.
 
-        :return first queue index
+        :return: first queue index
         :rtype: int
         """
         return self._first
@@ -79,7 +79,7 @@ class CircularQueue:
     def last(self) -> int:
         """Last queue index property.
 
-        :return last queue index
+        :return: last queue index
         :rtype: int
         """
         return self._last
@@ -97,7 +97,7 @@ class CircularQueue:
     def max_len(self) -> int:
         """Maximum number of allowed elements property.
 
-        :return maximum number of allowed elements
+        :return: maximum number of allowed elements
         :rtype: int
         """
         return self._max_len
@@ -118,7 +118,7 @@ class CircularQueue:
     def queue(self) -> List[Optional[bool]]:
         """Queue property.
 
-        :return queue
+        :return: queue
         :rtype: List[Optional[bool]]
         """
         return self._queue
@@ -139,7 +139,7 @@ class CircularQueue:
     def size(self) -> int:
         """Number of current elements property.
 
-        :return Number of current elements
+        :return: Number of current elements
         :rtype: int
         """
         return self.count
@@ -179,7 +179,7 @@ class CircularQueue:
     def is_empty(self) -> bool:
         """Check if queue is empty.
 
-        :return check if queue is empty
+        :return: check if queue is empty
         :rtype: bool
         """
         return self.size == 0
@@ -187,7 +187,7 @@ class CircularQueue:
     def is_full(self) -> bool:
         """Check if queue is full.
 
-        :return check if queue is full
+        :return: check if queue is full
         :rtype: bool
         """
         return self.size == self.max_len
@@ -195,7 +195,7 @@ class CircularQueue:
     def __len__(self) -> int:
         """Queue size.
 
-        :return queue size
+        :return: queue size
         :rtype: int
         """
         return self.size
@@ -210,7 +210,7 @@ class CircularQueue:
 
         :param idx: position index
         :type idx: int
-        :return queue item
+        :return: queue item
         :rtype: float
         """
         return self.queue[idx]  # type: ignore
@@ -232,7 +232,7 @@ class AccuracyQueue(CircularQueue):
     def num_false(self):
         """Number of false label property.
 
-        :return number of false labels
+        :return: number of false labels
         :rtype: int
         """
         return self.count - self.num_true
@@ -241,7 +241,7 @@ class AccuracyQueue(CircularQueue):
     def num_true(self) -> int:
         """Number of true label property.
 
-        :return number of true labels
+        :return: number of true labels
         :rtype: int
         """
         return self._num_true

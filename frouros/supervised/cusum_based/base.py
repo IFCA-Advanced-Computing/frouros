@@ -231,7 +231,7 @@ class CUSUMBaseEstimator(SupervisedBaseEstimator):
         :type y: numpy.ndarray
         :param X: feature data
         :type X: Optional[numpy.ndarray]
-        :return predicted values
+        :return: predicted values
         :rtype: Dict[str, Optional[Union[float, bool, Dict[str, float]]]]
         """
         check_is_fitted(self.estimator)

@@ -153,7 +153,7 @@ class KSWIN(WindowBasedEstimator):
         :type y: numpy.ndarray
         :param X: feature data
         :type X: Optional[numpy.ndarray]
-        :return response message
+        :return: response message
         :rtype: Dict[str, Optional[Union[float, bool, Dict[str, float]]]]
         """
         y_pred, metrics = self._prepare_update(y=y)
