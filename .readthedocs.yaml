@@ -13,7 +13,7 @@ build:
 
 # Build documentation in the docs/ directory with Sphinx
 sphinx:
-   configuration: docs/conf.py
+   configuration: docs/source/conf.py
    # Right now there are several unmanaged warnings. Change it to true when there are no warnings.
    fail_on_warning: false
 
