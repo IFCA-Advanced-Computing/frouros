@@ -44,7 +44,7 @@ class SEA(Generator):
         :type noise: float
         :param num_samples: number of samples to generate
         :type num_samples: int
-        :return generator with the samples
+        :return: generator with the samples
         :rtype: Iterator[Tuple[np.ndarray, int]]
         """
         try:

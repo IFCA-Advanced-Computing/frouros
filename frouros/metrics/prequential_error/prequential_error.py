@@ -31,8 +31,8 @@ class PrequentialError(BaseMetric):
         :type y_true: numpy.ndarray
         :param y_pred: predicted values
         :type y_pred: numpy.ndarray
-        :return cumulative error
-        :rtype Union[int, float]
+        :return: cumulative error
+        :rtype: Union[int, float]
         """
         error_rate = self.error_scorer(y_true=y_true, y_pred=y_pred, **kwargs)
         self.num_instances += y_true.shape[0]

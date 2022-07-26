@@ -203,8 +203,7 @@ class MD3SVM(MarginDensityBasedEstimator):
         :type y: numpy.ndarray
         :param sample_weight: assigns weights to each sample
         :type sample_weight: Optional[Union[List[int], List[float]]]
-        :raises TrainingEstimatorError: Training estimator exception
-        :return fitted estimator
+        :return: fitted estimator
         :rtype: self
         """
         self.sample_weight = sample_weight
@@ -281,8 +280,7 @@ class MD3RS(MarginDensityBasedEstimator):
         :type y: numpy.ndarray
         :param sample_weight: assigns weights to each sample
         :type sample_weight: Optional[Union[List[int], List[float]]]
-        :raises TrainingEstimatorError: Training estimator exception
-        :return fitted estimator
+        :return: fitted estimator
         :rtype: self
         """
         self.sample_weight = sample_weight

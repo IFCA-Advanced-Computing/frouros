@@ -557,7 +557,7 @@ class ADWIN(WindowBasedEstimator):
         :type y: numpy.ndarray
         :param X: feature data
         :type X: Optional[numpy.ndarray]
-        :return response message
+        :return: response message
         :rtype: Dict[str, Optional[Union[float, bool, Dict[str, float]]]]
         """
         # pylint: disable=too-many-locals, too-many-nested-blocks

@@ -18,8 +18,8 @@ class Elec2(Dataset):
         """
         super().__init__(
             url=[
+                "https://nextcloud.ifca.es/index.php/s/2coqgBEpa82boLS/download"
                 "https://www.openml.org/data/download/2419/electricity-normalized.arff",
-                "https://nextcloud.ifca.es/index.php/s/2coqgBEpa82boLS/download",
             ],
             file_path=file_path,
         )
@@ -27,8 +27,8 @@ class Elec2(Dataset):
     def read_file(self, **kwargs) -> np.ndarray:
         """Read file.
 
-        # :param kwargs: dict of kwargs
-        # :type kwargs: dict
+        :param kwargs: dict of kwargs
+        :type kwargs: dict
         :return: read file
         :rtype: numpy.ndarray
         """

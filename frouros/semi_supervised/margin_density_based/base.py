@@ -179,7 +179,6 @@ class MarginDensityBasedEstimator(SemiSupervisedBaseEstimator):
         y_test: np.ndarray,
     ) -> Tuple[float, float]:
         estimator = clone(estimator=self.estimator).fit(X=X_train, y=y_train)
-        # estimator = LinearSVC(**self.svm_args).fit(X=X_train, y=y_train)
         y_pred = estimator.predict(X=X_test)
         metric = self.metric_scorer(y_true=y_test, y_pred=y_pred)
         md_ref = self._calculate_md_ref(X=X_test)
@@ -192,7 +191,7 @@ class MarginDensityBasedEstimator(SemiSupervisedBaseEstimator):
 
         :param X: input data
         :type X: numpy.ndarray
-        :return predicted values and response dict
+        :return: predicted values and response dict
         :rtype: Tuple[np.ndarray, Dict[str, Union[bool, float]]]
         """
         check_is_fitted(self.estimator)

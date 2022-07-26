@@ -36,12 +36,18 @@ dependencies = [
 docs = [
     "sphinx>=4.5.0,<5.0",
     "sphinx-book-theme>=0.3.0,<0.4",
+    "sphinxcontrib-bibtex>=2.4.0,<2.5",
     "myst-parser>=0.18.0,<0.19",
     "myst-nb>=0.16.0,<0.17"
 ]
+pytorch = [
+    "torch>=1.12.0,<1.13",
+    "skorch>=0.11.0,<0.12.0"
+    ]
 
 [project.urls]
-repository = "https://github.com/jaime-cespedes-sisniega/frouros"
+repository = "https://github.com/IFCA/frouros"
+download = "https://pypi.org/project/frouros/#files"
 
 [build-system]
 requires = [

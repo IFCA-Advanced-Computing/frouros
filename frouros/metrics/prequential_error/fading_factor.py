@@ -87,8 +87,8 @@ class PrequentialErrorFadingFactor(PrequentialErrorBase):
         :type y_true: numpy.ndarray
         :param y_pred: predicted values
         :type y_pred: numpy.ndarray
-        :return cumulative facing error
-        :rtype Union[int, float]
+        :return: cumulative facing error
+        :rtype: Union[int, float]
         """
         error_rate = self.error_scorer(y_true=y_true, y_pred=y_pred, **kwargs)
         self.cumulative_error = self.cumulative_error * self.alpha + error_rate

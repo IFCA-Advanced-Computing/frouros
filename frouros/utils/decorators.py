@@ -12,8 +12,8 @@ def check_func_parameters(func: Any) -> Any:
 
     :param func: function to be wrapped
     :type func: Any
-    :return wrapper
-    :rtype Any
+    :return: wrapper
+    :rtype: Any
     """
 
     @wraps(func)

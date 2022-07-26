@@ -508,7 +508,7 @@ class SupervisedBaseEstimator(abc.ABC):
         :param sample_weight: assigns weights to each sample
         :type sample_weight: Optional[Union[List[int], List[float]]]
         :raises TrainingEstimatorError: Training estimator exception
-        :return fitted estimator
+        :return: fitted estimator
         :rtype: self
         """
         self.sample_weight = sample_weight
@@ -527,7 +527,7 @@ class SupervisedBaseEstimator(abc.ABC):
 
         :param X: input data
         :type X: numpy.ndarray
-        :return predicted values
+        :return: predicted values
         :rtype: numpy.ndarray
         """
         check_is_fitted(self.estimator)

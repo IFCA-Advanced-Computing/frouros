@@ -177,7 +177,7 @@ class UnsupervisedBaseEstimator(abc.ABC, BaseEstimator, TransformerMixin):
         :type X: numpy.ndarray
         :param y: target data
         :type y: numpy.ndarray
-        :return fitted estimator
+        :return: fitted estimator
         :rtype: self
         """
         self.X_ref_ = X  # type: ignore
@@ -195,7 +195,7 @@ class UnsupervisedBaseEstimator(abc.ABC, BaseEstimator, TransformerMixin):
         :type X: numpy.ndarray
         :param y: target data
         :type y: numpy.ndarray
-        :return transformed feature data
+        :return: transformed feature data
         :rtype: numpy.ndarray
         """
         X = self._common_checks(X=X)  # noqa: N806
@@ -211,14 +211,14 @@ class UnsupervisedBaseEstimator(abc.ABC, BaseEstimator, TransformerMixin):
     ) -> np.ndarray:
         """Override fit_transform from TransformerMixin.
 
-        This will avoid to use transform when fit and return X_ref_ instead.
+        This will avoid to use transform when fit and return reference data instead.
 
         :param X: feature data
         :type X: numpy.ndarray
         :param y: target data
         :type y: numpy.ndarray
         :param fit_params: dict of additional fit parameters
-        :return X_ref_ data
+        :return: reference data
         :rtype: numpy.ndarray
         """
         return self.fit(X=X, **fit_params).X_ref_
@@ -255,7 +255,7 @@ class UnsupervisedBaseEstimator(abc.ABC, BaseEstimator, TransformerMixin):
 
         :param X: feature data
         :type X: numpy.ndarray
-        :return test result
+        :return: test result
         :rtype: Union[List[float], List[Tuple[float, float]], Tuple[float, float]]
         """
         test = self.test_type.get_test(X_ref_=self.X_ref_, X=X, **kwargs)

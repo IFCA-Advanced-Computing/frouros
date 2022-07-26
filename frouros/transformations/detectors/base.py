@@ -45,7 +45,7 @@ class BaseDetectors(abc.ABC, BaseEstimator, TransformerMixin):
         :type X: numpy.ndarray
         :param y: target data
         :type y: numpy.ndarray
-        :return fitted estimator
+        :return: fitted estimator
         :rtype: self
         """
         X_preprocessed = self.preprocess_x(X=X)  # noqa: N806
@@ -66,7 +66,7 @@ class BaseDetectors(abc.ABC, BaseEstimator, TransformerMixin):
         :param X: feature data
         :type X: numpy.ndarray
         :param y: target data
-        :return transformed feature data
+        :return: transformed feature data
         :rtype: numpy.ndarray
         """
         X_preprocessed = self.preprocess_x(X=X)  # noqa: N806
