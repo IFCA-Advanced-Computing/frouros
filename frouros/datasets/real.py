@@ -18,8 +18,8 @@ class Elec2(Dataset):
         """
         super().__init__(
             url=[
-                "https://www.openml.org/data/download/2419/electricity-normalized.arff",
                 "https://nextcloud.ifca.es/index.php/s/2coqgBEpa82boLS/download",
+                "https://www.openml.org/data/download/2419/electricity-normalized.arff",
             ],
             file_path=file_path,
         )
