@@ -1,57 +1,79 @@
 [//]: # (![Frouros logo]&#40;logo.svg&#41;)
 
-<p style="text-align: center;">
+<p align="center">
   <!-- CI -->
-  <a href="https://github.com/jaime-cespedes-sisniega/frouros/actions/workflows/ci.yml">
-    <img src="https://github.com/jaime-cespedes-sisniega/frouros/actions/workflows/ci.yml/badge.svg?style=flat-square" alt="ci"/>
+  <a href="https://github.com/IFCA/frouros/actions/workflows/ci.yml">
+    <img src="https://github.com/IFCA/frouros/actions/workflows/ci.yml/badge.svg?style=flat-square" alt="ci"/>
   </a>
   <!-- Code coverage -->
-  <a href="https://codecov.io/gh/jaime-cespedes-sisniega/frouros">
-    <img src="https://codecov.io/gh/jaime-cespedes-sisniega/frouros/branch/main/graph/badge.svg?token=DLKQSWYTYM" alt="coverage"/>
+  <a href="https://codecov.io/gh/IFCA/frouros">
+    <img src="https://codecov.io/gh/IFCA/frouros/branch/main/graph/badge.svg?token=DLKQSWYTYM" alt="coverage"/>
   </a>
-
-[//]: # (  <!-- Documentation -->)
-
-[//]: # (  <a href="">)
-
-[//]: # (    <img src="" alt="documentation">)
-
-[//]: # (  </a>)
-
-[//]: # (  <!-- Roadmap -->)
-
-[//]: # (  <a href="">)
-
-[//]: # (    <img src="" alt="roadmap">)
-
-[//]: # (  </a>)
-
-[//]: # (  <!-- PyPI -->)
-
-[//]: # (  <a href="">)
-
-[//]: # (    <img src="" alt="pypi">)
-
-[//]: # (  </a>)
-
-[//]: # (  <!-- PePy -->)
-
-[//]: # (  <a href="">)
-
-[//]: # (    <img src="" alt="pepy">)
-
-[//]: # (  </a>)
+  <!-- Documentation -->
+  <a href="https://frouros.readthedocs.io/">
+    <img src="https://readthedocs.org/projects/frouros/badge/?version=latest" alt="documentation"/>
+  </a>
   <!-- License -->
   <a href="https://opensource.org/licenses/BSD-3-Clause">
     <img src="https://img.shields.io/badge/License-BSD%203--Clause-blue.svg" alt="bsd_3_license">
   </a>
 </p>
 
-Frouros is a Python library for drift detection in Machine Learning problems.
+<p align="center">Frouros is a Python library for drift detection in Machine Learning problems.</p>
+
+It provides a set of algorithms for drift detection, both for the supervised and unsupervised parts, as well as some semi-supervised algorithms. It is design with the intention of being integrated easily with the [scikit-learn](https://github.com/scikit-learn/scikit-learn) library. This integration allows Frouros to be used in machine learning problem pipelines, in the implementation of new drift detection algorithms and could be used to compare performance between detectors, as a benchmark.
+
+## Quickstart
+
+As a quick and easy example, we can generate two bivariate normal distribution in order to use an unsupervised method like MMD (Maximum Mean Discrepancy). This method tries to verify if generated samples come from the same distribution or not. If they come from different distributions, it means that there is covariate drift.
+
+```python
+from sklearn.gaussian_process.kernels import RBF
+import numpy as np
+from frouros.unsupervised.distance_based import MMD
+
+np.random.seed(31)
+# X samples from a normal distribution with mean = [1. 1.] and cov = [[2. 0.][0. 2.]]
+x_mean = np.ones(2)
+x_cov = 2*np.eye(2)
+# Y samples a normal distribution with mean = [0. 0.] and cov = [[2. 1.][1. 2.]]
+y_mean = np.zeros(2)
+y_cov = np.eye(2) + 1
+
+num_samples = 200
+X_ref = np.random.multivariate_normal(x_mean, x_cov, num_samples)
+X_test = np.random.multivariate_normal(y_mean, y_cov, num_samples)
+
+alpha = 0.01  # significance level for the hypothesis test
+
+detector = MMD(num_permutations=1000, kernel=RBF(length_scale=1.0), random_state=31)
+detector.fit(X=X_ref)
+detector.transform(X=X_test)
+mmd, p_value = detector.test
+
+p_value < alpha
+>>> True  # Drift detected. We can reject H0, so both samples come from different distributions.
+```
+
+More advance examples can be found [here](https://frouros.readthedocs.io).
+
+## Installation
+
+Frouros supports Python 3.8, 3.9 and 3.10 versions. It can be installed via pip:
+
+```bash
+pip install frouros
+```
+there is also the option to use [PyTorch](https://github.com/pytorch/pytorch) models with the help of [skorch](https://github.com/skorch-dev/skorch):
+```bash
+pip install frouros[pytorch]
+```
 
 ## Drift detection methods
 
-<table class="tg">
+The currently supported methods are listed in the following table. They are divided in three main categories depending on the type of drift that they are capable of detecting and how they detect it.
+
+<table class="center">
 <thead>
 <tr>
     <th>Type</th>
@@ -345,7 +367,9 @@ Frouros is a Python library for drift detection in Machine Learning problems.
 
 ## Datasets
 
-<table class="tg">
+Some well-known datasets and synthetic generators are provided and listed in the following table.
+
+<table class="center">
 <thead>
 <tr>
     <th>Type</th>
