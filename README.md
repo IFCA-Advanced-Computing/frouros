@@ -1,6 +1,6 @@
 [//]: # (![Frouros logo]&#40;logo.svg&#41;)
 
-<p style="text-align: center;">
+<p align="center">
   <!-- CI -->
   <a href="https://github.com/IFCA/frouros/actions/workflows/ci.yml">
     <img src="https://github.com/IFCA/frouros/actions/workflows/ci.yml/badge.svg?style=flat-square" alt="ci"/>
