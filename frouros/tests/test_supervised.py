@@ -40,7 +40,7 @@ ESTIMATOR = DecisionTreeClassifier
 ESTIMATOR_ARGS = {
     "random_state": 31,
 }
-MIN_NUM_INSTANCES = 500
+MIN_NUM_INSTANCES = 30
 CUMSUM_ARGS = {
     "delta": 0.005,
     "lambda_": 50,
@@ -188,7 +188,7 @@ supervised_methods = (
             config=STEPDConfig(
                 alpha_d=0.003,
                 alpha_w=0.05,
-                min_num_instances=30,
+                min_num_instances=MIN_NUM_INSTANCES,
             ),
         ),
     ],
