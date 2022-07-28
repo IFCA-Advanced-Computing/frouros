@@ -6,7 +6,7 @@ on:
       - "*"
 
 jobs:
-  build:
+  python-version:
     runs-on: ubuntu-20.04
     strategy:
       matrix:
