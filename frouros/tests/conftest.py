@@ -55,7 +55,7 @@ def classification_dataset() -> Tuple[np.array, np.array, np.array, np.array]:
     :return: classification dataset
     :rtype: Tuple[np.array, np.array, np.array, np.array]
     """
-    concept_samples = 100
+    concept_samples = 200
     generator = SEA(seed=31)
 
     concepts = [
@@ -87,8 +87,8 @@ def classification_dataset() -> Tuple[np.array, np.array, np.array, np.array]:
 
 
 @pytest.fixture(scope="module")
-def dataset_categorical() -> Tuple[np.ndarray, np.ndarray]:
-    """Dataset using categorical variables.
+def categorical_dataset() -> Tuple[np.ndarray, np.ndarray]:
+    """Categorical variables dataset.
 
     :return: dataset
     :rtype: Tuple[np.ndarray, np.ndarray]
@@ -106,8 +106,22 @@ def dataset_categorical() -> Tuple[np.ndarray, np.ndarray]:
 
 
 @pytest.fixture(scope="module")
-def dataset_elec2() -> Tuple[np.ndarray, np.ndarray, np.ndarray]:
-    """Dataset using Elec2.
+def numerical_dataset() -> Tuple[np.ndarray, np.ndarray]:
+    """Numerical variables dataset.
+
+    :return: dataset
+    :rtype: Tuple[np.ndarray, np.ndarray]
+    """
+    np.random.seed(seed=31)
+    X_ref = np.random.normal(loc=[0, 5], scale=[1, 1], size=(10, 2))  # noqa: N806
+    X_test = np.random.normal(loc=[0, 1], scale=[1, 0.5], size=(10, 2))  # noqa: N806
+
+    return X_ref, X_test
+
+
+@pytest.fixture(scope="module")
+def elec2_dataset() -> Tuple[np.ndarray, np.ndarray, np.ndarray]:
+    """Elec2 dataset.
 
     :return: dataset
     :rtype: Tuple[np.ndarray, np.ndarray, np.ndarray]

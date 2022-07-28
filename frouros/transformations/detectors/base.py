@@ -49,10 +49,11 @@ class BaseDetectors(abc.ABC, BaseEstimator, TransformerMixin):
         :rtype: self
         """
         X_preprocessed = self.preprocess_x(X=X)  # noqa: N806
-        _ = Parallel(n_jobs=self.n_jobs, verbose=self.verbose, prefer="threads",)(
-            delayed(detector.fit)(X=X_preprocessed, y=y)
-            for _, detector in self.detectors
-        )
+        _ = Parallel(
+            n_jobs=self.n_jobs,
+            verbose=self.verbose,
+            prefer="threads",
+        )(delayed(detector.fit)(X=X_preprocessed, y=y) for detector in self.detectors)
         return self
 
     def transform(
@@ -72,7 +73,7 @@ class BaseDetectors(abc.ABC, BaseEstimator, TransformerMixin):
         X_preprocessed = self.preprocess_x(X=X)  # noqa: N806
         _ = Parallel(n_jobs=self.n_jobs, verbose=self.verbose, prefer="threads",)(
             delayed(detector.transform)(X=X_preprocessed, **kwargs)
-            for _, detector in self.detectors
+            for detector in self.detectors
         )
         return X
 
@@ -93,7 +94,7 @@ class BaseDetectors(abc.ABC, BaseEstimator, TransformerMixin):
         :type value: List[UnsupervisedBaseEstimator]
         :raises TypeError: Type error exception
         """
-        if not all(isinstance(x[1], UnsupervisedBaseEstimator) for x in value):
+        if not all(isinstance(x, UnsupervisedBaseEstimator) for x in value):
             raise TypeError("value elements must be of type UnsupervisedBaseEstimator.")
         self._detectors = value
 
