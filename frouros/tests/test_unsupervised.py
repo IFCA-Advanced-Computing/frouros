@@ -23,17 +23,15 @@ from frouros.unsupervised.utils import get_statistical_test
 
 
 @pytest.mark.parametrize("detector", [ChiSquareTest()])
-def test_categorical_features(
-    dataset_categorical: Tuple[np.ndarray, np.ndarray], detector: ChiSquareTest
-) -> None:
+def test_categorical_features(categorical_dataset, detector: ChiSquareTest) -> None:
     """Test categorical features method.
 
-    :param dataset_categorical: categorical dataset
-    :type dataset_categorical: Tuple[numpy.ndarray, numpy.ndarray]
+    :param categorical_dataset: categorical dataset
+    :type categorical_dataset: Tuple[numpy.ndarray, numpy.ndarray]
     :param detector: detector test
     :type detector: ChiSquaredTest
     """
-    X_ref, X_test = dataset_categorical  # noqa: N806
+    X_ref, X_test = categorical_dataset  # noqa: N806
 
     detector.fit(X=X_ref)
     detector.transform(X=X_test)
@@ -50,7 +48,7 @@ def test_categorical_features(
     [EMD(), PSI(), CVMTest(), KSTest(), JS(), KL(), HistogramIntersection(), TTest()],
 )
 def test_univariate_test(
-    dataset_elec2: Tuple[np.ndarray, np.ndarray, np.ndarray],
+    elec2_dataset,
     detector: UnsupervisedBaseEstimator,
 ) -> None:
     """Test univariate method.
@@ -60,7 +58,7 @@ def test_univariate_test(
     :param detector: detector test
     :type detector: UnsupervisedBaseEstimator
     """
-    X_ref, y_ref, X_test = dataset_elec2  # noqa: N806
+    X_ref, y_ref, X_test = elec2_dataset  # noqa: N806
 
     pipe = Pipeline(
         [
