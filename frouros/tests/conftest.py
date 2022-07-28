@@ -55,7 +55,7 @@ def classification_dataset() -> Tuple[np.array, np.array, np.array, np.array]:
     :return: classification dataset
     :rtype: Tuple[np.array, np.array, np.array, np.array]
     """
-    concept_samples = 100
+    concept_samples = 200
     generator = SEA(seed=31)
 
     concepts = [
