@@ -2,9 +2,10 @@
 
 import numpy as np  # type: ignore
 
-from frouros.unsupervised.base import NumericalData, UnivariateTestType
-from frouros.unsupervised.distance_based.base import (  # type: ignore
+from frouros.unsupervised.base import NumericalData, UnivariateType
+from frouros.unsupervised.distance_based.base import (
     DistanceBasedEstimator,
+    DistanceResult,
 )
 
 
@@ -17,7 +18,7 @@ class HistogramIntersection(DistanceBasedEstimator):
         :param num_bins: number of bins in which to divide probabilities
         :type num_bins: int
         """
-        super().__init__(data_type=NumericalData(), test_type=UnivariateTestType())
+        super().__init__(data_type=NumericalData(), statistical_type=UnivariateType())
         self.num_bins = num_bins
 
     @property
@@ -48,9 +49,9 @@ class HistogramIntersection(DistanceBasedEstimator):
         intersection = np.sum(np.minimum(X_ref_hist, X_hist))
         return intersection
 
-    def _distance(
+    def _distance_measure(
         self, X_ref_: np.ndarray, X: np.ndarray, **kwargs  # noqa: N803
-    ) -> float:
+    ) -> DistanceResult:
         hist_range = (
             np.min([np.min(X_ref_), np.min(X)]),
             np.max([np.max(X_ref_), np.max(X)]),
@@ -61,7 +62,8 @@ class HistogramIntersection(DistanceBasedEstimator):
         X_ref_hist = X_ref_hist / X_ref_.shape[0]  # noqa: N806
         X_hist, _ = np.histogram(X, bins=self.num_bins, range=hist_range)  # noqa: N806
         X_hist = X_hist / X.shape[0]  # noqa: N806
-        distance = 1 - self._histogram_intersection(
+        intersection = 1 - self._histogram_intersection(
             X_ref_hist=X_ref_hist, X_hist=X_hist
         )
+        distance = DistanceResult(distance=intersection)
         return distance

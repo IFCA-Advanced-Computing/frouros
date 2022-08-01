@@ -1,31 +1,95 @@
 """Unsupervised distance based base module."""
 
 import abc
-from typing import Tuple, Union
+from collections import namedtuple
+from typing import Optional, List, Tuple, Union
 
 import numpy as np  # type: ignore
 from scipy.stats import rv_histogram  # type: ignore
 
 from frouros.unsupervised.base import (
+    BaseDataType,
+    BaseStatisticalType,
     NumericalData,
-    UnivariateTestType,
+    UnivariateType,
     UnsupervisedBaseEstimator,
 )
+
+DistanceResult = namedtuple("DistanceResult", ["distance"])
+DistanceTestResult = namedtuple("DistanceTestResult", ["distance", "p_value"])
 
 
 class DistanceBasedEstimator(UnsupervisedBaseEstimator):
     """Abstract class representing a distance based estimator."""
 
+    def __init__(
+        self, data_type: BaseDataType, statistical_type: BaseStatisticalType
+    ) -> None:
+        """Init method.
+
+        :param data_type: data type
+        :type data_type: BaseDataType
+        :param statistical_type: statistical type
+        :type statistical_type: BaseStatisticalType
+        """
+        super().__init__(data_type=data_type, statistical_type=statistical_type)
+        self.X_ref_ = None  # type: ignore
+        self.distance: Optional[
+            Union[List[DistanceResult], List[DistanceTestResult]]
+        ] = None
+
+    @property
+    def distance(
+        self,
+    ) -> Optional[Union[List[DistanceResult], List[DistanceTestResult]]]:
+        """Distance results property.
+
+        :return: distance results
+        :rtype: Optional[Union[List[DistanceResult], List[DistanceTestResult]]]
+        """
+        return self._distance
+
+    @distance.setter
+    def distance(
+        self, value: Optional[Union[List[DistanceResult], List[DistanceTestResult]]]
+    ) -> None:
+        """Distance results setter.
+
+        :param value: value to be set
+        :type value: Optional[Union[List[DistanceResult], List[DistanceTestResult]]]
+        """
+        self._distance = value
+
     def _apply_method(
         self, X_ref_: np.ndarray, X: np.ndarray, **kwargs  # noqa: N803
-    ) -> Union[Tuple[float, float], float]:
-        distance = self._distance(X_ref_=X_ref_, X=X, **kwargs)
+    ) -> Union[DistanceResult, DistanceTestResult]:
+        distance = self._distance_measure(X_ref_=X_ref_, X=X, **kwargs)
         return distance
 
+    def transform(
+        self,
+        X: np.ndarray,  # noqa: N803
+        y: np.ndarray = None,  # pylint: disable=W0613
+        **kwargs,
+    ) -> np.ndarray:
+        """Transform values.
+
+        :param X: feature data
+        :type X: numpy.ndarray
+        :param y: target data
+        :type y: numpy.ndarray
+        :return: transformed feature data
+        :rtype: numpy.ndarray
+        """
+        X = self._common_checks(X=X)  # noqa: N806
+        self._specific_checks(X=X)  # noqa: N806
+        self.distance = self._get_result(X=X, **kwargs)  # type: ignore
+        return X
+
     @abc.abstractmethod
-    def _distance(
+    def _distance_measure(
         self, X_ref_: np.ndarray, X: np.ndarray, **kwargs  # noqa: N803
-    ) -> Union[Tuple[float, float], float]:
+    ) -> Union[DistanceResult, DistanceTestResult]:
         pass
 
 
@@ -38,7 +102,7 @@ class DistanceProbabilityBasedEstimator(DistanceBasedEstimator):
         :param num_bins: number of bins in which to divide probabilities
         :type num_bins: int
         """
-        super().__init__(data_type=NumericalData(), test_type=UnivariateTestType())
+        super().__init__(data_type=NumericalData(), statistical_type=UnivariateType())
         self.num_bins = num_bins
 
     @property
@@ -63,9 +127,9 @@ class DistanceProbabilityBasedEstimator(DistanceBasedEstimator):
         self._num_bins = value
 
     @abc.abstractmethod
-    def _distance(
+    def _distance_measure(
         self, X_ref_: np.ndarray, X: np.ndarray, **kwargs  # noqa: N803
-    ) -> Union[Tuple[float, float], float]:
+    ) -> DistanceResult:
         pass
 
     def _calculate_probabilities(

@@ -11,74 +11,74 @@ from sklearn.utils.validation import check_array, check_is_fitted  # type: ignor
 from frouros.unsupervised.exceptions import MismatchDimensionError
 
 
-TestResult = namedtuple("TestResult", ["statistic", "pvalue"])
+TestResult = namedtuple("TestResult", ["statistic", "p_value"])
 
 
-class BaseTestType(abc.ABC):
-    """Abstract class representing a test type."""
+class BaseStatisticalType(abc.ABC):
+    """Abstract class representing a statistical type."""
 
     def __init__(self) -> None:
         """Init method."""
-        self.apply_method: Optional[Callable] = None
+        self._apply_method: Optional[Callable] = None
 
     @abc.abstractmethod
-    def get_test(
+    def get_result(
         self, X_ref_: np.ndarray, X: np.ndarray, **kwargs  # noqa: N803
     ) -> Union[List[float], List[Tuple[float, float]], Tuple[float, float]]:
-        """Obtain test result.
+        """Obtain result.
 
         :param X_ref_: reference data
         :type X_ref_: numpy.ndarray
         :param X: feature data
         :type X: numpy.ndarray
-        :return test result
+        :return result
         :rtype: Union[List[float], List[Tuple[float, float]], Tuple[float, float]]
         """
 
 
-class UnivariateTestType(BaseTestType):
-    """Class representing a univariate test."""
+class UnivariateType(BaseStatisticalType):
+    """Class representing a univariate type."""
 
-    def get_test(
+    def get_result(
         self, X_ref_: np.ndarray, X: np.ndarray, **kwargs  # noqa: N803
     ) -> Union[List[float], List[Tuple[float, float]]]:
-        """Obtain test result for each feature.
+        """Obtain result for each variable (univariate).
 
         :param X_ref_: reference data
         :type X_ref_: numpy.ndarray
         :param X: feature data
         :type X: numpy.ndarray
-        :return test result
+        :return univariate result
         :rtype: Union[List[numpy.float], List[Tuple[float, float]]]
         """
-        tests = []
+        results = []
         for i in range(X.shape[1]):
-            test = self.apply_method(  # pylint: disable=not-callable
+            result = self._apply_method(  # pylint: disable=not-callable
                 X_ref_=X_ref_[:, i], X=X[:, i], **kwargs  # type: ignore
             )  # type: ignore
-            tests.append(test)
-        return tests
+            results.append(result)
+        return results
 
 
-class MultivariateTestType(BaseTestType):
-    """Class representing a multivariate test."""
+class MultivariateType(BaseStatisticalType):
+    """Class representing a multivariate type."""
 
-    def get_test(
+    def get_result(
         self, X_ref_: np.ndarray, X: np.ndarray, **kwargs  # noqa: N803
     ) -> Tuple[float, float]:
-        """Obtain test result.
+        """Obtain result for multivariate.
 
         :param X_ref_: reference data
         :type X_ref_: numpy.ndarray
         :param X: feature data
         :type X: numpy.ndarray
-        :return test result
+        :return multivariate result
         :rtype: Tuple[float, float]
         """
-        test = self.apply_method(  # type: ignore # pylint: disable=not-callable
+        result = self._apply_method(  # type: ignore # pylint: disable=not-callable
             X_ref_=X_ref_, X=X, **kwargs
         )
-        return test
+        return result
 
 
 class BaseDataType(abc.ABC):
@@ -110,21 +110,20 @@ class NumericalData(BaseDataType):
 class UnsupervisedBaseEstimator(abc.ABC, BaseEstimator, TransformerMixin):
     """Abstract class representing an unsupervised estimator."""
 
-    def __init__(self, test_type: BaseTestType, data_type: BaseDataType) -> None:
+    def __init__(
+        self, data_type: BaseDataType, statistical_type: BaseStatisticalType
+    ) -> None:
         """Init method.
 
-        :param test_type: type of test to apply
-        :type test_type: BaseTestType
-        :param data_type: type of data to use
+        :param data_type: data type
         :type data_type: BaseDataType
+        :param statistical_type: statistical type
+        :type statistical_type: BaseStatisticalType
         """
         self.X_ref_ = None  # type: ignore
-        self.test: Optional[
-            Union[List[float], List[Tuple[float, float]], Tuple[float, float]]
-        ] = None
-        test_type.apply_method = self._apply_method
-        self.test_type = test_type
         self.data_type = data_type
+        self.statistical_type = statistical_type
+        statistical_type._apply_method = self._apply_method
 
     @property
     def X_ref_(self) -> Optional[np.ndarray]:  # noqa: N802
@@ -149,22 +148,46 @@ class UnsupervisedBaseEstimator(abc.ABC, BaseEstimator, TransformerMixin):
         )
 
     @property
-    def test(self) -> Optional[List[Tuple[float, float]]]:
-        """Test results property.
+    def data_type(self) -> BaseDataType:
+        """Data type property.
 
-        :return: test results
-        :rtype: Optional[List[Tuple[float, float]]]
+        :return: data type
+        :rtype: BaseDataType
         """
-        return self._test
+        return self._data_type
 
-    @test.setter
-    def test(self, value: Optional[List[Tuple[float, float]]]) -> None:
-        """Test results setter.
+    @data_type.setter
+    def data_type(self, value: BaseDataType) -> None:
+        """Data type setter.
 
         :param value: value to be set
-        :type value: Optional[List[Tuple[float, float]]]
+        :type value: BaseDataType
+        :raises TypeError: Type error exception
         """
-        self._test = value
+        if not isinstance(value, BaseDataType):
+            raise TypeError("value must be of type BaseDataType.")
+        self._data_type = value
+
+    @property
+    def statistical_type(self) -> BaseStatisticalType:
+        """Statistical type property.
+
+        :return: statistical type
+        :rtype: BaseStatisticalType
+        """
+        return self._statistical_type
+
+    @statistical_type.setter
+    def statistical_type(self, value: BaseStatisticalType) -> None:
+        """Statistical type setter.
+
+        :param value: value to be set
+        :type value: BaseStatisticalType
+        :raises TypeError: Type error exception
+        """
+        if not isinstance(value, BaseStatisticalType):
+            raise TypeError("value must be of type BaseStatisticalType.")
+        self._statistical_type = value
 
     def fit(
         self,
@@ -183,6 +206,7 @@ class UnsupervisedBaseEstimator(abc.ABC, BaseEstimator, TransformerMixin):
         self.X_ref_ = X  # type: ignore
         return self
 
+    @abc.abstractmethod
     def transform(
         self,
         X: np.ndarray,  # noqa: N803
@@ -198,10 +222,6 @@ class UnsupervisedBaseEstimator(abc.ABC, BaseEstimator, TransformerMixin):
         :return: transformed feature data
         :rtype: numpy.ndarray
         """
-        X = self._common_checks(X=X)  # noqa: N806
-        self._specific_checks(X=X)  # noqa: N806
-        self.test = self.get_test(X=X, **kwargs)  # type: ignore
-        return X
 
     def fit_transform(
         self,
@@ -245,18 +265,11 @@ class UnsupervisedBaseEstimator(abc.ABC, BaseEstimator, TransformerMixin):
     @abc.abstractmethod
     def _apply_method(
         self, X_ref_: np.ndarray, X: np.ndarray, **kwargs  # noqa: N803
-    ) -> Union[Tuple[float, float], float]:
+    ) -> Any:
         pass
 
-    def get_test(
+    def _get_result(
         self, X: np.ndarray, **kwargs  # noqa: N803
     ) -> Union[List[float], List[Tuple[float, float]], Tuple[float, float]]:
-        """Obtain test result.
-
-        :param X: feature data
-        :type X: numpy.ndarray
-        :return: test result
-        :rtype: Union[List[float], List[Tuple[float, float]], Tuple[float, float]]
-        """
-        test = self.test_type.get_test(X_ref_=self.X_ref_, X=X, **kwargs)
-        return test
+        result = self.statistical_type.get_result(X_ref_=self.X_ref_, X=X, **kwargs)
+        return result
