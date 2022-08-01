@@ -355,9 +355,9 @@ The currently supported methods are listed in the following table. They are divi
   </tr>
   <tr>
     <td>
-        <a href="https://github.com/jaime-cespedes-sisniega/frouros/blob/main/frouros/unsupervised/statistical_test/t_test.py">
+        <a href="https://github.com/jaime-cespedes-sisniega/frouros/blob/main/frouros/unsupervised/statistical_test/welch_t_test.py">
             <div style="height:100%;width:100%">
-                T-test
+                Welch's T-test
             </div>    
         </a>
     </td>

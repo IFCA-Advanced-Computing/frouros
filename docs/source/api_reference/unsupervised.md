@@ -39,4 +39,5 @@ The {mod}`frouros.unsupervised` module contains unsupervised algorithms for drif
     ChiSquareTest
     CVMTest
     KSTest
+    WelchTTest
 ```
