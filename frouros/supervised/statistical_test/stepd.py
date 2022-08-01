@@ -293,7 +293,7 @@ class STEPD(SupervisedBaseEstimatorReFit, StatisticalTestEstimator):
         self._add_context_samples(
             samples_list=self._fit_method.new_context_samples, X=X, y=y
         )
-        X_new_context, y_new_context = self._list_to_arrays(  # noqa: N806
+        X_new_context, y_new_context = self._fit_method.list_to_arrays(  # noqa: N806
             list_=self._fit_method.new_context_samples
         )
         self._check_number_classes(
@@ -313,7 +313,7 @@ class STEPD(SupervisedBaseEstimatorReFit, StatisticalTestEstimator):
     def _normal_case(self, *args, **kwargs) -> None:
         X, y = kwargs.get("X"), kwargs.get("y")  # noqa: N806
         self._fit_method.add_fit_context_samples(X=X, y=y)
-        X, y = self._list_to_arrays(  # noqa: N806
+        X, y = self._fit_method.list_to_arrays(  # noqa: N806
             list_=self._fit_method.fit_context_samples
         )
         self._fit_estimator(X=X, y=y)

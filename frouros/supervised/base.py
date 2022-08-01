@@ -149,6 +149,32 @@ class BaseFit(abc.ABC):
         """Method to be executed after the fit method."""
         self.new_context_samples.clear()
 
+    @staticmethod
+    def _get_number_classes(y: np.array) -> int:
+        return len(np.unique(y))
+
+    @staticmethod
+    def list_to_arrays(
+        list_: List[Tuple[np.array, Union[str, int, float]]]
+    ) -> List[np.ndarray]:
+        """Convert list to numpy arrays.
+
+        :param list_: list of samples
+        :type list_: List[Tuple[np.array, Union[str, int, float]]]
+        :return: list of numpy arrays
+        :rtype List[numpy.ndarray]
+        """
+        return [*map(np.array, zip(*list_))]
+
+    @abc.abstractmethod
+    def is_ready(self, y: np.ndarray, **kwargs) -> bool:
+        """Abstract method to check if fit method is ready.
+
+        :param y: input data
+        :type y: numpy.ndarray
+        :return ready flag
+        """
+
 
 class NormalFit(BaseFit):
     """Normal fit method class."""
@@ -190,6 +216,15 @@ class NormalFit(BaseFit):
     ) -> None:
         """Method to be executed before the initial fit method."""
         self.add_fit_context_samples(X=X, y=y)
+
+    def is_ready(self, y: np.ndarray, **kwargs) -> bool:
+        """Check if fit method is ready to be used.
+
+        :param y: input data
+        :type y: numpy.ndarray
+        :return ready flag
+        """
+        return self._get_number_classes(y=y) > 1
 
 
 class PartialFit(BaseFit):
@@ -246,6 +281,15 @@ class PartialFit(BaseFit):
         """Method to be executed after the fit method."""
         super().post_fit_estimator()
         self.fit_context_samples.clear()
+
+    def is_ready(self, y: np.ndarray, **kwargs) -> bool:
+        """Check if fit method is ready to be used.
+
+        :param y: input data
+        :type y: numpy.ndarray
+        :return ready flag
+        """
+        return True
 
 
 class SupervisedBaseConfig(abc.ABC):
@@ -466,10 +510,6 @@ class SupervisedBaseEstimator(abc.ABC):
     def _fit_extra(self, X: np.ndarray, y: np.ndarray) -> None:  # noqa: N803
         pass
 
-    @staticmethod
-    def _get_number_classes(y: np.array) -> int:
-        return len(np.unique(y))
-
     def _get_specific_response_attributes(self):
         pass
 
@@ -550,19 +590,17 @@ class SupervisedBaseEstimatorReFit(SupervisedBaseEstimator):
     """Abstract class representing a re-fit estimator."""
 
     def _check_drift_sufficient_samples(self) -> bool:
-        _, y_new_context = self._list_to_arrays(
+        _, y_new_context = self._fit_method.list_to_arrays(
             list_=self._fit_method.new_context_samples
         )
-        num_classes = self._get_number_classes(y=y_new_context)
-        if num_classes > 1:
+        if self._fit_method.is_ready(y=y_new_context):
             return True
         return False
 
     def _check_number_classes(
         self, X_new_context: np.ndarray, y_new_context: np.ndarray  # noqa: N803
     ) -> None:
-        num_classes = self._get_number_classes(y=y_new_context)
-        if num_classes > 1:
+        if self._fit_method.is_ready(y=y_new_context):
             # Construct a new unfitted estimator with the same parameters
             self.estimator = clone(estimator=self.estimator)
             # Fit new estimator with the next context samples
@@ -571,9 +609,8 @@ class SupervisedBaseEstimatorReFit(SupervisedBaseEstimator):
         else:
             logger.warning(
                 "Classifier estimator needs at least 2 different "
-                "classes, but only %s was found. Samples "
-                "will be collected until this is to be fulfilled.",
-                num_classes,
+                "classes, but only 1 was found. Samples "
+                "will be collected until this is to be fulfilled."
             )
             self._drift_insufficient_samples = True
 
@@ -599,12 +636,6 @@ class SupervisedBaseEstimatorReFit(SupervisedBaseEstimator):
             metrics=metrics,
         )
         return response
-
-    @staticmethod
-    def _list_to_arrays(
-        list_: List[Tuple[np.array, Union[str, int, float]]]
-    ) -> List[np.ndarray]:
-        return [*map(np.array, zip(*list_))]
 
     @abc.abstractmethod
     def _drift_case(self, X: np.ndarray, y: np.ndarray) -> None:  # noqa: N803

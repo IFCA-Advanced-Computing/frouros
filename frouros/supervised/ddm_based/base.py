@@ -149,7 +149,7 @@ class DDMBasedEstimator(SupervisedBaseEstimatorReFit):
         self._add_context_samples(
             samples_list=self._fit_method.new_context_samples, X=X, y=y
         )
-        X_new_context, y_new_context = self._list_to_arrays(  # noqa: N806
+        X_new_context, y_new_context = self._fit_method.list_to_arrays(  # noqa: N806
             list_=self._fit_method.new_context_samples
         )
         if not is_classifier(self.estimator):
@@ -164,10 +164,16 @@ class DDMBasedEstimator(SupervisedBaseEstimatorReFit):
     def _normal_case(self, *args, **kwargs) -> None:
         X, y = kwargs.get("X"), kwargs.get("y")  # noqa: N806
         self._fit_method.add_fit_context_samples(X=X, y=y)
-        X, y = self._list_to_arrays(  # noqa: N806
+        X, y = self._fit_method.list_to_arrays(  # noqa: N806
             list_=self._fit_method.fit_context_samples
         )
-        self._fit_estimator(X=X, y=y)
+        if self._fit_method.is_ready(y=y):
+            self._fit_estimator(X=X, y=y)
+        else:
+            logger.warning(
+                "Estimator is not ready to be fitted. "
+                "Samples will continue to be saved."
+            )
         # Remove warning samples if performance returns to normality
         self._fit_method.post_fit_estimator()
 
