@@ -5,9 +5,10 @@ from typing import Optional
 
 import numpy as np  # type: ignore
 
-from frouros.unsupervised.base import NumericalData, UnivariateTestType
-from frouros.unsupervised.distance_based.base import (  # type: ignore
+from frouros.unsupervised.base import NumericalData, UnivariateType
+from frouros.unsupervised.distance_based.base import (
     DistanceBasedEstimator,
+    DistanceResult,
 )
 
 
@@ -20,7 +21,7 @@ class PSI(DistanceBasedEstimator):
         :param num_buckets: number of buckets
         :type num_buckets: int
         """
-        super().__init__(data_type=NumericalData(), test_type=UnivariateTestType())
+        super().__init__(data_type=NumericalData(), statistical_type=UnivariateType())
         self.num_buckets = num_buckets
         self.X_ref_num: Optional[int] = None  # pylint: disable=invalid-name
 
@@ -65,19 +66,20 @@ class PSI(DistanceBasedEstimator):
 
     def _apply_method(
         self, X_ref_: np.ndarray, X: np.ndarray, **kwargs  # noqa: N803
-    ) -> float:
-        distance = self._distance(X_ref_=X_ref_, X=X, **kwargs)
+    ) -> DistanceResult:
+        distance = self._distance_measure(X_ref_=X_ref_, X=X, **kwargs)
         return distance
 
-    def _distance(
+    def _distance_measure(
         self, X_ref_: np.ndarray, X: np.ndarray, **kwargs  # noqa: N803
-    ) -> float:
-        distance = self._psi(
+    ) -> DistanceResult:
+        psi = self._psi(
             X_ref_=X_ref_,
             X=X,
             X_ref_num=self.X_ref_num,  # type: ignore
             num_buckets=self.num_buckets,
         )
+        distance = DistanceResult(distance=psi)
         return distance
 
     @staticmethod

@@ -18,8 +18,13 @@ from frouros.unsupervised.distance_based import (
     KL,
     MMD,
 )
-from frouros.unsupervised.statistical_test import ChiSquareTest, CVMTest, KSTest, TTest
-from frouros.unsupervised.utils import get_statistical_test
+from frouros.unsupervised.statistical_test import (
+    ChiSquareTest,
+    CVMTest,
+    KSTest,
+    WelchTTest,
+)
+from frouros.unsupervised.utils import get_distance, get_statistical_test
 
 
 @pytest.mark.parametrize("detector", [ChiSquareTest()])
@@ -36,22 +41,53 @@ def test_categorical_features(categorical_dataset, detector: ChiSquareTest) -> N
     detector.fit(X=X_ref)
     detector.transform(X=X_test)
 
-    for (statistic, p_value), (expected_statistic, expected_p_value) in zip(
-        detector.test, [(7.19999, 0.0273237), (0.53333, 0.7659283)]  # type: ignore
+    for test_result, (expected_statistic, expected_p_value) in zip(
+        detector.test, [(7.2, 0.0273237), (0.53333, 0.7659283)]  # type: ignore
     ):
-        assert np.isclose(statistic, expected_statistic)
-        assert np.isclose(p_value, expected_p_value)
+        assert np.isclose(test_result.statistic, expected_statistic)
+        assert np.isclose(test_result.p_value, expected_p_value)
 
 
 @pytest.mark.parametrize(
     "detector",
-    [EMD(), PSI(), CVMTest(), KSTest(), JS(), KL(), HistogramIntersection(), TTest()],
+    [EMD(), PSI(), JS(), KL(), HistogramIntersection()],
 )
-def test_univariate_test(
+def test_distance_based_univariate_test(
     elec2_dataset,
     detector: UnsupervisedBaseEstimator,
 ) -> None:
-    """Test univariate method.
+    """Test distance based univariate method.
+
+    :param dataset_elec2: Elec2 raw dataset
+    :type dataset_elec2: Tuple[numpy.ndarray, numpy.ndarray, numpy.ndarray]
+    :param detector: detector distance
+    :type detector: UnsupervisedBaseEstimator
+    """
+    X_ref, y_ref, X_test = elec2_dataset  # noqa: N806
+
+    pipe = Pipeline(
+        [
+            ("scaler", StandardScaler()),
+            ("detector", detector),
+            ("model", LogisticRegression(solver="lbfgs", max_iter=1000)),
+        ]
+    )
+
+    pipe.fit(X=X_ref, y=y_ref)
+
+    _ = pipe.predict(X=np.array([*X_test]))
+    _ = get_distance(estimator=pipe, detector_name="detector")
+
+
+@pytest.mark.parametrize(
+    "detector",
+    [CVMTest(), KSTest(), WelchTTest()],
+)
+def test_statistical_univariate_test(
+    elec2_dataset,
+    detector: UnsupervisedBaseEstimator,
+) -> None:
+    """Test statistical univariate method.
 
     :param dataset_elec2: Elec2 raw dataset
     :type dataset_elec2: Tuple[numpy.ndarray, numpy.ndarray, numpy.ndarray]
@@ -83,7 +119,7 @@ def test_distance_based_multivariate_different_distribution_test(
     detector: UnsupervisedBaseEstimator,
     num_samples: int = 500,
 ) -> None:
-    """Test multivariate different distribution method.
+    """Test distance based multivariate different distribution method.
 
     :param multivariate_distribution_p: mean and covariance matrix of distribution p
     :type multivariate_distribution_p: Tuple[numpy.ndarray, numpy.ndarray]
@@ -104,7 +140,7 @@ def test_distance_based_multivariate_different_distribution_test(
 
     detector.fit(X=X_ref)
     detector.transform(X=X_test)
-    statistic, p_value = detector.test  # type: ignore
+    statistic, p_value = detector.distance  # type: ignore
 
     assert np.isclose(statistic, 0.09446612)
     assert np.isclose(p_value, 0.0)
@@ -137,7 +173,7 @@ def test_distance_based_multivariate_same_distribution_test(
 
     detector.fit(X=X_ref)
     detector.transform(X=X_test)
-    statistic, p_value = detector.test  # type: ignore
+    statistic, p_value = detector.distance  # type: ignore
 
     assert np.isclose(statistic, 0.00256109)
     assert np.isclose(p_value, 0.894)

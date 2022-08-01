@@ -1,15 +1,16 @@
 """CVMTest (Cramér-von Mises test) module."""
 
-from typing import Optional, Tuple
+from typing import Optional
 
 import numpy as np  # type: ignore
 from scipy.stats import cramervonmises_2samp  # type: ignore
 from sklearn.utils.validation import check_array  # type: ignore
 
-from frouros.unsupervised.base import NumericalData, UnivariateTestType
+from frouros.unsupervised.base import NumericalData, UnivariateType
 from frouros.unsupervised.exceptions import InsufficientSamplesError
-from frouros.unsupervised.statistical_test.base import (  # type: ignore
+from frouros.unsupervised.statistical_test.base import (
     StatisticalTestBaseEstimator,
+    TestResult,
 )
 
 
@@ -18,7 +19,7 @@ class CVMTest(StatisticalTestBaseEstimator):
 
     def __init__(self) -> None:
         """Init method."""
-        super().__init__(data_type=NumericalData(), test_type=UnivariateTestType())
+        super().__init__(data_type=NumericalData(), statistical_type=UnivariateType())
 
     @StatisticalTestBaseEstimator.X_ref_.setter  # type: ignore[attr-defined]
     def X_ref_(self, value: Optional[np.ndarray]) -> None:  # noqa: N802
@@ -43,10 +44,11 @@ class CVMTest(StatisticalTestBaseEstimator):
 
     def _statistical_test(
         self, X_ref_: np.ndarray, X: np.ndarray, **kwargs  # noqa: N803
-    ) -> Tuple[float, float]:
+    ) -> TestResult:
         test = cramervonmises_2samp(
             x=X_ref_,
             y=X,
             method=kwargs.get("method", "auto"),
         )
-        return test.statistic, test.pvalue
+        test = TestResult(statistic=test.statistic, p_value=test.pvalue)
+        return test

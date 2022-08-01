@@ -5,8 +5,11 @@ from typing import Optional, Tuple
 import numpy as np  # type: ignore
 from sklearn.gaussian_process.kernels import Kernel, RBF  # type: ignore
 
-from frouros.unsupervised.base import NumericalData, MultivariateTestType, TestResult
-from frouros.unsupervised.distance_based.base import DistanceBasedEstimator
+from frouros.unsupervised.base import NumericalData, MultivariateType
+from frouros.unsupervised.distance_based.base import (
+    DistanceBasedEstimator,
+    DistanceTestResult,
+)
 
 
 class MMD(DistanceBasedEstimator):
@@ -27,7 +30,7 @@ class MMD(DistanceBasedEstimator):
         :param random_state: random state value
         :type random_state: Optional[int]
         """
-        super().__init__(data_type=NumericalData(), test_type=MultivariateTestType())
+        super().__init__(data_type=NumericalData(), statistical_type=MultivariateType())
         self.kernel = kernel
         self.num_permutations = num_permutations
         self.random_state = random_state
@@ -74,13 +77,16 @@ class MMD(DistanceBasedEstimator):
             raise ValueError("value must be greater of equal than 1.")
         self._num_permutations = value
 
-    def _distance(
+    def _distance_measure(
         self, X_ref_: np.ndarray, X: np.ndarray, **kwargs  # noqa: N803
-    ) -> Tuple[float, float]:
-        test = self._mmd(X_ref_=X_ref_, X=X, **kwargs)
-        return test.statistic, test.pvalue
+    ) -> DistanceTestResult:
+        mmd_statistic, p_value = self._mmd(X_ref_=X_ref_, X=X, **kwargs)
+        distance_test = DistanceTestResult(distance=mmd_statistic, p_value=p_value)
+        return distance_test
 
-    def _mmd(self, X_ref_: np.ndarray, X: np.ndarray):  # noqa: N803
+    def _mmd(
+        self, X_ref_: np.ndarray, X: np.ndarray  # noqa: N803
+    ) -> Tuple[float, float]:
         X_ref_num_samples = X_ref_.shape[0]  # noqa: N806
         X_num_samples = X.shape[0]  # noqa: N806
         X_concat = np.vstack((X_ref_, X))  # noqa: N806
@@ -96,9 +102,7 @@ class MMD(DistanceBasedEstimator):
             mmd_statistic=mmd_statistic,
             num_permutations=self.num_permutations,
         )
-
-        test = TestResult(statistic=mmd_statistic, pvalue=p_value)
-        return test
+        return mmd_statistic, p_value
 
     def _calculate_p_value(
         self,

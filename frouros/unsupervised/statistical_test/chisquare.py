@@ -6,9 +6,10 @@ from typing import List, Tuple
 import numpy as np  # type: ignore
 from scipy.stats import chi2_contingency  # type: ignore
 
-from frouros.unsupervised.base import CategoricalData, UnivariateTestType, TestResult
+from frouros.unsupervised.base import CategoricalData, UnivariateType
 from frouros.unsupervised.statistical_test.base import (  # type: ignore
     StatisticalTestBaseEstimator,
+    TestResult,
 )
 
 
@@ -17,7 +18,7 @@ class ChiSquareTest(StatisticalTestBaseEstimator):
 
     def __init__(self) -> None:
         """Init method."""
-        super().__init__(data_type=CategoricalData(), test_type=UnivariateTestType())
+        super().__init__(data_type=CategoricalData(), statistical_type=UnivariateType())
 
     def _statistical_test(
         self, X_ref_: np.ndarray, X: np.ndarray, **kwargs  # noqa: N803
@@ -27,7 +28,7 @@ class ChiSquareTest(StatisticalTestBaseEstimator):
             observed=np.array([f_obs, f_exp]), **kwargs
         )
 
-        test = TestResult(statistic=statistic, pvalue=p_value)
+        test = TestResult(statistic=statistic, p_value=p_value)
         return test
 
     @staticmethod
