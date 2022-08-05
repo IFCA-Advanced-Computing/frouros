@@ -1,14 +1,12 @@
 """ADWIN (ADaptive WINdowing) module."""
 
 from collections import deque
-from typing import Callable, Dict, Optional, List, Union  # noqa: TYP001
+from typing import Union  # noqa: TYP001
 
 from sklearn.base import BaseEstimator  # type: ignore
 import numpy as np  # type: ignore
 
-from frouros.metrics.base import BaseMetric
 from frouros.supervised.window_based.base import WindowBaseConfig, WindowBasedEstimator
-from frouros.utils.logger import logger
 
 
 class Bucket:
@@ -250,26 +248,18 @@ class ADWIN(WindowBasedEstimator):
     def __init__(
         self,
         estimator: BaseEstimator,
-        error_scorer: Callable,
         config: ADWINConfig,
-        metrics: Optional[Union[BaseMetric, List[BaseMetric]]] = None,
     ) -> None:
         """Init method.
 
         :param estimator: sklearn estimator
         :type estimator: BaseEstimator
-        :param error_scorer: error scorer function
-        :type error_scorer: Callable
         :param config: configuration parameters
         :type config: ADWINConfig
-        :param metrics: performance metrics
-        :type metrics: Optional[Union[BaseMetric, List[BaseMetric]]]
         """
         super().__init__(
             estimator=estimator,
-            error_scorer=error_scorer,
             config=config,
-            metrics=metrics,
         )
         self.buckets = deque([Bucket(m=self.config.m)])  # type: ignore
         self.total = 0.0
@@ -339,8 +329,9 @@ class ADWIN(WindowBasedEstimator):
         :type value: float
         :raises ValueError: Value error exception
         """
-        if value < 0.0:
-            raise ValueError("variance value must be greater or equal than 0.0.")
+        # FIXME: Workaround to avoid precision problems  # pylint: disable=fixme
+        # if value < 0.0:
+        #     raise ValueError("variance value must be greater or equal than 0.0.")
         self._variance = value
 
     @property
@@ -546,33 +537,18 @@ class ADWIN(WindowBasedEstimator):
         )
         return epsilon
 
-    def update(
-        self,
-        y: np.ndarray,
-        X: np.ndarray = None,  # noqa: N803
-    ) -> Dict[str, Optional[Union[float, bool, Dict[str, float]]]]:
+    def update(self, value: Union[int, float]) -> None:
         """Update drift detector.
 
-        :param y: input data
-        :type y: numpy.ndarray
-        :param X: feature data
-        :type X: Optional[numpy.ndarray]
-        :return: response message
-        :rtype: Dict[str, Optional[Union[float, bool, Dict[str, float]]]]
+        :param value: value to update detector
+        :type value: Union[int, float]
         """
         # pylint: disable=too-many-locals, too-many-nested-blocks
         # NOTE: Refactor function
-        y_pred, metrics = self._prepare_update(y=y)
-
-        self.ground_truth.extend(y.tolist())
-        self.predictions.extend(y_pred.tolist())
-
-        value = self.error_scorer(
-            y_true=np.array([*self.ground_truth]), y_pred=np.array([*self.predictions])
-        )
+        self.num_instances += 1
         self._insert_bucket(value=value)
 
-        drift = False
+        self.drift = False
         if (
             self.num_instances % self.config.clock == 0  # type: ignore
             and self.width > self.config.min_num_instances  # type: ignore
@@ -613,12 +589,8 @@ class ADWIN(WindowBasedEstimator):
                             )
                             if np.abs(w0_mean - w1_mean) > threshold:
                                 # Drift detected
-                                logger.warning(
-                                    "Changing threshold has been exceeded. "
-                                    "Drift detected."
-                                )
                                 flag_reduce_width = True
-                                drift = True
+                                self.drift = True
                                 if self.width > 0:
                                     w0_instances -= self._delete_bucket()
                                     flag_exit = True
@@ -626,20 +598,8 @@ class ADWIN(WindowBasedEstimator):
                                     self._reset()
                                     break
 
-        self._clear_target_values()
-
-        response = self._get_update_response(
-            drift=drift,
-            metrics=metrics,
-        )
-        return response
-
-    def _clear_target_values(self):
-        self.ground_truth.clear()
-        self.predictions.clear()
-
-    def _reset(self, *args, **kwargs):
-        self.buckets = deque([Bucket(m=self.config.m)])
+    def _reset(self) -> None:
+        self.buckets = deque([Bucket(m=self.config.m)])  # type: ignore
         self.total = 0.0
         self.variance = 0.0
         self.width = 0

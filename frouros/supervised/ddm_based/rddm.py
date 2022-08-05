@@ -1,11 +1,9 @@
 """RDDM (Reactive Drift detection method) module."""
 
-from typing import Callable, Dict, Optional, List, Union  # noqa: TYP001
+from typing import Union
 
-import numpy as np  # type: ignore
 from sklearn.base import BaseEstimator  # type: ignore
 
-from frouros.metrics.base import BaseMetric
 from frouros.supervised.ddm_based.base import DDMBaseConfig, DDMErrorBasedEstimator
 from frouros.utils.data_structures import CircularQueue
 from frouros.utils.stats import Mean
@@ -109,26 +107,18 @@ class RDDM(DDMErrorBasedEstimator):
     def __init__(
         self,
         estimator: BaseEstimator,
-        error_scorer: Callable,
         config: RDDMConfig,
-        metrics: Optional[Union[BaseMetric, List[BaseMetric]]] = None,
     ) -> None:
         """Init method.
 
         :param estimator: sklearn estimator
         :type estimator: BaseEstimator
-        :param error_scorer: error scorer function
-        :type error_scorer: Callable
         :param config: configuration parameters
         :type config: RDDMConfig
-        :param metrics: performance metrics
-        :type metrics: Optional[Union[BaseMetric, List[BaseMetric]]]
         """
         super().__init__(
             estimator=estimator,
-            error_scorer=error_scorer,
             config=config,
-            metrics=metrics,
         )
         self.num_warnings = 0
         self.rddm_drift = False
@@ -136,41 +126,26 @@ class RDDM(DDMErrorBasedEstimator):
             max_len=self.config.min_concept_size  # type: ignore
         )
 
-    def _reset(self, *args, **kwargs) -> None:
-        super()._reset()
+    def reset(self, *args, **kwargs) -> None:
+        """Reset method."""
+        super().reset()
         self.rddm_drift = False
 
     def update(  # pylint: disable=too-many-branches
-        self,
-        y: np.ndarray,
-        X: np.ndarray = None,  # noqa: N803
-    ) -> Dict[str, Optional[Union[float, bool, Dict[str, float]]]]:
+        self, value: Union[int, float]
+    ) -> None:
         """Update drift detector.
 
-        :param y: input data
-        :type y: numpy.ndarray
-        :param X: feature data
-        :type X: Optional[numpy.ndarray]
-        :return: response message
-        :rtype: Dict[str, Optional[Union[float, bool, Dict[str, float]]]]
+        :param value: value to update detector
+        :type value: Union[int, float]
         """
-        X, y_pred, metrics = self._prepare_update(y=y)  # noqa: N806
-
-        if self._drift_insufficient_samples:
-            self._insufficient_samples_case(X=X, y=y)
-            if not self._check_drift_sufficient_samples:
-                # Drift has been detected but there are no enough samples
-                # to train a new model from scratch
-                return self._insufficient_samples_response(metrics=metrics)
-            # There are enough samples to train a new model from scratch
-            self._complete_delayed_drift()
+        self.num_instances += 1
 
         if self.rddm_drift:
             self._rdd_drift_case()
 
-        error_rate = self.error_scorer(y_true=y, y_pred=y_pred)
-        self.predictions.enqueue(value=error_rate)
-        self.error_rate.update(value=error_rate)
+        self.predictions.enqueue(value=value)
+        self.error_rate.update(value=value)
 
         if self.num_instances >= self.config.min_num_instances:
             error_rate_plus_std, std = self._calculate_error_rate_plus_std()
@@ -186,7 +161,6 @@ class RDDM(DDMErrorBasedEstimator):
 
             if drift_flag:
                 # Out-of-Control
-                self._drift_case(X=X, y=y)
                 self.rddm_drift = True
                 self.drift = True
                 self.warning = False
@@ -209,12 +183,11 @@ class RDDM(DDMErrorBasedEstimator):
                         self.predictions.maintain_last_element()
                     else:
                         # Warning
-                        self._warning_case(X=X, y=y)
                         self.warning = True
                         self.num_warnings += 1
+                        self.drift = False
                 else:
                     # In-Control
-                    self._normal_case(X=X, y=y)
                     self.drift = False
                     self.warning = False
                     self.num_warnings = 0
@@ -224,16 +197,7 @@ class RDDM(DDMErrorBasedEstimator):
                 ):
                     self.rddm_drift = True
         else:
-            self._normal_case(X=X, y=y)
-            error_rate_plus_std, self.drift, self.warning = 0.0, False, False
-
-        response = self._get_update_response(
-            drift=self.drift,
-            warning=self.warning,
-            error_rate_plus_std=error_rate_plus_std,
-            metrics=metrics,
-        )
-        return response
+            self.drift, self.warning = False, False
 
     def _rdd_drift_case(self) -> None:
         self._reset_stats()

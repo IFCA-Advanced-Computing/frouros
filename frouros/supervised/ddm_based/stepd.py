@@ -1,25 +1,16 @@
 """STEPD (Statistical test of equal proportions) module."""
 
-from typing import Callable, Dict, Optional, List, Tuple, Union  # noqa: TYP001
+from typing import Union  # noqa: TYP001
 
+import numpy as np  # type: ignore
 from scipy.stats import norm  # type: ignore
 from sklearn.base import BaseEstimator  # type: ignore
-from sklearn.utils.validation import check_is_fitted  # type: ignore
-import numpy as np  # type: ignore
 
-from frouros.metrics.base import BaseMetric
-from frouros.supervised.base import SupervisedBaseEstimatorReFit
-from frouros.supervised.statistical_test.base import (
-    StatisticalTestConfig,
-    StatisticalTestEstimator,
-)
+from frouros.supervised.ddm_based.base import DDMBaseConfig, DDMBasedEstimator
 from frouros.utils.data_structures import AccuracyQueue
-from frouros.utils.decorators import check_func_parameters
-from frouros.utils.logger import logger
-from frouros.utils.validation import check_is_one_sample
 
 
-class STEPDConfig(StatisticalTestConfig):
+class STEPDConfig(DDMBaseConfig):
     """STEPD (Statistical test of equal proportions) configuration class."""
 
     def __init__(
@@ -85,58 +76,29 @@ class STEPDConfig(StatisticalTestConfig):
         self._alpha_w = value
 
 
-class STEPD(SupervisedBaseEstimatorReFit, StatisticalTestEstimator):
+class STEPD(DDMBasedEstimator):
     """STEPD (Statistical test of equal proportions) algorithm class."""
 
     def __init__(
         self,
         estimator: BaseEstimator,
-        config: StatisticalTestConfig,
-        accuracy_scorer: Callable = lambda y_true, y_pred: y_true == y_pred,
-        metrics: Optional[Union[BaseMetric, List[BaseMetric]]] = None,
+        config: DDMBaseConfig,
     ) -> None:
         """Init method.
 
         :param estimator: sklearn estimator
         :type estimator: BaseEstimator
         :param config: configuration parameters
-        :type config: StatisticalTestConfig
-        :param accuracy_scorer: accuracy scorer function
-        :type accuracy_scorer: Callable
-        :param metrics: performance metrics
-        :type metrics: Optional[Union[BaseMetric, List[BaseMetric]]]
+        :type config: DDMBaseConfig
         """
         super().__init__(
             estimator=estimator,
             config=config,
-            metrics=metrics,
         )
-        self.accuracy_scorer = accuracy_scorer  # type: ignore
         self.correct_total = 0
         self.min_num_instances = 2 * self.config.min_num_instances
         self.window_accuracy = AccuracyQueue(max_len=self.config.min_num_instances)
-        self.drift = False
-        self.warning = False
         self._distribution = norm()
-
-    @property
-    def accuracy_scorer(self) -> Callable:
-        """Accuracy scorer property.
-
-        :return: accuracy scorer function
-        :rtype: Callable
-        """
-        return self._accuracy_scorer
-
-    @accuracy_scorer.setter  # type: ignore
-    @check_func_parameters
-    def accuracy_scorer(self, value: Callable) -> None:
-        """Accuracy scorer setter.
-
-        :param value: value to be set
-        :type value: Callable
-        """
-        self._accuracy_scorer = value
 
     @property
     def correct_total(self) -> int:
@@ -206,116 +168,38 @@ class STEPD(SupervisedBaseEstimatorReFit, StatisticalTestEstimator):
         ) / np.sqrt((p_hat * (1 - p_hat) * num_instances_inv))
         return statistic
 
-    def _reset(self, *args, **kwargs) -> None:
-        super()._reset()
+    def reset(self, *args, **kwargs) -> None:
+        """Reset method."""
+        super().reset()
+        self.correct_total = 0
         self.window_accuracy.clear()
 
-    def _prepare_update(
-        self, y: np.ndarray
-    ) -> Tuple[np.ndarray, np.ndarray, Optional[Dict[str, float]]]:
-        check_is_fitted(self.estimator)
-        check_is_one_sample(array=y)
-        X, y_pred = self.delayed_predictions.popleft()  # noqa: N806
-        self.num_instances += 1
-
-        metrics = self._metrics_func(y_true=y, y_pred=y_pred)
-        return X, y_pred, metrics
-
-    def update(
-        self,
-        y: np.ndarray,
-        X: np.ndarray = None,  # noqa: N803
-    ) -> Dict[str, Optional[Union[float, bool, Dict[str, float]]]]:
+    def update(self, value: Union[int, float]) -> None:
         """Update drift detector.
 
-        :param y: input data
-        :type y: numpy.ndarray
-        :param X: feature data
-        :type X: Optional[numpy.ndarray]
-        :return: response message
-        :rtype: Dict[str, Optional[Union[float, bool, Dict[str, float]]]]
+        :param value: value to update detector
+        :type value: Union[int, float]
         """
-        X, y_pred, metrics = self._prepare_update(y=y)  # noqa: N806
+        self.num_instances += 1
 
-        if self._drift_insufficient_samples:
-            self._insufficient_samples_case(X=X, y=y)
-            if not self._check_drift_sufficient_samples:
-                # Drift has been detected but there are no enough samples
-                # to train a new model from scratch
-                response = self._get_update_response(
-                    drift=True, warning=False, statistical_test=None, metrics=metrics
-                )
-                return response  # type: ignore
-            # There are enough samples to train a new model from scratch
-            self._complete_delayed_drift()
-
-        accuracy = self.accuracy_scorer(y_true=y, y_pred=y_pred)
-
-        self.correct_total += np.sum(accuracy)
-        self.window_accuracy.enqueue(value=accuracy)
+        self.correct_total += np.sum(value)
+        self.window_accuracy.enqueue(value=value)
 
         if self.num_instances >= self.min_num_instances:
             statistic = self._calculate_statistic()
-            p_value = self._distribution.sf(np.abs(statistic)) * 2
-
-            statistical_test = {"statistic": statistic, "p-value": p_value}
+            p_value = self._distribution.sf(np.abs(statistic))  # One-sided test
 
             if p_value < self.config.alpha_d:  # type: ignore
                 # Drift case
-                self._drift_case(X=X, y=y)
                 self.drift = True
                 self.warning = False
             else:
                 if p_value < self.config.alpha_w:  # type: ignore
                     # Warning case
-                    self._warning_case(X=X, y=y)
                     self.warning = True
                 else:
                     # In-Control
-                    self._normal_case(X=X, y=y)
                     self.warning = False
                 self.drift = False
         else:
-            self._normal_case(X=X, y=y)
-            statistical_test, self.drift, self.warning = None, False, False
-
-        response = self._get_update_response(
-            drift=self.drift,
-            warning=self.warning,
-            statistical_test=statistical_test,
-            metrics=metrics,
-        )
-        return response
-
-    def _drift_case(self, X: np.ndarray, y: np.ndarray) -> None:  # noqa: N803
-        if not self.drift:  # Check if drift message has already been shown
-            logger.warning("Changing threshold has been exceeded. Drift detected.")
-        self._add_context_samples(
-            samples_list=self._fit_method.new_context_samples, X=X, y=y
-        )
-        X_new_context, y_new_context = self._fit_method.list_to_arrays(  # noqa: N806
-            list_=self._fit_method.new_context_samples
-        )
-        self._check_number_classes(
-            X_new_context=X_new_context, y_new_context=y_new_context
-        )
-
-    def _warning_case(self, X: np.array, y: np.array) -> None:  # noqa: N803
-        if not self.warning:  # Check if warning message has already been shown
-            logger.warning(
-                "Warning threshold has been exceeded. "
-                "New concept will be learned until drift is detected."
-            )
-        self._add_context_samples(
-            samples_list=self._fit_method.new_context_samples, X=X, y=y
-        )
-
-    def _normal_case(self, *args, **kwargs) -> None:
-        X, y = kwargs.get("X"), kwargs.get("y")  # noqa: N806
-        self._fit_method.add_fit_context_samples(X=X, y=y)
-        X, y = self._fit_method.list_to_arrays(  # noqa: N806
-            list_=self._fit_method.fit_context_samples
-        )
-        self._fit_estimator(X=X, y=y)
-        # Remove warning samples if performance returns to normality
-        self._fit_method.post_fit_estimator()
+            self.drift, self.warning = False, False

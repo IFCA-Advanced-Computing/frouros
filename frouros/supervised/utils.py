@@ -1,30 +1,19 @@
 """Supervised util functions."""
 
-from typing import Any, Tuple
+from typing import List, Tuple
 
 import numpy as np  # type: ignore
-from sklearn.base import BaseEstimator  # type: ignore
-
-from frouros.supervised.exceptions import UpdateDetectorError
 
 
-def update_detector(
-    estimator: BaseEstimator, y: np.ndarray, detector_name: str = "detector"
-) -> Tuple[Any, ...]:
-    """Update detector with new target sample/s.
+def list_to_arrays(list_: List[Tuple[np.ndarray, np.ndarray]]):
+    """Convert list to numpy arrays.
 
-    :param estimator: estimator containing the detector
-    :type estimator: sklearn.base.BaseEstimator
-    :param y: target samples
-    :type y: np.ndarray
-    :param detector_name: detector´s name
-    :type detector_name: str
-    :raises UpdateDetectorError: update detector error exception
-    :return: detector update output
-    :rtype: Tuple[Any, ...]
+    :param list_: list of samples
+    :type list_: List[Tuple[numpy.ndarray, numpy.ndarray]]
+    :return: list of numpy arrays
+    :rtype List[numpy.ndarray]
     """
-    try:
-        output = estimator[detector_name].update(y=y)
-    except KeyError as e:
-        raise UpdateDetectorError(e) from e
-    return output
+    X, y = [*map(np.array, zip(*list_))]  # noqa: N806
+    X = np.squeeze(X, axis=1)  # noqa: N806
+    y = np.ravel(y)
+    return X, y

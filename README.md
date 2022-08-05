@@ -49,7 +49,7 @@ alpha = 0.01  # significance level for the hypothesis test
 detector = MMD(num_permutations=1000, kernel=RBF(length_scale=1.0), random_state=31)
 detector.fit(X=X_ref)
 detector.transform(X=X_test)
-mmd, p_value = detector.test
+mmd, p_value = detector.distance
 
 p_value < alpha
 >>> True  # Drift detected. We can reject H0, so both samples come from different distributions.
@@ -122,7 +122,7 @@ The currently supported methods are listed in the following table. They are divi
         </a>
     </td>
   </tr>
-    <td rowspan="6">
+    <td rowspan="7">
         <a href="https://github.com/jaime-cespedes-sisniega/frouros/blob/main/frouros/supervised/ddm_based/base.py">  
             <div style="height:100%;width:100%">
                 DDM Based
@@ -181,6 +181,15 @@ The currently supported methods are listed in the following table. They are divi
         </a>
     </td>
   </tr>
+  <tr>
+    <td>
+        <a href="https://github.com/jaime-cespedes-sisniega/frouros/blob/main/frouros/supervised/ddm_based/stepd.py">  
+            <div style="height:100%;width:100%">
+                STEPD
+            </div>
+        </a>
+    </td>
+  </tr>
   <td rowspan="2">
         <a href="https://github.com/jaime-cespedes-sisniega/frouros/blob/main/frouros/supervised/window_based/base.py">  
             <div style="height:100%;width:100%">
@@ -204,20 +213,6 @@ The currently supported methods are listed in the following table. They are divi
         </a>
     </td>
   </tr>
-  <td rowspan="1">
-        <a href="https://github.com/jaime-cespedes-sisniega/frouros/blob/main/frouros/supervised/statistical_test/base.py">  
-            <div style="height:100%;width:100%">
-                Statistical Test
-            </div>
-        </a>
-    </td>
-    <td>
-        <a href="https://github.com/jaime-cespedes-sisniega/frouros/blob/main/frouros/supervised/statistical_test/stepd.py">
-            <div style="height:100%;width:100%">
-                STEPD
-            </div>    
-        </a>
-    </td>
   </tr>
   <tr>
     <td rowspan="2">

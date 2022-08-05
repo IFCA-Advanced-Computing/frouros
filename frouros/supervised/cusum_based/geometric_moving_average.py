@@ -39,4 +39,4 @@ class GeometricMovingAverage(CUSUMBaseEstimator):
     def _update_sum(self, error_rate: float) -> None:
         self.sum_ = self.config.alpha * self.sum_ + (  # type: ignore
             1 - self.config.alpha  # type: ignore
-        ) * (error_rate - self.mean_error_rate)
+        ) * (error_rate - self.mean_error_rate.mean)

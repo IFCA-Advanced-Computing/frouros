@@ -2,28 +2,20 @@
 
 import abc
 from typing import (  # noqa: TYP001
-    Callable,
     Dict,
-    List,
-    Optional,
     Tuple,
     Union,
 )
 
 import numpy as np  # type: ignore
-from sklearn.base import BaseEstimator, clone, is_classifier  # type: ignore
-from sklearn.utils.validation import check_is_fitted  # type: ignore
+from sklearn.base import BaseEstimator  # type: ignore
 
-from frouros.metrics.base import BaseMetric
 from frouros.supervised.base import (
     SupervisedBaseConfig,
-    SupervisedBaseEstimatorReFit,
+    SupervisedBaseEstimator,
 )
 from frouros.supervised.exceptions import InvalidAverageRunLengthError
-from frouros.utils.decorators import check_func_parameters
-from frouros.utils.logger import logger
 from frouros.utils.stats import Mean
-from frouros.utils.validation import check_is_one_sample
 
 
 class DDMBaseConfig(SupervisedBaseConfig):
@@ -94,144 +86,47 @@ class DDMBaseConfig(SupervisedBaseConfig):
         self._warning_level = value
 
 
-class DDMBasedEstimator(SupervisedBaseEstimatorReFit):
+class DDMBasedEstimator(SupervisedBaseEstimator):
     """Abstract class representing a DDM based estimator."""
 
     def __init__(
         self,
         estimator: BaseEstimator,
-        error_scorer: Callable,
         config: SupervisedBaseConfig,
-        metrics: Optional[Union[BaseMetric, List[BaseMetric]]] = None,
     ) -> None:
         """Init method.
 
         :param estimator: estimator to be used
         :type estimator: BaseEstimator
-        :param error_scorer: error scorer function
-        :type error_scorer: Callable
         :param config: configuration parameters
         :type config: SupervisedBaseConfig
-        :param metrics: performance metrics
-        :type metrics: Optional[Union[BaseMetric, List[BaseMetric]]]
         """
         super().__init__(
             estimator=estimator,
             config=config,
-            metrics=metrics,
         )
-        self.error_scorer = error_scorer  # type: ignore
         self.drift = False
         self.warning = False
 
-    @property
-    def error_scorer(self) -> Callable:
-        """Error scorer property.
-
-        :return: error scorer function
-        :rtype: Callable
-        """
-        return self._error_scorer
-
-    @error_scorer.setter  # type: ignore
-    @check_func_parameters
-    def error_scorer(self, value: Callable) -> None:
-        """Error scorer setter.
-
-        :param value: value to be set
-        :type value: Callable
-        """
-        self._error_scorer = value
-
-    def _drift_case(self, X: np.ndarray, y: np.ndarray) -> None:  # noqa: N803
-        if not self.drift:  # Check if drift message has already been shown
-            logger.warning("Changing threshold has been exceeded. Drift detected.")
-        self._add_context_samples(
-            samples_list=self._fit_method.new_context_samples, X=X, y=y
-        )
-        X_new_context, y_new_context = self._fit_method.list_to_arrays(  # noqa: N806
-            list_=self._fit_method.new_context_samples
-        )
-        if not is_classifier(self.estimator):
-            # Construct a new unfitted estimator with the same parameters
-            self.estimator = clone(estimator=self.estimator)
-            self._fit_estimator(X=X_new_context, y=y_new_context)
-            self._reset()
-        self._check_number_classes(
-            X_new_context=X_new_context, y_new_context=y_new_context
-        )
-
-    def _normal_case(self, *args, **kwargs) -> None:
-        X, y = kwargs.get("X"), kwargs.get("y")  # noqa: N806
-        self._fit_method.add_fit_context_samples(X=X, y=y)
-        X, y = self._fit_method.list_to_arrays(  # noqa: N806
-            list_=self._fit_method.fit_context_samples
-        )
-        if self._fit_method.is_ready(y=y):
-            self._fit_estimator(X=X, y=y)
-        else:
-            logger.warning(
-                "Estimator is not ready to be fitted. "
-                "Samples will continue to be saved."
-            )
-        # Remove warning samples if performance returns to normality
-        self._fit_method.post_fit_estimator()
-
-    def _prepare_update(
-        self, y: np.ndarray
-    ) -> Tuple[np.ndarray, np.ndarray, Optional[Dict[str, float]]]:
-        check_is_fitted(self.estimator)
-        check_is_one_sample(array=y)
-        X, y_pred = self.delayed_predictions.popleft()  # noqa: N806
-        self.num_instances += 1
-
-        metrics = self._metrics_func(y_true=y, y_pred=y_pred)
-        return X, y_pred, metrics
-
-    def _reset(self, *args, **kwargs) -> None:
+    def reset(self, *args, **kwargs) -> None:
+        """Reset method."""
         self.num_instances = 0
-        self._drift_insufficient_samples = False
-        self.sample_weight = None
-        self.delayed_predictions.clear()
-        self._fit_method.reset()
 
-    def _update_response(
-        self,
-        specific_attributes: Dict[str, float],
-        metrics: Optional[Dict[str, float]],
-    ) -> Dict[str, Optional[Union[float, bool, Dict[str, float]]]]:
-        response = self._get_update_response(
-            drift=self.drift,
-            warning=self.warning,
-            **specific_attributes,
-            metrics=metrics,
-        )
-        return response
+    @property
+    def status(self) -> Dict[str, bool]:
+        """Status property.
 
-    def _warning_case(self, X: np.array, y: np.array) -> None:  # noqa: N803
-        if not self.warning:  # Check if warning message has already been shown
-            logger.warning(
-                "Warning threshold has been exceeded. "
-                "New concept will be learned until drift is detected."
-            )
-        self._add_context_samples(
-            samples_list=self._fit_method.new_context_samples, X=X, y=y
-        )
+        :return: status dict
+        :rtype: Dict[str, bool]
+        """
+        return {"drift": self.drift, "warning": self.warning}
 
     @abc.abstractmethod
-    def update(
-        self,
-        y: np.ndarray,
-        X: np.ndarray = None,  # noqa: N803
-    ) -> Dict[str, Optional[Union[float, bool, Dict[str, float]]]]:
-        """Update drift detector.
+    def update(self, value: Union[int, float]) -> None:
+        """Abstract update method.
 
-        :param y: input data
-        :type y: numpy.ndarray
-        :param X: feature data
-        :type X: Optional[numpy.ndarray]
-        :return response message
-        :rtype: Dict[str, Optional[Union[float, bool, Dict[str, float]]]]
+        :param value: value to update detector
+        :type value: Union[int, float]
         """
 
 
@@ -241,26 +136,18 @@ class DDMErrorBasedEstimator(DDMBasedEstimator):
     def __init__(
         self,
         estimator: BaseEstimator,
-        error_scorer: Callable,
         config: DDMBaseConfig,
-        metrics: Optional[Union[BaseMetric, List[BaseMetric]]] = None,
     ) -> None:
         """Init method.
 
         :param estimator: sklearn estimator
         :type estimator: BaseEstimator
-        :param error_scorer: error scorer function
-        :type error_scorer: Callable
         :param config: configuration parameters
         :type config: DDMBaseConfig
-        :param metrics: performance metrics
-        :type metrics: Optional[Union[BaseMetric, List[BaseMetric]]]
         """
         super().__init__(
             estimator=estimator,
-            error_scorer=error_scorer,
             config=config,
-            metrics=metrics,
         )
         self.error_rate = Mean()
         self.min_error_rate = float("inf")
@@ -351,12 +238,9 @@ class DDMErrorBasedEstimator(DDMBasedEstimator):
     ) -> bool:
         return error_rate_plus_std > min_error_rate + level * min_std
 
-    def _get_specific_response_attributes(self):
-        attributes = {"error_rate": self._error_rate.mean}
-        return attributes
-
-    def _reset(self, *args, **kwargs) -> None:
-        super()._reset()
+    def reset(self, *args, **kwargs) -> None:
+        """Reset method."""
+        super().reset()
         self.error_rate = Mean()
         self.min_error_rate = float("inf")
         self.min_std = float("inf")

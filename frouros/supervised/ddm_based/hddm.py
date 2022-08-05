@@ -1,12 +1,11 @@
 """HDDM (Hoeffding's inequality drift detection method) module."""
 
 import copy
-from typing import Callable, Dict, Optional, List, Tuple, Union  # noqa: TYP001
+from typing import Tuple, Union  # noqa: TYP001
 
 from sklearn.base import BaseEstimator  # type: ignore
 import numpy as np  # type: ignore
 
-from frouros.metrics.base import BaseMetric
 from frouros.supervised.ddm_based.base import DDMBaseConfig, DDMBasedEstimator
 from frouros.utils.stats import EWMA, Mean
 
@@ -194,15 +193,6 @@ class HoeffdingOneSidedTest:
 
         return drift, warning
 
-    def get_update_variables(self) -> Dict[str, float]:
-        """Get update variables to be included in the response.
-
-        :return: dict with the variables
-        :rtype: Dict[str, float]
-        """
-        variables = {"x_mean": self.x.mean, "z_mean": self.z.mean}
-        return variables
-
     def hoeffding_error_bound(self, num_values: int) -> float:
         """Calculate Hoeffding's error.
 
@@ -280,15 +270,6 @@ class HoeffdingTwoSidedTest(HoeffdingOneSidedTest):
             [warning_increase, warning_decrease]
         )
 
-    def get_update_variables(self) -> Dict[str, float]:
-        """Get update variables to be included in the response.
-
-        :return: dict with the variables
-        :rtype: Dict[str, float]
-        """
-        variables = {**super().get_update_variables(), "y_mean": self.y.mean}
-        return variables
-
     def set_initial_cut_mean(self) -> None:
         """Copy value of z to x and/or y if x and/or y has no values."""
         super().set_initial_cut_mean()
@@ -313,26 +294,18 @@ class HDDMA(DDMBasedEstimator):
     def __init__(
         self,
         estimator: BaseEstimator,
-        error_scorer: Callable,
         config: HDDMAConfig,
-        metrics: Optional[Union[BaseMetric, List[BaseMetric]]] = None,
     ) -> None:
         """Init method.
 
         :param estimator: sklearn estimator
         :type estimator: BaseEstimator
-        :param error_scorer: error scorer function
-        :type error_scorer: Callable
         :param config: configuration parameters
         :type config: HDDMAConfig
-        :param metrics: performance metrics
-        :type metrics: Optional[Union[BaseMetric, List[BaseMetric]]]
         """
         super().__init__(
             estimator=estimator,
-            error_scorer=error_scorer,
             config=config,
-            metrics=metrics,
         )
         self.test_type = (
             HoeffdingTwoSidedTest(
@@ -344,40 +317,15 @@ class HDDMA(DDMBasedEstimator):
             )
         )
 
-    def update(
-        self,
-        y: np.ndarray,
-        X: np.ndarray = None,  # noqa: N803
-    ) -> Dict[str, Optional[Union[float, bool, Dict[str, float]]]]:
+    def update(self, value: Union[int, float]) -> None:
         """Update drift detector.
 
-        :param y: input data
-        :type y: numpy.ndarray
-        :param X: feature data
-        :type X: Optional[numpy.ndarray]
-        :return: response message
-        :rtype: Dict[str, Optional[Union[float, bool, Dict[str, float]]]]
+        :param value: value to update detector
+        :type value: Union[int, float]
         """
-        X, y_pred, metrics = self._prepare_update(y=y)  # noqa: N806
+        self.num_instances += 1
 
-        if self._drift_insufficient_samples:
-            self._insufficient_samples_case(X=X, y=y)
-            if not self._check_drift_sufficient_samples:
-                # Drift has been detected but there are no enough samples
-                # to train a new model from scratch
-                response = self._get_update_response(
-                    drift=True,
-                    warning=False,
-                    **self.test_type.get_update_variables(),
-                    metrics=metrics,
-                )
-                return response  # type: ignore
-            # There are enough samples to train a new model from scratch
-            self._complete_delayed_drift()
-
-        error_rate = self.error_scorer(y_true=y, y_pred=y_pred)
-        self.test_type.z.update(value=error_rate)
-
+        self.test_type.z.update(value=value)
         self.test_type.set_initial_cut_mean()
 
         epsilon_z = self.test_type.hoeffding_error_bound(
@@ -393,37 +341,19 @@ class HDDMA(DDMBasedEstimator):
             )
             if drift_flag:
                 # Out-of-Control
-                self._drift_case(X=X, y=y)
                 self.drift = True
                 self.warning = False
-                update_variables = self.test_type.get_update_variables()
                 self.test_type.reset()
             else:
                 if warning_flag:
                     # Warning
-                    self._warning_case(X=X, y=y)
                     self.warning = True
                 else:
                     # In-Control
-                    self._normal_case(X=X, y=y)
                     self.warning = False
                 self.drift = False
-                update_variables = self.test_type.get_update_variables()
         else:
-            self._normal_case(X=X, y=y)
-            update_variables, self.drift, self.warning = (
-                self.test_type.get_update_variables(),
-                False,
-                False,
-            )
-
-        response = self._get_update_response(
-            drift=self.drift,
-            warning=self.warning,
-            **update_variables,
-            metrics=metrics,
-        )
-        return response
+            self.drift, self.warning = False, False
 
 
 class SampleInfo:
@@ -526,19 +456,6 @@ class McDiarmidOneSidedTest:
         warning = False if drift else self._check_mean_increase(alpha=self.alpha_w)
         return drift, warning
 
-    def get_update_variables(self) -> Dict[str, float]:
-        """Get update variables to be included in the response.
-
-        :return: dict with the variables
-        :rtype: Dict[str, float]
-        """
-        variables = {
-            "sample_increase_ewma_1": self.sample_increase_1.ewma.mean,
-            "sample_increase_ewma_2": self.sample_increase_2.ewma.mean,
-            "increase_cut_point": self.increase_cut_point,
-        }
-        return variables
-
     @staticmethod
     def _mcdiarmid_error_bound(
         independent_bound_condition: float, alpha: float
@@ -618,20 +535,6 @@ class McDiarmidTwoSidedTest(McDiarmidOneSidedTest):
             [warning_increase, warning_decrease]
         )
 
-    def get_update_variables(self) -> Dict[str, float]:
-        """Get update variables to be included in the response.
-
-        :return: dict with the variables
-        :rtype: Dict[str, float]
-        """
-        variables = {
-            **super().get_update_variables(),
-            "sample_decrease_ewma_1": self.sample_decrease_1.ewma.mean,
-            "sample_decrease_ewma_2": self.sample_decrease_2.ewma.mean,
-            "decrease_cut_point": self.decrease_cut_point,
-        }
-        return variables
-
     def reset(self) -> None:
         """Reset sample info variables and cut points."""
         super().reset()
@@ -667,26 +570,18 @@ class HDDMW(DDMBasedEstimator):
     def __init__(
         self,
         estimator: BaseEstimator,
-        error_scorer: Callable,
         config: HDDMWConfig,
-        metrics: Optional[Union[BaseMetric, List[BaseMetric]]] = None,
     ) -> None:
         """Init method.
 
         :param estimator: sklearn estimator
         :type estimator: BaseEstimator
-        :param error_scorer: error scorer function
-        :type error_scorer: Callable
         :param config: configuration parameters
         :type config: HDDMWConfig
-        :param metrics: performance metrics
-        :type metrics: Optional[Union[BaseMetric, List[BaseMetric]]]
         """
         super().__init__(
             estimator=estimator,
-            error_scorer=error_scorer,
             config=config,
-            metrics=metrics,
         )
         self.test_type = (
             McDiarmidTwoSidedTest(
@@ -702,74 +597,32 @@ class HDDMW(DDMBasedEstimator):
             )
         )
 
-    def update(
-        self,
-        y: np.ndarray,
-        X: np.ndarray = None,  # noqa: N803
-    ) -> Dict[str, Optional[Union[float, bool, Dict[str, float]]]]:
+    def update(self, value: Union[int, float]) -> None:
         """Update drift detector.
 
-        :param y: input data
-        :type y: numpy.ndarray
-        :param X: feature data
-        :type X: Optional[numpy.ndarray]
-        :return: response message
-        :rtype: Dict[str, Optional[Union[float, bool, Dict[str, float]]]]
+        :param value: value to update detector
+        :type value: Union[int, float]
         """
-        X, y_pred, metrics = self._prepare_update(y=y)  # noqa: N806
+        self.num_instances += 1
 
-        if self._drift_insufficient_samples:
-            self._insufficient_samples_case(X=X, y=y)
-            if not self._check_drift_sufficient_samples:
-                # Drift has been detected but there are no enough samples
-                # to train a new model from scratch
-                response = self._get_update_response(
-                    drift=True,
-                    warning=False,
-                    **self.test_type.get_update_variables(),
-                    metrics=metrics,
-                )
-                return response  # type: ignore
-            # There are enough samples to train a new model from scratch
-            self._complete_delayed_drift()
-
-        error_rate = self.error_scorer(y_true=y, y_pred=y_pred)
         self.test_type.update_stats(
-            value=error_rate, alpha=self.config.lambda_  # type: ignore
+            value=value, alpha=self.config.lambda_  # type: ignore
         )
 
         if self.num_instances >= self.config.min_num_instances:
             drift_flag, warning_flag = self.test_type.check_changes()
             if drift_flag:
                 # Out-of-Control
-                self._drift_case(X=X, y=y)
                 self.drift = True
                 self.warning = False
-                update_variables = self.test_type.get_update_variables()
                 self.test_type.reset()
             else:
                 if warning_flag:
                     # Warning
-                    self._warning_case(X=X, y=y)
                     self.warning = True
                 else:
                     # In-Control
-                    self._normal_case(X=X, y=y)
                     self.warning = False
                 self.drift = False
-                update_variables = self.test_type.get_update_variables()
         else:
-            self._normal_case(X=X, y=y)
-            update_variables, self.drift, self.warning = (
-                self.test_type.get_update_variables(),
-                False,
-                False,
-            )
-
-        response = self._get_update_response(
-            drift=self.drift,
-            warning=self.warning,
-            **update_variables,
-            metrics=metrics,
-        )
-        return response
+            self.drift, self.warning = False, False
