@@ -41,6 +41,9 @@ class PrequentialErrorBase(BaseMetric):
             raise TypeError("value must be of type int or float.")
         self._cumulative_error = value
 
+    def reset(self) -> None:
+        """Reset cumulative_error."""
+
     @abc.abstractmethod
     def __call__(
         self, y_true: np.ndarray, y_pred: np.ndarray, *args, **kwargs

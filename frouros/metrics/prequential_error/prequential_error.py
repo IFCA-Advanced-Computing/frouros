@@ -40,3 +40,8 @@ class PrequentialError(BaseMetric):
             error_rate - self.cumulative_error
         ) / self.num_instances
         return self.cumulative_error
+
+    def reset(self) -> None:
+        """Reset cumulative error."""
+        self.cumulative_error = 0.0
+        self.num_instances = 0
