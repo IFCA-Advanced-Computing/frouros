@@ -74,3 +74,7 @@ class BaseMetric(abc.ABC):
         :return: cumulative error
         :rtype: Union[int, float]
         """
+
+    @abc.abstractmethod
+    def reset(self) -> None:
+        """Abstract method that resets the metric."""

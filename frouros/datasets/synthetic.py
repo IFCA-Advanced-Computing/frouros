@@ -60,3 +60,43 @@ class SEA(Generator):
             for _ in range(num_samples)
         )
         return dataset
+
+
+class Dummy(Generator):
+    """Dummy generator class."""
+
+    def __init__(self, seed: Optional[int] = None) -> None:
+        """Init method.
+
+        :param seed: seed value
+        :type seed: Optional[int]
+        """
+        try:
+            np.random.seed(seed=seed)
+        except (TypeError, ValueError) as e:
+            raise e
+
+    @staticmethod
+    def _generate_sample(class_: int) -> Tuple[np.ndarray, int]:
+        X = np.random.uniform(low=0.0, high=10.0, size=(2,))  # noqa: N806
+        y = class_ if X[0] + X[1] < 10.0 else 1 - class_
+        return X, y
+
+    def generate_dataset(
+        self, class_: int = 1, num_samples: int = 12500
+    ) -> Iterator[Tuple[np.ndarray, int]]:
+        """Generate dataset.
+
+        :param class_: class value
+        :type class_: int
+        :param num_samples: number of samples to generate
+        :type num_samples: int
+        :return: generator with the samples
+        :rtype: Iterator[Tuple[np.ndarray, int]]
+        """
+        if class_ not in [1, 0]:
+            raise ValueError("class_ must be 1 or 0.")
+        if num_samples < 1:
+            raise ValueError("num_samples must be greater than 0.")
+        dataset = (self._generate_sample(class_=class_) for _ in range(num_samples))
+        return dataset

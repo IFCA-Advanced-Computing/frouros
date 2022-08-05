@@ -1,12 +1,11 @@
 """EDDM (Early drift detection method) module."""
 
 import copy
-from typing import Dict, Optional, List, Tuple, Union  # noqa: TYP001
+from typing import Union  # noqa: TYP001
 
 import numpy as np  # type: ignore
 from sklearn.base import BaseEstimator  # type: ignore
 
-from frouros.metrics.base import BaseMetric
 from frouros.supervised.ddm_based.base import DDMBaseConfig, DDMBasedEstimator
 
 
@@ -131,7 +130,6 @@ class EDDM(DDMBasedEstimator):
         self,
         estimator: BaseEstimator,
         config: EDDMConfig,
-        metrics: Optional[Union[BaseMetric, List[BaseMetric]]] = None,
     ) -> None:
         """Init method.
 
@@ -144,11 +142,8 @@ class EDDM(DDMBasedEstimator):
         """
         super().__init__(
             estimator=estimator,
-            error_scorer=lambda y_true, y_pred: y_true != y_pred,
             config=config,
-            metrics=metrics,
         )
-        self.distance_threshold = 0.0
         self.last_distance_error = 0.0
         self.max_distance_threshold = float("-inf")
         self.mean_distance_error = 0.0
@@ -156,27 +151,6 @@ class EDDM(DDMBasedEstimator):
         self.old_mean_distance_error = copy.copy(self.mean_distance_error)
         self.std_distance_error = 0.0
         self.variance_distance_error = 0.0
-
-    @property
-    def distance_threshold(self) -> float:
-        """Distance threshold property.
-
-        :return: distance threshold
-        :rtype: float
-        """
-        return self._distance_threshold
-
-    @distance_threshold.setter
-    def distance_threshold(self, value: float) -> None:
-        """Distance threshold setter.
-
-        :param value: value to be set
-        :type value: float
-        :raises ValueError: Value error exception
-        """
-        if value < 0:
-            raise ValueError("distance_threshold must be great or equal than 0.")
-        self._distance_threshold = value
 
     @property
     def last_distance_error(self) -> float:
@@ -324,140 +298,66 @@ class EDDM(DDMBasedEstimator):
             raise ValueError("variance must be great or equal than 0.")
         self._variance_distance_error = value
 
-    def _normal_response(
-        self, metrics: Union[BaseMetric, List[BaseMetric]]
-    ) -> Dict[str, Union[bool, float]]:
-        response: Dict[str, Union[bool, float]] = self._response(
-            drift=False,
-            warning=False,
-            metrics=metrics,
-        )
-        return response
-
-    def _response(
-        self, drift: bool, warning: bool, metrics: Union[BaseMetric, List[BaseMetric]]
-    ) -> Dict[str, Union[bool, float]]:
-        response: Dict[str, Union[bool, float]] = self._get_update_response(
-            drift=drift,
-            warning=warning,
-            metrics=metrics,
-            distance_threshold=self.distance_threshold,
-            max_distance_threshold=self.max_distance_threshold,
-            mean_distance_error=self.mean_distance_error,
-            std_distance_error=self.std_distance_error,
-        )
-        return response
-
-    def update(
-        self,
-        y: np.ndarray,
-        X: np.ndarray = None,  # noqa: N803
-    ) -> Dict[str, Optional[Union[float, bool, Dict[str, float]]]]:
+    def update(self, value: Union[int, float]) -> None:
         """Update drift detector.
 
-        :param y: input data
-        :type y: numpy.ndarray
-        :param X: feature data
-        :type X: Optional[numpy.ndarray]
-        :return: response message
-        :rtype: Dict[str, Optional[Union[float, bool, Dict[str, float]]]]
+        :param value: value to update detector
+        :type value: Union[int, float]
         """
-        X, y_pred, metrics = self._prepare_update(y=y)  # noqa: N806
+        self.num_instances += 1
 
-        if self._drift_insufficient_samples:
-            self._insufficient_samples_case(X=X, y=y)
-            if not self._check_drift_sufficient_samples:
-                # Drift has been detected but there are no enough samples
-                # to train a new model from scratch
-                response = self._response(
-                    drift=True, warning=False, metrics=metrics  # type: ignore
+        if value == 1:
+            self.num_misclassified_instances += 1
+
+            distance = self.num_instances - self.last_distance_error
+            self.old_mean_distance_error = self.mean_distance_error
+            self.mean_distance_error += (
+                distance - self.mean_distance_error
+            ) / self.num_misclassified_instances
+            self.variance_distance_error += (distance - self.mean_distance_error) * (
+                distance - self.old_mean_distance_error
+            )
+            self.std_distance_error = (
+                np.sqrt(self.variance_distance_error / self.num_misclassified_instances)
+                if self.num_misclassified_instances > 0
+                else 0.0
+            )
+            self.last_distance_error = self.num_instances
+
+            if (
+                self.num_instances
+                >= self.config.min_num_misclassified_instances  # type: ignore
+            ):
+
+                distance_threshold = (
+                    self.mean_distance_error
+                    + self.config.level * self.std_distance_error  # type: ignore
                 )
-                return response  # type: ignore
-            # There are enough samples to train a new model from scratch
-            self._complete_delayed_drift()
-
-        try:
-            misclassified_idxs = np.argwhere(
-                self.error_scorer(y_true=y, y_pred=y_pred)
-            )[0]
-            non_misclassified_instances = False
-        except IndexError:
-            non_misclassified_instances = True
-
-        if non_misclassified_instances:
-            response = self._normal_response(metrics=metrics)  # type: ignore
-            return response  # type: ignore
-
-        X = X[misclassified_idxs, :]  # noqa: N806
-        y = y[misclassified_idxs]
-
-        self.num_misclassified_instances += misclassified_idxs.size
-
-        # Welford´s method to compute incremental mean and standard deviation
-        distance = self.num_instances - self.last_distance_error
-        self.old_mean_distance_error = self.mean_distance_error
-        self.mean_distance_error += (
-            distance - self.mean_distance_error
-        ) / self.num_misclassified_instances
-        self.variance_distance_error += (distance - self.mean_distance_error) * (
-            distance - self.old_mean_distance_error
-        )
-        self.std_distance_error = (
-            np.sqrt(self.variance_distance_error / self.num_misclassified_instances)
-            if self.num_misclassified_instances > 0
-            else 0.0
-        )
-        self.last_distance_error = self.num_instances
-
-        if (
-            self.num_misclassified_instances
-            < self.config.min_num_misclassified_instances  # type: ignore
-        ):
-            self._normal_case(X=X, y=y)
-            response = self._normal_response(metrics=metrics)  # type: ignore
-            return response  # type: ignore
-
-        self.distance_threshold = (
-            self.mean_distance_error
-            + self.config.level * self.std_distance_error  # type: ignore
-        )
-        if self.distance_threshold > self.max_distance_threshold:
-            self.max_distance_threshold = self.distance_threshold
-            response = self._normal_response(metrics=metrics)  # type: ignore
-            return response  # type: ignore
-
-        p = self.distance_threshold / self.max_distance_threshold
-
-        drift, warning = self._check_case(X=X, y=y, p=p)
-
-        response = self._response(
-            drift=drift, warning=warning, metrics=metrics  # type: ignore
-        )
-        return response  # type: ignore
-
-    def _check_case(
-        self, X: np.ndarray, y: np.ndarray, p: float  # noqa: N803
-    ) -> Tuple[bool, bool]:
-        if p < self.config.beta:  # type: ignore
-            # Out-of-Control
-            self._drift_case(X=X, y=y)
-            self.drift = True
-            self.warning = False
+                if distance_threshold > self.max_distance_threshold:
+                    self.max_distance_threshold = distance_threshold
+                    self.drift, self.warning = False, False
+                elif (
+                    self.num_misclassified_instances
+                    >= self.config.min_num_misclassified_instances  # type: ignore
+                ):
+                    p = distance_threshold / self.max_distance_threshold
+                    if p < self.config.beta:  # type: ignore
+                        # Out-of-Control
+                        self.drift = True
+                        self.warning = False
+                    else:
+                        if p < self.config.alpha:  # type: ignore
+                            # Warning
+                            self.warning = True
+                        else:
+                            self.warning = False
+                        self.drift = False
         else:
-            if p < self.config.alpha:  # type: ignore
-                # Warning
-                self._warning_case(X=X, y=y)
-                self.warning = True
-            else:
-                self._normal_case(X=X, y=y)
-                self.warning = False
-            self.drift = False
+            self.drift, self.warning = False, False
 
-        return self.drift, self.warning
-
-    def _reset(self, *args, **kwargs) -> None:
-        super()._reset()
-        self.distance_threshold = 0.0
+    def reset(self, *args, **kwargs) -> None:
+        """Reset method."""
+        super().reset()
         self.last_distance_error = 0.0
         self.max_distance_threshold = float("-inf")
         self.mean_distance_error = 0.0

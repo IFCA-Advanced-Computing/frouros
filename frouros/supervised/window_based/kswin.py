@@ -2,15 +2,13 @@
 
 from collections import deque
 import itertools
-from typing import Callable, Dict, Optional, List, Union  # noqa: TYP001
+from typing import Optional, Union  # noqa: TYP001
 
 from scipy.stats import ks_2samp  # type: ignore
 from sklearn.base import BaseEstimator  # type: ignore
 import numpy as np  # type: ignore
 
-from frouros.metrics.base import BaseMetric
 from frouros.supervised.window_based.base import WindowBaseConfig, WindowBasedEstimator
-from frouros.utils.logger import logger
 
 
 class KSWINConfig(WindowBaseConfig):
@@ -98,26 +96,18 @@ class KSWIN(WindowBasedEstimator):
     def __init__(
         self,
         estimator: BaseEstimator,
-        error_scorer: Callable,
         config: KSWINConfig,
-        metrics: Optional[Union[BaseMetric, List[BaseMetric]]] = None,
     ) -> None:
         """Init method.
 
         :param estimator: sklearn estimator
         :type estimator: BaseEstimator
-        :param error_scorer: error scorer function
-        :type error_scorer: Callable
         :param config: configuration parameters
         :type config: KSWINConfig
-        :param metrics: performance metrics
-        :type metrics: Optional[Union[BaseMetric, List[BaseMetric]]]
         """
         super().__init__(
             estimator=estimator,
-            error_scorer=error_scorer,
             config=config,
-            metrics=metrics,
         )
         self.window = deque(maxlen=self.config.min_num_instances)  # type: ignore
 
@@ -142,35 +132,19 @@ class KSWIN(WindowBasedEstimator):
             raise TypeError("value must be of type deque.")
         self._window = value
 
-    def update(
-        self,
-        y: np.ndarray,
-        X: np.ndarray = None,  # noqa: N803
-    ) -> Dict[str, Optional[Union[float, bool, Dict[str, float]]]]:
+    def update(self, value: Union[int, float]) -> None:
         """Update drift detector.
 
-        :param y: input data
-        :type y: numpy.ndarray
-        :param X: feature data
-        :type X: Optional[numpy.ndarray]
-        :return: response message
-        :rtype: Dict[str, Optional[Union[float, bool, Dict[str, float]]]]
+        :param value: value to update detector
+        :type value: Union[int, float]
         """
-        y_pred, metrics = self._prepare_update(y=y)
-
-        self.ground_truth.extend(y.tolist())
-        self.predictions.extend(y_pred.tolist())
-
-        value = self.error_scorer(
-            y_true=np.array([*self.ground_truth]), y_pred=np.array([*self.predictions])
-        )
+        self.num_instances += 1
 
         self.window.append(value)
-        self._clear_target_values()
 
-        if len(self.window) >= self.config.min_num_instances:
+        window_size = len(self.window)
+        if window_size >= self.config.min_num_instances:
             # fmt: off
-            window_size = len(self.window)
             num_first_samples = window_size - self.config.num_test_instances  # type: ignore # noqa: E501 pylint: disable=line-too-long
             r_samples = [*itertools.islice(self.window,
                                            num_first_samples,
@@ -178,34 +152,24 @@ class KSWIN(WindowBasedEstimator):
             w_samples = np.random.choice(
                 a=[*itertools.islice(self.window, 0, num_first_samples)],
                 size=self.config.num_test_instances,  # type: ignore
+                replace=False,
             )
             # fmt: on
-            statistic, p_value = ks_2samp(
+            _, p_value = ks_2samp(
                 data1=w_samples,
                 data2=r_samples,
                 alternative="two-sided",
                 mode="auto",
             )
-            statistical_test = {"statistic": statistic, "p_value": p_value}
 
             if p_value <= self.config.alpha:  # type: ignore
                 # Drift detected
-                logger.warning("Changing threshold has been exceeded. Drift detected.")
-                drift = True
-                self._reset(r_samples=r_samples)
+                self.drift = True
             else:
-                drift = False
+                self.drift = False
         else:
-            drift = False
-            statistical_test = None
+            self.drift = False
 
-        response = self._get_update_response(
-            drift=drift, metrics=metrics, statistical_test=statistical_test
-        )
-        return response
-
-    def _reset(self, *args, **kwargs) -> None:
-        self.window = deque(
-            iterable=kwargs["r_samples"],
-            maxlen=self.config.min_num_instances,  # type: ignore
-        )
+    def reset(self, *args, **kwargs) -> None:
+        """Reset method."""
+        self.window.clear()

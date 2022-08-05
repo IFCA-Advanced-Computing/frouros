@@ -94,3 +94,8 @@ class PrequentialErrorFadingFactor(PrequentialErrorBase):
         self.cumulative_error = self.cumulative_error * self.alpha + error_rate
         self.cumulative_instances = self.cumulative_instances * self.alpha + 1
         return self.cumulative_fading_error
+
+    def reset(self) -> None:
+        """Reset cumulative error."""
+        self.cumulative_error = 0.0
+        self.cumulative_instances = 0

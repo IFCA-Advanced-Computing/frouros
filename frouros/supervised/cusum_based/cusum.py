@@ -43,6 +43,6 @@ class CUSUM(CUSUMBaseEstimator):
             0,
             self.sum_
             + error_rate
-            - self.mean_error_rate
+            - self.mean_error_rate.mean
             - self.config.delta,  # type: ignore
         )

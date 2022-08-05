@@ -2,19 +2,14 @@
 
 import abc
 from typing import (  # noqa: TYP001
-    Callable,
     Dict,
-    Optional,
     Union,
 )
 
 from sklearn.base import BaseEstimator  # type: ignore
-from sklearn.utils.validation import check_is_fitted  # type: ignore
-import numpy as np  # type: ignore
 
-from frouros.utils.decorators import check_func_parameters
-from frouros.utils.validation import check_is_one_sample
 from frouros.supervised.base import SupervisedBaseEstimator, SupervisedBaseConfig
+from frouros.utils.stats import Mean
 
 
 class CUSUMBaseConfig(SupervisedBaseConfig):
@@ -136,61 +131,45 @@ class CUSUMBaseEstimator(SupervisedBaseEstimator):
     def __init__(
         self,
         estimator: BaseEstimator,
-        error_scorer: Callable,
         config: CUSUMBaseConfig,
     ) -> None:
         """Init method.
 
         :param estimator: sklearn estimator
         :type estimator: BaseEstimator
-        :param error_scorer: error scorer function
-        :type error_scorer: Callable
         :param config: configuration parameters
         :type config: CUSUMBaseConfig
         """
         super().__init__(estimator=estimator, config=config)
-        self.error_scorer = error_scorer  # type: ignore
-        self.mean_error_rate = 0.0
+        self.mean_error_rate = Mean()
         self.sum_ = 0.0
+        self.drift = False
 
     @property
-    def error_scorer(self) -> Callable:
-        """Error scorer property.
+    def status(self) -> Dict[str, bool]:
+        """Status property.
 
-        :return: error scorer function
-        :rtype: Callable
+        :return: status dict
+        :rtype: Dict[str, bool]
         """
-        return self._error_scorer
-
-    @error_scorer.setter  # type: ignore
-    @check_func_parameters
-    def error_scorer(self, value: Callable) -> None:
-        """Error scorer setter.
-
-        :param value: value to be set
-        :type value: Callable
-        """
-        self._error_scorer = value
+        return {"drift": self.drift}
 
     @property
-    def mean_error_rate(self) -> float:
+    def mean_error_rate(self) -> Mean:
         """Mean error rate property.
 
         :return: mean error rate to use
-        :rtype: float
+        :rtype: Mean
         """
         return self._mean_error_rate
 
     @mean_error_rate.setter
-    def mean_error_rate(self, value: float) -> None:
+    def mean_error_rate(self, value: Mean) -> None:
         """Mean error rate setter.
 
         :param value: value to be set
-        :type value: float
-        :raises ValueError: Value error exception
+        :type value: Mean
         """
-        if value < 0:
-            raise ValueError("mean_error_rate must be great or equal than 0.")
         self._mean_error_rate = value
 
     @property
@@ -215,46 +194,27 @@ class CUSUMBaseEstimator(SupervisedBaseEstimator):
     def _update_sum(self, error_rate: float) -> None:
         pass
 
-    def _reset(self, *args, **kwargs) -> None:
+    def reset(self, *args, **kwargs) -> None:
+        """Reset method."""
         self.num_instances = 0
-        self.mean_error_rate = 0.0
+        self.mean_error_rate = Mean()
         self.sum_ = 0.0
 
-    def update(
-        self,
-        y: np.ndarray,
-        X: np.ndarray = None,  # noqa: N803
-    ) -> Dict[str, Optional[Union[float, bool, Dict[str, float]]]]:
+    def update(self, value: Union[int, float]) -> None:
         """Update drift detector.
 
-        :param y: input data
-        :type y: numpy.ndarray
-        :param X: feature data
-        :type X: Optional[numpy.ndarray]
-        :return: predicted values
-        :rtype: Dict[str, Optional[Union[float, bool, Dict[str, float]]]]
+        :param value: value to update detector
+        :type value: Union[int, float]
         """
-        check_is_fitted(self.estimator)
-        check_is_one_sample(array=y)
-        _, y_pred = self.delayed_predictions.popleft()  # noqa: N806
         self.num_instances += 1
 
-        error_rate = self.error_scorer(y_true=y, y_pred=y_pred)
-
-        self.mean_error_rate += (error_rate - self.mean_error_rate) / self.num_instances
-        self._update_sum(error_rate=error_rate)
+        self.mean_error_rate.update(value=value)
+        self._update_sum(error_rate=value)
 
         if (
             self.num_instances >= self.config.min_num_instances  # type: ignore
             and self.sum_ > self.config.lambda_  # type: ignore
         ):
-            response = self._get_update_response(
-                drift=True, sum=self.sum_, mean_error_rate=self.mean_error_rate
-            )
-            self._reset()
-            return response
-
-        response = self._get_update_response(
-            drift=False, sum=self.sum_, mean_error_rate=self.mean_error_rate
-        )
-        return response
+            self.drift = True
+        else:
+            self.drift = False

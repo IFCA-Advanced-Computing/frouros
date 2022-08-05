@@ -43,5 +43,5 @@ class PageHinkley(CUSUMBaseEstimator):
 
     def _update_sum(self, error_rate: float) -> None:
         self.sum_ = self.config.alpha * self.sum_ + (  # type: ignore
-            error_rate - self.mean_error_rate - self.config.delta  # type: ignore
+            error_rate - self.mean_error_rate.mean - self.config.delta  # type: ignore
         )
