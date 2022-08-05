@@ -39,21 +39,6 @@ The {mod}`frouros.supervised` module contains supervised algorithms for drift de
     HDDMA
     HDDMW
     RDDM
-```
-
-## Statistical Test
-
-```{eval-rst}
-.. automodule:: frouros.supervised.statistical_test
-    :no-members:
-    :no-inherited-members:
-```
-
-```{eval-rst}
-.. autosummary::
-    :toctree: auto_generated/
-    :template: class.md
-
     STEPD
 ```
 
