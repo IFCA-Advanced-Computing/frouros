@@ -33,6 +33,7 @@ def setup_package():
         # FIXME: Find a way not to hardcode license
         license="BSD-3-Clause",
         long_description=long_description(),
+        long_description_content_type="text/markdown",
         maintainer_email=pyproject["project"]["maintainers"][0]["email"],
         maintainer=pyproject["project"]["maintainers"][0]["name"],
         name=pyproject["project"]["name"],
