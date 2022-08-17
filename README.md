@@ -56,7 +56,7 @@ p_value < alpha
 >>> True  # Drift detected. We can reject H0, so both samples come from different distributions.
 ```
 
-More examples can be found [here](https://frouros.readthedocs.io/examples.html).
+More examples can be found [here](https://frouros.readthedocs.io/en/latest/examples.html).
 
 ## Installation
 
