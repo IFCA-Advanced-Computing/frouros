@@ -21,11 +21,12 @@
 
 <p align="center">Frouros is a Python library for drift detection in Machine Learning problems.</p>
 
-It provides a set of algorithms for drift detection, both for the supervised and unsupervised parts, as well as some semi-supervised algorithms. It is design with the intention of being integrated easily with the [scikit-learn](https://github.com/scikit-learn/scikit-learn) library. This integration allows Frouros to be used in machine learning problem pipelines, in the implementation of new drift detection algorithms and could be used to compare performance between detectors, as a benchmark.
+Frouros provides a combination of classical and more recent algorithms for drift detection, both for the supervised and unsupervised parts, as well as some semi-supervised algorithms. The library tries to fulfill two main objectives: 1. to be able to easily integrate in a machine learning model development pipeline with the [scikit-learn](https://github.com/scikit-learn/scikit-learn) library; 2. to unify in a single library the part of concept drift detection and
+adaptation (traditionally researched and used for streaming/evolving data streams and incremental learning) with the research of change detection in the covariate distributions (also known as data shift, related to the field of statistical two-sample testing and methods that measure distance between distributions).
 
 ## Quickstart
 
-As a quick and easy example, we can generate two bivariate normal distribution in order to use an unsupervised method like MMD (Maximum Mean Discrepancy). This method tries to verify if generated samples come from the same distribution or not. If they come from different distributions, it means that there is covariate drift.
+As a quick and easy example, we can generate two bivariate normal distribution in order to use an unsupervised method like MMD (Maximum Mean Discrepancy). This method tries to verify if generated samples come from the same distribution or not. If they come from different distributions, it means that there is data drift.
 
 ```python
 from sklearn.gaussian_process.kernels import RBF
@@ -67,6 +68,10 @@ pip install frouros
 there is also the option to use [PyTorch](https://github.com/pytorch/pytorch) models with the help of [skorch](https://github.com/skorch-dev/skorch):
 ```bash
 pip install frouros[pytorch]
+```
+Latest main branch modifications can be installed via:
+```bash
+pip install git+https://github.com/IFCA/frouros.git
 ```
 
 ## Drift detection methods
