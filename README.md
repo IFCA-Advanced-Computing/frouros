@@ -68,6 +68,10 @@ there is also the option to use [PyTorch](https://github.com/pytorch/pytorch) mo
 ```bash
 pip install frouros[pytorch]
 ```
+Latest main branch modifications can be installed via:
+```bash
+pip install git+https://github.com/IFCA/frouros.git
+```
 
 ## Drift detection methods
 
