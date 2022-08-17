@@ -25,7 +25,7 @@ It provides a set of algorithms for drift detection, both for the supervised and
 
 ## Quickstart
 
-As a quick and easy example, we can generate two bivariate normal distribution in order to use an unsupervised method like MMD (Maximum Mean Discrepancy). This method tries to verify if generated samples come from the same distribution or not. If they come from different distributions, it means that there is covariate drift.
+As a quick and easy example, we can generate two bivariate normal distribution in order to use an unsupervised method like MMD (Maximum Mean Discrepancy). This method tries to verify if generated samples come from the same distribution or not. If they come from different distributions, it means that there is data drift.
 
 ```python
 from sklearn.gaussian_process.kernels import RBF
