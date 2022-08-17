@@ -21,8 +21,7 @@ get_started
 installation
 concepts
 api_reference
-
-[//]: # (examples)
+examples
 about
 ```
 
