@@ -8,4 +8,8 @@
 
 In order to start using `frouros`, we highly recommend to check {doc}`concepts <concepts>` section to get a quick idea of what `frouros` is capable of, and what it is not yet capable of.
 
-As highlighted in {doc}`concepts <concepts>` section, unsupervised methods are easier to get started quickly. 
+Subsequently, we recommend taking a look at the {doc}`examples <examples>` section since it is the best way to start using `frouros`.
+
+```{warning}
+Due the fact that the library is under heavy development, new examples will be added.
+```
