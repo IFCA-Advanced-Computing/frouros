@@ -60,4 +60,5 @@ On the other hand, there are problems where it is very costly or even impossible
 It could be considered that there is another type of detector, those that do not require labels throughout the entire process except at specific moments. As for example with the use of an oracle that provides a number of labeled samples at certain times.
 
 ```{bibliography} references.bib
+:filter: docname in docnames
 ```
