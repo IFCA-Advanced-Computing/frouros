@@ -48,6 +48,7 @@ docs = [
 ]
 pytorch = [
     "torch>=1.12.0,<1.13",
+    "torchvision>=0.13.0,<0.14",
     "skorch>=0.11.0,<0.12.0"
     ]
 
