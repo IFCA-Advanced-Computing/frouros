@@ -2,7 +2,7 @@
 
 ## What is drift detection?
 
-Can be defined as the process of trying to detect a significant change in the concept previously learned by a model (*concept drift*), or a change related to the feature/covariate distributions by the model (*data drift*) that can end up producing *concept drift*.
+Can be defined as the process of trying to detect a significant change in the concept previously learned by a model (*concept drift*), or a change related to the feature/covariate distributions (*data drift*) that can end up producing *concept drift*.
 
 Traditionally there has been little consensus on the terminology and definitions of the
 different types of drift, as stated in {cite}`moreno2012unifying`. In order to adopt some
