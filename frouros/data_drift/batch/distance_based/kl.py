@@ -3,13 +3,13 @@
 import numpy as np  # type: ignore
 from scipy.special import rel_entr  # type: ignore
 
-from frouros.unsupervised.distance_based.base import (
-    DistanceProbabilityBasedEstimator,
+from frouros.data_drift.batch.distance_based.base import (
+    DistanceProbabilityBasedBase,
     DistanceResult,
 )
 
 
-class KL(DistanceProbabilityBasedEstimator):
+class KL(DistanceProbabilityBasedBase):
     """KL (Kullback-Leibler divergence / relative entropy) algorithm class."""
 
     def _distance_measure(

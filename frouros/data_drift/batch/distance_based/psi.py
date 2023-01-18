@@ -5,14 +5,14 @@ from typing import Optional
 
 import numpy as np  # type: ignore
 
-from frouros.unsupervised.base import NumericalData, UnivariateType
-from frouros.unsupervised.distance_based.base import (
-    DistanceBasedEstimator,
+from frouros.data_drift.base import NumericalData, UnivariateData
+from frouros.data_drift.batch.distance_based.base import (
+    DistanceBasedBase,
     DistanceResult,
 )
 
 
-class PSI(DistanceBasedEstimator):
+class PSI(DistanceBasedBase):
     """PSI (Population Stability Index) algorithm class."""
 
     def __init__(self, num_buckets: int = 10) -> None:
@@ -21,7 +21,7 @@ class PSI(DistanceBasedEstimator):
         :param num_buckets: number of buckets
         :type num_buckets: int
         """
-        super().__init__(data_type=NumericalData(), statistical_type=UnivariateType())
+        super().__init__(data_type=NumericalData(), statistical_type=UnivariateData())
         self.num_buckets = num_buckets
         self.X_ref_num: Optional[int] = None  # pylint: disable=invalid-name
 
@@ -49,20 +49,16 @@ class PSI(DistanceBasedEstimator):
     def fit(
         self,
         X: np.ndarray,  # noqa: N803
-        y: np.ndarray = None,  # pylint: disable=W0613
-    ):
+    ) -> None:
         """Fit estimator.
 
         :param X: feature data
         :type X: numpy.ndarray
-        :param y: target data
-        :type y: numpy.ndarray
         :return: fitted estimator
         :rtype: self
         """
-        super().fit(X=X, y=y)
+        super().fit(X=X)
         self.X_ref_num = self.X_ref_.shape[0]  # type: ignore
-        return self
 
     def _apply_method(
         self, X_ref_: np.ndarray, X: np.ndarray, **kwargs  # noqa: N803

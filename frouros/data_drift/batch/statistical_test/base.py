@@ -1,4 +1,4 @@
-"""Unsupervised statistical test base module."""
+"""Data drift statistical test base module."""
 
 import abc
 from collections import namedtuple
@@ -6,28 +6,26 @@ from typing import Optional, List, Tuple
 
 import numpy as np  # type: ignore
 
-from frouros.unsupervised.base import (
-    BaseDataType,
-    BaseStatisticalType,
-    UnsupervisedBaseEstimator,
+from frouros.data_drift.batch.base import (
+    DataTypeBase,
+    DataDriftBatchBase,
+    StatisticalTypeBase,
 )
 
 
 TestResult = namedtuple("TestResult", ["statistic", "p_value"])
 
 
-class StatisticalTestBaseEstimator(UnsupervisedBaseEstimator):
-    """Abstract class representing a statistical test estimator."""
+class StatisticalTestBase(DataDriftBatchBase):
+    """Abstract class representing a statistical test."""
 
     def __init__(
-        self, data_type: BaseDataType, statistical_type: BaseStatisticalType
+        self, data_type: DataTypeBase, statistical_type: StatisticalTypeBase
     ) -> None:
         """Init method.
 
         :param data_type: data type
         :type data_type: BaseDataType
-        :param statistical_type: statistical type
-        :type statistical_type: BaseStatisticalType
         """
         super().__init__(data_type=data_type, statistical_type=statistical_type)
         self.test: Optional[List[TestResult]] = None
@@ -56,25 +54,20 @@ class StatisticalTestBaseEstimator(UnsupervisedBaseEstimator):
         statistical_test = self._statistical_test(X_ref_=X_ref_, X=X, **kwargs)
         return statistical_test
 
-    def transform(
+    def compare(
         self,
         X: np.ndarray,  # noqa: N803
-        y: np.ndarray = None,  # pylint: disable=W0613
         **kwargs,
-    ) -> np.ndarray:
+    ) -> None:
         """Transform values.
 
         :param X: feature data
         :type X: numpy.ndarray
-        :param y: target data
-        :type y: numpy.ndarray
-        :return: transformed feature data
-        :rtype: numpy.ndarray
         """
-        X = self._common_checks(X=X)  # noqa: N806
+        self._common_checks(X=X)  # noqa: N806
         self._specific_checks(X=X)  # noqa: N806
-        self.test = self._get_result(X=X, **kwargs)  # type: ignore
-        return X
+        result = self._get_result(X=X, **kwargs)  # type: ignore
+        return result
 
     @abc.abstractmethod
     def _statistical_test(

@@ -4,24 +4,23 @@ from typing import Optional
 
 import numpy as np  # type: ignore
 from scipy.stats import cramervonmises_2samp  # type: ignore
-from sklearn.utils.validation import check_array  # type: ignore
 
-from frouros.unsupervised.base import NumericalData, UnivariateType
-from frouros.unsupervised.exceptions import InsufficientSamplesError
-from frouros.unsupervised.statistical_test.base import (
-    StatisticalTestBaseEstimator,
+from frouros.data_drift.base import NumericalData, UnivariateData
+from frouros.data_drift.exceptions import InsufficientSamplesError
+from frouros.data_drift.batch.statistical_test.base import (
+    StatisticalTestBase,
     TestResult,
 )
 
 
-class CVMTest(StatisticalTestBaseEstimator):
+class CVMTest(StatisticalTestBase):
     """CVMTest (Cramér-von Mises test) algorithm class."""
 
     def __init__(self) -> None:
         """Init method."""
-        super().__init__(data_type=NumericalData(), statistical_type=UnivariateType())
+        super().__init__(data_type=NumericalData(), statistical_type=UnivariateData())
 
-    @StatisticalTestBaseEstimator.X_ref_.setter  # type: ignore[attr-defined]
+    @StatisticalTestBase.X_ref_.setter  # type: ignore[attr-defined]
     def X_ref_(self, value: Optional[np.ndarray]) -> None:  # noqa: N802
         """Reference data setter.
 
@@ -30,7 +29,8 @@ class CVMTest(StatisticalTestBaseEstimator):
         """
         if value is not None:
             self._check_sufficient_samples(X=value)
-            self._X_ref_ = check_array(value)  # noqa: N806
+            self._X_ref_ = value
+            # self._X_ref_ = check_array(value)  # noqa: N806
         else:
             self._X_ref_ = None  # noqa: N806
 

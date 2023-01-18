@@ -1,4 +1,4 @@
-"""Unsupervised statistical test detection methods' init."""
+"""Data drift batch statistical test detection methods' init."""
 
 from .chisquare import ChiSquareTest
 from .cvm import CVMTest

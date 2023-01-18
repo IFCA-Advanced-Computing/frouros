@@ -6,19 +6,19 @@ from typing import List, Tuple
 import numpy as np  # type: ignore
 from scipy.stats import chi2_contingency  # type: ignore
 
-from frouros.unsupervised.base import CategoricalData, UnivariateType
-from frouros.unsupervised.statistical_test.base import (  # type: ignore
-    StatisticalTestBaseEstimator,
+from frouros.data_drift.base import CategoricalData, UnivariateData
+from frouros.data_drift.batch.statistical_test.base import (  # type: ignore
+    StatisticalTestBase,
     TestResult,
 )
 
 
-class ChiSquareTest(StatisticalTestBaseEstimator):
+class ChiSquareTest(StatisticalTestBase):
     """ChiSquareTest (Chi-square test) algorithm class."""
 
     def __init__(self) -> None:
         """Init method."""
-        super().__init__(data_type=CategoricalData(), statistical_type=UnivariateType())
+        super().__init__(data_type=CategoricalData(), statistical_type=UnivariateData())
 
     def _statistical_test(
         self, X_ref_: np.ndarray, X: np.ndarray, **kwargs  # noqa: N803

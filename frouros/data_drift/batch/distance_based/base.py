@@ -1,4 +1,4 @@
-"""Unsupervised distance based base module."""
+"""Data drift batch distance based base module."""
 
 import abc
 from collections import namedtuple
@@ -7,30 +7,29 @@ from typing import Optional, List, Tuple, Union
 import numpy as np  # type: ignore
 from scipy.stats import rv_histogram  # type: ignore
 
-from frouros.unsupervised.base import (
-    BaseDataType,
-    BaseStatisticalType,
-    NumericalData,
-    UnivariateType,
-    UnsupervisedBaseEstimator,
+from frouros.data_drift.base import NumericalData, UnivariateData
+from frouros.data_drift.batch.base import (
+    DataTypeBase,
+    DataDriftBatchBase,
+    StatisticalTypeBase,
 )
 
 DistanceResult = namedtuple("DistanceResult", ["distance"])
 DistanceTestResult = namedtuple("DistanceTestResult", ["distance", "p_value"])
 
 
-class DistanceBasedEstimator(UnsupervisedBaseEstimator):
-    """Abstract class representing a distance based estimator."""
+class DistanceBasedBase(DataDriftBatchBase):
+    """Abstract class representing a distance based."""
 
     def __init__(
-        self, data_type: BaseDataType, statistical_type: BaseStatisticalType
+        self, data_type: DataTypeBase, statistical_type: StatisticalTypeBase
     ) -> None:
         """Init method.
 
         :param data_type: data type
-        :type data_type: BaseDataType
+        :type data_type: DataTypeBase
         :param statistical_type: statistical type
-        :type statistical_type: BaseStatisticalType
+        :type statistical_type: StatisticalTypeBase
         """
         super().__init__(data_type=data_type, statistical_type=statistical_type)
         self.X_ref_ = None  # type: ignore
@@ -66,12 +65,11 @@ class DistanceBasedEstimator(UnsupervisedBaseEstimator):
         distance = self._distance_measure(X_ref_=X_ref_, X=X, **kwargs)
         return distance
 
-    def transform(
+    def compare(
         self,
         X: np.ndarray,  # noqa: N803
-        y: np.ndarray = None,  # pylint: disable=W0613
         **kwargs,
-    ) -> np.ndarray:
+    ) -> float:
         """Transform values.
 
         :param X: feature data
@@ -81,10 +79,10 @@ class DistanceBasedEstimator(UnsupervisedBaseEstimator):
         :return: transformed feature data
         :rtype: numpy.ndarray
         """
-        X = self._common_checks(X=X)  # noqa: N806
+        self._common_checks(X=X)  # noqa: N806
         self._specific_checks(X=X)  # noqa: N806
-        self.distance = self._get_result(X=X, **kwargs)  # type: ignore
-        return X
+        distance = self._get_result(X=X, **kwargs)  # type: ignore
+        return distance
 
     @abc.abstractmethod
     def _distance_measure(
@@ -93,8 +91,8 @@ class DistanceBasedEstimator(UnsupervisedBaseEstimator):
         pass
 
 
-class DistanceProbabilityBasedEstimator(DistanceBasedEstimator):
-    """Abstract class representing a distance probability based estimator."""
+class DistanceProbabilityBasedBase(DistanceBasedBase):
+    """Abstract class representing a distance probability based."""
 
     def __init__(self, num_bins: int = 100) -> None:
         """Init method.
@@ -102,7 +100,7 @@ class DistanceProbabilityBasedEstimator(DistanceBasedEstimator):
         :param num_bins: number of bins in which to divide probabilities
         :type num_bins: int
         """
-        super().__init__(data_type=NumericalData(), statistical_type=UnivariateType())
+        super().__init__(data_type=NumericalData(), statistical_type=UnivariateData())
         self.num_bins = num_bins
 
     @property

@@ -12,9 +12,7 @@ readme = "README.md"
 keywords = [
     "drift-detection",
     "concept-drift",
-    "supervised-drift-detection",
-    "unsupervised-drift-detection",
-    "semi-supervised-drift-detection",
+    "data-drift",
     "machine-learning",
     "data-science",
 ]

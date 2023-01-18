@@ -3,13 +3,13 @@
 import numpy as np  # type: ignore
 from scipy.spatial.distance import jensenshannon  # type: ignore
 
-from frouros.unsupervised.distance_based.base import (
-    DistanceProbabilityBasedEstimator,
+from frouros.data_drift.batch.distance_based.base import (
+    DistanceProbabilityBasedBase,
     DistanceResult,
 )
 
 
-class JS(DistanceProbabilityBasedEstimator):
+class JS(DistanceProbabilityBasedBase):
     """JS (Jensen-Shannon distance) algorithm class."""
 
     def _distance_measure(

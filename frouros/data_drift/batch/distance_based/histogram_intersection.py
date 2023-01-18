@@ -2,14 +2,14 @@
 
 import numpy as np  # type: ignore
 
-from frouros.unsupervised.base import NumericalData, UnivariateType
-from frouros.unsupervised.distance_based.base import (
-    DistanceBasedEstimator,
+from frouros.data_drift.base import NumericalData, UnivariateData
+from frouros.data_drift.batch.distance_based.base import (
+    DistanceBasedBase,
     DistanceResult,
 )
 
 
-class HistogramIntersection(DistanceBasedEstimator):
+class HistogramIntersection(DistanceBasedBase):
     """Histogram intersection algorithm class."""
 
     def __init__(self, num_bins: int = 100) -> None:
@@ -18,7 +18,7 @@ class HistogramIntersection(DistanceBasedEstimator):
         :param num_bins: number of bins in which to divide probabilities
         :type num_bins: int
         """
-        super().__init__(data_type=NumericalData(), statistical_type=UnivariateType())
+        super().__init__(data_type=NumericalData(), statistical_type=UnivariateData())
         self.num_bins = num_bins
 
     @property

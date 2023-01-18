@@ -1,10 +1,10 @@
-"""Unsupervised util functions."""
+"""Data drift util functions."""
 
 from typing import Tuple
 
 from sklearn.base import BaseEstimator  # type: ignore
 
-from frouros.unsupervised.exceptions import GetStatisticalTestError
+from frouros.data_drift.exceptions import GetStatisticalTestError
 
 
 def get_statistical_test(

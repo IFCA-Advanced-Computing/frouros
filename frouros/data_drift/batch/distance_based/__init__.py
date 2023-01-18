@@ -1,4 +1,4 @@
-"""Unsupervised distance based detection methods' init."""
+"""Data drift batch distance based detection methods' init."""
 
 from .emd import EMD
 from .histogram_intersection import HistogramIntersection

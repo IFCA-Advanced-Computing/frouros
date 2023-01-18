@@ -9,8 +9,8 @@ from sklearn.linear_model import LogisticRegression  # type: ignore
 from sklearn.pipeline import Pipeline  # type: ignore
 from sklearn.preprocessing import StandardScaler  # type: ignore
 
-from frouros.unsupervised.base import UnsupervisedBaseEstimator
-from frouros.unsupervised.distance_based import (
+from frouros.data_drift.batch.base import DataDriftBatchBase
+from frouros.data_drift.batch.distance_based import (
     EMD,
     HistogramIntersection,
     PSI,
@@ -18,105 +18,99 @@ from frouros.unsupervised.distance_based import (
     KL,
     MMD,
 )
-from frouros.unsupervised.statistical_test import (
+from frouros.data_drift.batch.statistical_test import (
     ChiSquareTest,
     CVMTest,
     KSTest,
     WelchTTest,
 )
-from frouros.unsupervised.utils import get_distance, get_statistical_test
 
 
-@pytest.mark.parametrize("detector", [ChiSquareTest()])
-def test_categorical_features(categorical_dataset, detector: ChiSquareTest) -> None:
-    """Test categorical features method.
+@pytest.mark.parametrize("detector, expected_statistic, expected_p_value", [(ChiSquareTest(), 6.13333333, 0.04657615)])
+def test_batch_distance_based_categorical(categorical_dataset, detector: ChiSquareTest, expected_statistic: float, expected_p_value: float) -> None:
+    """Test batch categorical features method.
 
     :param categorical_dataset: categorical dataset
     :type categorical_dataset: Tuple[numpy.ndarray, numpy.ndarray]
     :param detector: detector test
     :type detector: ChiSquaredTest
+    :param expected_statistic: expected statistic value
+    :type expected_statistic: float
+    :param expected_p_value: expected p-value value
+    :type expected_p_value: float
     """
     X_ref, X_test = categorical_dataset  # noqa: N806
 
     detector.fit(X=X_ref)
-    detector.transform(X=X_test)
+    statistic, p_value = detector.compare(X=X_test)
 
-    for test_result, (expected_statistic, expected_p_value) in zip(
-        detector.test, [(7.2, 0.0273237), (0.53333, 0.7659283)]  # type: ignore
-    ):
-        assert np.isclose(test_result.statistic, expected_statistic)
-        assert np.isclose(test_result.p_value, expected_p_value)
+    assert np.isclose(statistic, expected_statistic)
+    assert np.isclose(p_value, expected_p_value)
 
 
 @pytest.mark.parametrize(
-    "detector",
-    [EMD(), PSI(), JS(), KL(), HistogramIntersection()],
+    "detector, expected_distance",
+    [(EMD(), 0.54726161), (PSI(), 496.21968934), (JS(), 0.81451218), (KL(), np.inf), (HistogramIntersection(), 0.97669491)],
 )
-def test_distance_based_univariate_test(
+def test_batch_distance_based_univariate(
     elec2_dataset,
-    detector: UnsupervisedBaseEstimator,
+    detector: DataDriftBatchBase,
+    expected_distance: float,
 ) -> None:
-    """Test distance based univariate method.
+    """Test batch distance based univariate method.
 
-    :param dataset_elec2: Elec2 raw dataset
-    :type dataset_elec2: Tuple[numpy.ndarray, numpy.ndarray, numpy.ndarray]
+    :param elec2_dataset: Elec2 raw dataset
+    :type elec2_dataset: Tuple[numpy.ndarray, numpy.ndarray, numpy.ndarray]
     :param detector: detector distance
-    :type detector: UnsupervisedBaseEstimator
+    :type detector: DataDriftBatchBase
+    :param expected_distance: expected p-value value
+    :type expected_distance: float
     """
     X_ref, y_ref, X_test = elec2_dataset  # noqa: N806
 
-    pipe = Pipeline(
-        [
-            ("scaler", StandardScaler()),
-            ("detector", detector),
-            ("model", LogisticRegression(solver="lbfgs", max_iter=1000)),
-        ]
-    )
+    detector.fit(X=X_ref[:, 0])
+    distance = detector.compare(X=X_test[:, 0])
 
-    pipe.fit(X=X_ref, y=y_ref)
-
-    _ = pipe.predict(X=np.array([*X_test]))
-    _ = get_distance(estimator=pipe, detector_name="detector")
+    assert np.isclose(distance, expected_distance)
 
 
 @pytest.mark.parametrize(
-    "detector",
-    [CVMTest(), KSTest(), WelchTTest()],
+    "detector, expected_statistic, expected_p_value",
+    [(CVMTest(), 3776.09848103, 5.38105056e-07), (KSTest(), 0.99576271, 0.0), (WelchTTest(), -287.98035253, 0.0)],
 )
-def test_statistical_univariate_test(
+def test_batch_statistical_univariate(
     elec2_dataset,
-    detector: UnsupervisedBaseEstimator,
+    detector: DataDriftBatchBase,
+    expected_statistic: float,
+    expected_p_value: float,
 ) -> None:
     """Test statistical univariate method.
 
-    :param dataset_elec2: Elec2 raw dataset
-    :type dataset_elec2: Tuple[numpy.ndarray, numpy.ndarray, numpy.ndarray]
+    :param elec2_dataset: Elec2 raw dataset
+    :type elec2_dataset: Tuple[numpy.ndarray, numpy.ndarray, numpy.ndarray]
     :param detector: detector test
-    :type detector: UnsupervisedBaseEstimator
+    :type detector: DataDriftBatchBase
+    :param expected_statistic: expected statistic value
+    :type expected_statistic: float
+    :param expected_p_value: expected p-value value
+    :type expected_p_value: float
     """
     X_ref, y_ref, X_test = elec2_dataset  # noqa: N806
 
-    pipe = Pipeline(
-        [
-            ("scaler", StandardScaler()),
-            ("detector", detector),
-            ("model", LogisticRegression(solver="lbfgs", max_iter=1000)),
-        ]
-    )
+    detector.fit(X=X_ref[:, 0])
+    statistic, p_value = detector.compare(X=X_test[:, 0])
 
-    pipe.fit(X=X_ref, y=y_ref)
-
-    _ = pipe.predict(X=np.array([*X_test]))
-    _ = get_statistical_test(estimator=pipe, detector_name="detector")
+    assert np.isclose(statistic, expected_statistic)
+    assert np.isclose(p_value, expected_p_value)
 
 
 @pytest.mark.parametrize(
-    "detector", [MMD(num_permutations=1000, kernel=RBF(), random_state=31)]
+    "detector", [MMD()]
 )
-def test_distance_based_multivariate_different_distribution_test(
+def test_batch_distance_based_multivariate_different_distribution(
     multivariate_distribution_p: Tuple[np.ndarray, np.ndarray],
     multivariate_distribution_q: Tuple[np.ndarray, np.ndarray],
-    detector: UnsupervisedBaseEstimator,
+    detector: DataDriftBatchBase,
     num_samples: int = 500,
 ) -> None:
     """Test distance based multivariate different distribution method.
@@ -126,7 +120,7 @@ def test_distance_based_multivariate_different_distribution_test(
     :param multivariate_distribution_q: mean and covariance matrix of distribution q
     :type multivariate_distribution_q: Tuple[numpy.ndarray, numpy.ndarray]
     :param detector: detector test
-    :type detector: UnsupervisedBaseEstimator
+    :type detector: DataDriftBatchBase
     :param num_samples: number of random samples
     :type num_samples: int
     """
@@ -139,19 +133,17 @@ def test_distance_based_multivariate_different_distribution_test(
     )
 
     detector.fit(X=X_ref)
-    detector.transform(X=X_test)
-    statistic, p_value = detector.distance  # type: ignore
+    statistic = detector.compare(X=X_test)
 
     assert np.isclose(statistic, 0.09446612)
-    assert np.isclose(p_value, 0.0)
 
 
 @pytest.mark.parametrize(
-    "detector", [MMD(num_permutations=1000, kernel=RBF(), random_state=31)]
+    "detector", [MMD()]
 )
-def test_distance_based_multivariate_same_distribution_test(
+def test_batch_distance_based_multivariate_same_distribution(
     multivariate_distribution_p: Tuple[np.ndarray, np.ndarray],
-    detector: UnsupervisedBaseEstimator,
+    detector: DataDriftBatchBase,
     num_samples: int = 500,
 ) -> None:
     """Test distance based multivariate same distribution method.
@@ -159,7 +151,7 @@ def test_distance_based_multivariate_same_distribution_test(
     :param multivariate_distribution_p: mean and covariance matrix of distribution p
     :type multivariate_distribution_p: Tuple[numpy.ndarray, numpy.ndarray]
     :param detector: detector test
-    :type detector: UnsupervisedBaseEstimator
+    :type detector: DataDriftBatchBase
     :param num_samples: number of random samples
     :type num_samples: int
     """
@@ -172,8 +164,6 @@ def test_distance_based_multivariate_same_distribution_test(
     )
 
     detector.fit(X=X_ref)
-    detector.transform(X=X_test)
-    statistic, p_value = detector.distance  # type: ignore
+    statistic = detector.compare(X=X_test)
 
     assert np.isclose(statistic, 0.00256109)
-    assert np.isclose(p_value, 0.894)

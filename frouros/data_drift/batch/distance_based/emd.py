@@ -3,19 +3,19 @@
 import numpy as np  # type: ignore
 from scipy.stats import wasserstein_distance  # type: ignore
 
-from frouros.unsupervised.base import NumericalData, UnivariateType
-from frouros.unsupervised.distance_based.base import (
-    DistanceBasedEstimator,
+from frouros.data_drift.base import NumericalData, UnivariateData
+from frouros.data_drift.batch.distance_based.base import (
+    DistanceBasedBase,
     DistanceResult,
 )
 
 
-class EMD(DistanceBasedEstimator):
+class EMD(DistanceBasedBase):
     """EMD (Earth Mover's Distance) algorithm class."""
 
     def __init__(self) -> None:
         """Init method."""
-        super().__init__(data_type=NumericalData(), statistical_type=UnivariateType())
+        super().__init__(data_type=NumericalData(), statistical_type=UnivariateData())
 
     def _distance_measure(
         self, X_ref_: np.ndarray, X: np.ndarray, **kwargs  # noqa: N803

@@ -94,11 +94,11 @@ def categorical_dataset() -> Tuple[np.ndarray, np.ndarray]:
     :rtype: Tuple[np.ndarray, np.ndarray]
     """
     X_ref = np.array(  # noqa: N806
-        [["a", "A"], ["a", "B"], ["b", "B"], ["a", "C"], ["a", "A"], ["b", "C"]],
+        ["a", "a", "b", "a", "a", "b"],
         dtype=object,
     )
     X_test = np.array(  # noqa: N806
-        [["b", "A"], ["c", "B"], ["c", "A"], ["c", "A"], ["b", "C"], ["b", "C"]],
+        ["b", "a", "c", "c", "c", "c"],
         dtype=object,
     )
 

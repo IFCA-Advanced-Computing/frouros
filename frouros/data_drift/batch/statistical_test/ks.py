@@ -3,19 +3,19 @@
 import numpy as np  # type: ignore
 from scipy.stats import ks_2samp  # type: ignore
 
-from frouros.unsupervised.base import NumericalData, UnivariateType
-from frouros.unsupervised.statistical_test.base import (
-    StatisticalTestBaseEstimator,
+from frouros.data_drift.base import NumericalData, UnivariateData
+from frouros.data_drift.batch.statistical_test.base import (
+    StatisticalTestBase,
     TestResult,
 )
 
 
-class KSTest(StatisticalTestBaseEstimator):
+class KSTest(StatisticalTestBase):
     """KSTest (Kolmogorov-Smirnov test) algorithm class."""
 
     def __init__(self) -> None:
         """Init method."""
-        super().__init__(data_type=NumericalData(), statistical_type=UnivariateType())
+        super().__init__(data_type=NumericalData(), statistical_type=UnivariateData())
 
     def _statistical_test(
         self, X_ref_: np.ndarray, X: np.ndarray, **kwargs  # noqa: N803
