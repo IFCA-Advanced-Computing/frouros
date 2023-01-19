@@ -2,14 +2,14 @@
 
 from typing import Union
 
-from frouros.supervised.ddm_based.base import DDMBaseConfig, DDMErrorBasedEstimator
+from frouros.concept_drift.ddm_based.base import DDMBaseConfig, DDMErrorBased
 
 
 class DDMConfig(DDMBaseConfig):
     """DDM (Drift detection method) configuration class."""
 
 
-class DDM(DDMErrorBasedEstimator):
+class DDM(DDMErrorBased):
     """DDM (Drift detection method) algorithm class."""
 
     def update(self, value: Union[int, float]) -> None:

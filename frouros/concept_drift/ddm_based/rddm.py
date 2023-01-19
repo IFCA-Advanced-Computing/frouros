@@ -2,9 +2,7 @@
 
 from typing import Union
 
-from sklearn.base import BaseEstimator  # type: ignore
-
-from frouros.supervised.ddm_based.base import DDMBaseConfig, DDMErrorBasedEstimator
+from frouros.concept_drift.ddm_based.base import DDMBaseConfig, DDMErrorBased
 from frouros.utils.data_structures import CircularQueue
 from frouros.utils.stats import Mean
 
@@ -101,25 +99,19 @@ class RDDMConfig(DDMBaseConfig):
         self._max_num_instances_warning = value
 
 
-class RDDM(DDMErrorBasedEstimator):
+class RDDM(DDMErrorBased):
     """RDDM (Reactive Drift detection method) algorithm class."""
 
     def __init__(
         self,
-        estimator: BaseEstimator,
         config: RDDMConfig,
     ) -> None:
         """Init method.
 
-        :param estimator: sklearn estimator
-        :type estimator: BaseEstimator
         :param config: configuration parameters
         :type config: RDDMConfig
         """
-        super().__init__(
-            estimator=estimator,
-            config=config,
-        )
+        super().__init__(config=config)
         self.num_warnings = 0
         self.rddm_drift = False
         self.predictions = CircularQueue(

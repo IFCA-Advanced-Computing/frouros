@@ -1,13 +1,9 @@
-"""Test unsupervised methods."""
+"""Test data drift detectors."""
 
 from typing import Tuple
 
 import pytest  # type: ignore
 import numpy as np  # type: ignore
-from sklearn.gaussian_process.kernels import RBF  # type: ignore
-from sklearn.linear_model import LogisticRegression  # type: ignore
-from sklearn.pipeline import Pipeline  # type: ignore
-from sklearn.preprocessing import StandardScaler  # type: ignore
 
 from frouros.data_drift.batch.base import DataDriftBatchBase
 from frouros.data_drift.batch.distance_based import (
@@ -26,8 +22,16 @@ from frouros.data_drift.batch.statistical_test import (
 )
 
 
-@pytest.mark.parametrize("detector, expected_statistic, expected_p_value", [(ChiSquareTest(), 6.13333333, 0.04657615)])
-def test_batch_distance_based_categorical(categorical_dataset, detector: ChiSquareTest, expected_statistic: float, expected_p_value: float) -> None:
+@pytest.mark.parametrize(
+    "detector, expected_statistic, expected_p_value",
+    [(ChiSquareTest(), 6.13333333, 0.04657615)],
+)
+def test_batch_distance_based_categorical(
+    categorical_dataset: Tuple[np.ndarray, np.ndarray],
+    detector: ChiSquareTest,
+    expected_statistic: float,
+    expected_p_value: float,
+) -> None:
     """Test batch categorical features method.
 
     :param categorical_dataset: categorical dataset
@@ -50,7 +54,13 @@ def test_batch_distance_based_categorical(categorical_dataset, detector: ChiSqua
 
 @pytest.mark.parametrize(
     "detector, expected_distance",
-    [(EMD(), 0.54726161), (PSI(), 496.21968934), (JS(), 0.81451218), (KL(), np.inf), (HistogramIntersection(), 0.97669491)],
+    [
+        (EMD(), 0.54726161),
+        (PSI(), 496.21968934),
+        (JS(), 0.81451218),
+        (KL(), np.inf),
+        (HistogramIntersection(), 0.97669491),
+    ],
 )
 def test_batch_distance_based_univariate(
     elec2_dataset,
@@ -76,7 +86,11 @@ def test_batch_distance_based_univariate(
 
 @pytest.mark.parametrize(
     "detector, expected_statistic, expected_p_value",
-    [(CVMTest(), 3776.09848103, 5.38105056e-07), (KSTest(), 0.99576271, 0.0), (WelchTTest(), -287.98035253, 0.0)],
+    [
+        (CVMTest(), 3776.09848103, 5.38105056e-07),
+        (KSTest(), 0.99576271, 0.0),
+        (WelchTTest(), -287.98035253, 0.0),
+    ],
 )
 def test_batch_statistical_univariate(
     elec2_dataset,
@@ -104,9 +118,7 @@ def test_batch_statistical_univariate(
     assert np.isclose(p_value, expected_p_value)
 
 
-@pytest.mark.parametrize(
-    "detector", [MMD()]
-)
+@pytest.mark.parametrize("detector", [MMD()])
 def test_batch_distance_based_multivariate_different_distribution(
     multivariate_distribution_p: Tuple[np.ndarray, np.ndarray],
     multivariate_distribution_q: Tuple[np.ndarray, np.ndarray],
@@ -138,9 +150,7 @@ def test_batch_distance_based_multivariate_different_distribution(
     assert np.isclose(statistic, 0.09446612)
 
 
-@pytest.mark.parametrize(
-    "detector", [MMD()]
-)
+@pytest.mark.parametrize("detector", [MMD()])
 def test_batch_distance_based_multivariate_same_distribution(
     multivariate_distribution_p: Tuple[np.ndarray, np.ndarray],
     detector: DataDriftBatchBase,

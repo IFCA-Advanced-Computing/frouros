@@ -3,10 +3,9 @@
 from collections import deque
 from typing import Union  # noqa: TYP001
 
-from sklearn.base import BaseEstimator  # type: ignore
 import numpy as np  # type: ignore
 
-from frouros.supervised.window_based.base import WindowBaseConfig, WindowBasedEstimator
+from frouros.concept_drift.window_based.base import WindowBaseConfig, WindowBased
 
 
 class Bucket:
@@ -242,25 +241,19 @@ class ADWINConfig(WindowBaseConfig):
         self._m = value
 
 
-class ADWIN(WindowBasedEstimator):
+class ADWIN(WindowBased):
     """ADWIN (ADaptive WINdowing) algorithm class."""
 
     def __init__(
         self,
-        estimator: BaseEstimator,
         config: ADWINConfig,
     ) -> None:
         """Init method.
 
-        :param estimator: sklearn estimator
-        :type estimator: BaseEstimator
         :param config: configuration parameters
         :type config: ADWINConfig
         """
-        super().__init__(
-            estimator=estimator,
-            config=config,
-        )
+        super().__init__(config=config)
         self.buckets = deque([Bucket(m=self.config.m)])  # type: ignore
         self.total = 0.0
         self.variance = 0.0

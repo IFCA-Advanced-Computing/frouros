@@ -3,10 +3,9 @@
 from typing import Union
 
 import numpy as np  # type: ignore
-from sklearn.base import BaseEstimator  # type: ignore
 
-from frouros.supervised.ddm_based.base import (
-    DDMBasedEstimator,
+from frouros.concept_drift.ddm_based.base import (
+    DDMBased,
     ECDDBaseConfig,
 )
 from frouros.utils.stats import EWMA, Mean
@@ -16,25 +15,19 @@ class ECDDWTConfig(ECDDBaseConfig):
     """ECDD-WT (EWMA for Concept Drift Detection with Warning) configuration class."""
 
 
-class ECDDWT(DDMBasedEstimator):
+class ECDDWT(DDMBased):
     """ECDD-WT (EWMA for Concept Drift Detection with Warning) algorithm class."""
 
     def __init__(
         self,
-        estimator: BaseEstimator,
         config: ECDDBaseConfig,
     ) -> None:
         """Init method.
 
-        :param estimator: sklearn estimator
-        :type estimator: BaseEstimator
         :param config: configuration parameters
         :type config: ECDDBaseConfig
         """
-        super().__init__(
-            estimator=estimator,
-            config=config,
-        )
+        super().__init__(config=config)
         self.p = Mean()
         self.z = EWMA(alpha=self.config.lambda_)  # type: ignore
         self._lambda_div_two_minus_lambda = self.config.lambda_ / (  # type: ignore

@@ -5,7 +5,7 @@ import abc
 from collections import namedtuple
 import operator
 
-import numpy as np
+import numpy as np  # type: ignore
 
 TestResult = namedtuple("TestResult", ["statistic", "p_value"])
 
@@ -46,6 +46,7 @@ class UnivariateData(StatisticalTypeBase):
     """Class representing a univariate data type."""
 
     def __init__(self) -> None:
+        """Init method."""
         self.dim_check = operator.eq
 
 
@@ -53,4 +54,5 @@ class MultivariateData(StatisticalTypeBase):
     """Class representing a multivariate data type."""
 
     def __init__(self) -> None:
+        """Init method."""
         self.dim_check = operator.gt

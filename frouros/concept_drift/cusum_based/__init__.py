@@ -1,4 +1,4 @@
-"""Supervised CUSUM based detection methods' init."""
+"""Concept drift CUSUM based detection methods' init."""
 
 from .cusum import CUSUM, CUSUMConfig
 from .geometric_moving_average import (

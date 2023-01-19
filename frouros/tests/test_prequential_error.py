@@ -4,7 +4,6 @@ from typing import Callable
 
 import numpy as np  # type: ignore
 import pytest  # type: ignore
-from sklearn.metrics import accuracy_score  # type: ignore
 
 from frouros.metrics import PrequentialError, PrequentialErrorFadingFactor
 from frouros.metrics.prequential_error import PrequentialErrorBase
@@ -20,7 +19,7 @@ def error_scorer(y_true: np.ndarray, y_pred: np.ndarray) -> Callable:
     :return error scorer function
     :rtype Callable
     """
-    return 1 - accuracy_score(y_true, y_pred)
+    return int(1 - y_true == y_pred)
 
 
 @pytest.mark.parametrize(

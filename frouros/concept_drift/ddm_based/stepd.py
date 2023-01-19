@@ -4,9 +4,8 @@ from typing import Union  # noqa: TYP001
 
 import numpy as np  # type: ignore
 from scipy.stats import norm  # type: ignore
-from sklearn.base import BaseEstimator  # type: ignore
 
-from frouros.supervised.ddm_based.base import DDMBaseConfig, DDMBasedEstimator
+from frouros.concept_drift.ddm_based.base import DDMBaseConfig, DDMBased
 from frouros.utils.data_structures import AccuracyQueue
 
 
@@ -76,23 +75,19 @@ class STEPDConfig(DDMBaseConfig):
         self._alpha_w = value
 
 
-class STEPD(DDMBasedEstimator):
+class STEPD(DDMBased):
     """STEPD (Statistical test of equal proportions) algorithm class."""
 
     def __init__(
         self,
-        estimator: BaseEstimator,
         config: DDMBaseConfig,
     ) -> None:
         """Init method.
 
-        :param estimator: sklearn estimator
-        :type estimator: BaseEstimator
         :param config: configuration parameters
         :type config: DDMBaseConfig
         """
         super().__init__(
-            estimator=estimator,
             config=config,
         )
         self.correct_total = 0

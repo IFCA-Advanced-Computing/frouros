@@ -5,10 +5,9 @@ import itertools
 from typing import Optional, Union  # noqa: TYP001
 
 from scipy.stats import ks_2samp  # type: ignore
-from sklearn.base import BaseEstimator  # type: ignore
 import numpy as np  # type: ignore
 
-from frouros.supervised.window_based.base import WindowBaseConfig, WindowBasedEstimator
+from frouros.concept_drift.window_based.base import WindowBaseConfig, WindowBased
 
 
 class KSWINConfig(WindowBaseConfig):
@@ -90,25 +89,19 @@ class KSWINConfig(WindowBaseConfig):
         self._num_test_instances = value
 
 
-class KSWIN(WindowBasedEstimator):
+class KSWIN(WindowBased):
     """KSWIN (Kolmogorov-Smirnov Windowing) algorithm class."""
 
     def __init__(
         self,
-        estimator: BaseEstimator,
         config: KSWINConfig,
     ) -> None:
         """Init method.
 
-        :param estimator: sklearn estimator
-        :type estimator: BaseEstimator
         :param config: configuration parameters
         :type config: KSWINConfig
         """
-        super().__init__(
-            estimator=estimator,
-            config=config,
-        )
+        super().__init__(config=config)
         self.window = deque(maxlen=self.config.min_num_instances)  # type: ignore
 
     @property

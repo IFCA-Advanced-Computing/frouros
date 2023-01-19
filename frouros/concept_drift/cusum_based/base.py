@@ -1,4 +1,4 @@
-"""Supervised CUSUM based base module."""
+"""Concept drift CUSUM based base module."""
 
 import abc
 from typing import (  # noqa: TYP001
@@ -6,13 +6,11 @@ from typing import (  # noqa: TYP001
     Union,
 )
 
-from sklearn.base import BaseEstimator  # type: ignore
-
-from frouros.supervised.base import SupervisedBaseEstimator, SupervisedBaseConfig
+from frouros.concept_drift.base import ConceptDriftBase, ConceptDriftBaseConfig
 from frouros.utils.stats import Mean
 
 
-class CUSUMBaseConfig(SupervisedBaseConfig):
+class CUSUMBaseConfig(ConceptDriftBaseConfig):
     """Class representing a CUSUM based configuration class."""
 
     def __init__(
@@ -125,22 +123,19 @@ class AlphaConfig:
         self._alpha = value
 
 
-class CUSUMBaseEstimator(SupervisedBaseEstimator):
+class CUSUMBase(ConceptDriftBase):
     """CUSUM based algorithm class."""
 
     def __init__(
         self,
-        estimator: BaseEstimator,
         config: CUSUMBaseConfig,
     ) -> None:
         """Init method.
 
-        :param estimator: sklearn estimator
-        :type estimator: BaseEstimator
         :param config: configuration parameters
         :type config: CUSUMBaseConfig
         """
-        super().__init__(estimator=estimator, config=config)
+        super().__init__(config=config)
         self.mean_error_rate = Mean()
         self.sum_ = 0.0
         self.drift = False

@@ -6,14 +6,20 @@ from typing import Any, Optional, List, Tuple, Union
 import numpy as np  # type: ignore
 
 from frouros.data_drift.base import DataTypeBase, StatisticalTypeBase
-from frouros.data_drift.exceptions import DimensionError, MismatchDimensionError, MissingFitError
+from frouros.data_drift.exceptions import (
+    DimensionError,
+    MismatchDimensionError,
+    MissingFitError,
+)
 
 
 class DataDriftBatchBase(abc.ABC):
     """Abstract class representing a data drift batch detector."""
 
     def __init__(
-        self, data_type: DataTypeBase, statistical_type: StatisticalTypeBase,
+        self,
+        data_type: DataTypeBase,
+        statistical_type: StatisticalTypeBase,
     ) -> None:
         """Init method.
 
@@ -69,6 +75,7 @@ class DataDriftBatchBase(abc.ABC):
     @property
     def statistical_type(self) -> StatisticalTypeBase:
         """Statistical type property.
+
         :return: statistical type
         :rtype: StatisticalTypeBase
         """
@@ -77,6 +84,7 @@ class DataDriftBatchBase(abc.ABC):
     @statistical_type.setter
     def statistical_type(self, value: StatisticalTypeBase) -> None:
         """Statistical type setter.
+
         :param value: value to be set
         :type value: StatisticalTypeBase
         :raises TypeError: Type error exception
@@ -114,23 +122,19 @@ class DataDriftBatchBase(abc.ABC):
         self._check_compare_dimensions(X=X)
 
     def _check_fit_dimensions(self, X: np.ndarray) -> None:  # noqa: N803
-        if not self.statistical_type.dim_check(X.ndim, 1):
-            raise DimensionError(
-                f"Dimensions of X ({X.ndim})"
-            )
+        if not self.statistical_type.dim_check(X.ndim, 1):  # type: ignore
+            raise DimensionError(f"Dimensions of X ({X.ndim})")
 
     def _check_compare_dimensions(self, X: np.ndarray) -> None:  # noqa: N803
-        if self.X_ref_.ndim != X.ndim:
+        if self.X_ref_.ndim != X.ndim:  # type: ignore
             raise MismatchDimensionError(
-                f"Dimensions of X_ref ({self.X_ref_.ndim}) "
+                f"Dimensions of X_ref ({self.X_ref_.ndim}) "  # type: ignore
                 f"and X ({X.ndim}) must be equal"
             )
 
     def _check_is_fitted(self):
         if self.X_ref_ is None:
-            raise MissingFitError(
-                f"fit method has not been called"
-            )
+            raise MissingFitError("fit method has not been called")
 
     def _specific_checks(self, X: np.ndarray) -> None:  # noqa: N803
         pass

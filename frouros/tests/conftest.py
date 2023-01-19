@@ -4,7 +4,6 @@ from typing import Tuple
 
 import pytest  # type: ignore
 import numpy as np  # type: ignore
-from sklearn.metrics import accuracy_score  # type: ignore
 
 from frouros.datasets.real import Elec2
 from frouros.datasets.synthetic import SEA
@@ -180,5 +179,62 @@ def prequential_error():
     :rtype: PrequentialError
     """
     return PrequentialError(
-        error_scorer=lambda y_true, y_pred: 1 - accuracy_score(y_true, y_pred)
+        error_scorer=lambda y_true, y_pred: int(1 - y_true == y_pred)
     )
+
+
+class DummyClassificationModel:
+    """Dummy classification model class."""
+
+    def __init__(self, num_classes: int = 2) -> None:
+        """Init method.
+
+        :param num_classes: number of classes
+        :type num_classes: int
+        """
+        self.num_classes = num_classes
+
+    def fit(self, X: np.ndarray, y: np.ndarray, *args, **kwargs):  # noqa: N803
+        """Fit method.
+
+        :param X: feature data
+        :type X: numpy.ndarray
+        :param y: target data
+        :type y: numpy.ndarray
+        :return: random class prediction
+        :rtype: numpy.ndarray
+        """
+        return self
+
+    def predict(self, X: np.ndarray) -> np.ndarray:  # noqa: N803
+        """Predict method.
+
+        :param X: feature data
+        :type X: numpy.ndarray
+        :return: random class prediction
+        :rtype: numpy.ndarray
+        """
+        prediction = np.random.randint(low=0, high=self.num_classes, size=X.shape[0])
+        return prediction
+
+
+@pytest.fixture(scope="module")
+def train_prediction_normal(
+    classification_dataset: Tuple[np.array, np.array, np.array, np.array]
+) -> Tuple[DummyClassificationModel, np.ndarray]:
+    """Train a model and use a test dataset to obtain the predictions.
+
+    :param classification_dataset: dataset generated using SEA
+    :type classification_dataset: Tuple[numpy.array, numpy.array,
+    numpy.array, numpy.array]
+    :return: trained model and test predictions
+    :rtype: Tuple[DummyClassificationModel, numpy.array]
+    """
+    np.random.seed(seed=31)
+    X_ref, y_ref, X_test, _ = classification_dataset  # noqa: N806
+
+    model = DummyClassificationModel(num_classes=len(np.unique(y_ref)))
+    model.fit(X=X_ref, y=y_ref)
+    y_pred = model.predict(X=X_test)
+
+    return model, y_pred

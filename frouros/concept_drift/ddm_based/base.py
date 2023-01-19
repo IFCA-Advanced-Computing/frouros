@@ -8,17 +8,16 @@ from typing import (  # noqa: TYP001
 )
 
 import numpy as np  # type: ignore
-from sklearn.base import BaseEstimator  # type: ignore
 
-from frouros.supervised.base import (
-    SupervisedBaseConfig,
-    SupervisedBaseEstimator,
+from frouros.concept_drift.base import (
+    ConceptDriftBaseConfig,
+    ConceptDriftBase,
 )
-from frouros.supervised.exceptions import InvalidAverageRunLengthError
+from frouros.concept_drift.exceptions import InvalidAverageRunLengthError
 from frouros.utils.stats import Mean
 
 
-class DDMBaseConfig(SupervisedBaseConfig):
+class DDMBaseConfig(ConceptDriftBaseConfig):
     """Class representing a DDM based configuration class."""
 
     def __init__(
@@ -86,23 +85,19 @@ class DDMBaseConfig(SupervisedBaseConfig):
         self._warning_level = value
 
 
-class DDMBasedEstimator(SupervisedBaseEstimator):
+class DDMBased(ConceptDriftBase):
     """Abstract class representing a DDM based estimator."""
 
     def __init__(
         self,
-        estimator: BaseEstimator,
-        config: SupervisedBaseConfig,
+        config: ConceptDriftBaseConfig,
     ) -> None:
         """Init method.
 
-        :param estimator: estimator to be used
-        :type estimator: BaseEstimator
         :param config: configuration parameters
         :type config: SupervisedBaseConfig
         """
         super().__init__(
-            estimator=estimator,
             config=config,
         )
         self.drift = False
@@ -130,25 +125,19 @@ class DDMBasedEstimator(SupervisedBaseEstimator):
         """
 
 
-class DDMErrorBasedEstimator(DDMBasedEstimator):
+class DDMErrorBased(DDMBased):
     """Abstract class representing a DDM error based estimator."""
 
     def __init__(
         self,
-        estimator: BaseEstimator,
         config: DDMBaseConfig,
     ) -> None:
         """Init method.
 
-        :param estimator: sklearn estimator
-        :type estimator: BaseEstimator
         :param config: configuration parameters
         :type config: DDMBaseConfig
         """
-        super().__init__(
-            estimator=estimator,
-            config=config,
-        )
+        super().__init__(config=config)
         self.error_rate = Mean()
         self.min_error_rate = float("inf")
         self.min_std = float("inf")
@@ -246,7 +235,7 @@ class DDMErrorBasedEstimator(DDMBasedEstimator):
         self.min_std = float("inf")
 
 
-class ECDDBaseConfig(SupervisedBaseConfig):
+class ECDDBaseConfig(ConceptDriftBaseConfig):
     """Class representing a ECDD configuration class."""
 
     average_run_length_map = {

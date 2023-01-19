@@ -3,7 +3,7 @@
 from typing import Callable
 
 import numpy as np  # type: ignore
-from scipy.spatial.distance import cdist
+from scipy.spatial.distance import cdist  # type: ignore
 
 from frouros.data_drift.base import NumericalData, MultivariateData
 from frouros.data_drift.batch.distance_based.base import (
@@ -12,12 +12,30 @@ from frouros.data_drift.batch.distance_based.base import (
 )
 
 
+def rbf_kernel(
+    X: np.ndarray, Y: np.ndarray, std: float = 1.0  # noqa: N803
+) -> np.ndarray:
+    """Radial basis function kernel between X and Y matrices.
+
+    :param X: X matrix
+    :type X: numpy.ndarray
+    :param Y: Y matrix
+    :type Y: numpy.ndarray
+    :param std: standard deviation value
+    :type std: float
+
+    :return: Radial basis kernel matrix
+    :rtype: numpy.ndarray
+    """
+    return np.exp(-cdist(X, Y, "sqeuclidean") / 2 * std**2)
+
+
 class MMD(DistanceBasedBase):
     """MMD (Maximum Mean Discrepancy) algorithm class."""
 
     def __init__(
         self,
-        kernel: Callable = lambda X, Y, std=1.0: np.exp(-cdist(X, Y, 'sqeuclidean') / 2*std**2),
+        kernel: Callable = rbf_kernel,
     ) -> None:
         """Init method.
 
@@ -76,9 +94,7 @@ class MMD(DistanceBasedBase):
         distance_test = DistanceResult(distance=mmd_statistic)
         return distance_test
 
-    def _mmd(
-        self, X_ref_: np.ndarray, X: np.ndarray  # noqa: N803
-    ) -> float:
+    def _mmd(self, X_ref_: np.ndarray, X: np.ndarray) -> float:  # noqa: N803
         X_ref_num_samples = X_ref_.shape[0]  # noqa: N806
         X_num_samples = X.shape[0]  # noqa: N806
         X_concat = np.vstack((X_ref_, X))  # noqa: N806

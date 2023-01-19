@@ -6,31 +6,26 @@ from typing import (  # noqa: TYP001
     Union,
 )
 
-from sklearn.base import BaseEstimator  # type: ignore
-
-from frouros.supervised.base import SupervisedBaseEstimator, SupervisedBaseConfig
+from frouros.concept_drift.base import ConceptDriftBase, ConceptDriftBaseConfig
 
 
-class WindowBaseConfig(SupervisedBaseConfig):
+class WindowBaseConfig(ConceptDriftBaseConfig):
     """Class representing a window based configuration class."""
 
 
-class WindowBasedEstimator(SupervisedBaseEstimator):
-    """Abstract class representing a window based estimator."""
+class WindowBased(ConceptDriftBase):
+    """Abstract class representing a window based."""
 
     def __init__(
         self,
-        estimator: BaseEstimator,
         config: WindowBaseConfig,
     ) -> None:
         """Init method.
 
-        :param estimator: sklearn estimator
-        :type estimator: BaseEstimator
         :param config: configuration parameters
         :type config: WindowBaseConfig
         """
-        super().__init__(estimator=estimator, config=config)
+        super().__init__(config=config)
         self.drift = False
 
     @property

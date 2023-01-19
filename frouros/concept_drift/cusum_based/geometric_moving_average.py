@@ -1,8 +1,8 @@
 """Geometric Moving Average module."""
 
 
-from frouros.supervised.cusum_based.base import (
-    CUSUMBaseEstimator,
+from frouros.concept_drift.cusum_based.base import (
+    CUSUMBase,
     CUSUMBaseConfig,
     AlphaConfig,
 )
@@ -33,7 +33,7 @@ class GeometricMovingAverageConfig(CUSUMBaseConfig, AlphaConfig):
         AlphaConfig.__init__(self, alpha=alpha)
 
 
-class GeometricMovingAverage(CUSUMBaseEstimator):
+class GeometricMovingAverage(CUSUMBase):
     """Geometric Moving Average algorithm class."""
 
     def _update_sum(self, error_rate: float) -> None:

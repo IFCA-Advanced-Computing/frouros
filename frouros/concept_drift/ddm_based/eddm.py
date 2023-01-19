@@ -4,9 +4,8 @@ import copy
 from typing import Union  # noqa: TYP001
 
 import numpy as np  # type: ignore
-from sklearn.base import BaseEstimator  # type: ignore
 
-from frouros.supervised.ddm_based.base import DDMBaseConfig, DDMBasedEstimator
+from frouros.concept_drift.ddm_based.base import DDMBaseConfig, DDMBased
 
 
 class EDDMConfig(DDMBaseConfig):
@@ -123,27 +122,19 @@ class EDDMConfig(DDMBaseConfig):
         self._min_num_misclassified_instances = value
 
 
-class EDDM(DDMBasedEstimator):
+class EDDM(DDMBased):
     """EDDM (Early drift detection method) algorithm class."""
 
     def __init__(
         self,
-        estimator: BaseEstimator,
         config: EDDMConfig,
     ) -> None:
         """Init method.
 
-        :param estimator: sklearn estimator
-        :type estimator: BaseEstimator
         :param config: configuration parameters
         :type config: EDDMConfig
-        :param metrics: performance metrics
-        :type metrics: Optional[Union[BaseMetric, List[BaseMetric]]]
         """
-        super().__init__(
-            estimator=estimator,
-            config=config,
-        )
+        super().__init__(config=config)
         self.last_distance_error = 0.0
         self.max_distance_threshold = float("-inf")
         self.mean_distance_error = 0.0

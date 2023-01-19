@@ -58,11 +58,13 @@ class StatisticalTestBase(DataDriftBatchBase):
         self,
         X: np.ndarray,  # noqa: N803
         **kwargs,
-    ) -> None:
+    ) -> TestResult:
         """Transform values.
 
         :param X: feature data
         :type X: numpy.ndarray
+        :return: test results
+        :rtype: TestResult
         """
         self._common_checks(X=X)  # noqa: N806
         self._specific_checks(X=X)  # noqa: N806

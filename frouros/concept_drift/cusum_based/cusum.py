@@ -3,8 +3,8 @@
 
 import numpy as np  # type: ignore
 
-from frouros.supervised.cusum_based.base import (
-    CUSUMBaseEstimator,
+from frouros.concept_drift.cusum_based.base import (
+    CUSUMBase,
     CUSUMBaseConfig,
     DeltaConfig,
 )
@@ -35,7 +35,7 @@ class CUSUMConfig(CUSUMBaseConfig, DeltaConfig):
         DeltaConfig.__init__(self, delta=delta)
 
 
-class CUSUM(CUSUMBaseEstimator):
+class CUSUM(CUSUMBase):
     """CUSUM algorithm class."""
 
     def _update_sum(self, error_rate: float) -> None:

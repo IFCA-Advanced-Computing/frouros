@@ -83,9 +83,9 @@ The currently supported methods are listed in the following table. They are divi
 <tbody>
   <tr>
     <td rowspan="12">
-        <a href="https://github.com/jaime-cespedes-sisniega/frouros/blob/main/frouros/supervised/base.py"> 
+        <a href="https://github.com/jaime-cespedes-sisniega/frouros/blob/main/frouros/concept_drift/base.py"> 
             <div style="height:100%;width:100%">
-                Supervised
+                Concept drift
             </div>
         </a>
     </td>
@@ -247,7 +247,7 @@ The currently supported methods are listed in the following table. They are divi
   </tr>
   <tr>
     <td rowspan="10">
-        <a href="https://github.com/jaime-cespedes-sisniega/frouros/blob/main/frouros/unsupervised/base.py"> 
+        <a href="https://github.com/jaime-cespedes-sisniega/frouros/blob/main/frouros/data_drift/base.py"> 
             <div style="height:100%;width:100%">
                 Data drift
             </div>

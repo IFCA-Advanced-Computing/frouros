@@ -3,10 +3,9 @@
 import copy
 from typing import Tuple, Union  # noqa: TYP001
 
-from sklearn.base import BaseEstimator  # type: ignore
 import numpy as np  # type: ignore
 
-from frouros.supervised.ddm_based.base import DDMBaseConfig, DDMBasedEstimator
+from frouros.concept_drift.ddm_based.base import DDMBaseConfig, DDMBased
 from frouros.utils.stats import EWMA, Mean
 
 
@@ -288,25 +287,19 @@ class HoeffdingTwoSidedTest(HoeffdingOneSidedTest):
             self.y = copy.deepcopy(self.z)
 
 
-class HDDMA(DDMBasedEstimator):
+class HDDMA(DDMBased):
     """HDDM-A (Hoeffding's drift detection method with A-Test) algorithm class."""
 
     def __init__(
         self,
-        estimator: BaseEstimator,
         config: HDDMAConfig,
     ) -> None:
         """Init method.
 
-        :param estimator: sklearn estimator
-        :type estimator: BaseEstimator
         :param config: configuration parameters
         :type config: HDDMAConfig
         """
-        super().__init__(
-            estimator=estimator,
-            config=config,
-        )
+        super().__init__(config=config)
         self.test_type = (
             HoeffdingTwoSidedTest(
                 alpha_d=self.config.alpha_d, alpha_w=self.config.alpha_w  # type: ignore
@@ -564,25 +557,19 @@ class McDiarmidTwoSidedTest(McDiarmidOneSidedTest):
             self.sample_decrease_2.update(value=value)
 
 
-class HDDMW(DDMBasedEstimator):
+class HDDMW(DDMBased):
     """HDDM-W (Hoeffding's drift detection method with W-Test) algorithm class."""
 
     def __init__(
         self,
-        estimator: BaseEstimator,
         config: HDDMWConfig,
     ) -> None:
         """Init method.
 
-        :param estimator: sklearn estimator
-        :type estimator: BaseEstimator
         :param config: configuration parameters
         :type config: HDDMWConfig
         """
-        super().__init__(
-            estimator=estimator,
-            config=config,
-        )
+        super().__init__(config=config)
         self.test_type = (
             McDiarmidTwoSidedTest(
                 alpha_d=self.config.alpha_d,  # type: ignore

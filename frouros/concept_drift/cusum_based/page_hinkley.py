@@ -1,8 +1,8 @@
 """Page Hinkley module."""
 
 
-from frouros.supervised.cusum_based.base import (
-    CUSUMBaseEstimator,
+from frouros.concept_drift.cusum_based.base import (
+    CUSUMBase,
     CUSUMBaseConfig,
     DeltaConfig,
     AlphaConfig,
@@ -38,7 +38,7 @@ class PageHinkleyConfig(CUSUMBaseConfig, DeltaConfig, AlphaConfig):
         AlphaConfig.__init__(self, alpha=alpha)
 
 
-class PageHinkley(CUSUMBaseEstimator):
+class PageHinkley(CUSUMBase):
     """Page Hinkley algorithm class."""
 
     def _update_sum(self, error_rate: float) -> None:
