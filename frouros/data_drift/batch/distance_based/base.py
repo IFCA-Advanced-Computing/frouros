@@ -2,66 +2,24 @@
 
 import abc
 from collections import namedtuple
-from typing import Optional, List, Tuple, Union
+from typing import Tuple
 
 import numpy as np  # type: ignore
 from scipy.stats import rv_histogram  # type: ignore
 
 from frouros.data_drift.base import NumericalData, UnivariateData
-from frouros.data_drift.batch.base import (
-    DataTypeBase,
-    DataDriftBatchBase,
-    StatisticalTypeBase,
-)
+from frouros.data_drift.batch.base import DataDriftBatchBase
+
 
 DistanceResult = namedtuple("DistanceResult", ["distance"])
-DistanceTestResult = namedtuple("DistanceTestResult", ["distance", "p_value"])
 
 
 class DistanceBasedBase(DataDriftBatchBase):
     """Abstract class representing a distance based."""
 
-    def __init__(
-        self, data_type: DataTypeBase, statistical_type: StatisticalTypeBase
-    ) -> None:
-        """Init method.
-
-        :param data_type: data type
-        :type data_type: DataTypeBase
-        :param statistical_type: statistical type
-        :type statistical_type: StatisticalTypeBase
-        """
-        super().__init__(data_type=data_type, statistical_type=statistical_type)
-        self.X_ref_ = None  # type: ignore
-        self.distance: Optional[
-            Union[List[DistanceResult], List[DistanceTestResult]]
-        ] = None
-
-    @property
-    def distance(
-        self,
-    ) -> Optional[Union[List[DistanceResult], List[DistanceTestResult]]]:
-        """Distance results property.
-
-        :return: distance results
-        :rtype: Optional[Union[List[DistanceResult], List[DistanceTestResult]]]
-        """
-        return self._distance
-
-    @distance.setter
-    def distance(
-        self, value: Optional[Union[List[DistanceResult], List[DistanceTestResult]]]
-    ) -> None:
-        """Distance results setter.
-
-        :param value: value to be set
-        :type value: Optional[Union[List[DistanceResult], List[DistanceTestResult]]]
-        """
-        self._distance = value
-
     def _apply_method(
         self, X_ref_: np.ndarray, X: np.ndarray, **kwargs  # noqa: N803
-    ) -> Union[DistanceResult, DistanceTestResult]:
+    ) -> DistanceResult:
         distance = self._distance_measure(X_ref_=X_ref_, X=X, **kwargs)
         return distance
 
@@ -69,25 +27,23 @@ class DistanceBasedBase(DataDriftBatchBase):
         self,
         X: np.ndarray,  # noqa: N803
         **kwargs,
-    ) -> float:
-        """Transform values.
+    ) -> DistanceResult:
+        """Compare values.
 
         :param X: feature data
         :type X: numpy.ndarray
-        :param y: target data
-        :type y: numpy.ndarray
         :return: transformed feature data
-        :rtype: numpy.ndarray
+        :rtype: DistanceResult
         """
         self._common_checks(X=X)  # noqa: N806
         self._specific_checks(X=X)  # noqa: N806
         distance = self._get_result(X=X, **kwargs)  # type: ignore
-        return distance
+        return distance  # type: ignore
 
     @abc.abstractmethod
     def _distance_measure(
         self, X_ref_: np.ndarray, X: np.ndarray, **kwargs  # noqa: N803
-    ) -> Union[DistanceResult, DistanceTestResult]:
+    ) -> DistanceResult:
         pass
 
 

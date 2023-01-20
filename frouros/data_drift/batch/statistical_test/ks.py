@@ -6,7 +6,7 @@ from scipy.stats import ks_2samp  # type: ignore
 from frouros.data_drift.base import NumericalData, UnivariateData
 from frouros.data_drift.batch.statistical_test.base import (
     StatisticalTestBase,
-    TestResult,
+    StatisticalResult,
 )
 
 
@@ -19,12 +19,12 @@ class KSTest(StatisticalTestBase):
 
     def _statistical_test(
         self, X_ref_: np.ndarray, X: np.ndarray, **kwargs  # noqa: N803
-    ) -> TestResult:
+    ) -> StatisticalResult:
         test = ks_2samp(
             data1=X_ref_,
             data2=X,
             alternative=kwargs.get("alternative", "two-sided"),
             mode=kwargs.get("method", "auto"),
         )
-        test = TestResult(statistic=test.statistic, p_value=test.pvalue)
+        test = StatisticalResult(statistic=test.statistic, p_value=test.pvalue)
         return test

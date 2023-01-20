@@ -62,7 +62,7 @@ class MMD(DistanceBasedBase):
         :type value: Callable
         :raises TypeError: Type error exception
         """
-        if not isinstance(value, Callable):
+        if not isinstance(value, Callable):  # type: ignore
             raise TypeError("value must be of type Callable.")
         self._kernel = value
 

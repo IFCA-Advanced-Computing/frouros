@@ -9,7 +9,7 @@ from scipy.stats import chi2_contingency  # type: ignore
 from frouros.data_drift.base import CategoricalData, UnivariateData
 from frouros.data_drift.batch.statistical_test.base import (  # type: ignore
     StatisticalTestBase,
-    TestResult,
+    StatisticalResult,
 )
 
 
@@ -22,13 +22,13 @@ class ChiSquareTest(StatisticalTestBase):
 
     def _statistical_test(
         self, X_ref_: np.ndarray, X: np.ndarray, **kwargs  # noqa: N803
-    ) -> TestResult:
+    ) -> StatisticalResult:
         f_exp, f_obs = self._calculate_frequencies(X_ref_=X_ref_, X=X)
         statistic, p_value, _, _ = chi2_contingency(
             observed=np.array([f_obs, f_exp]), **kwargs
         )
 
-        test = TestResult(statistic=statistic, p_value=p_value)
+        test = StatisticalResult(statistic=statistic, p_value=p_value)
         return test
 
     @staticmethod

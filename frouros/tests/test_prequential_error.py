@@ -1,7 +1,5 @@
 """Test real datasets module."""
 
-from typing import Callable
-
 import numpy as np  # type: ignore
 import pytest  # type: ignore
 
@@ -9,15 +7,15 @@ from frouros.metrics import PrequentialError, PrequentialErrorFadingFactor
 from frouros.metrics.prequential_error import PrequentialErrorBase
 
 
-def error_scorer(y_true: np.ndarray, y_pred: np.ndarray) -> Callable:
+def error_scorer(y_true: np.ndarray, y_pred: np.ndarray) -> int:
     """Error scorer function.
 
     :param y_true: ground-truth values
     :type: numpy.ndarray
     :param y_pred: predicted values
     :type: numpy.ndarray
-    :return error scorer function
-    :rtype Callable
+    :return error score value
+    :rtype int
     """
     return int(1 - y_true == y_pred)
 
