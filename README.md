@@ -214,38 +214,6 @@ The currently supported methods are listed in the following table. They are divi
   </tr>
   </tr>
   <tr>
-    <td rowspan="2">
-        <a href="https://github.com/jaime-cespedes-sisniega/frouros/blob/main/frouros/semi_supervised/base.py"> 
-            <div style="height:100%;width:100%">
-                Semi-supervised
-            </div>
-        </a>
-    </td>
-    <td rowspan="2">
-        <a href="https://github.com/jaime-cespedes-sisniega/frouros/blob/main/frouros/semi_supervised/margin_density_based/base.py"> 
-            <div style="height:100%;width:100%">
-                Margin Density Based
-            </div>
-        </a>
-    </td>
-    <td>
-        <a href="https://github.com/jaime-cespedes-sisniega/frouros/blob/main/frouros/semi_supervised/margin_density_based/md3.py"> 
-            <div style="height:100%;width:100%">
-                MD3-SVM
-            </div>
-        </a>
-    </td>
-  <tr>
-    <td>
-        <a href="https://github.com/jaime-cespedes-sisniega/frouros/blob/main/frouros/supervised/margin_density_based/md3.py">  
-            <div style="height:100%;width:100%">
-                MD3-RS
-            </div>
-        </a>
-    </td>
-  </tr>
-  </tr>
-  <tr>
     <td rowspan="10">
         <a href="https://github.com/jaime-cespedes-sisniega/frouros/blob/main/frouros/data_drift/base.py"> 
             <div style="height:100%;width:100%">
