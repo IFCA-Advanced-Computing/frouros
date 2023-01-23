@@ -66,27 +66,6 @@ class MMD(DistanceBasedBase):
             raise TypeError("value must be of type Callable.")
         self._kernel = value
 
-    @property
-    def num_permutations(self) -> int:
-        """Number of permutations property.
-
-        :return: number of permutation to obtain the p-value
-        :rtype: int
-        """
-        return self._num_permutations
-
-    @num_permutations.setter
-    def num_permutations(self, value: int) -> None:
-        """Number of permutations method setter.
-
-        :param value: value to be set
-        :type value: int
-        :raises ValueError: Value error exception
-        """
-        if value < 1:
-            raise ValueError("value must be greater of equal than 1.")
-        self._num_permutations = value
-
     def _distance_measure(
         self, X_ref_: np.ndarray, X: np.ndarray, **kwargs  # noqa: N803
     ) -> DistanceResult:
