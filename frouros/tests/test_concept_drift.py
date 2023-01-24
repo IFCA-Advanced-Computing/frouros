@@ -202,20 +202,22 @@ detectors = [
 
 @pytest.mark.parametrize("detector_info", detectors)
 def test_streaming_detector_normal(
-    classification_dataset: Tuple[np.array, np.array, np.array, np.array],
-    train_prediction_normal,
+    clf_dataset: Tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray],
+    train_prediction_normal: np.ndarray,
     detector_info: Tuple[ConceptDriftBase, Callable],
 ) -> None:
     """Test streaming detector.
 
-    :param classification_dataset: dataset generated using SEA
-    :type classification_dataset: Tuple[numpy.array, numpy.array,
-    numpy.array, numpy.array]
+    :param clf_dataset: dataset generated using SEA
+    :type clf_dataset: Tuple[numpy.ndarray, numpy.ndarray,
+    numpy.ndarray, numpy.ndndarray]
+    :param train_prediction_normal: test prediction values
+    :type train_prediction_normal: numpy.ndarray
     :param detector_info: concept drift detector and value function
     :type detector_info: Tuple[ConceptDriftBase, Callable]
     """
-    _, _, _, y_test = classification_dataset
-    pipeline, y_pred = train_prediction_normal  # noqa: N806
+    _, _, _, y_test = clf_dataset
+    y_pred = train_prediction_normal  # noqa: N806
     detector, value_func = detector_info
 
     for y_sample_pred, y_sample in zip(y_pred, y_test):  # noqa: N806

@@ -76,7 +76,7 @@ def test_batch_distance_based_univariate(
     :param expected_distance: expected p-value value
     :type expected_distance: float
     """
-    X_ref, y_ref, X_test = elec2_dataset  # noqa: N806
+    X_ref, _, X_test = elec2_dataset  # noqa: N806
 
     detector.fit(X=X_ref[:, 0])
     distance = detector.compare(X=X_test[:, 0])
@@ -93,7 +93,7 @@ def test_batch_distance_based_univariate(
     ],
 )
 def test_batch_statistical_univariate(
-    elec2_dataset,
+    elec2_dataset: Tuple[np.ndarray, np.ndarray, np.ndarray],
     detector: DataDriftBatchBase,
     expected_statistic: float,
     expected_p_value: float,
@@ -109,7 +109,7 @@ def test_batch_statistical_univariate(
     :param expected_p_value: expected p-value value
     :type expected_p_value: float
     """
-    X_ref, y_ref, X_test = elec2_dataset  # noqa: N806
+    X_ref, _, X_test = elec2_dataset  # noqa: N806
 
     detector.fit(X=X_ref[:, 0])
     statistic, p_value = detector.compare(X=X_test[:, 0])

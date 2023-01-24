@@ -47,12 +47,12 @@ def sea() -> SEA:
     return generator
 
 
-@pytest.fixture(scope="module")
-def classification_dataset() -> Tuple[np.array, np.array, np.array, np.array]:
+@pytest.fixture(scope="module", name="clf_dataset")
+def classification_dataset() -> Tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray]:
     """Classification dataset using SEA generator.
 
     :return: classification dataset
-    :rtype: Tuple[np.array, np.array, np.array, np.array]
+    :rtype: Tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray]
     """
     concept_samples = 200
     generator = SEA(seed=31)
@@ -194,7 +194,7 @@ class DummyClassificationModel:
         """
         self.num_classes = num_classes
 
-    def fit(self, X: np.ndarray, y: np.ndarray, *args, **kwargs):  # noqa: N803
+    def fit(self, X: np.ndarray, y: np.ndarray, *args, **kwargs):  # noqa: N803, W0613
         """Fit method.
 
         :param X: feature data
@@ -204,6 +204,7 @@ class DummyClassificationModel:
         :return: random class prediction
         :rtype: numpy.ndarray
         """
+        _ = (X, y, args, kwargs)
         return self
 
     def predict(self, X: np.ndarray) -> np.ndarray:  # noqa: N803
@@ -220,21 +221,21 @@ class DummyClassificationModel:
 
 @pytest.fixture(scope="module")
 def train_prediction_normal(
-    classification_dataset: Tuple[np.array, np.array, np.array, np.array]
-) -> Tuple[DummyClassificationModel, np.ndarray]:
+    clf_dataset: Tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray],
+) -> np.ndarray:
     """Train a model and use a test dataset to obtain the predictions.
 
-    :param classification_dataset: dataset generated using SEA
-    :type classification_dataset: Tuple[numpy.array, numpy.array,
-    numpy.array, numpy.array]
-    :return: trained model and test predictions
-    :rtype: Tuple[DummyClassificationModel, numpy.array]
+    :param clf_dataset: dataset generated using SEA
+    :type clf_dataset: Tuple[numpy.ndarray, numpy.ndarray,
+    numpy.ndarray, numpy.ndarray]
+    :return: test predictions from trained model
+    :rtype: numpy.ndarray
     """
     np.random.seed(seed=31)
-    X_ref, y_ref, X_test, _ = classification_dataset  # noqa: N806
+    X_ref, y_ref, X_test, _ = clf_dataset  # noqa: N806
 
     model = DummyClassificationModel(num_classes=len(np.unique(y_ref)))
     model.fit(X=X_ref, y=y_ref)
     y_pred = model.predict(X=X_test)
 
-    return model, y_pred
+    return y_pred

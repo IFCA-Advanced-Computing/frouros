@@ -48,7 +48,8 @@ class DataDriftBatchBase(abc.ABC):
         :param value: value to be set
         :type value: Optional[numpy.ndarray]
         """
-        # FIXME: create a function to check array
+        if value is not None:
+            self._check_array(X=value)
         self._X_ref_ = value
 
     @property
@@ -120,6 +121,11 @@ class DataDriftBatchBase(abc.ABC):
     def _common_checks(self, X: np.ndarray) -> None:  # noqa: N803
         self._check_is_fitted()
         self._check_compare_dimensions(X=X)
+
+    @staticmethod
+    def _check_array(X: Any) -> None:  # noqa: N803
+        if not isinstance(X, np.ndarray):
+            raise TypeError("X must be a numpy array")
 
     def _check_fit_dimensions(self, X: np.ndarray) -> None:  # noqa: N803
         if not self.statistical_type.dim_check(X.ndim, 1):  # type: ignore
