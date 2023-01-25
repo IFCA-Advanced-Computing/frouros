@@ -24,7 +24,7 @@ class KSTest(StatisticalTestBase):
             data1=X_ref_,
             data2=X,
             alternative=kwargs.get("alternative", "two-sided"),
-            mode=kwargs.get("method", "auto"),
+            method=kwargs.get("method", "auto"),
         )
         test = StatisticalResult(statistic=test.statistic, p_value=test.pvalue)
         return test

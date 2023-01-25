@@ -152,7 +152,7 @@ class KSWIN(WindowBased):
                 data1=w_samples,
                 data2=r_samples,
                 alternative="two-sided",
-                mode="auto",
+                method="auto",
             )
 
             if p_value <= self.config.alpha:  # type: ignore
