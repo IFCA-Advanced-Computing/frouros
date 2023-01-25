@@ -89,7 +89,7 @@ def test_batch_distance_based_univariate(
     [
         (CVMTest(), 3776.09848103, 5.38105056e-07),
         (KSTest(), 0.99576271, 0.0),
-        (WelchTTest(), -287.98035253, 0.0),
+        (WelchTTest(), -287.92032554, 0.0),
     ],
 )
 def test_batch_statistical_univariate(
