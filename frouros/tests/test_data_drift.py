@@ -7,6 +7,7 @@ import numpy as np  # type: ignore
 
 from frouros.data_drift.batch.base import DataDriftBatchBase
 from frouros.data_drift.batch.distance_based import (
+    Bhattacharyya,
     EMD,
     Hellinger,
     HistogramIntersection,
@@ -86,7 +87,7 @@ def test_batch_distance_based_univariate(
 
 @pytest.mark.parametrize(
     "detector, expected_distance",
-    [(PSI(), 468.79410784), (Hellinger(), 0.77137797)],
+    [(PSI(), 468.79410784), (Hellinger(), 0.77137797), (Bhattacharyya(), 0.59502397)],
 )
 def test_batch_distance_bins_based_univariate_different_distribution(
     univariate_distribution_p: Tuple[float, float],
@@ -120,7 +121,7 @@ def test_batch_distance_bins_based_univariate_different_distribution(
 
 @pytest.mark.parametrize(
     "detector, expected_distance",
-    [(PSI(), 0.01840072), (Hellinger(), 0.04792538)],
+    [(PSI(), 0.01840072), (Hellinger(), 0.04792538), (Bhattacharyya(), 0.00229684)],
 )
 def test_batch_distance_bins_based_univariate_same_distribution(
     univariate_distribution_p: Tuple[float, float],
