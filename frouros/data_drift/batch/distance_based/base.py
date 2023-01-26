@@ -15,7 +15,7 @@ DistanceResult = namedtuple("DistanceResult", ["distance"])
 
 
 class DistanceBasedBase(DataDriftBatchBase):
-    """Abstract class representing a distance based."""
+    """Abstract class representing a distance based detector."""
 
     def _apply_method(
         self, X_ref_: np.ndarray, X: np.ndarray, **kwargs  # noqa: N803
@@ -47,8 +47,71 @@ class DistanceBasedBase(DataDriftBatchBase):
         pass
 
 
+class DistanceBinsBasedBase(DistanceBasedBase):
+    """Abstract class representing a distance bins based detector."""
+
+    def __init__(self, num_bins: int = 10) -> None:
+        """Init method.
+
+        :param num_bins: number of bins in which to divide probabilities
+        :type num_bins: int
+        """
+        super().__init__(data_type=NumericalData(), statistical_type=UnivariateData())
+        self.num_bins = num_bins
+
+    @property
+    def num_bins(self) -> int:
+        """Number of bins property.
+
+        :return: number of bins in which to divide probabilities
+        :rtype: int
+        """
+        return self._num_bins
+
+    @num_bins.setter
+    def num_bins(self, value: int) -> None:
+        """Number of bins setter.
+
+        :param value: value to be set
+        :type value: int
+        :raises ValueError: Value error exception
+        """
+        if value < 1:
+            raise ValueError("value must be greater than 0.")
+        self._num_bins = value
+
+    def _distance_measure(
+        self, X_ref_: np.ndarray, X: np.ndarray, **kwargs  # noqa: N803
+    ) -> DistanceResult:
+        X_ref_percents, X_percents = self._calculate_bins_values(  # noqa: N806
+            X_ref_=self.X_ref_, X=X, num_bins=self.num_bins
+        )
+        distance_bins = self._distance_measure_bins(X_ref_=X_ref_percents, X=X_percents)
+        distance = DistanceResult(distance=distance_bins)
+        return distance
+
+    @staticmethod
+    def _calculate_bins_values(
+        X_ref_: np.ndarray, X: np.ndarray, num_bins: int = 10  # noqa: N803
+    ) -> np.ndarray:
+        bins = np.histogram(np.hstack((X_ref_, X)), bins=num_bins)[  # get the bin edges
+            1
+        ]
+        X_ref_percents = (  # noqa: N806
+            np.histogram(a=X_ref_, bins=bins)[0] / X_ref_.shape[0]
+        )  # noqa: N806
+        X_percents = np.histogram(a=X, bins=bins)[0] / X.shape[0]  # noqa: N806
+        return X_ref_percents, X_percents
+
+    @abc.abstractmethod
+    def _distance_measure_bins(
+        self, X_ref_: np.ndarray, X: np.ndarray  # noqa: N803
+    ) -> float:
+        pass
+
+
 class DistanceProbabilityBasedBase(DistanceBasedBase):
-    """Abstract class representing a distance probability based."""
+    """Abstract class representing a distance probability based detector."""
 
     def __init__(self, num_bins: int = 100) -> None:
         """Init method.

@@ -172,6 +172,30 @@ def multivariate_distribution_q() -> Tuple[np.ndarray, np.ndarray]:
 
 
 @pytest.fixture(scope="module")
+def univariate_distribution_p() -> Tuple[float, float]:
+    """Univariate distribution p.
+
+    :return: mean and standard deviation of distribution p
+    :rtype: Tuple[float, float]
+    """
+    mean, std = 1, 1
+
+    return mean, std
+
+
+@pytest.fixture(scope="module")
+def univariate_distribution_q() -> Tuple[float, float]:
+    """Univariate distribution q.
+
+    :return: mean and standard deviation of distribution q
+    :rtype: Tuple[float, float]
+    """
+    mean, std = 5, 2
+
+    return mean, std
+
+
+@pytest.fixture(scope="module")
 def prequential_error():
     """Prequential error.
 

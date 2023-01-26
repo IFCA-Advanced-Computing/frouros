@@ -2,6 +2,7 @@
 
 from .distance_based import (
     EMD,
+    Hellinger,
     HistogramIntersection,
     JS,
     KL,
@@ -19,6 +20,7 @@ __all__ = [
     "ChiSquareTest",
     "CVMTest",
     "EMD",
+    "Hellinger",
     "HistogramIntersection",
     "JS",
     "KL",
