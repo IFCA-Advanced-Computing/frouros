@@ -21,36 +21,33 @@
 
 <p align="center">Frouros is a Python library for drift detection in Machine Learning problems.</p>
 
-Frouros provides a combination of classical and more recent algorithms for drift detection, both for the supervised and unsupervised parts, as well as some semi-supervised algorithms. The library tries to fulfill two main objectives: 1. to be able to easily integrate in a machine learning model development pipeline with the [scikit-learn](https://github.com/scikit-learn/scikit-learn) library; 2. to unify in a single library the part of concept drift detection and
-adaptation (traditionally researched and used for streaming/evolving data streams and incremental learning) with the research of change detection in the covariate distributions (also known as data shift, related to the field of statistical two-sample testing and methods that measure distance between distributions).
+Frouros provides a combination of classical and more recent algorithms for drift detection, both for detecting concept and data drift.
 
 ## Quickstart
 
-As a quick and easy example, we can generate two bivariate normal distribution in order to use an unsupervised method like MMD (Maximum Mean Discrepancy). This method tries to verify if generated samples come from the same distribution or not. If they come from different distributions, it means that there is data drift.
+As a quick and easy example, we can generate two normal distributions in order to use a data drift detector like Kolmogorov-Smirnov. This method tries to verify if generated samples come from the same distribution or not. If they come from different distributions, it means that there is data drift.
 
 ```python
-from sklearn.gaussian_process.kernels import RBF
 import numpy as np
-from frouros.unsupervised.distance_based import MMD
+from frouros.data_drift.batch import KSTest
 
 np.random.seed(31)
-# X samples from a normal distribution with mean = [1. 1.] and cov = [[2. 0.][0. 2.]]
-x_mean = np.ones(2)
-x_cov = 2*np.eye(2)
-# Y samples a normal distribution with mean = [0. 0.] and cov = [[2. 1.][1. 2.]]
-y_mean = np.zeros(2)
-y_cov = np.eye(2) + 1
+# X samples from a normal distribution with mean=2 and std=2
+x_mean = 2
+x_std = 2
+# Y samples a normal distribution with mean=1 and std=2
+y_mean = 1
+y_std = 2
 
-num_samples = 200
-X_ref = np.random.multivariate_normal(x_mean, x_cov, num_samples)
-X_test = np.random.multivariate_normal(y_mean, y_cov, num_samples)
+num_samples = 10000
+X_ref = np.random.normal(x_mean, x_std, num_samples)
+X_test = np.random.normal(y_mean, y_std, num_samples)
 
 alpha = 0.01  # significance level for the hypothesis test
 
-detector = MMD(num_permutations=1000, kernel=RBF(length_scale=1.0), random_state=31)
+detector = KSTest()
 detector.fit(X=X_ref)
-detector.transform(X=X_test)
-mmd, p_value = detector.distance
+statistic, p_value = detector.compare(X=X_test)
 
 p_value < alpha
 >>> True  # Drift detected. We can reject H0, so both samples come from different distributions.
@@ -65,10 +62,7 @@ Frouros supports Python 3.8, 3.9 and 3.10 versions. It can be installed via pip:
 ```bash
 pip install frouros
 ```
-there is also the option to use [PyTorch](https://github.com/pytorch/pytorch) models with the help of [skorch](https://github.com/skorch-dev/skorch):
-```bash
-pip install frouros[pytorch]
-```
+
 Latest main branch modifications can be installed via:
 ```bash
 pip install git+https://github.com/IFCA/frouros.git
@@ -89,9 +83,9 @@ The currently supported methods are listed in the following table. They are divi
 <tbody>
   <tr>
     <td rowspan="12">
-        <a href="https://github.com/jaime-cespedes-sisniega/frouros/blob/main/frouros/supervised/base.py"> 
+        <a href="https://github.com/jaime-cespedes-sisniega/frouros/blob/main/frouros/concept_drift/base.py"> 
             <div style="height:100%;width:100%">
-                Supervised
+                Concept drift
             </div>
         </a>
     </td>
@@ -220,42 +214,10 @@ The currently supported methods are listed in the following table. They are divi
   </tr>
   </tr>
   <tr>
-    <td rowspan="2">
-        <a href="https://github.com/jaime-cespedes-sisniega/frouros/blob/main/frouros/semi_supervised/base.py"> 
-            <div style="height:100%;width:100%">
-                Semi-supervised
-            </div>
-        </a>
-    </td>
-    <td rowspan="2">
-        <a href="https://github.com/jaime-cespedes-sisniega/frouros/blob/main/frouros/semi_supervised/margin_density_based/base.py"> 
-            <div style="height:100%;width:100%">
-                Margin Density Based
-            </div>
-        </a>
-    </td>
-    <td>
-        <a href="https://github.com/jaime-cespedes-sisniega/frouros/blob/main/frouros/semi_supervised/margin_density_based/md3.py"> 
-            <div style="height:100%;width:100%">
-                MD3-SVM
-            </div>
-        </a>
-    </td>
-  <tr>
-    <td>
-        <a href="https://github.com/jaime-cespedes-sisniega/frouros/blob/main/frouros/supervised/margin_density_based/md3.py">  
-            <div style="height:100%;width:100%">
-                MD3-RS
-            </div>
-        </a>
-    </td>
-  </tr>
-  </tr>
-  <tr>
     <td rowspan="10">
-        <a href="https://github.com/jaime-cespedes-sisniega/frouros/blob/main/frouros/unsupervised/base.py"> 
+        <a href="https://github.com/jaime-cespedes-sisniega/frouros/blob/main/frouros/data_drift/base.py"> 
             <div style="height:100%;width:100%">
-                Unsupervised
+                Data drift
             </div>
         </a>
     </td>

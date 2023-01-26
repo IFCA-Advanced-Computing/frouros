@@ -1,6 +1,6 @@
 [project]
 name = "frouros"
-version = "0.1.0"
+version = "1.0.0"
 description = "A Python library for drift detection in Machine Learning problems"
 authors = [
     {name = "Jaime Céspedes Sisniega", email = "cespedes@ifca.unican.es"}
@@ -12,9 +12,7 @@ readme = "README.md"
 keywords = [
     "drift-detection",
     "concept-drift",
-    "supervised-drift-detection",
-    "unsupervised-drift-detection",
-    "semi-supervised-drift-detection",
+    "data-drift",
     "machine-learning",
     "data-science",
 ]
@@ -31,11 +29,10 @@ classifiers = [
 ]
 requires-python = ">=3.8,<3.11"
 dependencies = [
-    "matplotlib>=3.5.0,<3.6",
-    "numpy>=1.23.0,<1.24",
-    "requests>=2.27.0,<2.28",
-    "scikit-learn>=1.1.0,<1.2",
-    "scipy>=1.8.0,<1.9"
+    "matplotlib>=3.6.0,<3.7",
+    "numpy>=1.24.0,<1.25",
+    "requests>=2.28.0,<2.29",
+    "scipy>=1.10.0,<1.11"
 ]
 
 [project.optional-dependencies]
@@ -46,11 +43,6 @@ docs = [
     "myst-parser>=0.18.0,<0.19",
     "myst-nb>=0.16.0,<0.17"
 ]
-pytorch = [
-    "torch>=1.12.0,<1.13",
-    "torchvision>=0.13.0,<0.14",
-    "skorch>=0.11.0,<0.12.0"
-    ]
 
 [project.urls]
 homepage = "https://frouros.readthedocs.io"
