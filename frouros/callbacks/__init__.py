@@ -1,8 +1,8 @@
 """Callbacks init."""
 
-from .callback import Callback, ResetOnDataDrift
+from .callback import Callback, ResetOnBatchDataDrift
 
 __all__ = [
     "Callback",
-    "ResetOnDataDrift",
+    "ResetOnBatchDataDrift",
 ]

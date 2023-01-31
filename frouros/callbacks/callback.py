@@ -56,7 +56,7 @@ class BatchCallback(Callback):
         """On compare end method."""
 
 
-class ResetOnDataDrift(BatchCallback):
+class ResetOnBatchDataDrift(BatchCallback):
     """Reset on batch data drift callback class."""
 
     def __init__(self, alpha: float) -> None:

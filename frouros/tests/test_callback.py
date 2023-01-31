@@ -3,7 +3,7 @@
 import numpy as np  # type: ignore
 import pytest  # type: ignore
 
-from frouros.callbacks import ResetOnDataDrift
+from frouros.callbacks import ResetOnBatchDataDrift
 from frouros.data_drift.batch.base import DataDriftBatchBase
 from frouros.data_drift.batch import KSTest
 
@@ -29,7 +29,7 @@ def test_batch_reset_on_data_drift(
     X_ref = np.random.normal(*univariate_distribution_p, size=500)  # noqa: N806
     X_test = np.random.normal(*univariate_distribution_q, size=500)  # noqa: N806
 
-    detector = KSTest(callbacks=[ResetOnDataDrift(alpha=0.01)])
+    detector = KSTest(callbacks=[ResetOnBatchDataDrift(alpha=0.01)])
 
     detector.fit(X=X_ref)
     _ = detector.compare(X=X_test)
