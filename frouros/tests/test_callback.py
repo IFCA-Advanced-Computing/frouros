@@ -1,36 +1,36 @@
 """Test callback module."""
 
-import numpy as np  # type: ignore
 import pytest  # type: ignore
 
 from frouros.callbacks import ResetOnBatchDataDrift
 from frouros.data_drift.batch.base import DataDriftBatchBase
-from frouros.data_drift.batch import KSTest
+from frouros.data_drift.batch import CVMTest, KSTest, WelchTTest
 
 
 @pytest.mark.parametrize(
     "detector",
-    [KSTest()],
+    [CVMTest, KSTest, WelchTTest],
 )
 def test_batch_reset_on_data_drift(
-    univariate_distribution_p,
-    univariate_distribution_q,
+    X_ref_univariate,  # noqa: N803
+    X_test_univariate,
     detector: DataDriftBatchBase,
     mocker,
 ) -> None:
-    """Test batch distance based univariate method.
+    """Test batch reset on data drift callback.
 
+    :param X_ref_univariate: reference univariate data
+    :type X_ref_univariate: numpy.ndarray
+    :param X_test_univariate: test univariate data
+    :type X_test_univariate: numpy.ndarray
     :param detector: detector distance
     :type detector: DataDriftBatchBase
+    :param mocker:
+    :type mocker:
     """
     mocker.patch("frouros.data_drift.batch.base.DataDriftBatchBase.reset")
 
-    np.random.seed(seed=31)
-    X_ref = np.random.normal(*univariate_distribution_p, size=500)  # noqa: N806
-    X_test = np.random.normal(*univariate_distribution_q, size=500)  # noqa: N806
-
-    detector = KSTest(callbacks=[ResetOnBatchDataDrift(alpha=0.01)])
-
-    detector.fit(X=X_ref)
-    _ = detector.compare(X=X_test)
+    detector = detector(callbacks=[ResetOnBatchDataDrift(alpha=0.01)])  # type: ignore
+    detector.fit(X=X_ref_univariate)
+    _ = detector.compare(X=X_test_univariate)
     detector.reset.assert_called_once()  # type: ignore # pylint: disable=no-member

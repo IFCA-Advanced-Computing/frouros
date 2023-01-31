@@ -145,6 +145,16 @@ def elec2_dataset() -> Tuple[np.ndarray, np.ndarray, np.ndarray]:
     return X_ref, y_ref, X_test
 
 
+def _generate_multivariate_normal_samples(
+    mean: np.ndarray, cov: np.ndarray, num_samples: int = 100, seed: int = 31
+) -> np.ndarray:
+    np.random.seed(seed=seed)
+    X = np.random.multivariate_normal(  # noqa: N806
+        mean=mean, cov=cov, size=num_samples
+    )
+    return X
+
+
 @pytest.fixture(scope="module")
 def multivariate_distribution_p() -> Tuple[np.ndarray, np.ndarray]:
     """Multivariate distribution p.
@@ -172,6 +182,46 @@ def multivariate_distribution_q() -> Tuple[np.ndarray, np.ndarray]:
 
 
 @pytest.fixture(scope="module")
+def X_ref_multivariate(  # noqa: N802
+    multivariate_distribution_p: Tuple[  # pylint: disable=redefined-outer-name
+        np.ndarray, np.ndarray
+    ]
+) -> np.ndarray:
+    """Reference multivariate data.
+
+    :param multivariate_distribution_p: multivariate distribution p
+    :type multivariate_distribution_p: Tuple[numpy.ndarray, numpy.ndarray]
+    :return: reference multivariate data
+    :rtype: numpy.ndarray
+    """
+    X = _generate_multivariate_normal_samples(  # noqa: N806
+        *multivariate_distribution_p
+    )
+
+    return X
+
+
+@pytest.fixture(scope="module")
+def X_test_multivariate(  # noqa: N802
+    multivariate_distribution_q: Tuple[  # pylint: disable=redefined-outer-name
+        np.ndarray, np.ndarray
+    ]
+) -> np.ndarray:
+    """Test multivariate data.
+
+    :param multivariate_distribution_q: multivariate distribution p
+    :type multivariate_distribution_q: Tuple[numpy.ndarray, numpy.ndarray]
+    :return: test multivariate data
+    :rtype: numpy.ndarray
+    """
+    X = _generate_multivariate_normal_samples(  # noqa: N806
+        *multivariate_distribution_q
+    )
+
+    return X
+
+
+@pytest.fixture(scope="module")
 def univariate_distribution_p() -> Tuple[float, float]:
     """Univariate distribution p.
 
@@ -193,6 +243,50 @@ def univariate_distribution_q() -> Tuple[float, float]:
     mean, std = 5, 2
 
     return mean, std
+
+
+def _generate_univariate_normal_samples(
+    mean: float, std: float, num_samples: int = 100, seed: int = 31
+) -> np.ndarray:
+    np.random.seed(seed=seed)
+    X = np.random.normal(loc=mean, scale=std, size=num_samples)  # noqa: N806
+    return X
+
+
+@pytest.fixture(scope="module")
+def X_ref_univariate(  # noqa: N802
+    univariate_distribution_p: Tuple[  # pylint: disable=redefined-outer-name
+        float, float
+    ]
+) -> np.ndarray:
+    """Reference univariate data.
+
+    :param univariate_distribution_p: univariate distribution p
+    :type univariate_distribution_p: Tuple[float, float]
+    :return: reference univariate data
+    :rtype: numpy.ndarray
+    """
+    X = _generate_univariate_normal_samples(*univariate_distribution_p)  # noqa: N806
+
+    return X
+
+
+@pytest.fixture(scope="module")
+def X_test_univariate(  # noqa: N802
+    univariate_distribution_q: Tuple[  # pylint: disable=redefined-outer-name
+        float, float
+    ]
+) -> np.ndarray:
+    """Test multivariate data.
+
+    :param univariate_distribution_q: univariate distribution q
+    :type univariate_distribution_q: Tuple[float, float]
+    :return: test univariate data
+    :rtype: numpy.ndarray
+    """
+    X = _generate_univariate_normal_samples(*univariate_distribution_q)  # noqa: N806
+
+    return X
 
 
 @pytest.fixture(scope="module")
