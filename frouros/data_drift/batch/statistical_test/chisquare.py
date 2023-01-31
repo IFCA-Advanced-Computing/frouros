@@ -1,11 +1,12 @@
 """ChiSquareTest (Chi-square test) module."""
 
 import collections
-from typing import List, Tuple
+from typing import Optional, List, Tuple, Union
 
 import numpy as np  # type: ignore
 from scipy.stats import chi2_contingency  # type: ignore
 
+from frouros.callbacks import Callback
 from frouros.data_drift.base import CategoricalData, UnivariateData
 from frouros.data_drift.batch.statistical_test.base import (  # type: ignore
     StatisticalTestBase,
@@ -16,9 +17,19 @@ from frouros.data_drift.batch.statistical_test.base import (  # type: ignore
 class ChiSquareTest(StatisticalTestBase):
     """ChiSquareTest (Chi-square test) algorithm class."""
 
-    def __init__(self) -> None:
-        """Init method."""
-        super().__init__(data_type=CategoricalData(), statistical_type=UnivariateData())
+    def __init__(
+        self, callbacks: Optional[Union[Callback, List[Callback]]] = None
+    ) -> None:
+        """Init method.
+
+        :param callbacks: callbacks
+        :type callbacks: Optional[Union[Callback, List[Callback]]]
+        """
+        super().__init__(
+            data_type=CategoricalData(),
+            statistical_type=UnivariateData(),
+            callbacks=callbacks,
+        )
 
     def _statistical_test(
         self, X_ref_: np.ndarray, X: np.ndarray, **kwargs  # noqa: N803

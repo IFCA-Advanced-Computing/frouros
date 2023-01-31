@@ -5,6 +5,7 @@ import abc
 from typing import Any, Optional, List, Tuple, Union
 import numpy as np  # type: ignore
 
+from frouros.callbacks import Callback
 from frouros.data_drift.base import DataTypeBase, StatisticalTypeBase
 from frouros.data_drift.exceptions import (
     DimensionError,
@@ -20,6 +21,7 @@ class DataDriftBatchBase(abc.ABC):
         self,
         data_type: DataTypeBase,
         statistical_type: StatisticalTypeBase,
+        callbacks: Optional[Union[Callback, List[Callback]]] = None,
     ) -> None:
         """Init method.
 
@@ -27,10 +29,40 @@ class DataDriftBatchBase(abc.ABC):
         :type data_type: DataTypeBase
         :param statistical_type: statistical type
         :type statistical_type: StatisticalTypeBase
+        :param callbacks: callbacks
+        :type callbacks: Optional[Union[Callback], List[Callback]]
         """
         self.X_ref_ = None  # type: ignore
         self.data_type = data_type
         self.statistical_type = statistical_type
+        self.callbacks = callbacks  # type: ignore
+        for callback in self.callbacks:
+            callback.set_detector(detector=self)
+
+    @property
+    def callbacks(self) -> Optional[List[Callback]]:
+        """Callbacks property.
+
+        :return: callbacks
+        :rtype: Optional[List[Callback]]
+        """
+        return self._callbacks
+
+    @callbacks.setter
+    def callbacks(self, value: Optional[Union[Callback, List[Callback]]]) -> None:
+        """Callbacks setter.
+
+        :param value: value to be set
+        :type value: Optional[Union[Callback, List[Callback]]]
+        """
+        if value is not None:
+            if value is isinstance(value, Callback):
+                self._callbacks = [value]
+            elif not all(isinstance(callback, Callback) for callback in value):  # type: ignore
+                raise TypeError("value must be of type None or a list of Callback.")
+            self._callbacks = value  # type: ignore
+        else:
+            self._callbacks = []
 
     @property
     def X_ref_(self) -> Optional[np.ndarray]:  # noqa: N802
@@ -104,9 +136,12 @@ class DataDriftBatchBase(abc.ABC):
         :type X: numpy.ndarray
         """
         self._check_fit_dimensions(X=X)
+        for callback in self.callbacks:
+            callback.on_fit_start()
         self.X_ref_ = X  # type: ignore
+        for callback in self.callbacks:
+            callback.on_fit_end()
 
-    @abc.abstractmethod
     def compare(
         self,
         X: np.ndarray,  # noqa: N803
@@ -116,7 +151,27 @@ class DataDriftBatchBase(abc.ABC):
 
         :param X: feature data
         :type X: numpy.ndarray
+        :return: compare result
+        :rtype: numpy.ndarray
         """
+        for callback in self.callbacks:
+            callback.on_compare_start()  # type: ignore
+        result = self._compare(X=X, **kwargs)
+        for callback in self.callbacks:
+            callback.on_compare_end(result=result)  # type: ignore
+        return result
+
+    def reset(self) -> None:
+        """Reset method."""
+        self.X_ref_ = None  # type: ignore
+
+    @abc.abstractmethod
+    def _compare(
+        self,
+        X: np.ndarray,  # noqa: N803
+        **kwargs,
+    ) -> np.ndarray:
+        pass
 
     def _common_checks(self, X: np.ndarray) -> None:  # noqa: N803
         self._check_is_fitted()

@@ -1,10 +1,11 @@
 """CVMTest (Cramér-von Mises test) module."""
 
-from typing import Optional
+from typing import Optional, List, Union
 
 import numpy as np  # type: ignore
 from scipy.stats import cramervonmises_2samp  # type: ignore
 
+from frouros.callbacks import Callback
 from frouros.data_drift.base import NumericalData, UnivariateData
 from frouros.data_drift.exceptions import InsufficientSamplesError
 from frouros.data_drift.batch.statistical_test.base import (
@@ -16,9 +17,19 @@ from frouros.data_drift.batch.statistical_test.base import (
 class CVMTest(StatisticalTestBase):
     """CVMTest (Cramér-von Mises test) algorithm class."""
 
-    def __init__(self) -> None:
-        """Init method."""
-        super().__init__(data_type=NumericalData(), statistical_type=UnivariateData())
+    def __init__(
+        self, callbacks: Optional[Union[Callback, List[Callback]]] = None
+    ) -> None:
+        """Init method.
+
+        :param callbacks: callbacks
+        :type callbacks: Optional[Union[Callback, List[Callback]]]
+        """
+        super().__init__(
+            data_type=NumericalData(),
+            statistical_type=UnivariateData(),
+            callbacks=callbacks,
+        )
 
     @StatisticalTestBase.X_ref_.setter  # type: ignore[attr-defined]
     def X_ref_(self, value: Optional[np.ndarray]) -> None:  # noqa: N802

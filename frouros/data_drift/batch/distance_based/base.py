@@ -23,18 +23,11 @@ class DistanceBasedBase(DataDriftBatchBase):
         distance = self._distance_measure(X_ref_=X_ref_, X=X, **kwargs)
         return distance
 
-    def compare(
+    def _compare(
         self,
         X: np.ndarray,  # noqa: N803
         **kwargs,
     ) -> DistanceResult:
-        """Compare values.
-
-        :param X: feature data
-        :type X: numpy.ndarray
-        :return: transformed feature data
-        :rtype: DistanceResult
-        """
         self._common_checks(X=X)  # noqa: N806
         self._specific_checks(X=X)  # noqa: N806
         distance = self._get_result(X=X, **kwargs)  # type: ignore
