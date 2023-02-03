@@ -2,7 +2,6 @@
 
 import numpy as np  # type: ignore
 import pytest  # type: ignore
-import pytest_mock  # type: ignore
 
 from frouros.callbacks import PermutationTestOnBatchData, ResetOnBatchDataDrift
 from frouros.data_drift.batch.base import DataDriftBatchBase
@@ -38,8 +37,8 @@ def test_batch_permutation_test_data_univariate_different_distribution(
     X_ref_univariate: np.ndarray,  # noqa: N803
     X_test_univariate: np.ndarray,
     detector: DataDriftBatchBase,
-    expected_distance,
-    expected_p_value,
+    expected_distance: float,
+    expected_p_value: float,
 ) -> None:
     """Test batch permutation test on data callback.
 
@@ -82,7 +81,7 @@ def test_batch_reset_on_data_drift(
     X_ref_univariate,  # noqa: N803
     X_test_univariate,
     detector: DataDriftBatchBase,
-    mocker: pytest_mock.MockFixture,
+    mocker,
 ) -> None:
     """Test batch reset on data drift callback.
 
@@ -92,8 +91,6 @@ def test_batch_reset_on_data_drift(
     :type X_test_univariate: numpy.ndarray
     :param detector: detector distance
     :type detector: DataDriftBatchBase
-    :param mocker: pytest mocker
-    :type mocker: pytest_mock.MockFixture
     """
     mocker.patch("frouros.data_drift.batch.base.DataDriftBatchBase.reset")
 
