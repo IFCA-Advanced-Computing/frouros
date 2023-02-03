@@ -1,7 +1,11 @@
 """Stats module."""
 
 import abc
-from typing import Union
+from functools import partial
+from multiprocessing import Pool
+from typing import Any, Callable, Dict, Optional, List, Union
+
+import numpy as np  # type: ignore
 
 
 class IncrementalStat(abc.ABC):
@@ -134,3 +138,50 @@ class EWMA(IncrementalStat):
         if not isinstance(value, (int, float)):
             raise TypeError("value must be of type int or float.")
         self.mean = self.alpha * value + self.one_minus_alpha * self.mean
+
+
+def permutation_test(
+    X: np.ndarray,  # noqa: N803
+    Y: np.ndarray,
+    statistic: Callable,
+    statistical_args: Dict[str, Any],
+    num_permutations: int,
+    num_jobs: int,
+    random_state: Optional[int] = None,
+) -> List[float]:
+    """Permutation test method.
+
+    :param X: reference data
+    :type X: numpy.ndarray
+    :param Y: test data
+    :type Y: numpy.ndarray
+    :param statistic: statistic to use
+    :type statistic: Callable
+    :param statistical_args: args to pass to statistic method
+    :type statistical_args: Dict[str, Any]
+    :param num_permutations: number of permutations to use
+    :type num_permutations: int
+    :param num_jobs: number of jobs to use
+    :type num_jobs: int
+    :param random_state: random state value
+    :type random_state: Optional[int]
+    :return: permuted statistics
+    :rtype: List[float]
+    """
+    np.random.seed(seed=random_state)
+    X_num_samples, Y_num_samples = X.shape[0], Y.shape[0]  # noqa: N806
+    data = np.concatenate([X, Y])
+
+    permutations = []
+    for _ in range(num_permutations):
+        permuted_data = np.random.permutation(data)
+        permutations.append(
+            (permuted_data[X_num_samples:], permuted_data[:Y_num_samples])
+        )
+
+    with Pool(processes=num_jobs) as pool:
+        permuted_statistics = pool.starmap_async(
+            partial(statistic, **statistical_args), iterable=permutations
+        ).get()
+
+    return permuted_statistics

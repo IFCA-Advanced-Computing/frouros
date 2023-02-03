@@ -2,7 +2,7 @@
 
 import abc
 
-from typing import Any, Optional, List, Tuple, Union
+from typing import Any, Dict, Optional, List, Tuple, Union
 import numpy as np  # type: ignore
 
 from frouros.callbacks import Callback
@@ -131,11 +131,13 @@ class DataDriftBatchBase(abc.ABC):
     def fit(
         self,
         X: np.ndarray,  # noqa: N803
-    ) -> None:
+    ) -> Dict[str, Any]:
         """Fit detector.
 
         :param X: feature data
         :type X: numpy.ndarray
+        :return: callbacks logs
+        :rtype: Dict[str, Any]
         """
         self._check_fit_dimensions(X=X)
         for callback in self.callbacks:  # type: ignore
@@ -144,24 +146,33 @@ class DataDriftBatchBase(abc.ABC):
         for callback in self.callbacks:  # type: ignore
             callback.on_fit_end()
 
+        logs = self._get_callbacks_logs()
+        return logs
+
     def compare(
         self,
         X: np.ndarray,  # noqa: N803
         **kwargs,
-    ) -> np.ndarray:
+    ) -> Tuple[np.ndarray, Dict[str, Any]]:
         """Compare values.
 
         :param X: feature data
         :type X: numpy.ndarray
-        :return: compare result
-        :rtype: numpy.ndarray
+        :return: compare result and callbacks logs
+        :rtype: Tuple[np.ndarray, Dict[str, Any]]
         """
         for callback in self.callbacks:  # type: ignore
             callback.on_compare_start()  # type: ignore
         result = self._compare(X=X, **kwargs)
         for callback in self.callbacks:  # type: ignore
-            callback.on_compare_end(result=result)  # type: ignore
-        return result
+            callback.on_compare_end(  # type: ignore
+                result=result,
+                X_ref=self.X_ref_,
+                X_test=X,
+            )
+
+        callbacks_logs = self._get_callbacks_logs()
+        return result, callbacks_logs
 
     def reset(self) -> None:
         """Reset method."""
@@ -185,14 +196,18 @@ class DataDriftBatchBase(abc.ABC):
             raise TypeError("X must be a numpy array")
 
     def _check_fit_dimensions(self, X: np.ndarray) -> None:  # noqa: N803
-        if not self.statistical_type.dim_check(X.ndim, 1):  # type: ignore
-            raise DimensionError(f"Dimensions of X ({X.ndim})")
+        try:
+            if not self.statistical_type.dim_check(X.shape[1], 1):  # type: ignore
+                raise DimensionError(f"Dimensions of X ({X.shape[-1]})")
+        except IndexError as e:
+            if not self.statistical_type.dim_check(X.ndim, 1):  # type: ignore
+                raise DimensionError(f"Dimensions of X ({X.ndim})") from e
 
     def _check_compare_dimensions(self, X: np.ndarray) -> None:  # noqa: N803
-        if self.X_ref_.ndim != X.ndim:  # type: ignore
+        if self.X_ref_.shape[-1] != X.shape[-1]:  # type: ignore
             raise MismatchDimensionError(
-                f"Dimensions of X_ref ({self.X_ref_.ndim}) "  # type: ignore
-                f"and X ({X.ndim}) must be equal"
+                f"Dimensions of X_ref ({self.X_ref_.shape[-1]}) "  # type: ignore
+                f"and X ({X.shape[-1]}) must be equal"
             )
 
     def _check_is_fitted(self):
@@ -215,3 +230,9 @@ class DataDriftBatchBase(abc.ABC):
             X_ref_=self.X_ref_, X=X, **kwargs
         )
         return result
+
+    def _get_callbacks_logs(self) -> Dict[str, Any]:
+        logs = {
+            callback.name: callback.logs for callback in self.callbacks  # type: ignore
+        }
+        return logs

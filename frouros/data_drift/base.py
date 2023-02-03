@@ -59,4 +59,4 @@ class MultivariateData(StatisticalTypeBase):
     def __init__(self) -> None:
         """Init method."""
         super().__init__()
-        self.dim_check = operator.gt
+        self.dim_check = operator.ge

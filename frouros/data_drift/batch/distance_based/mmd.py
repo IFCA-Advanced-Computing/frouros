@@ -1,11 +1,12 @@
 """MMD (Maximum Mean Discrepancy) module."""
 
-from typing import Callable
+from typing import Callable, Optional, List, Union
 
 import numpy as np  # type: ignore
 from scipy.spatial.distance import cdist  # type: ignore
 
-from frouros.data_drift.base import NumericalData, MultivariateData
+from frouros.callbacks import Callback
+from frouros.data_drift.base import MultivariateData
 from frouros.data_drift.batch.distance_based.base import (
     DistanceBasedBase,
     DistanceResult,
@@ -23,7 +24,6 @@ def rbf_kernel(
     :type Y: numpy.ndarray
     :param std: standard deviation value
     :type std: float
-
     :return: Radial basis kernel matrix
     :rtype: numpy.ndarray
     """
@@ -36,13 +36,21 @@ class MMD(DistanceBasedBase):
     def __init__(
         self,
         kernel: Callable = rbf_kernel,
+        callbacks: Optional[Union[Callback, List[Callback]]] = None,
     ) -> None:
         """Init method.
 
         :param kernel: kernel function to use
         :type kernel: Callable
+        :param callbacks: callbacks
+        :type callbacks: Optional[Union[Callback, List[Callback]]]
         """
-        super().__init__(data_type=NumericalData(), statistical_type=MultivariateData())
+        super().__init__(
+            statistical_type=MultivariateData(),
+            statistical_method=self._mmd,
+            statistical_kwargs={"kernel": kernel},
+            callbacks=callbacks,
+        )
         self.kernel = kernel
 
     @property
@@ -67,34 +75,34 @@ class MMD(DistanceBasedBase):
         self._kernel = value
 
     def _distance_measure(
-        self, X_ref_: np.ndarray, X: np.ndarray, **kwargs  # noqa: N803
+        self,
+        X_ref_: np.ndarray,  # noqa: N803
+        X: np.ndarray,  # noqa: N803
     ) -> DistanceResult:
-        mmd_statistic = self._mmd(X_ref_=X_ref_, X=X, **kwargs)
-        distance_test = DistanceResult(distance=mmd_statistic)
+        mmd = self._mmd(X=X_ref_, Y=X, kernel=self.kernel)
+        distance_test = DistanceResult(distance=mmd)
         return distance_test
 
-    def _mmd(self, X_ref_: np.ndarray, X: np.ndarray) -> float:  # noqa: N803
-        X_ref_num_samples = X_ref_.shape[0]  # noqa: N806
+    @staticmethod
+    def _mmd(
+        X: np.ndarray,  # noqa: N803
+        Y: np.ndarray,
+        *,
+        kernel: Callable,
+    ) -> float:  # noqa: N803
         X_num_samples = X.shape[0]  # noqa: N806
-        X_concat = np.vstack((X_ref_, X))  # noqa: N806
+        Y_num_samples = Y.shape[0]  # noqa: N806
+        data = np.concatenate([X, Y])  # noqa: N806
+        if X.ndim == 1:
+            data = np.expand_dims(data, axis=1)
 
-        mmd_statistic = self._mmd_statistic(
-            X=X_concat,
-            X_num_samples=X_num_samples,
-            X_ref_num_samples=X_ref_num_samples,
-        )
-        return mmd_statistic
-
-    def _mmd_statistic(
-        self, X: np.ndarray, X_num_samples: int, X_ref_num_samples: int  # noqa: N803
-    ) -> float:
-        k_matrix = self.kernel(X=X, Y=X)
-        k_x = k_matrix[:X_ref_num_samples, :X_ref_num_samples]
-        k_y = k_matrix[X_num_samples:, X_num_samples:]
-        k_xy = k_matrix[:X_ref_num_samples, X_num_samples:]
+        k_matrix = kernel(X=data, Y=data)
+        k_x = k_matrix[:X_num_samples, :X_num_samples]
+        k_y = k_matrix[Y_num_samples:, Y_num_samples:]
+        k_xy = k_matrix[:X_num_samples, Y_num_samples:]
         mmd = (
-            k_x.sum() / (X_ref_num_samples * (X_ref_num_samples - 1))
-            + k_y.sum() / (X_num_samples * (X_num_samples - 1))
-            - 2 * k_xy.sum() / (X_ref_num_samples * X_num_samples)
+            k_x.sum() / (X_num_samples * (X_num_samples - 1))
+            + k_y.sum() / (Y_num_samples * (Y_num_samples - 1))
+            - 2 * k_xy.sum() / (X_num_samples * Y_num_samples)
         )
         return mmd

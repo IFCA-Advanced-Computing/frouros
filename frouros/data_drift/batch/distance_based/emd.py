@@ -1,9 +1,12 @@
 """EMD (Earth Mover's Distance) module."""
 
+from typing import List, Optional, Union
+
 import numpy as np  # type: ignore
 from scipy.stats import wasserstein_distance  # type: ignore
 
-from frouros.data_drift.base import NumericalData, UnivariateData
+from frouros.callbacks import Callback
+from frouros.data_drift.base import UnivariateData
 from frouros.data_drift.batch.distance_based.base import (
     DistanceBasedBase,
     DistanceResult,
@@ -13,18 +16,38 @@ from frouros.data_drift.batch.distance_based.base import (
 class EMD(DistanceBasedBase):
     """EMD (Earth Mover's Distance) algorithm class."""
 
-    def __init__(self) -> None:
-        """Init method."""
-        super().__init__(data_type=NumericalData(), statistical_type=UnivariateData())
+    def __init__(
+        self,
+        callbacks: Optional[Union[Callback, List[Callback]]] = None,
+        **kwargs,
+    ) -> None:
+        """Init method.
+
+        :param callbacks: callbacks
+        :type callbacks: Optional[Union[Callback, List[Callback]]]
+        """
+        super().__init__(
+            statistical_type=UnivariateData(),
+            statistical_method=self._emd,
+            statistical_kwargs=kwargs,
+            callbacks=callbacks,
+        )
+        self.kwargs = kwargs
 
     def _distance_measure(
-        self, X_ref_: np.ndarray, X: np.ndarray, **kwargs  # noqa: N803
+        self,
+        X_ref_: np.ndarray,  # noqa: N803
+        X: np.ndarray,  # noqa: N803
     ) -> DistanceResult:
-        distance = wasserstein_distance(
-            u_values=X_ref_,
-            v_values=X,
-            u_weights=kwargs.get("u_weights", None),
-            v_weights=kwargs.get("v_weights", None),
-        )
-        distance = DistanceResult(distance=distance)
+        emd = self._emd(X=X_ref_, Y=X, **self.kwargs)
+        distance = DistanceResult(distance=emd)
         return distance
+
+    @staticmethod
+    def _emd(X: np.ndarray, Y: np.ndarray, **kwargs) -> float:  # noqa: N803
+        emd = wasserstein_distance(
+            u_values=X.flatten(),
+            v_values=Y.flatten(),
+            **kwargs,
+        )
+        return emd

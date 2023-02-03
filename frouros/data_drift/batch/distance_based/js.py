@@ -1,8 +1,11 @@
 """JS (Jensen-Shannon distance) module."""
 
+from typing import Any, Dict, List, Optional, Union
+
 import numpy as np  # type: ignore
 from scipy.spatial.distance import jensenshannon  # type: ignore
 
+from frouros.callbacks import Callback
 from frouros.data_drift.batch.distance_based.base import (
     DistanceProbabilityBasedBase,
     DistanceResult,
@@ -12,12 +15,51 @@ from frouros.data_drift.batch.distance_based.base import (
 class JS(DistanceProbabilityBasedBase):
     """JS (Jensen-Shannon distance) algorithm class."""
 
-    def _distance_measure(
-        self, X_ref_: np.ndarray, X: np.ndarray, **kwargs  # noqa: N803
-    ) -> DistanceResult:
-        X_ref_rvs, X_rvs = self._calculate_probabilities(  # noqa: N806
-            X_ref_=X_ref_, X=X
+    def __init__(
+        self,
+        num_bins: int = 10,
+        callbacks: Optional[Union[Callback, List[Callback]]] = None,
+        **kwargs
+    ) -> None:
+        """Init method.
+
+        :param num_bins: number of bins in which to divide probabilities
+        :type num_bins: int
+        :param callbacks: callbacks
+        :type callbacks: Optional[Union[Callback, List[Callback]]]
+        """
+        super().__init__(
+            statistical_method=self._js,
+            statistical_kwargs={**kwargs, "num_bins": num_bins},
+            callbacks=callbacks,
         )
-        distance = jensenshannon(p=X_ref_rvs, q=X_rvs, base=kwargs.get("base", None))
-        distance = DistanceResult(distance=distance)
+        self.num_bins = num_bins
+        self.kwargs = kwargs
+
+    def _distance_measure(
+        self,
+        X_ref_: np.ndarray,  # noqa: N803
+        X: np.ndarray,  # noqa: N803
+    ) -> DistanceResult:
+        js = self._js(X=X_ref_, Y=X, num_bins=self.num_bins, **self.kwargs)
+        distance = DistanceResult(distance=js)
         return distance
+
+    @staticmethod
+    def _js(
+        X: np.ndarray,  # noqa: N803
+        Y: np.ndarray,
+        *,
+        num_bins: int,
+        **kwargs: Dict[str, Any]
+    ) -> float:
+        (  # noqa: N806
+            X_ref_rvs,
+            X_rvs,
+        ) = DistanceProbabilityBasedBase._calculate_probabilities(
+            X_ref_=X,
+            X=Y,
+            num_bins=num_bins,
+        )
+        js = jensenshannon(p=X_ref_rvs, q=X_rvs, **kwargs)
+        return js

@@ -2,11 +2,12 @@
 
 import abc
 from collections import namedtuple
-from typing import Tuple
+from typing import Any, Callable, Dict, Optional, List, Tuple, Union
 
 import numpy as np  # type: ignore
 from scipy.stats import rv_histogram  # type: ignore
 
+from frouros.callbacks import Callback
 from frouros.data_drift.base import NumericalData, UnivariateData
 from frouros.data_drift.batch.base import DataDriftBatchBase
 
@@ -16,6 +17,71 @@ DistanceResult = namedtuple("DistanceResult", ["distance"])
 
 class DistanceBasedBase(DataDriftBatchBase):
     """Abstract class representing a distance based detector."""
+
+    def __init__(
+        self,
+        statistical_type,
+        statistical_method: Callable,
+        statistical_kwargs: Dict[str, Any],
+        callbacks: Optional[Union[Callback, List[Callback]]] = None,
+    ) -> None:
+        """Init method.
+
+        :param statistical_type: statistical type
+        :type statistical_type: StatisticalTypeBase
+        :param statistical_method: statistical method
+        :type statistical_method: Callable
+        :param statistical_kwargs: statistical kwargs
+        :type statistical_kwargs: Dict[str, Any]
+        :param callbacks: callbacks
+        :type callbacks: Optional[Union[Callback, List[Callback]]]
+        """
+        super().__init__(
+            data_type=NumericalData(),
+            statistical_type=statistical_type,
+            callbacks=callbacks,
+        )
+        self.statistical_method = statistical_method
+        self.statistical_kwargs = statistical_kwargs
+
+    @property
+    def statistical_method(self) -> Callable:
+        """Statistical method property.
+
+        :return: statistical method
+        :rtype: Callable
+        """
+        return self._statistical_method
+
+    @statistical_method.setter
+    def statistical_method(self, value: Callable) -> None:
+        """Statistical method setter.
+
+        :param value: value to be set
+        :type value: Callable
+        :raises TypeError: Type error exception
+        """
+        if not isinstance(value, Callable):  # type: ignore
+            raise TypeError("value must be of type Callable.")
+        self._statistical_method = value
+
+    @property
+    def statistical_kwargs(self) -> Dict[str, Any]:
+        """Statistical kwargs property.
+
+        :return: statistical kwargs
+        :rtype: Dict[str, Any]
+        """
+        return self._statistical_kwargs
+
+    @statistical_kwargs.setter
+    def statistical_kwargs(self, value: Dict[str, Any]) -> None:
+        """Statistical kwargs setter.
+
+        :param value: value to be set
+        :type value: Dict[str, Any]
+        """
+        self._statistical_kwargs = value
 
     def _apply_method(
         self, X_ref_: np.ndarray, X: np.ndarray, **kwargs  # noqa: N803
@@ -35,7 +101,9 @@ class DistanceBasedBase(DataDriftBatchBase):
 
     @abc.abstractmethod
     def _distance_measure(
-        self, X_ref_: np.ndarray, X: np.ndarray, **kwargs  # noqa: N803
+        self,
+        X_ref_: np.ndarray,  # noqa: N803
+        X: np.ndarray,  # noqa: N803
     ) -> DistanceResult:
         pass
 
@@ -43,13 +111,30 @@ class DistanceBasedBase(DataDriftBatchBase):
 class DistanceBinsBasedBase(DistanceBasedBase):
     """Abstract class representing a distance bins based detector."""
 
-    def __init__(self, num_bins: int = 10) -> None:
+    def __init__(
+        self,
+        statistical_method,
+        statistical_kwargs,
+        callbacks: Optional[Union[Callback, List[Callback]]] = None,
+        num_bins: int = 10,
+    ) -> None:
         """Init method.
 
+        :param statistical_method: statistical method
+        :type statistical_method: Callable
+        :param statistical_kwargs: statistical kwargs
+        :type statistical_kwargs: Dict[str, Any]
+        :param callbacks: callbacks
+        :type callbacks: Optional[Union[Callback, List[Callback]]]
         :param num_bins: number of bins in which to divide probabilities
         :type num_bins: int
         """
-        super().__init__(data_type=NumericalData(), statistical_type=UnivariateData())
+        super().__init__(
+            statistical_type=UnivariateData(),
+            statistical_method=statistical_method,
+            statistical_kwargs={**statistical_kwargs, "num_bins": num_bins},
+            callbacks=callbacks,
+        )
         self.num_bins = num_bins
 
     @property
@@ -74,12 +159,11 @@ class DistanceBinsBasedBase(DistanceBasedBase):
         self._num_bins = value
 
     def _distance_measure(
-        self, X_ref_: np.ndarray, X: np.ndarray, **kwargs  # noqa: N803
+        self,
+        X_ref_: np.ndarray,  # noqa: N803
+        X: np.ndarray,  # noqa: N803
     ) -> DistanceResult:
-        X_ref_percents, X_percents = self._calculate_bins_values(  # noqa: N806
-            X_ref_=self.X_ref_, X=X, num_bins=self.num_bins
-        )
-        distance_bins = self._distance_measure_bins(X_ref_=X_ref_percents, X=X_percents)
+        distance_bins = self._distance_measure_bins(X_ref_=X_ref_, X=X)
         distance = DistanceResult(distance=distance_bins)
         return distance
 
@@ -106,13 +190,30 @@ class DistanceBinsBasedBase(DistanceBasedBase):
 class DistanceProbabilityBasedBase(DistanceBasedBase):
     """Abstract class representing a distance probability based detector."""
 
-    def __init__(self, num_bins: int = 100) -> None:
+    def __init__(
+        self,
+        statistical_method,
+        statistical_kwargs,
+        callbacks: Optional[Union[Callback, List[Callback]]] = None,
+        num_bins: int = 10,
+    ) -> None:
         """Init method.
 
+        :param statistical_method: statistical method
+        :type statistical_method: Callable
+        :param statistical_kwargs: statistical kwargs
+        :type statistical_kwargs: Dict[str, Any]
+        :param callbacks: callbacks
+        :type callbacks: Optional[Union[Callback, List[Callback]]]
         :param num_bins: number of bins in which to divide probabilities
         :type num_bins: int
         """
-        super().__init__(data_type=NumericalData(), statistical_type=UnivariateData())
+        super().__init__(
+            statistical_type=UnivariateData(),
+            statistical_method=statistical_method,
+            statistical_kwargs=statistical_kwargs,
+            callbacks=callbacks,
+        )
         self.num_bins = num_bins
 
     @property
@@ -138,19 +239,24 @@ class DistanceProbabilityBasedBase(DistanceBasedBase):
 
     @abc.abstractmethod
     def _distance_measure(
-        self, X_ref_: np.ndarray, X: np.ndarray, **kwargs  # noqa: N803
+        self,
+        X_ref_: np.ndarray,  # noqa: N803
+        X: np.ndarray,  # noqa: N803
     ) -> DistanceResult:
         pass
 
+    @staticmethod
     def _calculate_probabilities(
-        self, X_ref_: np.ndarray, X: np.ndarray  # noqa: N803
+        X_ref_: np.ndarray,  # noqa: N803
+        X: np.ndarray,
+        num_bins: int,  # noqa: N803
     ) -> Tuple[np.ndarray, np.ndarray]:
         X_ref_rv_histogram = rv_histogram(  # noqa: N806
             np.histogram(X_ref_, bins="auto")
         )
         X_rv_histogram = rv_histogram(np.histogram(X, bins="auto"))  # noqa: N806
         X_merge = np.concatenate([X_ref_, X])  # noqa: N806
-        bins = np.linspace(np.min(X_merge), np.max(X_merge), self.num_bins)
+        bins = np.linspace(np.min(X_merge), np.max(X_merge), num_bins)
         X_ref_rvs = [  # noqa: N806
             X_ref_rv_histogram.cdf(bins[i])
             - X_ref_rv_histogram.cdf(bins[i - 1])  # noqa: N806

@@ -7,9 +7,9 @@ import numpy as np  # type: ignore
 
 from frouros.data_drift.batch.base import DataDriftBatchBase
 from frouros.data_drift.batch.distance_based import (
-    Bhattacharyya,
+    BhattacharyyaDistance,
     EMD,
-    Hellinger,
+    HellingerDistance,
     HistogramIntersection,
     PSI,
     JS,
@@ -47,8 +47,8 @@ def test_batch_distance_based_categorical(
     """
     X_ref, X_test = categorical_dataset  # noqa: N806
 
-    detector.fit(X=X_ref)
-    statistic, p_value = detector.compare(X=X_test)
+    _ = detector.fit(X=X_ref)
+    (statistic, p_value), _ = detector.compare(X=X_test)
 
     assert np.isclose(statistic, expected_statistic)
     assert np.isclose(p_value, expected_p_value)
@@ -58,9 +58,9 @@ def test_batch_distance_based_categorical(
     "detector, expected_distance",
     [
         (EMD(), 3.85346006),
-        (JS(), 0.68037988),
+        (JS(), 0.67010107),
         (KL(), np.inf),
-        (HistogramIntersection(), 0.8),
+        (HistogramIntersection(), 0.78),
     ],
 )
 def test_batch_distance_based_univariate(
@@ -80,15 +80,19 @@ def test_batch_distance_based_univariate(
     :param expected_distance: expected p-value value
     :type expected_distance: float
     """
-    detector.fit(X=X_ref_univariate)
-    distance = detector.compare(X=X_test_univariate)
+    _ = detector.fit(X=X_ref_univariate)
+    distance, _ = detector.compare(X=X_test_univariate)
 
     assert np.isclose(distance, expected_distance)
 
 
 @pytest.mark.parametrize(
     "detector, expected_distance",
-    [(PSI(), 461.20379435), (Hellinger(), 0.74509099), (Bhattacharyya(), 0.55516059)],
+    [
+        (PSI(), 461.20379435),
+        (HellingerDistance(), 0.74509099),
+        (BhattacharyyaDistance(), 0.55516059),
+    ],
 )
 def test_batch_distance_bins_based_univariate_different_distribution(
     X_ref_univariate: np.ndarray,  # noqa: N803
@@ -107,15 +111,19 @@ def test_batch_distance_bins_based_univariate_different_distribution(
     :param expected_distance: expected p-value value
     :type expected_distance: float
     """
-    detector.fit(X=X_ref_univariate)
-    distance = detector.compare(X=X_test_univariate)
+    _ = detector.fit(X=X_ref_univariate)
+    distance, _ = detector.compare(X=X_test_univariate)
 
     assert np.isclose(distance, expected_distance)
 
 
 @pytest.mark.parametrize(
     "detector, expected_distance",
-    [(PSI(), 0.01840072), (Hellinger(), 0.04792538), (Bhattacharyya(), 0.00229684)],
+    [
+        (PSI(), 0.01840072),
+        (HellingerDistance(), 0.04792538),
+        (BhattacharyyaDistance(), 0.00229684),
+    ],
 )
 def test_batch_distance_bins_based_univariate_same_distribution(
     univariate_distribution_p: Tuple[float, float],
@@ -138,8 +146,8 @@ def test_batch_distance_bins_based_univariate_same_distribution(
         *univariate_distribution_p, size=num_samples
     )
 
-    detector.fit(X=X_ref)
-    distance = detector.compare(X=X_test)
+    _ = detector.fit(X=X_ref)
+    distance, _ = detector.compare(X=X_test)
 
     assert np.isclose(distance, expected_distance)
 
@@ -171,8 +179,8 @@ def test_batch_statistical_univariate(
     """
     X_ref, _, X_test = elec2_dataset  # noqa: N806
 
-    detector.fit(X=X_ref[:, 0])
-    statistic, p_value = detector.compare(X=X_test[:, 0])
+    _ = detector.fit(X=X_ref[:, 0])
+    (statistic, p_value), _ = detector.compare(X=X_test[:, 0])
 
     assert np.isclose(statistic, expected_statistic)
     assert np.isclose(p_value, expected_p_value)
@@ -196,8 +204,8 @@ def test_batch_distance_based_multivariate_different_distribution(
     :param expected_distance: expected distance value
     :type expected_distance: float
     """
-    detector.fit(X=X_ref_multivariate)
-    statistic = detector.compare(X=X_test_multivariate)
+    _ = detector.fit(X=X_ref_multivariate)
+    statistic, _ = detector.compare(X=X_test_multivariate)
 
     assert np.isclose(statistic, expected_distance)
 
@@ -228,7 +236,7 @@ def test_batch_distance_based_multivariate_same_distribution(
         *multivariate_distribution_p, size=num_samples
     )
 
-    detector.fit(X=X_ref)
-    statistic = detector.compare(X=X_test)
+    _ = detector.fit(X=X_ref)
+    statistic, _ = detector.compare(X=X_test)
 
     assert np.isclose(statistic, expected_distance)

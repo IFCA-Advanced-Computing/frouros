@@ -1,6 +1,4 @@
-"""PSI (Population Stability Index) module."""
-
-import sys
+"""Hellinger distance module."""
 
 from typing import List, Optional, Union
 import numpy as np  # type: ignore
@@ -8,12 +6,11 @@ import numpy as np  # type: ignore
 from frouros.callbacks import Callback
 from frouros.data_drift.batch.distance_based.base import (
     DistanceBinsBasedBase,
-    DistanceResult,
 )
 
 
-class PSI(DistanceBinsBasedBase):
-    """PSI (Population Stability Index) algorithm class."""
+class HellingerDistance(DistanceBinsBasedBase):
+    """Hellinger distance algorithm class."""
 
     def __init__(
         self,
@@ -27,32 +24,31 @@ class PSI(DistanceBinsBasedBase):
         :param callbacks: callbacks
         :type callbacks: Optional[Union[Callback, List[Callback]]]
         """
+        sqrt_div = np.sqrt(2)
         super().__init__(
-            statistical_method=self._psi,
-            statistical_kwargs={"num_bins": num_bins},
+            statistical_method=self._hellinger,
+            statistical_kwargs={"num_bins": num_bins, "sqrt_div": sqrt_div},
             callbacks=callbacks,
         )
         self.num_bins = num_bins
-
-    def _apply_method(
-        self, X_ref_: np.ndarray, X: np.ndarray, **kwargs  # noqa: N803
-    ) -> DistanceResult:
-        distance = self._distance_measure(X_ref_=X_ref_, X=X, **kwargs)
-        return distance
+        self.sqrt_div = sqrt_div
 
     def _distance_measure_bins(
         self,
         X_ref_: np.ndarray,  # noqa: N803
         X: np.ndarray,  # noqa: N803
     ) -> float:
-        psi = self._psi(X=X_ref_, Y=X, num_bins=self.num_bins)
-        return psi
+        hellinger = self._hellinger(
+            X=X_ref_,
+            Y=X,
+            num_bins=self.num_bins,
+            sqrt_div=self.sqrt_div,
+        )
+        return hellinger
 
     @staticmethod
-    def _psi(
-        X: np.ndarray,  # noqa: N803
-        Y: np.ndarray,  # noqa: N803
-        num_bins: int,
+    def _hellinger(
+        X: np.ndarray, Y: np.ndarray, *, num_bins: int, sqrt_div: float  # noqa: N803
     ) -> float:
         (  # noqa: N806
             X_percents,
@@ -60,9 +56,7 @@ class PSI(DistanceBinsBasedBase):
         ) = DistanceBinsBasedBase._calculate_bins_values(
             X_ref_=X, X=Y, num_bins=num_bins
         )
-        # Replace 0.0 values with the smallest number possible
-        # in order to avoid division by zero
-        X_percents[X_percents == 0.0] = sys.float_info.min
-        Y_percents[Y_percents == 0.0] = sys.float_info.min
-        psi = np.sum((Y_percents - X_percents) * np.log(Y_percents / X_percents))
-        return psi
+        hellinger = (
+            np.sqrt(np.sum((np.sqrt(X_percents) - np.sqrt(Y_percents)) ** 2)) / sqrt_div
+        )
+        return hellinger

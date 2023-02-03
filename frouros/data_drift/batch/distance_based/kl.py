@@ -1,8 +1,11 @@
 """KL (Kullback-Leibler divergence distance) module."""
 
+from typing import Any, Dict, List, Optional, Union
+
 import numpy as np  # type: ignore
 from scipy.special import rel_entr  # type: ignore
 
+from frouros.callbacks import Callback
 from frouros.data_drift.batch.distance_based.base import (
     DistanceProbabilityBasedBase,
     DistanceResult,
@@ -12,12 +15,51 @@ from frouros.data_drift.batch.distance_based.base import (
 class KL(DistanceProbabilityBasedBase):
     """KL (Kullback-Leibler divergence / relative entropy) algorithm class."""
 
-    def _distance_measure(
-        self, X_ref_: np.ndarray, X: np.ndarray, **kwargs  # noqa: N803
-    ) -> DistanceResult:
-        X_ref_rvs, X_rvs = self._calculate_probabilities(  # noqa: N806
-            X_ref_=X_ref_, X=X
+    def __init__(
+        self,
+        num_bins: int = 10,
+        callbacks: Optional[Union[Callback, List[Callback]]] = None,
+        **kwargs,
+    ) -> None:
+        """Init method.
+
+        :param num_bins: number of bins in which to divide probabilities
+        :type num_bins: int
+        :param callbacks: number of bins in which to divide probabilities
+        :type callbacks: Optional[Union[Callback, List[Callback]]]
+        """
+        super().__init__(
+            statistical_method=self._kl,
+            statistical_kwargs={**kwargs, "num_bins": num_bins},
+            callbacks=callbacks,
         )
-        distance = np.sum(rel_entr(X_rvs, X_ref_rvs, **kwargs))
-        distance = DistanceResult(distance=distance)
+        self.num_bins = num_bins
+        self.kwargs = kwargs
+
+    def _distance_measure(
+        self,
+        X_ref_: np.ndarray,  # noqa: N803
+        X: np.ndarray,  # noqa: N803
+    ) -> DistanceResult:
+        kl = self._kl(X=X_ref_, Y=X, num_bins=self.num_bins, **self.kwargs)
+        distance = DistanceResult(distance=kl)
         return distance
+
+    @staticmethod
+    def _kl(
+        X: np.ndarray,  # noqa: N803
+        Y: np.ndarray,
+        *,
+        num_bins: int,
+        **kwargs: Dict[str, Any],
+    ) -> float:
+        (  # noqa: N806
+            X_ref_rvs,
+            X_rvs,
+        ) = DistanceProbabilityBasedBase._calculate_probabilities(
+            X_ref_=X,
+            X=Y,
+            num_bins=num_bins,
+        )
+        kl = np.sum(rel_entr(X_rvs, X_ref_rvs, **kwargs))
+        return kl

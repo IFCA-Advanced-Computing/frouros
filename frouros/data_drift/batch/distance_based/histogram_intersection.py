@@ -1,69 +1,64 @@
 """Histogram intersection module."""
 
+from typing import List, Optional, Union
+
 import numpy as np  # type: ignore
 
-from frouros.data_drift.base import NumericalData, UnivariateData
+from frouros.callbacks import Callback
 from frouros.data_drift.batch.distance_based.base import (
-    DistanceBasedBase,
-    DistanceResult,
+    DistanceBinsBasedBase,
 )
 
 
-class HistogramIntersection(DistanceBasedBase):
+class HistogramIntersection(DistanceBinsBasedBase):
     """Histogram intersection algorithm class."""
 
-    def __init__(self, num_bins: int = 100) -> None:
+    def __init__(
+        self,
+        num_bins: int = 10,
+        callbacks: Optional[Union[Callback, List[Callback]]] = None,
+    ) -> None:
         """Init method.
 
         :param num_bins: number of bins in which to divide probabilities
         :type num_bins: int
+        :param callbacks: callbacks
+        :type callbacks: Optional[Union[Callback, List[Callback]]]
         """
-        super().__init__(data_type=NumericalData(), statistical_type=UnivariateData())
+        super().__init__(
+            statistical_method=self._histogram_intersection,
+            statistical_kwargs={"num_bins": num_bins},
+            callbacks=callbacks,
+        )
         self.num_bins = num_bins
 
-    @property
-    def num_bins(self) -> int:
-        """Number of bins property.
-
-        :return: number of bins in which to divide probabilities
-        :rtype: int
-        """
-        return self._num_bins
-
-    @num_bins.setter
-    def num_bins(self, value: int) -> None:
-        """Number of bins setter.
-
-        :param value: value to be set
-        :type value: int
-        :raises ValueError: Value error exception
-        """
-        if value < 1:
-            raise ValueError("value must be greater than 0.")
-        self._num_bins = value
+    def _distance_measure_bins(
+        self,
+        X_ref_: np.ndarray,  # noqa: N803
+        X: np.ndarray,  # noqa: N803
+    ) -> float:
+        no_intersection = self._histogram_intersection(
+            X=X_ref_, Y=X, num_bins=self.num_bins
+        )
+        return no_intersection
 
     @staticmethod
     def _histogram_intersection(
-        X_ref_hist: np.ndarray, X_hist: np.ndarray  # noqa: N803
+        X: np.ndarray,  # noqa: N803
+        Y: np.ndarray,
+        *,
+        num_bins: int,
     ) -> float:
-        intersection = np.sum(np.minimum(X_ref_hist, X_hist))
-        return intersection
-
-    def _distance_measure(
-        self, X_ref_: np.ndarray, X: np.ndarray, **kwargs  # noqa: N803
-    ) -> DistanceResult:
         hist_range = (
-            np.min([np.min(X_ref_), np.min(X)]),
-            np.max([np.max(X_ref_), np.max(X)]),
+            np.min([np.min(X), np.min(Y)]),
+            np.max([np.max(X), np.max(Y)]),
         )
-        X_ref_hist, _ = np.histogram(  # noqa: N806
-            X_ref_, bins=self.num_bins, range=hist_range  # noqa: N806
+        X_hist, _ = np.histogram(  # noqa: N806
+            X, bins=num_bins, range=hist_range  # noqa: N806
         )
-        X_ref_hist = X_ref_hist / X_ref_.shape[0]  # noqa: N806
-        X_hist, _ = np.histogram(X, bins=self.num_bins, range=hist_range)  # noqa: N806
         X_hist = X_hist / X.shape[0]  # noqa: N806
-        intersection = 1 - self._histogram_intersection(
-            X_ref_hist=X_ref_hist, X_hist=X_hist
-        )
-        distance = DistanceResult(distance=intersection)
-        return distance
+        Y_hist, _ = np.histogram(Y, bins=num_bins, range=hist_range)  # noqa: N806
+        Y_hist = Y_hist / Y.shape[0]  # noqa: N806
+        no_intersection = 1 - np.sum(np.minimum(X_hist, Y_hist))
+
+        return no_intersection

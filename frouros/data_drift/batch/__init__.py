@@ -1,9 +1,9 @@
 """Data drift batch detection methods init."""
 
 from .distance_based import (
-    Bhattacharyya,
+    BhattacharyyaDistance,
     EMD,
-    Hellinger,
+    HellingerDistance,
     HistogramIntersection,
     JS,
     KL,
@@ -18,11 +18,11 @@ from .statistical_test import (
 )
 
 __all__ = [
-    "Bhattacharyya",
+    "BhattacharyyaDistance",
     "ChiSquareTest",
     "CVMTest",
     "EMD",
-    "Hellinger",
+    "HellingerDistance",
     "HistogramIntersection",
     "JS",
     "KL",
