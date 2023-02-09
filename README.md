@@ -29,7 +29,7 @@ As a quick and easy example, we can generate two normal distributions in order t
 
 ```python
 import numpy as np
-from frouros.data_drift.batch import KSTest
+from frouros.detectors.data_drift import KSTest
 
 np.random.seed(31)
 # X samples from a normal distribution with mean=2 and std=2
@@ -50,7 +50,7 @@ detector.fit(X=X_ref)
 statistic, p_value = detector.compare(X=X_test)
 
 p_value < alpha
->>> True  # Drift detected. We can reject H0, so both samples come from different distributions.
+>> > True  # Drift detected. We can reject H0, so both samples come from different distributions.
 ```
 
 More examples can be found [here](https://frouros.readthedocs.io/en/latest/examples.html).

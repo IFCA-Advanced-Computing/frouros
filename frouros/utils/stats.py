@@ -8,12 +8,24 @@ from typing import Any, Callable, Dict, Optional, List, Union
 import numpy as np  # type: ignore
 
 
-class IncrementalStat(abc.ABC):
+class Stat(abc.ABC):
+    """Abstract class representing an statistic."""
+
+    @abc.abstractmethod
+    def get(self) -> float:
+        """Get method."""
+
+
+class IncrementalStat(Stat):
     """Abstract class representing an incremental statistic."""
 
     @abc.abstractmethod
     def update(self, value: Union[int, float]) -> None:
         """Update abstract method."""
+
+    @abc.abstractmethod
+    def get(self) -> float:
+        """Get method."""
 
 
 class Mean(IncrementalStat):
@@ -74,6 +86,10 @@ class Mean(IncrementalStat):
             raise TypeError("value must be of type int or float.")
         self.num_values += 1
         self.mean += (value - self.mean) / self.num_values
+
+    def get(self) -> float:
+        """Get method."""
+        return self.mean
 
 
 class EWMA(IncrementalStat):
@@ -138,6 +154,10 @@ class EWMA(IncrementalStat):
         if not isinstance(value, (int, float)):
             raise TypeError("value must be of type int or float.")
         self.mean = self.alpha * value + self.one_minus_alpha * self.mean
+
+    def get(self) -> float:
+        """Get method."""
+        return self.mean
 
 
 def permutation_test(

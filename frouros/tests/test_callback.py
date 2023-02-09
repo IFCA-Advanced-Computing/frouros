@@ -1,11 +1,27 @@
 """Test callback module."""
 
+from typing import List
+
 import numpy as np  # type: ignore
 import pytest  # type: ignore
 
-from frouros.callbacks import PermutationTestOnBatchData, ResetOnBatchDataDrift
-from frouros.data_drift.batch.base import DataDriftBatchBase
-from frouros.data_drift.batch import (
+from frouros.callbacks import History, PermutationTestOnBatchData, ResetOnBatchDataDrift
+from frouros.detectors.concept_drift import (
+    ADWIN,
+    CUSUM,
+    DDM,
+    ECDDWT,
+    EDDM,
+    GeometricMovingAverage,
+    HDDMA,
+    HDDMW,
+    KSWIN,
+    PageHinkley,
+    RDDM,
+    STEPD,
+)
+from frouros.detectors.concept_drift.base import ConceptDriftBase
+from frouros.detectors.data_drift.batch import (
     BhattacharyyaDistance,
     CVMTest,
     EMD,
@@ -18,6 +34,7 @@ from frouros.data_drift.batch import (
     PSI,
     WelchTTest,
 )
+from frouros.detectors.data_drift.batch.base import DataDriftBatchBase
 
 
 @pytest.mark.parametrize(
@@ -92,9 +109,49 @@ def test_batch_reset_on_data_drift(
     :param detector: detector distance
     :type detector: DataDriftBatchBase
     """
-    mocker.patch("frouros.data_drift.batch.base.DataDriftBatchBase.reset")
+    mocker.patch("frouros.detectors.data_drift.batch.base.DataDriftBatchBase.reset")
 
     detector = detector(callbacks=[ResetOnBatchDataDrift(alpha=0.01)])  # type: ignore
     _ = detector.fit(X=X_ref_univariate)
-    _, _ = detector.compare(X=X_test_univariate)
+    _ = detector.compare(X=X_test_univariate)
     detector.reset.assert_called_once()  # type: ignore # pylint: disable=no-member
+
+
+@pytest.mark.parametrize(
+    "detector",
+    [
+        ADWIN,
+        CUSUM,
+        DDM,
+        ECDDWT,
+        EDDM,
+        GeometricMovingAverage,
+        HDDMA,
+        HDDMW,
+        KSWIN,
+        PageHinkley,
+        RDDM,
+        STEPD,
+    ],
+)
+def test_streaming_history_on_concept_drift(
+    model_errors: List[int],
+    detector: ConceptDriftBase,
+):
+    """Test streaming history on concept drift callback.
+
+    :param model_errors: model errors
+    :type model_errors: List[int]
+    :param detector: concept drift detector
+    :type detector: ConceptDriftBase
+    """
+    name = "history"
+    detector = detector(callbacks=History(name=name))  # type: ignore
+
+    for error in model_errors:
+        history = detector.update(value=error)
+        status = detector.status
+        if status["drift"]:
+            assert history[name]["drift"][-1]
+            assert not any(history[name]["drift"][:-1])
+            break

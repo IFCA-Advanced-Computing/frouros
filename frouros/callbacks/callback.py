@@ -1,11 +1,11 @@
 """Callback module."""
 
 import multiprocessing
-from typing import Any, Callable, Dict, List, Optional, Tuple
+from typing import Any, Callable, Dict, List, Optional, Tuple, Union
 
 import numpy as np  # type: ignore
 
-from frouros.utils.stats import permutation_test
+from frouros.utils.stats import permutation_test, Stat
 
 
 class Callback:
@@ -76,7 +76,7 @@ class StreamingCallback(Callback):
     def on_update_start(self) -> None:
         """On update start method."""
 
-    def on_update_end(self) -> None:
+    def on_update_end(self, value: Union[int, float], **kwargs) -> None:
         """On update end method."""
 
 
@@ -88,6 +88,56 @@ class BatchCallback(Callback):
 
     def on_compare_end(self, **kwargs) -> None:
         """On compare end method."""
+
+
+class History(StreamingCallback):
+    """History callback class."""
+
+    def __init__(self, name: Optional[str] = None) -> None:
+        """Init method.
+
+        :param name: name value
+        :type name: Optional[str]
+        """
+        super().__init__(name=name)
+        self.additional_vars: List[str] = []
+        self.history: Dict[str, List[Any]] = {
+            "value": [],
+            "num_instances": [],
+            "drift": [],
+        }
+
+    def add_additional_vars(self, vars_: List[str]) -> None:
+        """Add addtional variables to track.
+
+        :param vars_: list of variables
+        :type vars_: List[str]
+        """
+        self.additional_vars.extend(vars_)
+        self.history = {**self.history, **{var: [] for var in self.additional_vars}}
+
+    def on_update_end(self, value: Union[int, float], **kwargs) -> None:
+        """On update end method.
+
+        :param value: value to update detector
+        :type value: int
+        """
+        self.history["value"].append(value)
+        self.history["num_instances"].append(
+            self.detector.num_instances  # type: ignore
+        )
+        self.history["drift"].append(self.detector.drift)  # type: ignore
+        for var in self.additional_vars:
+            additional_var = self.detector.additional_vars[var]  # type: ignore
+            # FIXME: Extract isinstance check to be done when  # pylint: disable=fixme
+            #  add_addtional_vars is called (avoid the same computation)
+            self.history[var].append(
+                additional_var.get()
+                if isinstance(additional_var, Stat)
+                else additional_var
+            )
+
+        self.logs.update(**self.history)
 
 
 class PermutationTestOnBatchData(BatchCallback):
@@ -241,4 +291,5 @@ class ResetOnBatchDataDrift(BatchCallback):
         """On compare end method."""
         p_value = kwargs["result"].p_value
         if p_value < self.alpha:
+            print("Drift detected. Resetting detector.")
             self.detector.reset()  # type: ignore

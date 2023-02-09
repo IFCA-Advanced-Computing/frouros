@@ -5,8 +5,8 @@ from typing import Tuple
 import pytest  # type: ignore
 import numpy as np  # type: ignore
 
-from frouros.data_drift.batch.base import DataDriftBatchBase
-from frouros.data_drift.batch.distance_based import (
+from frouros.detectors.data_drift.batch.base import DataDriftBatchBase
+from frouros.detectors.data_drift.batch import (
     BhattacharyyaDistance,
     EMD,
     HellingerDistance,
@@ -16,7 +16,7 @@ from frouros.data_drift.batch.distance_based import (
     KL,
     MMD,
 )
-from frouros.data_drift.batch.statistical_test import (
+from frouros.detectors.data_drift.batch import (
     ChiSquareTest,
     CVMTest,
     KSTest,
