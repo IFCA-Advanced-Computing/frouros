@@ -4,9 +4,9 @@ from typing import List, Optional, Tuple
 
 import numpy as np  # type: ignore
 import pytest  # type: ignore
-from sklearn.linear_model import LogisticRegression  # type: ignore
-from sklearn.pipeline import Pipeline  # type: ignore
-from sklearn.preprocessing import StandardScaler  # type: ignore
+import sklearn.linear_model  # type: ignore # pylint: disable=import-error
+import sklearn.pipeline  # type: ignore # pylint: disable=import-error
+import sklearn.preprocessing  # type: ignore # pylint: disable=import-error
 
 from frouros.datasets.real import Elec2
 from frouros.datasets.synthetic import Dummy, SEA
@@ -414,7 +414,12 @@ def concept_drift_model_errors_simple(
     """
     (X_ref, y_ref), (X_test, y_test) = dataset_simple  # noqa: N806
 
-    pipeline = Pipeline([("scaler", StandardScaler()), ("model", LogisticRegression())])
+    pipeline = sklearn.pipeline.Pipeline(
+        [
+            ("scaler", sklearn.preprocessing.StandardScaler()),
+            ("model", sklearn.linear_model.LogisticRegression()),
+        ]
+    )
     pipeline.fit(X=X_ref, y=y_ref)
 
     y_test_pred = pipeline.predict(X_test)
