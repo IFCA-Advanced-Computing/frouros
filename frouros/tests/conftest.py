@@ -1,12 +1,15 @@
 """Configuration file for the tests."""
 
-from typing import Tuple
+from typing import List, Optional, Tuple
 
-import pytest  # type: ignore
 import numpy as np  # type: ignore
+import pytest  # type: ignore
+import sklearn.linear_model  # type: ignore # pylint: disable=import-error
+import sklearn.pipeline  # type: ignore # pylint: disable=import-error
+import sklearn.preprocessing  # type: ignore # pylint: disable=import-error
 
 from frouros.datasets.real import Elec2
-from frouros.datasets.synthetic import SEA
+from frouros.datasets.synthetic import Dummy, SEA
 from frouros.metrics.prequential_error import PrequentialError
 
 
@@ -145,6 +148,16 @@ def elec2_dataset() -> Tuple[np.ndarray, np.ndarray, np.ndarray]:
     return X_ref, y_ref, X_test
 
 
+def _generate_multivariate_normal_samples(
+    mean: np.ndarray, cov: np.ndarray, num_samples: int = 100, seed: int = 31
+) -> np.ndarray:
+    np.random.seed(seed=seed)
+    X = np.random.multivariate_normal(  # noqa: N806
+        mean=mean, cov=cov, size=num_samples
+    )
+    return X
+
+
 @pytest.fixture(scope="module")
 def multivariate_distribution_p() -> Tuple[np.ndarray, np.ndarray]:
     """Multivariate distribution p.
@@ -172,6 +185,46 @@ def multivariate_distribution_q() -> Tuple[np.ndarray, np.ndarray]:
 
 
 @pytest.fixture(scope="module")
+def X_ref_multivariate(  # noqa: N802
+    multivariate_distribution_p: Tuple[  # pylint: disable=redefined-outer-name
+        np.ndarray, np.ndarray
+    ]
+) -> np.ndarray:
+    """Reference multivariate data.
+
+    :param multivariate_distribution_p: multivariate distribution p
+    :type multivariate_distribution_p: Tuple[numpy.ndarray, numpy.ndarray]
+    :return: reference multivariate data
+    :rtype: numpy.ndarray
+    """
+    X = _generate_multivariate_normal_samples(  # noqa: N806
+        *multivariate_distribution_p
+    )
+
+    return X
+
+
+@pytest.fixture(scope="module")
+def X_test_multivariate(  # noqa: N802
+    multivariate_distribution_q: Tuple[  # pylint: disable=redefined-outer-name
+        np.ndarray, np.ndarray
+    ]
+) -> np.ndarray:
+    """Test multivariate data.
+
+    :param multivariate_distribution_q: multivariate distribution p
+    :type multivariate_distribution_q: Tuple[numpy.ndarray, numpy.ndarray]
+    :return: test multivariate data
+    :rtype: numpy.ndarray
+    """
+    X = _generate_multivariate_normal_samples(  # noqa: N806
+        *multivariate_distribution_q
+    )
+
+    return X
+
+
+@pytest.fixture(scope="module")
 def univariate_distribution_p() -> Tuple[float, float]:
     """Univariate distribution p.
 
@@ -195,6 +248,50 @@ def univariate_distribution_q() -> Tuple[float, float]:
     return mean, std
 
 
+def _generate_univariate_normal_samples(
+    mean: float, std: float, num_samples: int = 100, seed: int = 31
+) -> np.ndarray:
+    np.random.seed(seed=seed)
+    X = np.random.normal(loc=mean, scale=std, size=num_samples)  # noqa: N806
+    return X
+
+
+@pytest.fixture(scope="module")
+def X_ref_univariate(  # noqa: N802
+    univariate_distribution_p: Tuple[  # pylint: disable=redefined-outer-name
+        float, float
+    ]
+) -> np.ndarray:
+    """Reference univariate data.
+
+    :param univariate_distribution_p: univariate distribution p
+    :type univariate_distribution_p: Tuple[float, float]
+    :return: reference univariate data
+    :rtype: numpy.ndarray
+    """
+    X = _generate_univariate_normal_samples(*univariate_distribution_p)  # noqa: N806
+
+    return X
+
+
+@pytest.fixture(scope="module")
+def X_test_univariate(  # noqa: N802
+    univariate_distribution_q: Tuple[  # pylint: disable=redefined-outer-name
+        float, float
+    ]
+) -> np.ndarray:
+    """Test multivariate data.
+
+    :param univariate_distribution_q: univariate distribution q
+    :type univariate_distribution_q: Tuple[float, float]
+    :return: test univariate data
+    :rtype: numpy.ndarray
+    """
+    X = _generate_univariate_normal_samples(*univariate_distribution_q)  # noqa: N806
+
+    return X
+
+
 @pytest.fixture(scope="module")
 def prequential_error():
     """Prequential error.
@@ -210,13 +307,14 @@ def prequential_error():
 class DummyClassificationModel:
     """Dummy classification model class."""
 
-    def __init__(self, num_classes: int = 2) -> None:
+    def __init__(self, num_classes: int = 2, seed: Optional[int] = None) -> None:
         """Init method.
 
         :param num_classes: number of classes
         :type num_classes: int
         """
         self.num_classes = num_classes
+        np.random.seed(seed=seed)
 
     def fit(self, X: np.ndarray, y: np.ndarray, *args, **kwargs):  # noqa: N803, W0613
         """Fit method.
@@ -255,11 +353,76 @@ def train_prediction_normal(
     :return: test predictions from trained model
     :rtype: numpy.ndarray
     """
-    np.random.seed(seed=31)
     X_ref, y_ref, X_test, _ = clf_dataset  # noqa: N806
 
-    model = DummyClassificationModel(num_classes=len(np.unique(y_ref)))
+    model = DummyClassificationModel(num_classes=len(np.unique(y_ref)), seed=31)
     model.fit(X=X_ref, y=y_ref)
     y_pred = model.predict(X=X_test)
 
     return y_pred
+
+
+@pytest.fixture(scope="module", name="dataset_simple")
+def concept_drift_dataset_simple() -> Tuple[
+    Tuple[np.ndarray, np.ndarray], Tuple[np.ndarray, np.ndarray]
+]:
+    """Dataset with multiple concepts to induce concept drift.
+
+    :return: dataset split in reference and test
+    :rtype: Tuple[Tuple[numpy.ndarray, numpy.ndarray],
+    Tuple[numpy.ndarray, numpy.ndarray]]
+    """
+    concept_samples = 100
+    concept_types = [1, 1, 0, 1]
+
+    generator = Dummy(seed=31)
+    concepts = [
+        generator.generate_dataset(
+            class_=concept_type,
+            num_samples=concept_samples,
+        )
+        for concept_type in concept_types
+    ]
+
+    X, y = [], []  # noqa: N806
+    for concept in concepts:
+        for X_sample, y_sample in concept:  # noqa: N806
+            X.append(X_sample)
+            y.append(y_sample)
+    X = np.array(X)  # noqa: N806
+    y = np.array(y)
+
+    num_ref_concept_types = 1
+    idx_ref = num_ref_concept_types * concept_samples
+    X_ref, y_ref = X[:idx_ref], y[:idx_ref]  # noqa: N806
+    X_test, y_test = X[idx_ref:], y[idx_ref:]  # noqa: N806
+
+    return (X_ref, y_ref), (X_test, y_test)
+
+
+@pytest.fixture(scope="module", name="model_errors")
+def concept_drift_model_errors_simple(
+    dataset_simple: Tuple[Tuple[np.ndarray, np.ndarray], Tuple[np.ndarray, np.ndarray]]
+) -> List[int]:
+    """Compute model errors given a dataset with concept drift.
+
+    :param dataset_simple: Dataset with concept drift
+    :type dataset_simple: Tuple[Tuple[numpy.ndarray, numpy.ndarray],
+    Tuple[numpy.ndarray, numpy.ndarray]]
+    :return: model errors
+    :rtype: List[int]
+    """
+    (X_ref, y_ref), (X_test, y_test) = dataset_simple  # noqa: N806
+
+    pipeline = sklearn.pipeline.Pipeline(
+        [
+            ("scaler", sklearn.preprocessing.StandardScaler()),
+            ("model", sklearn.linear_model.LogisticRegression()),
+        ]
+    )
+    pipeline.fit(X=X_ref, y=y_ref)
+
+    y_test_pred = pipeline.predict(X_test)
+    error = (1 - y_test_pred == y_test).astype(int).tolist()
+
+    return error

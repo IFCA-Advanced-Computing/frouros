@@ -5,18 +5,18 @@ from typing import Tuple
 import pytest  # type: ignore
 import numpy as np  # type: ignore
 
-from frouros.data_drift.batch.base import DataDriftBatchBase
-from frouros.data_drift.batch.distance_based import (
-    Bhattacharyya,
+from frouros.detectors.data_drift.batch.base import DataDriftBatchBase
+from frouros.detectors.data_drift.batch import (
+    BhattacharyyaDistance,
     EMD,
-    Hellinger,
+    HellingerDistance,
     HistogramIntersection,
     PSI,
     JS,
     KL,
     MMD,
 )
-from frouros.data_drift.batch.statistical_test import (
+from frouros.detectors.data_drift.batch import (
     ChiSquareTest,
     CVMTest,
     KSTest,
@@ -47,8 +47,8 @@ def test_batch_distance_based_categorical(
     """
     X_ref, X_test = categorical_dataset  # noqa: N806
 
-    detector.fit(X=X_ref)
-    statistic, p_value = detector.compare(X=X_test)
+    _ = detector.fit(X=X_ref)
+    (statistic, p_value), _ = detector.compare(X=X_test)
 
     assert np.isclose(statistic, expected_statistic)
     assert np.isclose(p_value, expected_p_value)
@@ -57,71 +57,73 @@ def test_batch_distance_based_categorical(
 @pytest.mark.parametrize(
     "detector, expected_distance",
     [
-        (EMD(), 0.54726161),
-        (JS(), 0.81451218),
+        (EMD(), 3.85346006),
+        (JS(), 0.67010107),
         (KL(), np.inf),
-        (HistogramIntersection(), 0.97669491),
+        (HistogramIntersection(), 0.78),
     ],
 )
 def test_batch_distance_based_univariate(
-    elec2_dataset,
+    X_ref_univariate: np.ndarray,  # noqa: N803
+    X_test_univariate: np.ndarray,  # noqa: N803
     detector: DataDriftBatchBase,
     expected_distance: float,
 ) -> None:
     """Test batch distance based univariate method.
 
-    :param elec2_dataset: Elec2 raw dataset
-    :type elec2_dataset: Tuple[numpy.ndarray, numpy.ndarray, numpy.ndarray]
+    :param X_ref_univariate: reference univariate data
+    :type X_ref_univariate: numpy.ndarray
+    :param X_test_univariate: test univariate data
+    :type X_test_univariate: numpy.ndarray
     :param detector: detector distance
     :type detector: DataDriftBatchBase
     :param expected_distance: expected p-value value
     :type expected_distance: float
     """
-    X_ref, _, X_test = elec2_dataset  # noqa: N806
-
-    detector.fit(X=X_ref[:, 0])
-    distance = detector.compare(X=X_test[:, 0])
+    _ = detector.fit(X=X_ref_univariate)
+    distance, _ = detector.compare(X=X_test_univariate)
 
     assert np.isclose(distance, expected_distance)
 
 
 @pytest.mark.parametrize(
     "detector, expected_distance",
-    [(PSI(), 468.79410784), (Hellinger(), 0.77137797), (Bhattacharyya(), 0.59502397)],
+    [
+        (PSI(), 461.20379435),
+        (HellingerDistance(), 0.74509099),
+        (BhattacharyyaDistance(), 0.55516059),
+    ],
 )
 def test_batch_distance_bins_based_univariate_different_distribution(
-    univariate_distribution_p: Tuple[float, float],
-    univariate_distribution_q: Tuple[float, float],
+    X_ref_univariate: np.ndarray,  # noqa: N803
+    X_test_univariate: np.ndarray,  # noqa: N803
     detector: DataDriftBatchBase,
     expected_distance: float,
-    num_samples: int = 500,
 ) -> None:
-    """Test distance based univariate different distribution method.
+    """Test distance bins based univariate different distribution method.
 
-    :param univariate_distribution_p: mean and standard deviation of distribution p
-    :type univariate_distribution_p: Tuple[float, float]
-    :param univariate_distribution_q: mean and standard deviation of distribution q
-    :type univariate_distribution_q: Tuple[float, float]
+    :param X_ref_univariate: reference univariate data
+    :type X_ref_univariate: numpy.ndarray
+    :param X_test_univariate: test univariate data
+    :type X_test_univariate: numpy.ndarray
     :param detector: detector distance
     :type detector: DataDriftBatchBase
     :param expected_distance: expected p-value value
     :type expected_distance: float
     """
-    np.random.seed(seed=31)
-    X_ref = np.random.normal(*univariate_distribution_p, size=num_samples)  # noqa: N806
-    X_test = np.random.normal(  # noqa: N806
-        *univariate_distribution_q, size=num_samples
-    )
-
-    detector.fit(X=X_ref)
-    distance = detector.compare(X=X_test)
+    _ = detector.fit(X=X_ref_univariate)
+    distance, _ = detector.compare(X=X_test_univariate)
 
     assert np.isclose(distance, expected_distance)
 
 
 @pytest.mark.parametrize(
     "detector, expected_distance",
-    [(PSI(), 0.01840072), (Hellinger(), 0.04792538), (Bhattacharyya(), 0.00229684)],
+    [
+        (PSI(), 0.01840072),
+        (HellingerDistance(), 0.04792538),
+        (BhattacharyyaDistance(), 0.00229684),
+    ],
 )
 def test_batch_distance_bins_based_univariate_same_distribution(
     univariate_distribution_p: Tuple[float, float],
@@ -144,8 +146,8 @@ def test_batch_distance_bins_based_univariate_same_distribution(
         *univariate_distribution_p, size=num_samples
     )
 
-    detector.fit(X=X_ref)
-    distance = detector.compare(X=X_test)
+    _ = detector.fit(X=X_ref)
+    distance, _ = detector.compare(X=X_test)
 
     assert np.isclose(distance, expected_distance)
 
@@ -177,50 +179,43 @@ def test_batch_statistical_univariate(
     """
     X_ref, _, X_test = elec2_dataset  # noqa: N806
 
-    detector.fit(X=X_ref[:, 0])
-    statistic, p_value = detector.compare(X=X_test[:, 0])
+    _ = detector.fit(X=X_ref[:, 0])
+    (statistic, p_value), _ = detector.compare(X=X_test[:, 0])
 
     assert np.isclose(statistic, expected_statistic)
     assert np.isclose(p_value, expected_p_value)
 
 
-@pytest.mark.parametrize("detector", [MMD()])
+@pytest.mark.parametrize("detector, expected_distance", [(MMD(), 0.12183835)])
 def test_batch_distance_based_multivariate_different_distribution(
-    multivariate_distribution_p: Tuple[np.ndarray, np.ndarray],
-    multivariate_distribution_q: Tuple[np.ndarray, np.ndarray],
+    X_ref_multivariate: np.ndarray,  # noqa: N803
+    X_test_multivariate: np.ndarray,  # noqa: N803
     detector: DataDriftBatchBase,
-    num_samples: int = 500,
+    expected_distance: float,
 ) -> None:
     """Test distance based multivariate different distribution method.
 
-    :param multivariate_distribution_p: mean and covariance matrix of distribution p
-    :type multivariate_distribution_p: Tuple[numpy.ndarray, numpy.ndarray]
-    :param multivariate_distribution_q: mean and covariance matrix of distribution q
-    :type multivariate_distribution_q: Tuple[numpy.ndarray, numpy.ndarray]
+    :param X_ref_multivariate: reference multivariate data
+    :type X_ref_multivariate: numpy.ndarray
+    :param X_test_multivariate: test multivariate data
+    :type X_test_multivariate: numpy.ndarray
     :param detector: detector test
     :type detector: DataDriftBatchBase
-    :param num_samples: number of random samples
-    :type num_samples: int
+    :param expected_distance: expected distance value
+    :type expected_distance: float
     """
-    np.random.seed(seed=31)
-    X_ref = np.random.multivariate_normal(  # noqa: N806
-        *multivariate_distribution_p, size=num_samples
-    )
-    X_test = np.random.multivariate_normal(  # noqa: N806
-        *multivariate_distribution_q, size=num_samples
-    )
+    _ = detector.fit(X=X_ref_multivariate)
+    statistic, _ = detector.compare(X=X_test_multivariate)
 
-    detector.fit(X=X_ref)
-    statistic = detector.compare(X=X_test)
-
-    assert np.isclose(statistic, 0.09446612)
+    assert np.isclose(statistic, expected_distance)
 
 
-@pytest.mark.parametrize("detector", [MMD()])
+@pytest.mark.parametrize("detector, expected_distance", [(MMD(), 0.03590599)])
 def test_batch_distance_based_multivariate_same_distribution(
     multivariate_distribution_p: Tuple[np.ndarray, np.ndarray],
     detector: DataDriftBatchBase,
-    num_samples: int = 500,
+    expected_distance: float,
+    num_samples: int = 100,
 ) -> None:
     """Test distance based multivariate same distribution method.
 
@@ -230,6 +225,8 @@ def test_batch_distance_based_multivariate_same_distribution(
     :type detector: DataDriftBatchBase
     :param num_samples: number of random samples
     :type num_samples: int
+    :param expected_distance: expected distance value
+    :type expected_distance: float
     """
     np.random.seed(seed=31)
     X_ref = np.random.multivariate_normal(  # noqa: N806
@@ -239,7 +236,7 @@ def test_batch_distance_based_multivariate_same_distribution(
         *multivariate_distribution_p, size=num_samples
     )
 
-    detector.fit(X=X_ref)
-    statistic = detector.compare(X=X_test)
+    _ = detector.fit(X=X_ref)
+    statistic, _ = detector.compare(X=X_test)
 
-    assert np.isclose(statistic, 0.00256109)
+    assert np.isclose(statistic, expected_distance)

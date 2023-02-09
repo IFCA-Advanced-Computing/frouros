@@ -5,8 +5,8 @@ from typing import Callable, Tuple
 import pytest  # type: ignore
 import numpy as np  # type: ignore
 
-from frouros.concept_drift.base import ConceptDriftBase
-from frouros.concept_drift.cusum_based import (
+from frouros.detectors.concept_drift.base import ConceptDriftBase
+from frouros.detectors.concept_drift import (
     CUSUM,
     CUSUMConfig,
     GeometricMovingAverage,
@@ -14,7 +14,7 @@ from frouros.concept_drift.cusum_based import (
     PageHinkley,
     PageHinkleyConfig,
 )
-from frouros.concept_drift.ddm_based import (
+from frouros.detectors.concept_drift import (
     DDM,
     DDMConfig,
     ECDDWT,
@@ -30,7 +30,7 @@ from frouros.concept_drift.ddm_based import (
     STEPD,
     STEPDConfig,
 )
-from frouros.concept_drift.window_based import ADWIN, ADWINConfig, KSWIN, KSWINConfig
+from frouros.detectors.concept_drift import ADWIN, ADWINConfig, KSWIN, KSWINConfig
 
 
 MIN_NUM_INSTANCES = 30
@@ -210,7 +210,7 @@ def test_streaming_detector_normal(
 
     :param clf_dataset: dataset generated using SEA
     :type clf_dataset: Tuple[numpy.ndarray, numpy.ndarray,
-    numpy.ndarray, numpy.ndndarray]
+    numpy.ndarray, numpy.ndarray]
     :param train_prediction_normal: test prediction values
     :type train_prediction_normal: numpy.ndarray
     :param detector_info: concept drift detector and value function
