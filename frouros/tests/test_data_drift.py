@@ -22,6 +22,7 @@ from frouros.detectors.data_drift.batch import (
     KSTest,
     WelchTTest,
 )
+from frouros.detectors.data_drift.streaming import IncrementalKSTest
 
 
 @pytest.mark.parametrize(
@@ -100,7 +101,7 @@ def test_batch_distance_bins_based_univariate_different_distribution(
     detector: DataDriftBatchBase,
     expected_distance: float,
 ) -> None:
-    """Test distance bins based univariate different distribution method.
+    """Test batch distance bins based univariate different distribution method.
 
     :param X_ref_univariate: reference univariate data
     :type X_ref_univariate: numpy.ndarray
@@ -131,7 +132,7 @@ def test_batch_distance_bins_based_univariate_same_distribution(
     expected_distance: float,
     num_samples: int = 500,
 ) -> None:
-    """Test distance based univariate same distribution method.
+    """Test batch distance based univariate same distribution method.
 
     :param univariate_distribution_p: mean and standard deviation of distribution p
     :type univariate_distribution_p: Tuple[float, float]
@@ -193,7 +194,7 @@ def test_batch_distance_based_multivariate_different_distribution(
     detector: DataDriftBatchBase,
     expected_distance: float,
 ) -> None:
-    """Test distance based multivariate different distribution method.
+    """Test batch distance based multivariate different distribution method.
 
     :param X_ref_multivariate: reference multivariate data
     :type X_ref_multivariate: numpy.ndarray
@@ -217,7 +218,7 @@ def test_batch_distance_based_multivariate_same_distribution(
     expected_distance: float,
     num_samples: int = 100,
 ) -> None:
-    """Test distance based multivariate same distribution method.
+    """Test batch distance based multivariate same distribution method.
 
     :param multivariate_distribution_p: mean and covariance matrix of distribution p
     :type multivariate_distribution_p: Tuple[numpy.ndarray, numpy.ndarray]
@@ -240,3 +241,80 @@ def test_batch_distance_based_multivariate_same_distribution(
     statistic, _ = detector.compare(X=X_test)
 
     assert np.isclose(statistic, expected_distance)
+
+
+@pytest.mark.parametrize(
+    "detector, expected_statistic, expected_p_value",
+    [
+        (IncrementalKSTest(), 0.27, 0.46046910),
+    ],
+)
+def test_streaming_statistical_univariate_same_distribution(
+    univariate_distribution_p: Tuple[float, float],
+    detector: DataDriftBatchBase,
+    expected_statistic: float,
+    expected_p_value: float,
+) -> None:
+    """Test streaming statistical test univariate same distribution method.
+
+    :param univariate_distribution_p: mean and standard deviation of distribution p
+    :type univariate_distribution_p: Tuple[float, float]
+    :param detector: detector statistical test
+    :type detector: DataDriftStreamingBase
+    :param expected_statistic: expected statistic value
+    :type expected_statistic: float
+    :param expected_p_value: expected p-value
+    :type expected_p_value: float
+    """
+    np.random.seed(seed=31)
+    X_ref = np.random.normal(*univariate_distribution_p, size=100)  # noqa: N806
+    X_test = np.random.normal(*univariate_distribution_p, size=100)  # noqa: N806
+
+    _ = detector.fit(X=X_ref)
+
+    for value in X_test:
+        test = detector.update(value=value)  # type: ignore
+
+    # Check last statistic and p-value
+    assert np.isclose(test.statistic, expected_statistic)
+    assert np.isclose(test.p_value, expected_p_value)
+
+
+@pytest.mark.parametrize(
+    "detector, expected_statistic, expected_p_value",
+    [
+        (IncrementalKSTest(), 1.0, 0.0),
+    ],
+)
+def test_streaming_statistical_univariate_different_distribution(
+    univariate_distribution_p: Tuple[float, float],
+    univariate_distribution_q: Tuple[float, float],
+    detector: DataDriftBatchBase,
+    expected_statistic: float,
+    expected_p_value: float,
+) -> None:
+    """Test streaming statistical test univariate different distribution method.
+
+    :param univariate_distribution_p: mean and standard deviation of distribution p
+    :type univariate_distribution_p: Tuple[float, float]
+    :param univariate_distribution_q: mean and standard deviation of distribution q
+    :type univariate_distribution_q: Tuple[float, float]
+    :param detector: detector statistical test
+    :type detector: DataDriftStreamingBase
+    :param expected_statistic: expected statistic value
+    :type expected_statistic: float
+    :param expected_p_value: expected p-value
+    :type expected_p_value: float
+    """
+    np.random.seed(seed=31)
+    X_ref = np.random.normal(*univariate_distribution_p, size=100)  # noqa: N806
+    X_test = np.random.normal(*univariate_distribution_q, size=100)  # noqa: N806
+
+    _ = detector.fit(X=X_ref)
+
+    for value in X_test:
+        test = detector.update(value=value)  # type: ignore
+
+    # Check last statistic and p-value
+    assert np.isclose(test.statistic, expected_statistic)
+    assert np.isclose(test.p_value, expected_p_value)

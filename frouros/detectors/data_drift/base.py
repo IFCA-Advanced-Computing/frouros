@@ -2,16 +2,18 @@
 
 
 import abc
-from collections import namedtuple
 import operator
-from typing import List, Optional, Union
+from typing import Any, Dict, List, Optional, Union
 
 import numpy as np  # type: ignore
 
 from frouros.callbacks import Callback
 from frouros.detectors.base import DetectorBase
+from frouros.detectors.data_drift.exceptions import DimensionError, MissingFitError
 
-TestResult = namedtuple("TestResult", ["statistic", "p_value"])
+
+class ResultBase(abc.ABC):
+    """Abstract class representing a result."""
 
 
 class DataTypeBase(abc.ABC):
@@ -151,14 +153,43 @@ class DataDriftBase(DetectorBase):
             self._check_array(X=value)
         self._X_ref = value
 
-    @abc.abstractmethod
+    def fit(self, X: np.ndarray) -> Dict[str, Any]:  # noqa: N803
+        """Fit detector.
+
+        :param X: feature data
+        :type X: numpy.ndarray
+        :return: callbacks logs
+        :rtype: Dict[str, Any]
+        """
+        self._check_fit_dimensions(X=X)
+        for callback in self.callbacks:  # type: ignore
+            callback.on_fit_start()
+        self._fit(X=X)
+        for callback in self.callbacks:  # type: ignore
+            callback.on_fit_end()
+
+        logs = self._get_callbacks_logs()
+        return logs
+
     def reset(self) -> None:
         """Reset method."""
+        self.X_ref = None
+
+    def _check_fit_dimensions(self, X: np.ndarray) -> None:  # noqa: N803
+        try:
+            if not self.statistical_type.dim_check(X.shape[1], 1):  # type: ignore
+                raise DimensionError(f"Dimensions of X ({X.shape[-1]})")
+        except IndexError as e:
+            if not self.statistical_type.dim_check(X.ndim, 1):  # type: ignore
+                raise DimensionError(f"Dimensions of X ({X.ndim})") from e
+
+    def _check_is_fitted(self):
+        if self.X_ref is None:
+            raise MissingFitError("fit method has not been called")
+
+    def _common_checks(self) -> None:  # noqa: N803
+        self._check_is_fitted()
 
     @abc.abstractmethod
-    def _compare(
-        self,
-        X: np.ndarray,  # noqa: N803
-        **kwargs,
-    ) -> np.ndarray:
+    def _fit(self, X: np.ndarray) -> None:  # noqa: N803
         pass

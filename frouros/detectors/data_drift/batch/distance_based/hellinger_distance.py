@@ -1,6 +1,7 @@
 """Hellinger distance module."""
 
 from typing import List, Optional, Union
+
 import numpy as np  # type: ignore
 
 from frouros.callbacks import Callback
