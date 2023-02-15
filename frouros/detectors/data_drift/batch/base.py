@@ -12,9 +12,7 @@ from frouros.detectors.data_drift.base import (
     StatisticalTypeBase,
 )
 from frouros.detectors.data_drift.exceptions import (
-    DimensionError,
     MismatchDimensionError,
-    MissingFitError,
 )
 
 
@@ -44,26 +42,11 @@ class DataDriftBatchBase(DataDriftBase):
         for callback in self.callbacks:  # type: ignore
             callback.set_detector(detector=self)
 
-    def fit(
+    def _fit(
         self,
         X: np.ndarray,  # noqa: N803
-    ) -> Dict[str, Any]:
-        """Fit detector.
-
-        :param X: feature data
-        :type X: numpy.ndarray
-        :return: callbacks logs
-        :rtype: Dict[str, Any]
-        """
-        self._check_fit_dimensions(X=X)
-        for callback in self.callbacks:  # type: ignore
-            callback.on_fit_start()
+    ) -> None:
         self.X_ref = X  # type: ignore
-        for callback in self.callbacks:  # type: ignore
-            callback.on_fit_end()
-
-        logs = self._get_callbacks_logs()
-        return logs
 
     def compare(
         self,
@@ -90,22 +73,6 @@ class DataDriftBatchBase(DataDriftBase):
         callbacks_logs = self._get_callbacks_logs()
         return result, callbacks_logs
 
-    def reset(self) -> None:
-        """Reset method."""
-        self.X_ref = None  # type: ignore
-
-    def _common_checks(self, X: np.ndarray) -> None:  # noqa: N803
-        self._check_is_fitted()
-        self._check_compare_dimensions(X=X)
-
-    def _check_fit_dimensions(self, X: np.ndarray) -> None:  # noqa: N803
-        try:
-            if not self.statistical_type.dim_check(X.shape[1], 1):  # type: ignore
-                raise DimensionError(f"Dimensions of X ({X.shape[-1]})")
-        except IndexError as e:
-            if not self.statistical_type.dim_check(X.ndim, 1):  # type: ignore
-                raise DimensionError(f"Dimensions of X ({X.ndim})") from e
-
     def _check_compare_dimensions(self, X: np.ndarray) -> None:  # noqa: N803
         try:
             if self.X_ref.shape[1] != X.shape[1]:  # type: ignore
@@ -117,17 +84,21 @@ class DataDriftBatchBase(DataDriftBase):
             if self.X_ref.ndim != X.ndim:  # type: ignore
                 raise MismatchDimensionError(f"Dimensions of X ({X.ndim})") from e
 
-    def _check_is_fitted(self):
-        if self.X_ref is None:
-            raise MissingFitError("fit method has not been called")
-
     def _specific_checks(self, X: np.ndarray) -> None:  # noqa: N803
-        pass
+        self._check_compare_dimensions(X=X)
 
     @abc.abstractmethod
     def _apply_method(
         self, X_ref: np.ndarray, X: np.ndarray, **kwargs  # noqa: N803
     ) -> Any:
+        pass
+
+    @abc.abstractmethod
+    def _compare(
+        self,
+        X: np.ndarray,  # noqa: N803
+        **kwargs,
+    ) -> np.ndarray:
         pass
 
     def _get_result(

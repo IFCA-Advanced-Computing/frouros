@@ -26,7 +26,7 @@ class StatisticalTestBase(DataDriftBatchBase):
         X: np.ndarray,  # noqa: N803
         **kwargs,
     ) -> StatisticalResult:
-        self._common_checks(X=X)  # noqa: N806
+        self._common_checks()  # noqa: N806
         self._specific_checks(X=X)  # noqa: N806
         result = self._get_result(X=X, **kwargs)
         return result  # type: ignore

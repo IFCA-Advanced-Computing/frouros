@@ -98,7 +98,7 @@ class DistanceBasedBase(DataDriftBatchBase):
         X: np.ndarray,  # noqa: N803
         **kwargs,
     ) -> DistanceResult:
-        self._common_checks(X=X)  # noqa: N806
+        self._common_checks()  # noqa: N806
         self._specific_checks(X=X)  # noqa: N806
         distance = self._get_result(X=X, **kwargs)  # type: ignore
         return distance  # type: ignore
