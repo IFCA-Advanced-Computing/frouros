@@ -6,6 +6,7 @@ from multiprocessing import Pool
 from typing import Any, Callable, Dict, Optional, List, Union
 
 import numpy as np  # type: ignore
+from tqdm import tqdm  # type: ignore
 
 
 class Stat(abc.ABC):
@@ -160,7 +161,7 @@ class EWMA(IncrementalStat):
         return self.mean
 
 
-def permutation_test(
+def permutation_test(  # pylint: disable=too-many-arguments,too-many-locals
     X: np.ndarray,  # noqa: N803
     Y: np.ndarray,
     statistic: Callable,
@@ -168,6 +169,7 @@ def permutation_test(
     num_permutations: int,
     num_jobs: int,
     random_state: Optional[int] = None,
+    verbose: bool = False,
 ) -> List[float]:
     """Permutation test method.
 
@@ -185,6 +187,8 @@ def permutation_test(
     :type num_jobs: int
     :param random_state: random state value
     :type random_state: Optional[int]
+    :param verbose: verbose flag
+    :type verbose: bool
     :return: permuted statistics
     :rtype: List[float]
     """
@@ -201,7 +205,8 @@ def permutation_test(
 
     with Pool(processes=num_jobs) as pool:
         permuted_statistics = pool.starmap_async(
-            partial(statistic, **statistical_args), iterable=permutations
+            partial(statistic, **statistical_args),
+            iterable=tqdm(permutations) if verbose else permutations,
         ).get()
 
     return permuted_statistics
