@@ -148,6 +148,7 @@ class PermutationTestOnBatchData(BatchCallback):
         num_permutations: int,
         num_jobs: int = -1,
         name: Optional[str] = None,
+        verbose: bool = False,
         **kwargs
     ) -> None:
         """Init method.
@@ -162,6 +163,7 @@ class PermutationTestOnBatchData(BatchCallback):
         super().__init__(name=name)
         self.num_permutations = num_permutations
         self.num_jobs = num_jobs
+        self.verbose = verbose
         self.permutation_kwargs = kwargs
 
     @property
@@ -206,6 +208,27 @@ class PermutationTestOnBatchData(BatchCallback):
             raise ValueError("value must be greater than 0 or -1.")
         self._num_jobs = multiprocessing.cpu_count() if value == -1 else value
 
+    @property
+    def verbose(self) -> bool:
+        """Verbose flag property.
+
+        :return: verbose flag
+        :rtype: bool
+        """
+        return self._verbose
+
+    @verbose.setter
+    def verbose(self, value: bool) -> None:
+        """Verbose flag setter.
+
+        :param value: value to be set
+        :type value: bool
+        :raises TypeError: Type error exception
+        """
+        if not isinstance(value, bool):
+            raise TypeError("value must of type bool.")
+        self._verbose = value
+
     @staticmethod
     def _calculate_p_value(  # pylint: disable=too-many-arguments
         X_ref: np.ndarray,  # noqa: N803
@@ -216,6 +239,7 @@ class PermutationTestOnBatchData(BatchCallback):
         num_permutations: int,
         num_jobs: int,
         random_state: int,
+        verbose: bool,
     ) -> Tuple[List[float], float]:
         permuted_statistic = permutation_test(
             X=X_ref,
@@ -225,6 +249,7 @@ class PermutationTestOnBatchData(BatchCallback):
             num_permutations=num_permutations,
             num_jobs=num_jobs,
             random_state=random_state,
+            verbose=verbose,
         )
         p_value = (observed_statistic < permuted_statistic).mean()  # type: ignore
         return permuted_statistic, p_value
@@ -241,6 +266,7 @@ class PermutationTestOnBatchData(BatchCallback):
             observed_statistic=observed_statistic,
             num_permutations=self.num_permutations,
             num_jobs=self.num_jobs,
+            verbose=self.verbose,
             **self.permutation_kwargs,
         )
         self.logs.update(
