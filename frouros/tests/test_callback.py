@@ -4,7 +4,7 @@ from typing import List, Tuple
 
 import numpy as np  # type: ignore
 import pytest  # type: ignore
-import sklearn  # type: ignore
+import sklearn  # type: ignore # pylint: disable=import-error
 
 from frouros.callbacks import (
     History,
