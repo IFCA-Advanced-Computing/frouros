@@ -400,19 +400,18 @@ def concept_drift_dataset_simple() -> Tuple[
     return (X_ref, y_ref), (X_test, y_test)
 
 
-@pytest.fixture(scope="module", name="model_errors")
-def concept_drift_model_errors_simple(
-    dataset_simple: Tuple[Tuple[np.ndarray, np.ndarray], Tuple[np.ndarray, np.ndarray]]
-) -> List[int]:
-    """Compute model errors given a dataset with concept drift.
+@pytest.fixture(scope="module", name="model")
+def concept_drift_model(
+    dataset_simple: Tuple[Tuple[np.ndarray, np.ndarray], Tuple[np.ndarray, np.ndarray]],
+) -> sklearn.pipeline.Pipeline:
+    """Model used for concept drift.
 
-    :param dataset_simple: Dataset with concept drift
+    :param dataset_simple: dataset with concept drift
     :type dataset_simple: Tuple[Tuple[numpy.ndarray, numpy.ndarray],
-    Tuple[numpy.ndarray, numpy.ndarray]]
-    :return: model errors
-    :rtype: List[int]
+    :return: trained model
+    :rtype: sklearn.pipeline.Pipeline
     """
-    (X_ref, y_ref), (X_test, y_test) = dataset_simple  # noqa: N806
+    (X_ref, y_ref), _ = dataset_simple  # noqa: N806
 
     pipeline = sklearn.pipeline.Pipeline(
         [
@@ -422,7 +421,27 @@ def concept_drift_model_errors_simple(
     )
     pipeline.fit(X=X_ref, y=y_ref)
 
-    y_test_pred = pipeline.predict(X_test)
+    return pipeline
+
+
+@pytest.fixture(scope="module", name="model_errors")
+def concept_drift_model_errors_simple(
+    dataset_simple: Tuple[Tuple[np.ndarray, np.ndarray], Tuple[np.ndarray, np.ndarray]],
+    model: sklearn.pipeline.Pipeline,
+) -> List[int]:
+    """Compute model errors given a dataset with concept drift.
+
+    :param dataset_simple: dataset with concept drift
+    :type dataset_simple: Tuple[Tuple[numpy.ndarray, numpy.ndarray],
+    Tuple[numpy.ndarray, numpy.ndarray]]
+    :param model: trained model
+    :type model: sklearn.pipeline.Pipeline
+    :return: model errors
+    :rtype: List[int]
+    """
+    _, (X_test, y_test) = dataset_simple  # noqa: N806
+
+    y_test_pred = model.predict(X_test)
     error = (1 - y_test_pred == y_test).astype(int).tolist()
 
     return error
