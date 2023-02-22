@@ -5,6 +5,7 @@ from .callback import (
     History,
     PermutationTestOnBatchData,
     ResetOnBatchDataDrift,
+    WarningSamplesBuffer,
 )
 
 __all__ = [
@@ -12,4 +13,5 @@ __all__ = [
     "History",
     "PermutationTestOnBatchData",
     "ResetOnBatchDataDrift",
+    "WarningSamplesBuffer",
 ]

@@ -1,5 +1,6 @@
 """DDM (Drift detection method) module."""
 
+from contextlib import suppress
 from typing import Union
 
 from frouros.detectors.concept_drift.ddm_based.base import DDMBaseConfig, DDMErrorBased
@@ -43,6 +44,9 @@ class DDM(DDMErrorBased):
                 if warning_flag:
                     # Warning
                     self.warning = True
+                    for callback in self.callbacks:  # type: ignore
+                        with suppress(AttributeError):
+                            callback.on_warning_detected(**kwargs)  # type: ignore
                 else:
                     # In-Control
                     self.warning = False

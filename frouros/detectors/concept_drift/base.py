@@ -67,11 +67,13 @@ class ConceptDriftBase(DetectorBase):
 
         self.num_instances = 0
         self.drift = False
+        for callback in self.callbacks:  # type: ignore
+            callback.set_detector(detector=self)
 
     def _set_additional_vars_callback(self) -> None:
         for callback in self.callbacks:  # type: ignore
             if isinstance(callback, History):
-                callback.set_detector(detector=self)
+                # callback.set_detector(detector=self)
                 callback.add_additional_vars(
                     vars_=self.additional_vars.keys(),  # type: ignore
                 )
@@ -145,6 +147,8 @@ class ConceptDriftBase(DetectorBase):
         """Reset method."""
         self.num_instances = 0
         self.drift = False
+        for callback in self.callbacks:  # type: ignore
+            callback.reset()
 
     @property
     def status(self) -> Dict[str, bool]:
@@ -162,10 +166,10 @@ class ConceptDriftBase(DetectorBase):
         :type value: Union[int, float]
         """
         for callback in self.callbacks:  # type: ignore
-            callback.on_update_start()  # type: ignore
+            callback.on_update_start(value=value, **kwargs)  # type: ignore
         self._update(value=value, **kwargs)
         for callback in self.callbacks:  # type: ignore
-            callback.on_update_end(value=value)  # type: ignore
+            callback.on_update_end(value=value, **kwargs)  # type: ignore
 
         callbacks_logs = self._get_callbacks_logs()
         return callbacks_logs

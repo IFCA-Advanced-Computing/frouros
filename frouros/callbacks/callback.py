@@ -1,10 +1,19 @@
 """Callback module."""
 
+import abc
+import copy
 import multiprocessing
 from typing import Any, Callable, Dict, List, Optional, Tuple, Union
 
 import numpy as np  # type: ignore
 
+# FIXME: set_detector method as a workaround to  # pylint: disable=fixme
+#  avoid circular import problem. Make it an abstract method and
+#  uncomment commented code when it is solved
+
+# from frouros.detectors.concept_drift.base import ConceptDriftBase
+# from frouros.detectors.concept_drift.ddm_based.base import DDMBased
+# from frouros.detectors.data_drift.batch.base import DataDriftBatchBase
 from frouros.utils.stats import permutation_test, Stat
 
 
@@ -42,7 +51,6 @@ class Callback:
             raise TypeError("name must be of type str or None.")
         self._name = self.__class__.__name__ if value is None else value
 
-    # FIXME: Workaround to avoid circular import problem  # pylint: disable=fixme
     def set_detector(self, detector) -> None:
         """Set detector method."""
         self.detector = detector
@@ -69,15 +77,27 @@ class Callback:
     def on_drift_detected(self) -> None:
         """On drift detected method."""
 
+    @abc.abstractmethod
+    def reset(self) -> None:
+        """Reset method."""
+
 
 class StreamingCallback(Callback):
     """Streaming callback class."""
 
-    def on_update_start(self) -> None:
+    def on_update_start(self, value: Union[int, float], **kwargs) -> None:
         """On update start method."""
 
     def on_update_end(self, value: Union[int, float], **kwargs) -> None:
         """On update end method."""
+
+    # @abc.abstractmethod
+    # def set_detector(self, detector) -> None:
+    #     """Set detector method."""
+
+    @abc.abstractmethod
+    def reset(self) -> None:
+        """Reset method."""
 
 
 class BatchCallback(Callback):
@@ -88,6 +108,14 @@ class BatchCallback(Callback):
 
     def on_compare_end(self, **kwargs) -> None:
         """On compare end method."""
+
+    # @abc.abstractmethod
+    # def set_detector(self, detector) -> None:
+    #     """Set detector method."""
+
+    @abc.abstractmethod
+    def reset(self) -> None:
+        """Reset method."""
 
 
 class History(StreamingCallback):
@@ -139,6 +167,24 @@ class History(StreamingCallback):
 
         self.logs.update(**self.history)
 
+    # def set_detector(self, detector) -> None:
+    #     """Set detector method.
+    #
+    #     :raises TypeError: Type error exception
+    #     """
+    #     if not isinstance(detector, ConceptDriftBase):
+    #         raise TypeError(
+    #             f"callback {self.__class__.name} cannot be used with detector"
+    #             f" {detector.__class__name}. Must be used with a detector of "
+    #             f"type ConceptDriftBase."
+    #         )
+    #     self.detector = detector
+
+    def reset(self) -> None:
+        """Reset method."""
+        for key in self.history.keys():
+            self.history[key].clear()
+
 
 class PermutationTestOnBatchData(BatchCallback):
     """Permutation test on batch data callback class."""
@@ -149,7 +195,7 @@ class PermutationTestOnBatchData(BatchCallback):
         num_jobs: int = -1,
         name: Optional[str] = None,
         verbose: bool = False,
-        **kwargs
+        **kwargs,
     ) -> None:
         """Init method.
 
@@ -277,6 +323,22 @@ class PermutationTestOnBatchData(BatchCallback):
             },
         )
 
+    # def set_detector(self, detector) -> None:
+    #     """Set detector method.
+    #
+    #     :raises TypeError: Type error exception
+    #     """
+    #     if not isinstance(detector, DataDriftBatchBase):
+    #         raise TypeError(
+    #             f"callback {self.__class__.name} cannot be used with detector"
+    #             f" {detector.__class__name}. Must be used with a detector of "
+    #             f"type DataDriftBatchBase."
+    #         )
+    #     self.detector = detector
+
+    def reset(self) -> None:
+        """Reset method."""
+
 
 class ResetOnBatchDataDrift(BatchCallback):
     """Reset on batch data drift callback class."""
@@ -319,3 +381,75 @@ class ResetOnBatchDataDrift(BatchCallback):
         if p_value < self.alpha:
             print("Drift detected. Resetting detector.")
             self.detector.reset()  # type: ignore
+
+    # def set_detector(self, detector) -> None:
+    #     """Set detector method.
+    #
+    #     :raises TypeError: Type error exception
+    #     """
+    #     if not isinstance(detector, DataDriftBatchBase):
+    #         raise TypeError(
+    #             f"callback {self.__class__.name} cannot be used with detector"
+    #             f" {detector.__class__name}. Must be used with a detector of "
+    #             f"type DataDriftBatchBase."
+    #         )
+    #     self.detector = detector
+
+    def reset(self) -> None:
+        """Reset method."""
+
+
+class WarningSamplesBuffer(StreamingCallback):
+    """Store warning samples as a buffer callback class."""
+
+    def __init__(self, name: Optional[str] = None) -> None:
+        """Init method.
+
+        :param name: name to be use
+        :type name: Optional[str]
+        """
+        super().__init__(name=name)
+        self.X: List[Any] = []
+        self.y: List[Any] = []
+        self._start_warning = False
+
+    def on_update_start(self, value: Union[int, float], **kwargs) -> None:
+        """On update start method."""
+        self._start_warning = not self.detector.warning  # type: ignore
+
+    def on_update_end(self, value: Union[int, float], **kwargs) -> None:
+        """On update end method.
+
+        :param value: value to update detector
+        :type value: int
+        """
+        self.logs = {
+            "X": copy.deepcopy(self.X),
+            "y": copy.deepcopy(self.y),
+        }
+
+    def on_warning_detected(self, **kwargs) -> None:
+        """On warning detected method."""
+        if self._start_warning:
+            map(lambda x: x.clear(), [self.X, self.y])
+        self.X.append(kwargs["X"])
+        self.y.append(kwargs["y"])
+
+    # def set_detector(self, detector) -> None:
+    #     """Set detector method.
+    #
+    #     :raises TypeError: Type error exception
+    #     """
+    #     if not isinstance(detector, DDMBased):
+    #         raise TypeError(
+    #             f"callback {self.__class__.name} cannot be used with detector"
+    #             f" {detector.__class__name}. Must be used with a detector of "
+    #             f"type DDMBased."
+    #         )
+    #     self.detector = detector
+
+    def reset(self) -> None:
+        """Reset method."""
+        self.X.clear()
+        self.y.clear()
+        self._start_warning = False

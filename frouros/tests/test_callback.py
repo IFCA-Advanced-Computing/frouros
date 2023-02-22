@@ -1,11 +1,17 @@
 """Test callback module."""
 
-from typing import List
+from typing import List, Tuple
 
 import numpy as np  # type: ignore
 import pytest  # type: ignore
+import sklearn  # type: ignore
 
-from frouros.callbacks import History, PermutationTestOnBatchData, ResetOnBatchDataDrift
+from frouros.callbacks import (
+    History,
+    PermutationTestOnBatchData,
+    ResetOnBatchDataDrift,
+    WarningSamplesBuffer,
+)
 from frouros.detectors.concept_drift import (
     ADWIN,
     CUSUM,
@@ -21,6 +27,7 @@ from frouros.detectors.concept_drift import (
     STEPD,
 )
 from frouros.detectors.concept_drift.base import ConceptDriftBase
+from frouros.detectors.concept_drift.ddm_based.base import DDMBased
 from frouros.detectors.data_drift.batch import (
     BhattacharyyaDistance,
     CVMTest,
@@ -155,3 +162,64 @@ def test_streaming_history_on_concept_drift(
             assert history[name]["drift"][-1]
             assert not any(history[name]["drift"][:-1])
             break
+
+
+def _fit_model(model, X, y):  # noqa: N803
+    model.fit(X=X, y=y)
+    return model
+
+
+@pytest.mark.parametrize(
+    "detector",
+    [
+        DDM,
+        ECDDWT,
+        EDDM,
+        HDDMA,
+        HDDMW,
+        RDDM,
+        STEPD,
+    ],
+)
+def test_streaming_warning_samples_buffer_on_concept_drift(
+    dataset_simple: Tuple[Tuple[np.ndarray, np.ndarray], Tuple[np.ndarray, np.ndarray]],
+    model: sklearn.pipeline.Pipeline,
+    detector: DDMBased,
+):
+    """Test streaming warning samples buffer on concept drift callback.
+
+    :param dataset_simple: dataset with concept drift
+    :type dataset_simple: Tuple[Tuple[numpy.ndarray, numpy.ndarray],
+    :param model: trained model
+    :type model: sklearn.pipeline.Pipeline
+    :param detector: concept drift detector
+    :type detector: DDMBased
+    """
+    _, test = dataset_simple  # noqa: N806
+
+    detector = detector(
+        callbacks=WarningSamplesBuffer(name="samples"),  # type: ignore
+    )
+
+    collect_example_warning_samples = False
+    X_extra, y_extra = [], []  # noqa: N806
+
+    for X, y in zip(*test):  # noqa: N806
+        y_pred = model.predict(X.reshape(1, -1))
+        if not collect_example_warning_samples:
+            error = 1 - int(y_pred == y)
+            callbacks_logs = detector.update(value=error, X=X, y=y)
+        else:
+            X_extra.append(X)
+            y_extra.append(y)
+        if detector.status["drift"]:
+            y_new_ref = callbacks_logs["samples"]["y"] + y_extra
+            if len([*set(y_new_ref)]) < 2:
+                collect_example_warning_samples = True
+            else:
+                X_new_ref = callbacks_logs["samples"]["X"] + X_extra  # noqa: N806
+                collect_example_warning_samples = False
+                X_extra.clear()
+                y_extra.clear()
+                detector.reset()
+                model = _fit_model(model=model, X=X_new_ref, y=y_new_ref)
