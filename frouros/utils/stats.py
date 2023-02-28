@@ -200,7 +200,7 @@ def permutation_test(  # pylint: disable=too-many-arguments,too-many-locals
     for _ in range(num_permutations):
         permuted_data = np.random.permutation(data)
         permutations.append(
-            (permuted_data[X_num_samples:], permuted_data[:Y_num_samples])
+            (permuted_data[:X_num_samples], permuted_data[-Y_num_samples:])
         )
 
     with Pool(processes=num_jobs) as pool:
