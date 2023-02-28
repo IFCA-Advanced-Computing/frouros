@@ -6,10 +6,12 @@ import numpy as np  # type: ignore
 import pytest  # type: ignore
 import sklearn  # type: ignore # pylint: disable=import-error
 
-from frouros.callbacks import (
-    History,
+from frouros.callbacks.batch import (
     PermutationTestOnBatchData,
     ResetOnBatchDataDrift,
+)
+from frouros.callbacks.streaming import (
+    History,
     WarningSamplesBuffer,
 )
 from frouros.detectors.concept_drift import (

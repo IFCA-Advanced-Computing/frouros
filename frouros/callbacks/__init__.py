@@ -1,12 +1,8 @@
 """Callbacks init."""
 
-from .callback import (
-    Callback,
-    History,
-    PermutationTestOnBatchData,
-    ResetOnBatchDataDrift,
-    WarningSamplesBuffer,
-)
+from .base import Callback
+from .batch import PermutationTestOnBatchData, ResetOnBatchDataDrift
+from .streaming import History, WarningSamplesBuffer
 
 __all__ = [
     "Callback",

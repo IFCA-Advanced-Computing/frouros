@@ -10,7 +10,7 @@ import sklearn.preprocessing  # type: ignore # pylint: disable=import-error
 
 from frouros.datasets.real import Elec2
 from frouros.datasets.synthetic import Dummy, SEA
-from frouros.metrics.prequential_error import PrequentialError
+from frouros.metrics import PrequentialError
 
 
 # Elec2 fixtures
@@ -299,9 +299,7 @@ def prequential_error():
     :return: prequential error
     :rtype: PrequentialError
     """
-    return PrequentialError(
-        error_scorer=lambda y_true, y_pred: int(1 - y_true == y_pred)
-    )
+    return PrequentialError()
 
 
 class DummyClassificationModel:
