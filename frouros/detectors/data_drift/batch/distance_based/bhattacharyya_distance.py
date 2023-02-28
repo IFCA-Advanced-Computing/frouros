@@ -45,7 +45,7 @@ class BhattacharyyaDistance(DistanceBinsBasedBase):
     @staticmethod
     def _bhattacharyya(
         X: np.ndarray, Y: np.ndarray, *, num_bins: int  # noqa: N803
-    ) -> float:  # noqa: N803
+    ) -> float:
         (  # noqa: N806
             X_percents,
             Y_percents,
