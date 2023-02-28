@@ -6,7 +6,7 @@ from typing import Any, Callable, Dict, List, Optional, Tuple
 import numpy as np  # type: ignore
 
 from frouros.callbacks.batch.base import BatchCallback
-from frouros.utils.stats import permutation_test
+from frouros.utils.stats import permutation
 
 
 class PermutationTestOnBatchData(BatchCallback):
@@ -110,7 +110,7 @@ class PermutationTestOnBatchData(BatchCallback):
         random_state: int,
         verbose: bool,
     ) -> Tuple[List[float], float]:
-        permuted_statistic = permutation_test(
+        permuted_statistic = permutation(
             X=X_ref,
             Y=X_test,
             statistic=statistic,

@@ -5,6 +5,6 @@ show_missing = True
 source = frouros
 omit =
     */setup.py
-    */frouros/__init__.py
+    */__init__.py
     */frouros/setup.py
-    */frouros/*/tests/*.py
+    */frouros/tests/*

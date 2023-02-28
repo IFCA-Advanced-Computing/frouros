@@ -1,12 +1,15 @@
 """Stats module."""
 
 import abc
+import itertools
 from functools import partial
 from multiprocessing import Pool
 from typing import Any, Callable, Dict, Optional, List, Union
 
 import numpy as np  # type: ignore
 from tqdm import tqdm  # type: ignore
+
+from frouros.utils.logger import logger
 
 
 class Stat(abc.ABC):
@@ -161,7 +164,7 @@ class EWMA(IncrementalStat):
         return self.mean
 
 
-def permutation_test(  # pylint: disable=too-many-arguments,too-many-locals
+def permutation(  # pylint: disable=too-many-arguments,too-many-locals
     X: np.ndarray,  # noqa: N803
     Y: np.ndarray,
     statistic: Callable,
@@ -171,7 +174,7 @@ def permutation_test(  # pylint: disable=too-many-arguments,too-many-locals
     random_state: Optional[int] = None,
     verbose: bool = False,
 ) -> List[float]:
-    """Permutation test method.
+    """Permutation method.
 
     :param X: reference data
     :type X: numpy.ndarray
@@ -196,17 +199,27 @@ def permutation_test(  # pylint: disable=too-many-arguments,too-many-locals
     X_num_samples, Y_num_samples = X.shape[0], Y.shape[0]  # noqa: N806
     data = np.concatenate([X, Y])
 
-    permutations = []
-    for _ in range(num_permutations):
-        permuted_data = np.random.permutation(data)
-        permutations.append(
-            (permuted_data[:X_num_samples], permuted_data[-Y_num_samples:])
+    max_num_permutations = np.math.factorial(data.shape[0])
+    if num_permutations >= max_num_permutations:
+        logger.warning(
+            "Number of permutations (%s) is greater or equal "
+            "than the number of different possible permutations "
+            "(%s). %s number of permutations will be used instead.",
+            num_permutations,
+            max_num_permutations,
+            max_num_permutations,
         )
+        permutations = np.array([*itertools.permutations(data)])
+    else:
+        permutations = [np.random.permutation(data) for _ in range(num_permutations)]
+    permuted_data = []
+    for data in permutations:
+        permuted_data.append((data[:X_num_samples], data[-Y_num_samples:]))
 
     with Pool(processes=num_jobs) as pool:
         permuted_statistics = pool.starmap_async(
             partial(statistic, **statistical_args),
-            iterable=tqdm(permutations) if verbose else permutations,
+            iterable=tqdm(permuted_data) if verbose else permuted_data,
         ).get()
 
     return permuted_statistics
