@@ -52,3 +52,11 @@ class BaseMetric(abc.ABC):
     @abc.abstractmethod
     def reset(self) -> None:
         """Reset method."""
+
+    def __repr__(self) -> str:
+        """Repr method.
+
+        :return: repr value
+        :rtype: str
+        """
+        return f"{self.__class__.__name__}(name='{self.name}')"

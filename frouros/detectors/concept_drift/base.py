@@ -43,6 +43,17 @@ class ConceptDriftBaseConfig(abc.ABC):
             raise ValueError("value must be greater than 0.")
         self._min_num_instances = value
 
+    def __repr__(self) -> str:
+        """Repr method.
+
+        :return: repr value
+        :rtype: str
+        """
+        return (
+            f"{self.__class__.__name__}"
+            f"({', '.join(f'{k[1:]}={v}' for k, v in self.__dict__.items())})"
+        )
+
 
 class ConceptDriftBase(DetectorBase):
     """Abstract class representing a delayed target."""
@@ -183,3 +194,11 @@ class ConceptDriftBase(DetectorBase):
     @abc.abstractmethod
     def _update(self, value: Union[int, float], **kwargs) -> None:
         pass
+
+    def __repr__(self) -> str:
+        """Repr method.
+
+        :return: repr value
+        :rtype: str
+        """
+        return f"{super().__repr__()[:-1]}, config={self.config})"

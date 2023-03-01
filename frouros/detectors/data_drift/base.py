@@ -23,6 +23,17 @@ class DataTypeBase(abc.ABC):
     def __init__(self) -> None:
         """Init method."""
 
+    def __repr__(self) -> str:
+        """Repr method.
+
+        :return: repr value
+        :rtype: str
+        """
+        return (
+            f"{self.__class__.__name__}"
+            f"({', '.join(f'{k}={v}' for k, v in self.__dict__.items())})"
+        )
+
 
 class CategoricalData(DataTypeBase):
     """Class representing categorical data."""
@@ -48,6 +59,17 @@ class StatisticalTypeBase(abc.ABC):
     @abc.abstractmethod
     def __init__(self) -> None:
         """Init method."""
+
+    def __repr__(self) -> str:
+        """Repr method.
+
+        :return: repr value
+        :rtype: str
+        """
+        return (
+            f"{self.__class__.__name__}"
+            f"({', '.join(f'{k[1:]}={v}' for k, v in self.__dict__.items())})"
+        )
 
 
 class UnivariateData(StatisticalTypeBase):
@@ -193,3 +215,15 @@ class DataDriftBase(DetectorBase):
     @abc.abstractmethod
     def _fit(self, X: np.ndarray) -> None:  # noqa: N803
         pass
+
+    def __repr__(self) -> str:
+        """Repr method.
+
+        :return: repr value
+        :rtype: str
+        """
+        return (
+            f"{super().__repr__()[:-1]}, "
+            f"data_type={self.data_type}, "
+            f"statistical_type={self.statistical_type})"
+        )

@@ -1,6 +1,6 @@
 """Synthetic datasets module."""
 
-from typing import Optional, Tuple, Iterator
+from typing import Tuple, Iterator
 
 import numpy as np  # type: ignore
 
@@ -12,17 +12,6 @@ class SEA(Generator):
     """SEA generator class."""
 
     block_map = {1: 8.0, 2: 9.0, 3: 7.0, 4: 9.5}
-
-    def __init__(self, seed: Optional[int] = None) -> None:
-        """Init method.
-
-        :param seed: seed value
-        :type seed: Optional[int]
-        """
-        try:
-            np.random.seed(seed=seed)
-        except (TypeError, ValueError) as e:
-            raise e
 
     @staticmethod
     def _generate_sample(threshold: float, noise: float) -> Tuple[np.ndarray, int]:
@@ -64,17 +53,6 @@ class SEA(Generator):
 
 class Dummy(Generator):
     """Dummy generator class."""
-
-    def __init__(self, seed: Optional[int] = None) -> None:
-        """Init method.
-
-        :param seed: seed value
-        :type seed: Optional[int]
-        """
-        try:
-            np.random.seed(seed=seed)
-        except (TypeError, ValueError) as e:
-            raise e
 
     @staticmethod
     def _generate_sample(class_: int) -> Tuple[np.ndarray, int]:
