@@ -65,3 +65,14 @@ class DetectorBase(abc.ABC):
     def _check_array(X: Any) -> None:  # noqa: N803
         if not isinstance(X, np.ndarray):
             raise TypeError("X must be a numpy array")
+
+    def __repr__(self) -> str:
+        """Repr method.
+
+        :return: repr value
+        :rtype: str
+        """
+        return (
+            f"{self.__class__.__name__}"
+            f"(callbacks=[{', '.join(self.callbacks)}])"  # type: ignore
+        )

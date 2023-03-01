@@ -6,7 +6,9 @@ from typing import Any, List, Optional, Union
 import urllib.parse
 from pathlib import Path
 
+import numpy as np  # type: ignore
 import requests
+
 from frouros.datasets.exceptions import (
     DownloadError,
     InvalidURLError,
@@ -161,6 +163,36 @@ class Dataset(abc.ABC):
         :rtype: Any
         """
 
+    def __repr__(self) -> str:
+        """Repr method.
+
+        :return: repr value
+        :rtype: str
+        """
+        return (
+            f"{self.__class__.__name__}"
+            f"(url={self.url}, file_path='{self.file_path}')"
+        )
+
 
 class Generator(abc.ABC):
     """Abstract class representing a dataset generator."""
+
+    def __init__(self, seed: Optional[int] = None) -> None:
+        """Init method.
+
+        :param seed: seed value
+        :type seed: Optional[int]
+        """
+        try:
+            np.random.seed(seed=seed)
+        except (TypeError, ValueError) as e:
+            raise e
+
+    def __repr__(self) -> str:
+        """Repr method.
+
+        :return: repr value
+        :rtype: str
+        """
+        return f"{self.__class__.__name__}()"

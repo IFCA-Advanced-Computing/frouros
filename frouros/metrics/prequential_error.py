@@ -97,3 +97,11 @@ class PrequentialError(BaseMetric):
         self.cumulative_error = 0.0
         self.cumulative_instances = 0.0
         self.num_instances = 0
+
+    def __repr__(self) -> str:
+        """Repr method.
+
+        :return: repr value
+        :rtype: str
+        """
+        return f"{super().__repr__()[:-1]}, alpha={self.alpha})"
