@@ -1,0 +1,1 @@
+"""Batch callbacks test init."""
