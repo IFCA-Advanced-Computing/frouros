@@ -1,34 +1,18 @@
-# Datasets
+# Callbacks
 
 ```{eval-rst}
-.. automodule:: frouros.datasets
+.. automodule:: frouros.callbacks
     :no-members:
     :no-inherited-members:
 ```
 
-```{currentmodule} frouros.datasets
+```{currentmodule} frouros.callbacks
 ```
 
-## Real
+## Batch
 
 ```{eval-rst}
-.. automodule:: frouros.datasets.real
-    :no-members:
-    :no-inherited-members:
-```
-
-```{eval-rst}
-.. autosummary::
-    :toctree: auto_generated/
-    :template: class.md
-
-    Elec2
-```
-
-## Synthetic
-
-```{eval-rst}
-.. automodule:: frouros.datasets.synthetic
+.. automodule:: frouros.callbacks.batch
     :no-members:
     :no-inherited-members:
 ```
@@ -38,5 +22,23 @@
     :toctree: auto_generated/
     :template: class.md
 
-    SEA
+    PermutationTestOnBatchData
+    ResetOnBatchDataDrift
+```
+
+## Streaming
+
+```{eval-rst}
+.. automodule:: frouros.callbacks.streaming
+    :no-members:
+    :no-inherited-members:
+```
+
+```{eval-rst}
+.. autosummary::
+    :toctree: auto_generated/
+    :template: class.md
+
+    History
+    WarningSamplesBuffer
 ```

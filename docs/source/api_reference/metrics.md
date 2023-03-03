@@ -23,5 +23,4 @@
     :template: class.md
 
     PrequentialError
-    PrequentialErrorFadingFactor
 ```

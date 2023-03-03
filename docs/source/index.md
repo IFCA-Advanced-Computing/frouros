@@ -1,32 +1,29 @@
-[//]: # (```{include} ../../README.md)
-
-[//]: # (:relative-images:)
-
-[//]: # (```)
-
 # Welcome to Frouros
 
 A Python library for drift detection in Machine Learning problems.
 
-Read {doc}`installation` instructions to start using `frouros`.
+In order to start using `frouros`, we highly recommend to check {doc}`concepts <concepts>` section to get a quick idea of what `frouros` is capable of, and what it is not yet capable of. Subsequently, we recommend taking a look at the {doc}`examples <examples>` section since it is the best way to start using `frouros`.
+
+Read {doc}`installation <installation>` instructions to start using `frouros`.
+
+## Quickstart
+
+```{include} ../../README.md
+:start-after: Quickstart
+:end-before: Installation
+```
 
 ```{warning}
 This library and its documentation are under heavy development.
 ```
 
 ```{toctree}
-:maxdepth: 2
+:maxdepth: 1
+:hidden:
 
-get_started
 installation
 concepts
 api_reference
 examples
 about
 ```
-
-# Indices and tables
-
-- {ref}`genindex`
-- {ref}`modindex`
-- {ref}`search`
