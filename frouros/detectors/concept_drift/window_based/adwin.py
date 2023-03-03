@@ -487,7 +487,7 @@ class ADWIN(WindowBased):
                 bucket = None
             idx += 1
 
-    def _calculate_threshold(self, w0_instances, w1_instances) -> float:
+    def _calculate_threshold(self, w0_instances: int, w1_instances: int) -> float:
         # NOTE: Review this formula
         delta_prime = self.config.delta / np.log(  # type: ignore
             w0_instances + w1_instances
@@ -509,7 +509,7 @@ class ADWIN(WindowBased):
         self.num_instances += 1
         self._insert_bucket(value=value)
 
-        self.drift = False
+        # self.drift = False
         if (
             self.num_instances % self.config.clock == 0  # type: ignore
             and self.width > self.config.min_num_instances  # type: ignore

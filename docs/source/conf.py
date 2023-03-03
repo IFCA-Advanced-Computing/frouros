@@ -22,7 +22,7 @@ sys.path.insert(0, os.path.abspath("../.."))
 # -- Project information -----------------------------------------------------
 
 project = "Frouros"
-copyright = "2022, Spanish National Research Council (CSIC)"
+copyright = "2023, Spanish National Research Council (CSIC)"
 author = "Spanish National Research Council (CSIC)"
 
 # The full version, including alpha/beta/rc tags
@@ -110,4 +110,11 @@ myst_enable_extensions = [
 ]
 myst_url_schemes = ("http", "https", "mailto")
 myst_heading_anchors = 3
-nb_execution_timeout = 180
+
+# MyST-NB configuration
+nb_execution_timeout = 240
+nb_execution_raise_on_error = True
+nb_merge_streams = True
+
+# sphinxcontrib-bibtex configuration
+bibtex_default_style = "plain"
