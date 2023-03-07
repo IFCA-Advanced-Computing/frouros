@@ -18,8 +18,8 @@ class KL(DistanceProbabilityBasedBase):
     :References:
 
     .. [kullback1951information] Kullback, Solomon, and Richard A. Leibler.
-    "On information and sufficiency." The annals of mathematical
-    statistics 22.1 (1951): 79-86.
+        "On information and sufficiency."
+        The annals of mathematical statistics 22.1 (1951): 79-86.
     """
 
     def __init__(

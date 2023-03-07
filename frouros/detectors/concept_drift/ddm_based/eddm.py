@@ -15,8 +15,8 @@ class EDDMConfig(DDMBaseConfig):
     :References:
 
     .. [baena2006early] Baena-Garcıa, Manuel, et al. "Early drift detection method."
-    Fourth international workshop on knowledge discovery from data streams.
-    Vol. 6. 2006.
+        Fourth international workshop on knowledge discovery from data streams.
+        Vol. 6. 2006.
     """
 
     def __init__(
@@ -136,8 +136,8 @@ class EDDM(DDMBased):
     :References:
 
     .. [baena2006early] Baena-Garcıa, Manuel, et al. "Early drift detection method."
-    Fourth international workshop on knowledge discovery from data streams.
-    Vol. 6. 2006.
+        Fourth international workshop on knowledge discovery from data streams.
+        Vol. 6. 2006.
     """
 
     config_type = EDDMConfig  # type: ignore

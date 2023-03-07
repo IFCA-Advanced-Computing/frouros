@@ -13,9 +13,9 @@ class GeometricMovingAverageConfig(CUSUMBaseConfig, AlphaConfig):
     :References:
 
     .. [robertst1959control] Roberts, S. W.
-    “Control Chart Tests Based on Geometric Moving Averages.”
-    Technometrics, vol. 1, no. 3, 1959, pp. 239–50.
-    JSTOR, https://doi.org/10.2307/1266443.
+        “Control Chart Tests Based on Geometric Moving Averages.”
+        Technometrics, vol. 1, no. 3, 1959, pp. 239–50.
+        JSTOR, https://doi.org/10.2307/1266443.
     """
 
     def __init__(
@@ -46,9 +46,9 @@ class GeometricMovingAverage(CUSUMBase):
     :References:
 
     .. [robertst1959control] Roberts, S. W.
-    “Control Chart Tests Based on Geometric Moving Averages.”
-    Technometrics, vol. 1, no. 3, 1959, pp. 239–50.
-    JSTOR, https://doi.org/10.2307/1266443.
+        “Control Chart Tests Based on Geometric Moving Averages.”
+        Technometrics, vol. 1, no. 3, 1959, pp. 239–50.
+        JSTOR, https://doi.org/10.2307/1266443.
     """
 
     config_type = GeometricMovingAverageConfig  # type: ignore

@@ -15,8 +15,8 @@ class CUSUMConfig(CUSUMBaseConfig, DeltaConfig):
     :References:
 
     .. [page1954continuous] Page, Ewan S.
-    "Continuous inspection schemes."
-    Biometrika 41.1/2 (1954): 100-115.
+        "Continuous inspection schemes."
+        Biometrika 41.1/2 (1954): 100-115.
     """
 
     def __init__(
@@ -47,8 +47,8 @@ class CUSUM(CUSUMBase):
     :References:
 
     .. [page1954continuous] Page, Ewan S.
-    "Continuous inspection schemes."
-    Biometrika 41.1/2 (1954): 100-115.
+        "Continuous inspection schemes."
+        Biometrika 41.1/2 (1954): 100-115.
     """
 
     config_type = CUSUMConfig  # type: ignore

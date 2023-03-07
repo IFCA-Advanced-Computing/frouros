@@ -15,9 +15,9 @@ class BhattacharyyaDistance(DistanceBinsBasedBase):
 
     :References:
 
-    .. [bhattacharyya1946measure] Bhattacharyya, Anil. "On a measure
-    of divergence between two multinomial populations." Sankhyā:
-    the indian journal of statistics (1946): 401-406.
+    .. [bhattacharyya1946measure] Bhattacharyya, Anil.
+        "On a measure of divergence between two multinomial populations."
+        Sankhyā: the indian journal of statistics (1946): 401-406.
     """
 
     def __init__(

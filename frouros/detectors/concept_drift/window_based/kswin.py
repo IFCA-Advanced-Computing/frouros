@@ -20,8 +20,8 @@ class KSWINConfig(WindowBaseConfig):
     :References:
 
     .. [raab2020reactive] Raab, Christoph, Moritz Heusinger, and Frank-Michael Schleif.
-    "Reactive soft prototype computing for concept drift streams."
-    Neurocomputing 416 (2020): 340-351.
+        "Reactive soft prototype computing for concept drift streams."
+        Neurocomputing 416 (2020): 340-351.
     """
 
     def __init__(
@@ -107,8 +107,8 @@ class KSWIN(WindowBased):
     :References:
 
     .. [raab2020reactive] Raab, Christoph, Moritz Heusinger, and Frank-Michael Schleif.
-    "Reactive soft prototype computing for concept drift streams."
-    Neurocomputing 416 (2020): 340-351.
+        "Reactive soft prototype computing for concept drift streams."
+        Neurocomputing 416 (2020): 340-351.
     """
 
     config_type = KSWINConfig

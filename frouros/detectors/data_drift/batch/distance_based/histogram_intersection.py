@@ -16,8 +16,8 @@ class HistogramIntersection(DistanceBinsBasedBase):
     :References:
 
     .. [swain1991color] Swain, M. J., and D. H. Ballard.
-    "Color Indexing International Journal of Computer
-    Vision 7." (1991): 11-32.
+        "Color Indexing International Journal of Computer
+        Vision 7." (1991): 11-32.
     """
 
     def __init__(

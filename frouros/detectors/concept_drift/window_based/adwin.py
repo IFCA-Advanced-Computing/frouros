@@ -158,9 +158,9 @@ class ADWINConfig(WindowBaseConfig):
     :References:
 
     .. [bifet2007learning] Bifet, Albert, and Ricard Gavalda.
-    "Learning from time-changing data with adaptive windowing."
-    Proceedings of the 2007 SIAM international conference on data mining.
-    Society for Industrial and Applied Mathematics, 2007.
+        "Learning from time-changing data with adaptive windowing."
+        Proceedings of the 2007 SIAM international conference on data mining.
+        Society for Industrial and Applied Mathematics, 2007.
     """
 
     def __init__(
@@ -259,9 +259,9 @@ class ADWIN(WindowBased):
     :References:
 
     .. [bifet2007learning] Bifet, Albert, and Ricard Gavalda.
-    "Learning from time-changing data with adaptive windowing."
-    Proceedings of the 2007 SIAM international conference on data mining.
-    Society for Industrial and Applied Mathematics, 2007.
+        "Learning from time-changing data with adaptive windowing."
+        Proceedings of the 2007 SIAM international conference on data mining.
+        Society for Industrial and Applied Mathematics, 2007.
     """
 
     config_type = ADWINConfig

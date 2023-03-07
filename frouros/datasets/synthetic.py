@@ -14,9 +14,9 @@ class SEA(Generator):
     :References:
 
     .. [street2001streaming] Street, W. Nick, and YongSeog Kim.
-    "A streaming ensemble algorithm (SEA) for large-scale classification."
-    Proceedings of the seventh ACM SIGKDD international conference on Knowledge
-    discovery and data mining. 2001.
+        "A streaming ensemble algorithm (SEA) for large-scale classification."
+        Proceedings of the seventh ACM SIGKDD international conference on Knowledge
+        discovery and data mining. 2001.
     """
 
     block_map = {1: 8.0, 2: 9.0, 3: 7.0, 4: 9.5}

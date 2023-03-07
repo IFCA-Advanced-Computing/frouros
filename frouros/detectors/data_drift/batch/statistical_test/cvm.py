@@ -19,9 +19,9 @@ class CVMTest(StatisticalTestBase):
 
     :References:
 
-    .. [cramer1928composition] Cramér, Harald. "On the composition of
-    elementary errors: First paper: Mathematical deductions."
-    Scandinavian Actuarial Journal 1928.1 (1928): 13-74.
+    .. [cramer1928composition] Cramér, Harald.
+        "On the composition of elementary errors: First paper: Mathematical deductions."
+        Scandinavian Actuarial Journal 1928.1 (1928): 13-74.
     """
 
     def __init__(

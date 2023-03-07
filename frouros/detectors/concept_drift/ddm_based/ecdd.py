@@ -18,8 +18,8 @@ class ECDDWTConfig(ECDDBaseConfig):
     :References:
 
     .. [ross2012exponentially] Ross, Gordon J., et al.
-    "Exponentially weighted moving average charts for detecting concept drift."
-    Pattern recognition letters 33.2 (2012): 191-198.
+        "Exponentially weighted moving average charts for detecting concept drift."
+        Pattern recognition letters 33.2 (2012): 191-198.
     """
 
 
@@ -29,8 +29,8 @@ class ECDDWT(DDMBased):
     :References:
 
     .. [ross2012exponentially] Ross, Gordon J., et al.
-    "Exponentially weighted moving average charts for detecting concept drift."
-    Pattern recognition letters 33.2 (2012): 191-198.
+        "Exponentially weighted moving average charts for detecting concept drift."
+        Pattern recognition letters 33.2 (2012): 191-198.
     """
 
     config_type = ECDDWTConfig  # type: ignore

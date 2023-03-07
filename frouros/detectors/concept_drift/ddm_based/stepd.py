@@ -16,8 +16,8 @@ class STEPDConfig(DDMBaseConfig):
     :References:
 
     .. [nishida2007detecting] Nishida, Kyosuke, and Koichiro Yamauchi.
-    "Detecting concept drift using statistical testing." Discovery science.
-    Vol. 4755. 2007.
+        "Detecting concept drift using statistical testing." Discovery science.
+        Vol. 4755. 2007.
     """
 
     def __init__(
@@ -91,8 +91,8 @@ class STEPD(DDMBased):
     :References:
 
     .. [nishida2007detecting] Nishida, Kyosuke, and Koichiro Yamauchi.
-    "Detecting concept drift using statistical testing." Discovery science.
-    Vol. 4755. 2007.
+        "Detecting concept drift using statistical testing." Discovery science.
+        Vol. 4755. 2007.
     """
 
     config_type = STEPDConfig  # type: ignore
