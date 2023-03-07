@@ -283,489 +283,490 @@ class AccuracyQueue(CircularQueue):
         super().enqueue(value=value)
         self.num_true += np.count_nonzero(value)
 
-
-class Node:
-    """Class representing a node of a treap."""
-
-    def __init__(
-        self,
-        key: Tuple[float, Union[int, float]],
-        value: Union[int, float],
-    ) -> None:
-        """Init method.
-
-        :param key: key
-        :type key: Tuple[float, Union[int, float]]
-        :param value: value
-        :type value: Union[int, float]]
-        """
-        self.key = key
-        self.value_ = value
-        self.priority = np.random.rand()
-        self.size = 1
-        self.height = 1
-        self.lazy = 0
-        self.max_value = value
-        self.min_value = value
-        self.left = None
-        self.right = None
-
-    @property
-    def key(self) -> Tuple[float, Union[int, float]]:
-        """Key property.
-
-        :return: key value
-        :rtype: Tuple[float, Union[int, float]]
-        """
-        return self._key
-
-    @key.setter
-    def key(self, value: Tuple[float, Union[int, float]]) -> None:
-        """Key setter.
-
-        :param value: value to be set
-        :type value: int
-        :raises TypeError: Type error exception
-        """
-        if not (isinstance(value[0], float) and isinstance(value[1], (int, float))):
-            raise TypeError("value must be a tuple of float and int or float.")
-        self._key = value
-
-    @property
-    def value_(self) -> Union[int, float]:
-        """Value property.
-
-        :return: value
-        :rtype: Union[int, float]
-        """
-        return self._value
-
-    @value_.setter
-    def value_(self, value: Union[int, float]) -> None:
-        """Value setter.
-
-        :param value: value to be set
-        :type value: int
-        :raises TypeError: Type error exception
-        """
-        if not isinstance(value, (int, float)):
-            raise TypeError("value must be of type int or float.")
-        self._value = value
-
-    @property
-    def priority(self) -> float:
-        """Priority property.
-
-        :return: priority value
-        :rtype: float
-        """
-        return self._priority
-
-    @priority.setter
-    def priority(self, value: float) -> None:
-        """Value setter.
-
-        :param value: value to be set
-        :type value: float
-        :raises ValueError: Value error exception
-        """
-        if not 0.0 <= value <= 1.0:
-            raise ValueError("value must be in the range [0, 1].")
-        self._priority = value
-
-    @property
-    def size(self) -> int:
-        """Size property.
-
-        :return: size value
-        :rtype: int
-        """
-        return self._size
-
-    @size.setter
-    def size(self, value: int) -> None:
-        """Size setter.
-
-        :param value: value to be set
-        :type value: int
-        :raises ValueError: Value error exception
-        """
-        if value < 0:
-            raise ValueError("value must be a positive number.")
-        self._size = value
-
-    @property
-    def height(self) -> int:
-        """Height property.
-
-        :return: height value
-        :rtype: int
-        """
-        return self._height
-
-    @height.setter
-    def height(self, value: int) -> None:
-        """Height setter.
-
-        :param value: value to be set
-        :type value: int
-        :raises ValueError: Value error exception
-        """
-        if value < 0:
-            raise ValueError("value must be a positive number.")
-        self._height = value
-
-    @property
-    def lazy(self) -> Union[int, float]:
-        """Lazy property.
-
-        :return: lazy value
-        :rtype: Union[int, float]
-        """
-        return self._lazy
-
-    @lazy.setter
-    def lazy(self, value: Union[int, float]) -> None:
-        """Lazy setter.
-
-        :param value: value to be set
-        :type value: Union[int, float]
-        """
-        self._lazy = value
-
-    @property
-    def max_value(self) -> Union[int, float]:
-        """Maximum value property.
-
-        :return: maximum value
-        :rtype: Union[int, float]
-        """
-        return self._max_value
-
-    @max_value.setter
-    def max_value(self, value: Union[int, float]) -> None:
-        """Maximum setter.
-
-        :param value: value to be set
-        :type value: Union[int, float]
-        """
-        self._max_value = value
-
-    @property
-    def min_value(self) -> Union[int, float]:
-        """Minimum value property.
-
-        :return: minimum value
-        :rtype: Union[int, float]
-        """
-        return self._min_value
-
-    @min_value.setter
-    def min_value(self, value: Union[int, float]) -> None:
-        """Minimum setter.
-
-        :param value: value to be set
-        :type value: Union[int, float]
-        """
-        self._min_value = value
-
-    @property
-    def left(self):
-        """Left node property.
-
-        :return: left node
-        :rtype: Optional[Node]
-        """
-        return self._left
-
-    @left.setter
-    def left(self, value) -> None:
-        """Left node setter.
-
-        :param value: value to be set
-        :type value: Optional[Node]
-        """
-        self._left = value
-
-    @property
-    def right(self):
-        """Right node property.
-
-        :return: right node
-        :rtype: Optional[Node]
-        """
-        return self._right
-
-    @right.setter
-    def right(self, value) -> None:
-        """Right node setter.
-
-        :param value: value to be set
-        :type value: Optional[Node]
-        """
-        self._right = value
-
-    def increase(self, value: Union[int, float]) -> None:
-        """Increase node by a value.
-
-        :param value: value to use
-        :type value: Union[int, float]
-        """
-        self.value_ += value
-        self.max_value += value
-        self.min_value += value
-        self.lazy += value
-
-    def unlazy(self) -> None:
-        """Unlazy node."""
-        if self.left is not None:
-            self.left.increase(value=self.lazy)
-        if self.right is not None:
-            self.right.increase(value=self.lazy)
-        self.lazy = 0
-
-    def split_first(self):
-        """Split first element."""
-        self.unlazy()
-
-        if self.left is not None:
-            left, self.left = self.left.split_first()
-            right = self
-        else:
-            right = self.right
-            self.right = None
-            left = self
-
-        if self.left is not None:
-            self.left.update()
-        if self.right is not None:
-            self.right.update()
-        return left, right
-
-    def split_last(self):
-        """Split last element."""
-        self.unlazy()
-
-        if self.right is not None:
-            self.right, right = self.right.split_last()
-            left = self
-        else:
-            left = self.left
-            self.left = None
-            right = self
-
-        if self.left is not None:
-            self.left.update()
-        if self.right is not None:
-            self.right.update()
-        return left, right
-
-    def update(self):
-        """Update node values."""
-        self.unlazy()
-
-        self.size = 1
-        self.height = 0
-        self.max_value = self.value_
-        self.min_value = self.value_
-
-        if self.left is not None:
-            self.size += self.left.size
-            self.height = self.left.height
-            self.max_value = max(self.max_value, self.left.max_value)
-            self.min_value = min(self.min_value, self.left.min_value)
-
-        if self.right is not None:
-            self.size += self.right.size
-            self.height = max(self.height, self.right.height)
-            self.max_value = max(self.max_value, self.right.max_value)
-            self.min_value = min(self.min_value, self.right.min_value)
-
-        self.height += 1
-
-    def split(self, key: Tuple[float, Union[int, float]]):
-        """Split."""
-        self.unlazy()
-
-        if key <= self.key:
-            left, self.left = (
-                self.left.split(key=key) if self.left is not None else (None, None)
-            )
-            right = self
-        else:
-            self.right, right = (
-                self.right.split(key=key) if self.right is not None else (None, None)
-            )
-            left = self
-        if left is not None:
-            left.update()
-        if right is not None:
-            right.update()
-        return left, right
-
-
-class Treap:
-    """Class representing a treap."""
-
-    def __init__(self, r: float = 1.0) -> None:
-        """Init method.
-
-        :param r: constant that satisfies |A| = r|B|
-        :type r: float
-        """
-        self.root = None
-        self.r = r
-        self.num_samples = [0, 0]
-
-    @property
-    def root(self) -> Optional[Node]:
-        """Root node property.
-
-        :return: root node
-        :rtype: Optional[Node]
-        """
-        return self._root
-
-    @root.setter
-    def root(self, value: Optional[Node]) -> None:
-        """Root node setter.
-
-        :param value: value to be set
-        :type value: int
-        :raises TypeError: Type error exception
-        """
-        if value is not None and not isinstance(value, Node):
-            raise TypeError("value must be of type Node or None.")
-        self._root = value
-
-    @property
-    def r(self) -> Union[int, float]:
-        """R value property.
-
-        :return: r value
-        :rtype: Union[int, float]
-        """
-        return self._r
-
-    @r.setter
-    def r(self, value: Union[int, float]) -> None:
-        """R value setter.
-
-        :param value: value to be set
-        :type value: Union[int, float]
-        :raises TypeError: Type error exception
-        """
-        if not isinstance(value, (int, float)):
-            raise TypeError("value must be of type int or float.")
-        self._r = value
-
-    @property
-    def num_samples(self) -> List[int]:
-        """Number of samples property.
-
-        :return: number of samples
-        :rtype: List[int]
-        """
-        return self._num_samples
-
-    @num_samples.setter
-    def num_samples(self, value: List[int]) -> None:
-        """Number of samples value setter.
-
-        :param value: value to be set
-        :type value: List[int]
-        :raises ValueError: Value error exception
-        """
-        if value[0] < 0 and value[1] < 0:
-            raise ValueError("value must be a positive number in both elements.")
-        self._num_samples = value
-
-    @property
-    def max(self) -> Union[int, float]:
-        """Maximum value property.
-
-        :return: maximum value
-        :rtype: Union[int, float]
-        """
-        return self.root.max_value  # type: ignore
-
-    @property
-    def min(self) -> Union[int, float]:
-        """Minimum value property.
-
-        :return: minimum value
-        :rtype: Union[int, float]
-        """
-        return self.root.min_value  # type: ignore
-
-    def insert(self, obs: float, group: int) -> None:
-        """Insert an observation by group.
-
-        :param obs: observation to insert
-        :type obs: float
-        :param group: group to which the observations belongs
-        :type group: int
-        """
-        key = (obs, group)
-        r = 1 if group == 0 else -self.r
-
-        self.num_samples[group] += 1
-
-        left, right = self.root.split(key) if self.root is not None else (None, None)
-
-        left, temp = left.split_last() if left is not None else (None, None)
-        initial_value = 0 if temp is None else temp.value_
-
-        left = self.merge(left=left, right=temp)
-
-        right = self.merge(left=Node(key=key, value=initial_value), right=right)
-        right.increase(value=r)
-
-        self.root = self.merge(left=left, right=right)
-
-    def remove(self, obs: float, group: int) -> None:
-        """Remove an observation by group.
-
-        :param obs: observation to remove
-        :type obs: float
-        :param group: group to which the observations belongs
-        :type group: int
-        """
-        key = (obs, group)
-        r = -1 if group == 0 else self.r
-
-        self.num_samples[group] -= 1
-
-        left, right = self.root.split(key) if self.root is not None else (None, None)
-        temp, right = right.split_first() if right is not None else (None, None)
-
-        if right is not None and temp is not None and temp.key == key:
-            right.increase(value=r)
-        else:
-            right = self.merge(left=temp, right=right)
-
-        self.root = self.merge(left=left, right=right)
-
-    def merge(self, left: Optional[Node], right: Optional[Node]) -> Optional[Node]:
-        """Merge two given nodes.
-
-        :param left: left node
-        :type left: Optional[Node]
-        :param right: right node
-        :type right: Optional[Node]
-        :return result of merging the two nodes
-        :rtype Optional[Node]
-        """
-        if left is None or right is None:
-            return left or right
-
-        if left.priority > right.priority:
-            left.unlazy()
-            left.right = self.merge(left=left.right, right=right)
-            node = left
-        else:
-            right.unlazy()
-            right.left = self.merge(left=left, right=right.left)
-            node = right
-        node.update()
-        return node
+# FIXME: There seem to be a bug on the treap DS. Uncomment all  # pylint: disable=fixme
+#  the commented code lines when that is solved.
+# class Node:
+#     """Class representing a node of a treap."""
+#
+#     def __init__(
+#         self,
+#         key: Tuple[float, Union[int, float]],
+#         value: Union[int, float],
+#     ) -> None:
+#         """Init method.
+#
+#         :param key: key
+#         :type key: Tuple[float, Union[int, float]]
+#         :param value: value
+#         :type value: Union[int, float]]
+#         """
+#         self.key = key
+#         self.value_ = value
+#         self.priority = np.random.rand()
+#         self.size = 1
+#         self.height = 1
+#         self.lazy = 0
+#         self.max_value = value
+#         self.min_value = value
+#         self.left = None
+#         self.right = None
+#
+#     @property
+#     def key(self) -> Tuple[float, Union[int, float]]:
+#         """Key property.
+#
+#         :return: key value
+#         :rtype: Tuple[float, Union[int, float]]
+#         """
+#         return self._key
+#
+#     @key.setter
+#     def key(self, value: Tuple[float, Union[int, float]]) -> None:
+#         """Key setter.
+#
+#         :param value: value to be set
+#         :type value: int
+#         :raises TypeError: Type error exception
+#         """
+#         if not (isinstance(value[0], float) and isinstance(value[1], (int, float))):
+#             raise TypeError("value must be a tuple of float and int or float.")
+#         self._key = value
+#
+#     @property
+#     def value_(self) -> Union[int, float]:
+#         """Value property.
+#
+#         :return: value
+#         :rtype: Union[int, float]
+#         """
+#         return self._value
+#
+#     @value_.setter
+#     def value_(self, value: Union[int, float]) -> None:
+#         """Value setter.
+#
+#         :param value: value to be set
+#         :type value: int
+#         :raises TypeError: Type error exception
+#         """
+#         if not isinstance(value, (int, float)):
+#             raise TypeError("value must be of type int or float.")
+#         self._value = value
+#
+#     @property
+#     def priority(self) -> float:
+#         """Priority property.
+#
+#         :return: priority value
+#         :rtype: float
+#         """
+#         return self._priority
+#
+#     @priority.setter
+#     def priority(self, value: float) -> None:
+#         """Value setter.
+#
+#         :param value: value to be set
+#         :type value: float
+#         :raises ValueError: Value error exception
+#         """
+#         if not 0.0 <= value <= 1.0:
+#             raise ValueError("value must be in the range [0, 1].")
+#         self._priority = value
+#
+#     @property
+#     def size(self) -> int:
+#         """Size property.
+#
+#         :return: size value
+#         :rtype: int
+#         """
+#         return self._size
+#
+#     @size.setter
+#     def size(self, value: int) -> None:
+#         """Size setter.
+#
+#         :param value: value to be set
+#         :type value: int
+#         :raises ValueError: Value error exception
+#         """
+#         if value < 0:
+#             raise ValueError("value must be a positive number.")
+#         self._size = value
+#
+#     @property
+#     def height(self) -> int:
+#         """Height property.
+#
+#         :return: height value
+#         :rtype: int
+#         """
+#         return self._height
+#
+#     @height.setter
+#     def height(self, value: int) -> None:
+#         """Height setter.
+#
+#         :param value: value to be set
+#         :type value: int
+#         :raises ValueError: Value error exception
+#         """
+#         if value < 0:
+#             raise ValueError("value must be a positive number.")
+#         self._height = value
+#
+#     @property
+#     def lazy(self) -> Union[int, float]:
+#         """Lazy property.
+#
+#         :return: lazy value
+#         :rtype: Union[int, float]
+#         """
+#         return self._lazy
+#
+#     @lazy.setter
+#     def lazy(self, value: Union[int, float]) -> None:
+#         """Lazy setter.
+#
+#         :param value: value to be set
+#         :type value: Union[int, float]
+#         """
+#         self._lazy = value
+#
+#     @property
+#     def max_value(self) -> Union[int, float]:
+#         """Maximum value property.
+#
+#         :return: maximum value
+#         :rtype: Union[int, float]
+#         """
+#         return self._max_value
+#
+#     @max_value.setter
+#     def max_value(self, value: Union[int, float]) -> None:
+#         """Maximum setter.
+#
+#         :param value: value to be set
+#         :type value: Union[int, float]
+#         """
+#         self._max_value = value
+#
+#     @property
+#     def min_value(self) -> Union[int, float]:
+#         """Minimum value property.
+#
+#         :return: minimum value
+#         :rtype: Union[int, float]
+#         """
+#         return self._min_value
+#
+#     @min_value.setter
+#     def min_value(self, value: Union[int, float]) -> None:
+#         """Minimum setter.
+#
+#         :param value: value to be set
+#         :type value: Union[int, float]
+#         """
+#         self._min_value = value
+#
+#     @property
+#     def left(self):
+#         """Left node property.
+#
+#         :return: left node
+#         :rtype: Optional[Node]
+#         """
+#         return self._left
+#
+#     @left.setter
+#     def left(self, value) -> None:
+#         """Left node setter.
+#
+#         :param value: value to be set
+#         :type value: Optional[Node]
+#         """
+#         self._left = value
+#
+#     @property
+#     def right(self):
+#         """Right node property.
+#
+#         :return: right node
+#         :rtype: Optional[Node]
+#         """
+#         return self._right
+#
+#     @right.setter
+#     def right(self, value) -> None:
+#         """Right node setter.
+#
+#         :param value: value to be set
+#         :type value: Optional[Node]
+#         """
+#         self._right = value
+#
+#     def increase(self, value: Union[int, float]) -> None:
+#         """Increase node by a value.
+#
+#         :param value: value to use
+#         :type value: Union[int, float]
+#         """
+#         self.value_ += value
+#         self.max_value += value
+#         self.min_value += value
+#         self.lazy += value
+#
+#     def unlazy(self) -> None:
+#         """Unlazy node."""
+#         if self.left is not None:
+#             self.left.increase(value=self.lazy)
+#         if self.right is not None:
+#             self.right.increase(value=self.lazy)
+#         self.lazy = 0
+#
+#     def split_first(self):
+#         """Split first element."""
+#         self.unlazy()
+#
+#         if self.left is not None:
+#             left, self.left = self.left.split_first()
+#             right = self
+#         else:
+#             right = self.right
+#             self.right = None
+#             left = self
+#
+#         if self.left is not None:
+#             self.left.update()
+#         if self.right is not None:
+#             self.right.update()
+#         return left, right
+#
+#     def split_last(self):
+#         """Split last element."""
+#         self.unlazy()
+#
+#         if self.right is not None:
+#             self.right, right = self.right.split_last()
+#             left = self
+#         else:
+#             left = self.left
+#             self.left = None
+#             right = self
+#
+#         if self.left is not None:
+#             self.left.update()
+#         if self.right is not None:
+#             self.right.update()
+#         return left, right
+#
+#     def update(self):
+#         """Update node values."""
+#         self.unlazy()
+#
+#         self.size = 1
+#         self.height = 0
+#         self.max_value = self.value_
+#         self.min_value = self.value_
+#
+#         if self.left is not None:
+#             self.size += self.left.size
+#             self.height = self.left.height
+#             self.max_value = max(self.max_value, self.left.max_value)
+#             self.min_value = min(self.min_value, self.left.min_value)
+#
+#         if self.right is not None:
+#             self.size += self.right.size
+#             self.height = max(self.height, self.right.height)
+#             self.max_value = max(self.max_value, self.right.max_value)
+#             self.min_value = min(self.min_value, self.right.min_value)
+#
+#         self.height += 1
+#
+#     def split(self, key: Tuple[float, Union[int, float]]):
+#         """Split."""
+#         self.unlazy()
+#
+#         if key <= self.key:
+#             left, self.left = (
+#                 self.left.split(key=key) if self.left is not None else (None, None)
+#             )
+#             right = self
+#         else:
+#             self.right, right = (
+#                 self.right.split(key=key) if self.right is not None else (None, None)
+#             )
+#             left = self
+#         if left is not None:
+#             left.update()
+#         if right is not None:
+#             right.update()
+#         return left, right
+#
+#
+# class Treap:
+#     """Class representing a treap."""
+#
+#     def __init__(self, r: float = 1.0) -> None:
+#         """Init method.
+#
+#         :param r: constant that satisfies |A| = r|B|
+#         :type r: float
+#         """
+#         self.root = None
+#         self.r = r
+#         self.num_samples = [0, 0]
+#
+#     @property
+#     def root(self) -> Optional[Node]:
+#         """Root node property.
+#
+#         :return: root node
+#         :rtype: Optional[Node]
+#         """
+#         return self._root
+#
+#     @root.setter
+#     def root(self, value: Optional[Node]) -> None:
+#         """Root node setter.
+#
+#         :param value: value to be set
+#         :type value: int
+#         :raises TypeError: Type error exception
+#         """
+#         if value is not None and not isinstance(value, Node):
+#             raise TypeError("value must be of type Node or None.")
+#         self._root = value
+#
+#     @property
+#     def r(self) -> Union[int, float]:
+#         """R value property.
+#
+#         :return: r value
+#         :rtype: Union[int, float]
+#         """
+#         return self._r
+#
+#     @r.setter
+#     def r(self, value: Union[int, float]) -> None:
+#         """R value setter.
+#
+#         :param value: value to be set
+#         :type value: Union[int, float]
+#         :raises TypeError: Type error exception
+#         """
+#         if not isinstance(value, (int, float)):
+#             raise TypeError("value must be of type int or float.")
+#         self._r = value
+#
+#     @property
+#     def num_samples(self) -> List[int]:
+#         """Number of samples property.
+#
+#         :return: number of samples
+#         :rtype: List[int]
+#         """
+#         return self._num_samples
+#
+#     @num_samples.setter
+#     def num_samples(self, value: List[int]) -> None:
+#         """Number of samples value setter.
+#
+#         :param value: value to be set
+#         :type value: List[int]
+#         :raises ValueError: Value error exception
+#         """
+#         if value[0] < 0 and value[1] < 0:
+#             raise ValueError("value must be a positive number in both elements.")
+#         self._num_samples = value
+#
+#     @property
+#     def max(self) -> Union[int, float]:
+#         """Maximum value property.
+#
+#         :return: maximum value
+#         :rtype: Union[int, float]
+#         """
+#         return self.root.max_value  # type: ignore
+#
+#     @property
+#     def min(self) -> Union[int, float]:
+#         """Minimum value property.
+#
+#         :return: minimum value
+#         :rtype: Union[int, float]
+#         """
+#         return self.root.min_value  # type: ignore
+#
+#     def insert(self, obs: float, group: int) -> None:
+#         """Insert an observation by group.
+#
+#         :param obs: observation to insert
+#         :type obs: float
+#         :param group: group to which the observations belongs
+#         :type group: int
+#         """
+#         key = (obs, group)
+#         r = 1 if group == 0 else -self.r
+#
+#         self.num_samples[group] += 1
+#
+#         left, right = self.root.split(key) if self.root is not None else (None, None)
+#
+#         left, temp = left.split_last() if left is not None else (None, None)
+#         initial_value = 0 if temp is None else temp.value_
+#
+#         left = self.merge(left=left, right=temp)
+#
+#         right = self.merge(left=Node(key=key, value=initial_value), right=right)
+#         right.increase(value=r)
+#
+#         self.root = self.merge(left=left, right=right)
+#
+#     def remove(self, obs: float, group: int) -> None:
+#         """Remove an observation by group.
+#
+#         :param obs: observation to remove
+#         :type obs: float
+#         :param group: group to which the observations belongs
+#         :type group: int
+#         """
+#         key = (obs, group)
+#         r = -1 if group == 0 else self.r
+#
+#         self.num_samples[group] -= 1
+#
+#         left, right = self.root.split(key) if self.root is not None else (None, None)
+#         temp, right = right.split_first() if right is not None else (None, None)
+#
+#         if right is not None and temp is not None and temp.key == key:
+#             right.increase(value=r)
+#         else:
+#             right = self.merge(left=temp, right=right)
+#
+#         self.root = self.merge(left=left, right=right)
+#
+#     def merge(self, left: Optional[Node], right: Optional[Node]) -> Optional[Node]:
+#         """Merge two given nodes.
+#
+#         :param left: left node
+#         :type left: Optional[Node]
+#         :param right: right node
+#         :type right: Optional[Node]
+#         :return result of merging the two nodes
+#         :rtype Optional[Node]
+#         """
+#         if left is None or right is None:
+#             return left or right
+#
+#         if left.priority > right.priority:
+#             left.unlazy()
+#             left.right = self.merge(left=left.right, right=right)
+#             node = left
+#         else:
+#             right.unlazy()
+#             right.left = self.merge(left=left, right=right.left)
+#             node = right
+#         node.update()
+#         return node
