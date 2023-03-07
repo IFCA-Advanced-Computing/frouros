@@ -7,11 +7,29 @@ from frouros.detectors.concept_drift.ddm_based.base import DDMBaseConfig, DDMErr
 
 
 class DDMConfig(DDMBaseConfig):
-    """DDM (Drift detection method) configuration class."""
+    """DDM (Drift detection method) [gama2004learning]_ configuration.
+
+    :References:
+
+    .. [gama2004learning] Gama, Joao, et al.
+        "Learning with drift detection."
+        Advances in Artificial Intelligence–SBIA 2004: 17th Brazilian Symposium on
+        Artificial Intelligence, Sao Luis, Maranhao, Brazil, September 29-Ocotber 1,
+        2004. Proceedings 17. Springer Berlin Heidelberg, 2004.
+    """
 
 
 class DDM(DDMErrorBased):
-    """DDM (Drift detection method) algorithm class."""
+    """DDM (Drift detection method) [gama2004learning]_ detector.
+
+    :References:
+
+    .. [gama2004learning] Gama, Joao, et al.
+        "Learning with drift detection."
+        Advances in Artificial Intelligence–SBIA 2004: 17th Brazilian Symposium on
+        Artificial Intelligence, Sao Luis, Maranhao, Brazil, September 29-Ocotber 1,
+        2004. Proceedings 17. Springer Berlin Heidelberg, 2004.
+    """
 
     config_type = DDMConfig
 

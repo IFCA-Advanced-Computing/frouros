@@ -15,7 +15,14 @@ from frouros.detectors.concept_drift.window_based.base import (
 
 
 class KSWINConfig(WindowBaseConfig):
-    """KSWIN (Kolmogorov-Smirnov Windowing) configuration class."""
+    """KSWIN (Kolmogorov-Smirnov Windowing) [raab2020reactive]_ configuration.
+
+    :References:
+
+    .. [raab2020reactive] Raab, Christoph, Moritz Heusinger, and Frank-Michael Schleif.
+        "Reactive soft prototype computing for concept drift streams."
+        Neurocomputing 416 (2020): 340-351.
+    """
 
     def __init__(
         self,
@@ -95,7 +102,14 @@ class KSWINConfig(WindowBaseConfig):
 
 
 class KSWIN(WindowBased):
-    """KSWIN (Kolmogorov-Smirnov Windowing) algorithm class."""
+    """KSWIN (Kolmogorov-Smirnov Windowing) [raab2020reactive]_ detector.
+
+    :References:
+
+    .. [raab2020reactive] Raab, Christoph, Moritz Heusinger, and Frank-Michael Schleif.
+        "Reactive soft prototype computing for concept drift streams."
+        Neurocomputing 416 (2020): 340-351.
+    """
 
     config_type = KSWINConfig
 

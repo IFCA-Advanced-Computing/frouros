@@ -36,8 +36,11 @@ The {mod}`frouros.detectors` module contains drift detection algorithms.
     :template: class.md
 
     CUSUM
+    CUSUMConfig
     GeometricMovingAverage
+    GeometricMovingAverageConfig
     PageHinkley
+    PageHinkleyConfig
 ```
 
 ### DDM Based
@@ -54,12 +57,19 @@ The {mod}`frouros.detectors` module contains drift detection algorithms.
     :template: class.md
 
     DDM
+    DDMConfig
     ECDDWT
+    ECDDWTConfig
     EDDM
+    EDDMConfig
     HDDMA
+    HDDMAConfig
     HDDMW
+    HDDMWConfig
     RDDM
+    RDDMConfig
     STEPD
+    STEPDConfig
 ```
 
 ### Window Based
@@ -76,7 +86,9 @@ The {mod}`frouros.detectors` module contains drift detection algorithms.
     :template: class.md
 
     ADWIN
+    ADWINConfig
     KSWIN
+    KSWINConfig
 ```
 
 ## Data drift

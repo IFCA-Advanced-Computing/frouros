@@ -8,7 +8,15 @@ from frouros.detectors.concept_drift.cusum_based.base import (
 
 
 class GeometricMovingAverageConfig(CUSUMBaseConfig, AlphaConfig):
-    """Geometric Moving Average configuration class."""
+    """Geometric Moving Average [robertst1959control]_ configuration.
+
+    :References:
+
+    .. [robertst1959control] Roberts, S. W.
+        “Control Chart Tests Based on Geometric Moving Averages.”
+        Technometrics, vol. 1, no. 3, 1959, pp. 239–50.
+        JSTOR, https://doi.org/10.2307/1266443.
+    """
 
     def __init__(
         self,
@@ -33,7 +41,15 @@ class GeometricMovingAverageConfig(CUSUMBaseConfig, AlphaConfig):
 
 
 class GeometricMovingAverage(CUSUMBase):
-    """Geometric Moving Average algorithm class."""
+    """Geometric Moving Average [robertst1959control]_ detector.
+
+    :References:
+
+    .. [robertst1959control] Roberts, S. W.
+        “Control Chart Tests Based on Geometric Moving Averages.”
+        Technometrics, vol. 1, no. 3, 1959, pp. 239–50.
+        JSTOR, https://doi.org/10.2307/1266443.
+    """
 
     config_type = GeometricMovingAverageConfig  # type: ignore
 

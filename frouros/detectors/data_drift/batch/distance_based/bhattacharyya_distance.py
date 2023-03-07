@@ -11,7 +11,14 @@ from frouros.detectors.data_drift.batch.distance_based.base import (
 
 
 class BhattacharyyaDistance(DistanceBinsBasedBase):
-    """Bhattacharyya distance algorithm class."""
+    """Bhattacharyya distance [bhattacharyya1946measure]_ detector.
+
+    :References:
+
+    .. [bhattacharyya1946measure] Bhattacharyya, Anil.
+        "On a measure of divergence between two multinomial populations."
+        Sankhyā: the indian journal of statistics (1946): 401-406.
+    """
 
     def __init__(
         self,

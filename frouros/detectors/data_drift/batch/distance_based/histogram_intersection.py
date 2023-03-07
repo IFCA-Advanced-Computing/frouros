@@ -11,7 +11,14 @@ from frouros.detectors.data_drift.batch.distance_based.base import (
 
 
 class HistogramIntersection(DistanceBinsBasedBase):
-    """Histogram intersection algorithm class."""
+    """Histogram intersection [swain1991color]_ detector.
+
+    :References:
+
+    .. [swain1991color] Swain, M. J., and D. H. Ballard.
+        "Color Indexing International Journal of Computer
+        Vision 7." (1991): 11-32.
+    """
 
     def __init__(
         self,

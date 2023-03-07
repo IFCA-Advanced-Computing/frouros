@@ -13,7 +13,14 @@ from frouros.detectors.data_drift.batch.distance_based.base import (
 
 
 class JS(DistanceProbabilityBasedBase):
-    """JS (Jensen-Shannon distance) algorithm class."""
+    """JS (Jensen-Shannon distance) [lin1991divergence]_ detector.
+
+    :References:
+
+    .. [lin1991divergence] Lin, Jianhua.
+        "Divergence measures based on the Shannon entropy."
+        IEEE Transactions on Information theory 37.1 (1991): 145-151.
+    """
 
     def __init__(
         self,

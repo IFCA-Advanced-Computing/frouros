@@ -15,7 +15,14 @@ from frouros.detectors.data_drift.batch.statistical_test.base import (
 
 
 class CVMTest(StatisticalTestBase):
-    """CVMTest (Cramér-von Mises test) algorithm class."""
+    """CVMTest (Cramér-von Mises test) [cramer1928composition]_ detector.
+
+    :References:
+
+    .. [cramer1928composition] Cramér, Harald.
+        "On the composition of elementary errors: First paper: Mathematical deductions."
+        Scandinavian Actuarial Journal 1928.1 (1928): 13-74.
+    """
 
     def __init__(
         self, callbacks: Optional[Union[Callback, List[Callback]]] = None

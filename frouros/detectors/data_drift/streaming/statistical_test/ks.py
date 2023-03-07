@@ -28,7 +28,16 @@ MAX_AUTO_N = 10000
 
 
 class IncrementalKSTest(StatisticalTestBase):
-    """IncrementalKSTest (Incremental Kolmogorov-Smirnov test) algorithm class."""
+    """IncrementalKSTest (Incremental Kolmogorov-Smirnov test) [dos2016fast]_ detector.
+
+    :References:
+
+    .. [dos2016fast] dos Reis, Denis Moreira, et al.
+        "Fast unsupervised online drift detection using incremental kolmogorov-smirnov
+        test."
+        Proceedings of the 22nd ACM SIGKDD international conference on knowledge
+        discovery and data mining. 2016.
+    """
 
     def __init__(
         self,

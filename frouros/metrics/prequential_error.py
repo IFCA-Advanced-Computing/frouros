@@ -6,7 +6,20 @@ from frouros.metrics.base import BaseMetric
 
 
 class PrequentialError(BaseMetric):
-    """Prequential error using fading factor metric class."""
+    """Prequential error [dawid1984present]_ using fading factor [gama2009issues]_ metric.
+
+    :References:
+
+    .. [dawid1984present] Dawid, A. Philip.
+        "Present position and potential developments:
+        Some personal views statistical theory the prequential approach."
+        Journal of the Royal Statistical Society:
+        Series A (General) 147.2 (1984): 278-290.
+    .. [gama2009issues] Gama, Joao, Raquel Sebastiao, and Pedro Pereira Rodrigues.
+        "Issues in evaluation of stream learning algorithms."
+        Proceedings of the 15th ACM SIGKDD international conference on Knowledge
+        discovery and data mining. 2009.
+    """
 
     def __init__(
         self,

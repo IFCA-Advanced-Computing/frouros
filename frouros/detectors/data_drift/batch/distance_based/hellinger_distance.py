@@ -11,7 +11,15 @@ from frouros.detectors.data_drift.batch.distance_based.base import (
 
 
 class HellingerDistance(DistanceBinsBasedBase):
-    """Hellinger distance algorithm class."""
+    """Hellinger distance [hellinger1909neue]_ detector.
+
+    :References:
+
+    .. [hellinger1909neue] Hellinger, Ernst.
+        "Neue begründung der theorie quadratischer formen von unendlichvielen
+        veränderlichen."
+        Journal für die reine und angewandte Mathematik 1909.136 (1909): 210-271.
+    """
 
     def __init__(
         self,

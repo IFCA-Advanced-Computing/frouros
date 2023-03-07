@@ -11,7 +11,14 @@ from frouros.utils.data_structures import AccuracyQueue
 
 
 class STEPDConfig(DDMBaseConfig):
-    """STEPD (Statistical test of equal proportions) configuration class."""
+    """STEPD (Statistical test of equal proportions) [nishida2007detecting]_ configuration.
+
+    :References:
+
+    .. [nishida2007detecting] Nishida, Kyosuke, and Koichiro Yamauchi.
+        "Detecting concept drift using statistical testing." Discovery science.
+        Vol. 4755. 2007.
+    """
 
     def __init__(
         self,
@@ -79,7 +86,14 @@ class STEPDConfig(DDMBaseConfig):
 
 
 class STEPD(DDMBased):
-    """STEPD (Statistical test of equal proportions) algorithm class."""
+    """STEPD (Statistical test of equal proportions) [nishida2007detecting]_ detector.
+
+    :References:
+
+    .. [nishida2007detecting] Nishida, Kyosuke, and Koichiro Yamauchi.
+        "Detecting concept drift using statistical testing." Discovery science.
+        Vol. 4755. 2007.
+    """
 
     config_type = STEPDConfig  # type: ignore
 
