@@ -15,7 +15,9 @@ class HDDMBaseConfig(DDMBaseConfig):
 
     :References:
 
-    .. [frias2014online] Frias-Blanco, Isvani, et al. "Online and non-parametric drift detection methods based on Hoeffding’s bounds." IEEE Transactions on Knowledge and Data Engineering 27.3 (2014): 810-823.
+    .. [frias2014online] Frias-Blanco, Isvani, et al.
+    "Online and non-parametric drift detection methods based on Hoeffding’s bounds."
+    IEEE Transactions on Knowledge and Data Engineering 27.3 (2014): 810-823.
     """
 
     def __init__(
@@ -109,20 +111,26 @@ class HDDMBaseConfig(DDMBaseConfig):
 
 
 class HDDMAConfig(HDDMBaseConfig):
-    """HDDM-A (Hoeffding's drift detection method with A-Test) [frias2014online]_ configuration.
+    """HDDM-A (Hoeffding's drift detection method A-Test) [frias2014online]_ configuration.
 
     :References:
 
-    .. [frias2014online] Frias-Blanco, Isvani, et al. "Online and non-parametric drift detection methods based on Hoeffding’s bounds." IEEE Transactions on Knowledge and Data Engineering 27.3 (2014): 810-823.
+    .. [frias2014online] Frias-Blanco, Isvani, et al.
+    "Online and non-parametric drift detection methods based on Hoeffding’s bounds."
+    IEEE Transactions on Knowledge and Data Engineering 27.3 (2014):
+    810-823.
     """
 
 
 class HDDMWConfig(HDDMBaseConfig):
-    """HDDM-W (Hoeffding's drift detection method with W-Test) [frias2014online]_ configuration.
+    """HDDM-W (Hoeffding's drift detection method W-Test) [frias2014online]_ configuration.
 
     :References:
 
-    .. [frias2014online] Frias-Blanco, Isvani, et al. "Online and non-parametric drift detection methods based on Hoeffding’s bounds." IEEE Transactions on Knowledge and Data Engineering 27.3 (2014): 810-823.
+    .. [frias2014online] Frias-Blanco, Isvani, et al.
+    "Online and non-parametric drift detection methods based on Hoeffding’s bounds."
+    IEEE Transactions on Knowledge and Data Engineering 27.3 (2014):
+    810-823.
     """
 
     def __init__(
@@ -312,7 +320,10 @@ class HDDMA(DDMBased):
 
     :References:
 
-    .. [frias2014online] Frias-Blanco, Isvani, et al. "Online and non-parametric drift detection methods based on Hoeffding’s bounds." IEEE Transactions on Knowledge and Data Engineering 27.3 (2014): 810-823.
+    .. [frias2014online] Frias-Blanco, Isvani, et al.
+    "Online and non-parametric drift detection methods based on Hoeffding’s bounds."
+    IEEE Transactions on Knowledge and Data Engineering 27.3 (2014):
+    810-823.
     """
 
     config_type = HDDMAConfig  # type: ignore
@@ -605,7 +616,10 @@ class HDDMW(DDMBased):
 
     :References:
 
-    .. [frias2014online] Frias-Blanco, Isvani, et al. "Online and non-parametric drift detection methods based on Hoeffding’s bounds." IEEE Transactions on Knowledge and Data Engineering 27.3 (2014): 810-823.
+    .. [frias2014online] Frias-Blanco, Isvani, et al.
+    "Online and non-parametric drift detection methods based on Hoeffding’s bounds."
+    IEEE Transactions on Knowledge and Data Engineering 27.3 (2014):
+    810-823.
     """
 
     config_type = HDDMWConfig  # type: ignore

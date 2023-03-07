@@ -11,7 +11,10 @@ class DDMConfig(DDMBaseConfig):
 
     :References:
 
-    .. [gama2004learning] Gama, Joao, et al. "Learning with drift detection." Advances in Artificial Intelligence–SBIA 2004: 17th Brazilian Symposium on Artificial Intelligence, Sao Luis, Maranhao, Brazil, September 29-Ocotber 1, 2004. Proceedings 17. Springer Berlin Heidelberg, 2004.
+    .. [gama2004learning] Gama, Joao, et al. "Learning with drift detection."
+    Advances in Artificial Intelligence–SBIA 2004: 17th Brazilian Symposium on
+    Artificial Intelligence, Sao Luis, Maranhao, Brazil, September 29-Ocotber 1, 2004.
+    Proceedings 17. Springer Berlin Heidelberg, 2004.
     """
 
 
@@ -20,7 +23,10 @@ class DDM(DDMErrorBased):
 
     :References:
 
-    .. [gama2004learning] Gama, Joao, et al. "Learning with drift detection." Advances in Artificial Intelligence–SBIA 2004: 17th Brazilian Symposium on Artificial Intelligence, Sao Luis, Maranhao, Brazil, September 29-Ocotber 1, 2004. Proceedings 17. Springer Berlin Heidelberg, 2004.
+    .. [gama2004learning] Gama, Joao, et al. "Learning with drift detection."
+    Advances in Artificial Intelligence–SBIA 2004: 17th Brazilian Symposium on
+    Artificial Intelligence, Sao Luis, Maranhao, Brazil, September 29-Ocotber 1, 2004.
+    Proceedings 17. Springer Berlin Heidelberg, 2004.
     """
 
     config_type = DDMConfig

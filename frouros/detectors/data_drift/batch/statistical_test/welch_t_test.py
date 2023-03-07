@@ -18,7 +18,10 @@ class WelchTTest(StatisticalTestBase):
 
     :References:
 
-    .. [welch1947generalization] Welch, Bernard L. "The generalization of ‘STUDENT'S’problem when several different population varlances are involved." Biometrika 34.1-2 (1947): 28-35.
+    .. [welch1947generalization] Welch, Bernard L. "The
+    generalization of ‘STUDENT'S’problem when several
+    different population varlances are involved."
+    Biometrika 34.1-2 (1947): 28-35.
     """
 
     def __init__(

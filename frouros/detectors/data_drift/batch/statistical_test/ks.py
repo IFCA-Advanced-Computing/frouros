@@ -18,7 +18,9 @@ class KSTest(StatisticalTestBase):
 
     :References:
 
-    .. [massey1951kolmogorov] Massey Jr, Frank J. "The Kolmogorov-Smirnov test for goodness of fit." Journal of the American statistical Association 46.253 (1951): 68-78.
+    .. [massey1951kolmogorov] Massey Jr, Frank J. "The Kolmogorov-Smirnov
+    test for goodness of fit." Journal of the American statistical
+    Association 46.253 (1951): 68-78.
     """
 
     def __init__(

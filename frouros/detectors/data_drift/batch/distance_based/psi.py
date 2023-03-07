@@ -17,7 +17,9 @@ class PSI(DistanceBinsBasedBase):
 
     :References:
 
-    .. [wu2010enterprise] Wu, Desheng, and David L. Olson. "Enterprise risk management: coping with model risk in a large bank." Journal of the Operational Research Society 61.2 (2010): 179-190.
+    .. [wu2010enterprise] Wu, Desheng, and David L. Olson. "Enterprise
+    risk management: coping with model risk in a large bank." Journal
+    of the Operational Research Society 61.2 (2010): 179-190.
     """
 
     def __init__(

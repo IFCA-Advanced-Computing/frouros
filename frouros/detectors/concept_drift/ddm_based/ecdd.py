@@ -13,20 +13,24 @@ from frouros.utils.stats import EWMA, Mean
 
 
 class ECDDWTConfig(ECDDBaseConfig):
-    """ECDD-WT (EWMA for Concept Drift Detection with Warning) [ross2012exponentially]_ configuration.
+    """ECDDWT (EWMA Concept Drift Detection Warning) [ross2012exponentially]_ configuration.
 
     :References:
 
-    .. [ross2012exponentially] Ross, Gordon J., et al. "Exponentially weighted moving average charts for detecting concept drift." Pattern recognition letters 33.2 (2012): 191-198.
+    .. [ross2012exponentially] Ross, Gordon J., et al.
+    "Exponentially weighted moving average charts for detecting concept drift."
+    Pattern recognition letters 33.2 (2012): 191-198.
     """
 
 
 class ECDDWT(DDMBased):
-    """ECDD-WT (EWMA for Concept Drift Detection with Warning) [ross2012exponentially]_ detector.
+    """ECDDWT (EWMA Concept Drift Detection Warning) [ross2012exponentially]_ detector.
 
     :References:
 
-    .. [ross2012exponentially] Ross, Gordon J., et al. "Exponentially weighted moving average charts for detecting concept drift." Pattern recognition letters 33.2 (2012): 191-198.
+    .. [ross2012exponentially] Ross, Gordon J., et al.
+    "Exponentially weighted moving average charts for detecting concept drift."
+    Pattern recognition letters 33.2 (2012): 191-198.
     """
 
     config_type = ECDDWTConfig  # type: ignore

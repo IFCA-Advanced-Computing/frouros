@@ -18,7 +18,10 @@ class EMD(DistanceBasedBase):
 
     :References:
 
-    .. [rubner2000earth] Rubner, Yossi, Carlo Tomasi, and Leonidas J. Guibas. "The earth mover's distance as a metric for image retrieval." International journal of computer vision 40.2 (2000): 99.
+    .. [rubner2000earth] Rubner, Yossi, Carlo Tomasi, and
+    Leonidas J. Guibas. "The earth mover's distance as a metric
+    for image retrieval." International journal of computer
+    vision 40.2 (2000): 99.
     """
 
     def __init__(

@@ -12,7 +12,8 @@ class Elec2(Dataset):
 
     :References:
 
-    .. [harries1999splice] Harries, Michael. "Splice-2 comparative evaluation: Electricity pricing." (1999).
+    .. [harries1999splice] Harries, Michael.
+    "Splice-2 comparative evaluation: Electricity pricing." (1999).
     """
 
     def __init__(self, file_path: Optional[str] = None) -> None:

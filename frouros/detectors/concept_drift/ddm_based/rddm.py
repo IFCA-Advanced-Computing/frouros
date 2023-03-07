@@ -13,7 +13,9 @@ class RDDMConfig(DDMBaseConfig):
 
     :References:
 
-    .. [barros2017rddm] Barros, Roberto SM, et al. "RDDM: Reactive drift detection method." Expert Systems with Applications 90 (2017): 344-355.
+    .. [barros2017rddm] Barros, Roberto SM, et al.
+    "RDDM: Reactive drift detection method." Expert Systems with Applications 90 (2017):
+    344-355.
     """
 
     def __init__(
@@ -110,7 +112,9 @@ class RDDM(DDMErrorBased):
 
     :References:
 
-    .. [barros2017rddm] Barros, Roberto SM, et al. "RDDM: Reactive drift detection method." Expert Systems with Applications 90 (2017): 344-355.
+    .. [barros2017rddm] Barros, Roberto SM, et al.
+    "RDDM: Reactive drift detection method." Expert Systems with Applications 90 (2017):
+    344-355.
     """
 
     config_type = RDDMConfig  # type: ignore

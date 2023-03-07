@@ -15,7 +15,10 @@ class HellingerDistance(DistanceBinsBasedBase):
 
     :References:
 
-    .. [hellinger1909neue] Hellinger, Ernst. "Neue begründung der theorie quadratischer formen von unendlichvielen veränderlichen." Journal für die reine und angewandte Mathematik 1909.136 (1909): 210-271.
+    .. [hellinger1909neue] Hellinger, Ernst. "Neue begründung
+    der theorie quadratischer formen von unendlichvielen
+    veränderlichen." Journal für die reine und angewandte
+    Mathematik 1909.136 (1909): 210-271.
     """
 
     def __init__(

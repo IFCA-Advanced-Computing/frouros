@@ -13,11 +13,13 @@ from frouros.detectors.data_drift.batch.distance_based.base import (
 
 
 class KL(DistanceProbabilityBasedBase):
-    """KL (Kullback-Leibler divergence / relative entropy) [kullback1951information]_ detector.
+    """KL (Kullback-Leibler divergence) [kullback1951information]_ detector.
 
     :References:
 
-    .. [kullback1951information] Kullback, Solomon, and Richard A. Leibler. "On information and sufficiency." The annals of mathematical statistics 22.1 (1951): 79-86.
+    .. [kullback1951information] Kullback, Solomon, and Richard A. Leibler.
+    "On information and sufficiency." The annals of mathematical
+    statistics 22.1 (1951): 79-86.
     """
 
     def __init__(

@@ -17,7 +17,9 @@ class JS(DistanceProbabilityBasedBase):
 
     :References:
 
-    .. [lin1991divergence] Lin, Jianhua. "Divergence measures based on the Shannon entropy." IEEE Transactions on Information theory 37.1 (1991): 145-151.
+    .. [lin1991divergence] Lin, Jianhua. "Divergence measures
+    based on the Shannon entropy." IEEE Transactions on
+    Information theory 37.1 (1991): 145-151.
     """
 
     def __init__(
