@@ -153,7 +153,12 @@ class Bucket:
 
 
 class ADWINConfig(WindowBaseConfig):
-    """ADWIN (ADaptive WINdowing) configuration class."""
+    """ADWIN (ADaptive WINdowing) [bifet2007learning]_ configuration.
+
+    :References:
+
+    .. [bifet2007learning] Bifet, Albert, and Ricard Gavalda. "Learning from time-changing data with adaptive windowing." Proceedings of the 2007 SIAM international conference on data mining. Society for Industrial and Applied Mathematics, 2007.
+    """
 
     def __init__(
         self,
@@ -246,7 +251,12 @@ class ADWINConfig(WindowBaseConfig):
 
 
 class ADWIN(WindowBased):
-    """ADWIN (ADaptive WINdowing) algorithm class."""
+    """ADWIN (ADaptive WINdowing) [bifet2007learning]_ detector.
+
+    :References:
+
+    .. [bifet2007learning] Bifet, Albert, and Ricard Gavalda. "Learning from time-changing data with adaptive windowing." Proceedings of the 2007 SIAM international conference on data mining. Society for Industrial and Applied Mathematics, 2007.
+    """
 
     config_type = ADWINConfig
 

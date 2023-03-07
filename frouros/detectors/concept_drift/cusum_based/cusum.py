@@ -10,7 +10,12 @@ from frouros.detectors.concept_drift.cusum_based.base import (
 
 
 class CUSUMConfig(CUSUMBaseConfig, DeltaConfig):
-    """CUSUM configuration class."""
+    """CUSUM [page1954continuous]_ configuration.
+
+    :References:
+
+    .. [page1954continuous] Page, Ewan S. "Continuous inspection schemes." Biometrika 41.1/2 (1954): 100-115.
+    """
 
     def __init__(
         self,
@@ -35,7 +40,12 @@ class CUSUMConfig(CUSUMBaseConfig, DeltaConfig):
 
 
 class CUSUM(CUSUMBase):
-    """CUSUM algorithm class."""
+    """CUSUM [page1954continuous]_ detector.
+
+    :References:
+
+    .. [page1954continuous] Page, Ewan S. "Continuous inspection schemes." Biometrika 41.1/2 (1954): 100-115.
+    """
 
     config_type = CUSUMConfig  # type: ignore
 

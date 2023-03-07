@@ -10,7 +10,12 @@ from frouros.detectors.concept_drift.ddm_based.base import DDMBaseConfig, DDMBas
 
 
 class EDDMConfig(DDMBaseConfig):
-    """EDDM (Early drift detection method) configuration class."""
+    """EDDM (Early drift detection method) [baena2006early]_ configuration.
+
+    :References:
+
+    .. [baena2006early] Baena-Garcıa, Manuel, et al. "Early drift detection method." Fourth international workshop on knowledge discovery from data streams. Vol. 6. 2006.
+    """
 
     def __init__(
         self,
@@ -124,7 +129,12 @@ class EDDMConfig(DDMBaseConfig):
 
 
 class EDDM(DDMBased):
-    """EDDM (Early drift detection method) algorithm class."""
+    """EDDM (Early drift detection method) [baena2006early]_ detector.
+
+    :References:
+
+    .. [baena2006early] Baena-Garcıa, Manuel, et al. "Early drift detection method." Fourth international workshop on knowledge discovery from data streams. Vol. 6. 2006.
+    """
 
     config_type = EDDMConfig  # type: ignore
 

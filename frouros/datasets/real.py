@@ -8,7 +8,12 @@ from frouros.datasets.base import Dataset
 
 
 class Elec2(Dataset):
-    """Elec2 dataset class."""
+    """Elec2 dataset [harries1999splice]_.
+
+    :References:
+
+    .. [harries1999splice] Harries, Michael. "Splice-2 comparative evaluation: Electricity pricing." (1999).
+    """
 
     def __init__(self, file_path: Optional[str] = None) -> None:
         """Init method.

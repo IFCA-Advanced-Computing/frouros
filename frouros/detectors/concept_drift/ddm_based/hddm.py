@@ -11,7 +11,12 @@ from frouros.utils.stats import EWMA, Mean
 
 
 class HDDMBaseConfig(DDMBaseConfig):
-    """HDDM (Hoeffding's drift detection method) configuration class."""
+    """HDDM (Hoeffding's drift detection method) [frias2014online]_ configuration.
+
+    :References:
+
+    .. [frias2014online] Frias-Blanco, Isvani, et al. "Online and non-parametric drift detection methods based on Hoeffding’s bounds." IEEE Transactions on Knowledge and Data Engineering 27.3 (2014): 810-823.
+    """
 
     def __init__(
         self,
@@ -104,11 +109,21 @@ class HDDMBaseConfig(DDMBaseConfig):
 
 
 class HDDMAConfig(HDDMBaseConfig):
-    """HDDM-A (Hoeffding's drift detection method with A-Test) configuration class."""
+    """HDDM-A (Hoeffding's drift detection method with A-Test) [frias2014online]_ configuration.
+
+    :References:
+
+    .. [frias2014online] Frias-Blanco, Isvani, et al. "Online and non-parametric drift detection methods based on Hoeffding’s bounds." IEEE Transactions on Knowledge and Data Engineering 27.3 (2014): 810-823.
+    """
 
 
 class HDDMWConfig(HDDMBaseConfig):
-    """HDDM-W (Hoeffding's drift detection method with W-Test) configuration class."""
+    """HDDM-W (Hoeffding's drift detection method with W-Test) [frias2014online]_ configuration.
+
+    :References:
+
+    .. [frias2014online] Frias-Blanco, Isvani, et al. "Online and non-parametric drift detection methods based on Hoeffding’s bounds." IEEE Transactions on Knowledge and Data Engineering 27.3 (2014): 810-823.
+    """
 
     def __init__(
         self,
@@ -293,7 +308,12 @@ class HoeffdingTwoSidedTest(HoeffdingOneSidedTest):
 
 
 class HDDMA(DDMBased):
-    """HDDM-A (Hoeffding's drift detection method with A-Test) algorithm class."""
+    """HDDM-A (Hoeffding's drift detection method with A-Test) [frias2014online]_ detector.
+
+    :References:
+
+    .. [frias2014online] Frias-Blanco, Isvani, et al. "Online and non-parametric drift detection methods based on Hoeffding’s bounds." IEEE Transactions on Knowledge and Data Engineering 27.3 (2014): 810-823.
+    """
 
     config_type = HDDMAConfig  # type: ignore
 
@@ -581,7 +601,12 @@ class McDiarmidTwoSidedTest(McDiarmidOneSidedTest):
 
 
 class HDDMW(DDMBased):
-    """HDDM-W (Hoeffding's drift detection method with W-Test) algorithm class."""
+    """HDDM-W (Hoeffding's drift detection method with W-Test) [frias2014online]_ detector.
+
+    :References:
+
+    .. [frias2014online] Frias-Blanco, Isvani, et al. "Online and non-parametric drift detection methods based on Hoeffding’s bounds." IEEE Transactions on Knowledge and Data Engineering 27.3 (2014): 810-823.
+    """
 
     config_type = HDDMWConfig  # type: ignore
 

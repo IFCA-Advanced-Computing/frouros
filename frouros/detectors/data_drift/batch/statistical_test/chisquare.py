@@ -15,7 +15,12 @@ from frouros.detectors.data_drift.batch.statistical_test.base import (  # type: 
 
 
 class ChiSquareTest(StatisticalTestBase):
-    """ChiSquareTest (Chi-square test) algorithm class."""
+    """ChiSquareTest (Chi-square test) [pearson1900x]_ detector.
+
+    :References:
+
+    .. [pearson1900x] Pearson, Karl. "X. On the criterion that a given system of deviations from the probable in the case of a correlated system of variables is such that it can be reasonably supposed to have arisen from random sampling." The London, Edinburgh, and Dublin Philosophical Magazine and Journal of Science 50.302 (1900): 157-175.
+    """
 
     def __init__(
         self, callbacks: Optional[Union[Callback, List[Callback]]] = None

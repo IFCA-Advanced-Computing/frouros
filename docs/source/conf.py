@@ -38,11 +38,9 @@ extensions = [
     "sphinx.ext.autosectionlabel",
     "sphinx.ext.autosummary",
     "sphinx.ext.duration",
-    "myst_nb",
     "sphinxcontrib.bibtex",
+    "myst_nb",
 ]
-
-bibtex_bibfiles = ["references.bib"]
 
 # Use bootstrap CSS from theme.
 panels_add_bootstrap_css = False
@@ -95,11 +93,11 @@ html_static_path = ["_static"]
 autosummary_generate = True
 
 autodoc_default_options = {
-    "members": True,
-    "inherited-members": True,
     "member-order": "bysource",
+    "inherited-members": True,
+    "private-members": False,
 }
-autoclass_content = 'both'
+autoclass_content = "class"
 
 myst_enable_extensions = [
     "amsmath",
@@ -117,4 +115,5 @@ nb_execution_raise_on_error = True
 nb_merge_streams = True
 
 # sphinxcontrib-bibtex configuration
+bibtex_bibfiles = ["references.bib"]
 bibtex_default_style = "plain"

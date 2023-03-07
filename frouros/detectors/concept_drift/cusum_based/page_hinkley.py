@@ -9,7 +9,12 @@ from frouros.detectors.concept_drift.cusum_based.base import (
 
 
 class PageHinkleyConfig(CUSUMBaseConfig, DeltaConfig, AlphaConfig):
-    """Page Hinkley configuration class."""
+    """Page Hinkley [page1954continuous]_ configuration.
+
+    :References:
+
+    .. [page1954continuous] Page, Ewan S. "Continuous inspection schemes." Biometrika 41.1/2 (1954): 100-115.
+    """
 
     def __init__(
         self,
@@ -38,7 +43,12 @@ class PageHinkleyConfig(CUSUMBaseConfig, DeltaConfig, AlphaConfig):
 
 
 class PageHinkley(CUSUMBase):
-    """Page Hinkley algorithm class."""
+    """Page Hinkley [page1954continuous]_ detector.
+
+    :References:
+
+    .. [page1954continuous] Page, Ewan S. "Continuous inspection schemes." Biometrika 41.1/2 (1954): 100-115.
+    """
 
     config_type = PageHinkleyConfig  # type: ignore
 

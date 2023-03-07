@@ -13,7 +13,12 @@ from frouros.detectors.data_drift.batch.distance_based.base import (
 
 
 class PSI(DistanceBinsBasedBase):
-    """PSI (Population Stability Index) algorithm class."""
+    """PSI (Population Stability Index) [wu2010enterprise]_ detector.
+
+    :References:
+
+    .. [wu2010enterprise] Wu, Desheng, and David L. Olson. "Enterprise risk management: coping with model risk in a large bank." Journal of the Operational Research Society 61.2 (2010): 179-190.
+    """
 
     def __init__(
         self,

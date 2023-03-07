@@ -14,7 +14,12 @@ from frouros.detectors.data_drift.batch.statistical_test.base import (
 
 
 class WelchTTest(StatisticalTestBase):
-    """Welch's T-test algorithm class."""
+    """Welch's T-test [welch1947generalization]_ detector.
+
+    :References:
+
+    .. [welch1947generalization] Welch, Bernard L. "The generalization of ‘STUDENT'S’problem when several different population varlances are involved." Biometrika 34.1-2 (1947): 28-35.
+    """
 
     def __init__(
         self, callbacks: Optional[Union[Callback, List[Callback]]] = None

@@ -31,7 +31,12 @@ def rbf_kernel(
 
 
 class MMD(DistanceBasedBase):
-    """MMD (Maximum Mean Discrepancy) algorithm class."""
+    """MMD (Maximum Mean Discrepancy) [gretton2012kernel]_ detector.
+
+    :References:
+
+    .. [gretton2012kernel] Gretton, Arthur, et al. "A kernel two-sample test." The Journal of Machine Learning Research 13.1 (2012): 723-773.
+    """
 
     def __init__(
         self,
