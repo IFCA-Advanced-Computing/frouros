@@ -1,6 +1,6 @@
 """Data structures module."""
 
-from typing import Optional, List, Tuple, Union  # noqa: TYP001
+from typing import Optional, List, Union  # noqa: TYP001
 
 
 import numpy as np  # type: ignore
@@ -282,6 +282,7 @@ class AccuracyQueue(CircularQueue):
         """
         super().enqueue(value=value)
         self.num_true += np.count_nonzero(value)
+
 
 # FIXME: There seem to be a bug on the treap DS. Uncomment all  # pylint: disable=fixme
 #  the commented code lines when that is solved.
