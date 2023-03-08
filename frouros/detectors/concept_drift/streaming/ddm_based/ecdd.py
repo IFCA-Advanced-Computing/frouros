@@ -5,7 +5,7 @@ from typing import List, Optional, Union
 import numpy as np  # type: ignore
 
 from frouros.callbacks import Callback
-from frouros.detectors.concept_drift.ddm_based.base import (
+from frouros.detectors.concept_drift.streaming.ddm_based.base import (
     DDMBased,
     ECDDBaseConfig,
 )

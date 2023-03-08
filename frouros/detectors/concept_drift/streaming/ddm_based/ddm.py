@@ -3,7 +3,10 @@
 from contextlib import suppress
 from typing import Union
 
-from frouros.detectors.concept_drift.ddm_based.base import DDMBaseConfig, DDMErrorBased
+from frouros.detectors.concept_drift.streaming.ddm_based.base import (
+    DDMBaseConfig,
+    DDMErrorBased,
+)
 
 
 class DDMConfig(DDMBaseConfig):

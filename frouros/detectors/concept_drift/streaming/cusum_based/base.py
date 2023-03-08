@@ -4,14 +4,14 @@ import abc
 from typing import List, Optional, Union
 
 from frouros.callbacks import Callback
-from frouros.detectors.concept_drift.base import (
-    ConceptDriftBase,
-    ConceptDriftBaseConfig,
+from frouros.detectors.concept_drift.streaming.base import (
+    ConceptDriftStreamingBase,
+    ConceptDriftStreamingBaseConfig,
 )
 from frouros.utils.stats import Mean
 
 
-class CUSUMBaseConfig(ConceptDriftBaseConfig):
+class CUSUMBaseConfig(ConceptDriftStreamingBaseConfig):
     """Class representing a CUSUM based configuration class."""
 
     def __init__(
@@ -124,7 +124,7 @@ class AlphaConfig:
         self._alpha = value
 
 
-class CUSUMBase(ConceptDriftBase):
+class CUSUMBase(ConceptDriftStreamingBase):
     """CUSUM based algorithm class."""
 
     config_type = CUSUMBaseConfig

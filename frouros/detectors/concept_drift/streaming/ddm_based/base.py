@@ -6,15 +6,15 @@ from typing import Dict, List, Optional, Tuple, Union
 import numpy as np  # type: ignore
 
 from frouros.callbacks import Callback
-from frouros.detectors.concept_drift.base import (
-    ConceptDriftBaseConfig,
-    ConceptDriftBase,
+from frouros.detectors.concept_drift.streaming.base import (
+    ConceptDriftStreamingBaseConfig,
+    ConceptDriftStreamingBase,
 )
 from frouros.detectors.concept_drift.exceptions import InvalidAverageRunLengthError
 from frouros.utils.stats import Mean
 
 
-class DDMBaseConfig(ConceptDriftBaseConfig):
+class DDMBaseConfig(ConceptDriftStreamingBaseConfig):
     """Class representing a DDM based configuration class."""
 
     def __init__(
@@ -82,7 +82,7 @@ class DDMBaseConfig(ConceptDriftBaseConfig):
         self._warning_level = value
 
 
-class DDMBased(ConceptDriftBase):
+class DDMBased(ConceptDriftStreamingBase):
     """Abstract class representing a DDM based estimator."""
 
     config_type = DDMBaseConfig
@@ -273,7 +273,7 @@ class DDMErrorBased(DDMBased):
         pass
 
 
-class ECDDBaseConfig(ConceptDriftBaseConfig):
+class ECDDBaseConfig(ConceptDriftStreamingBaseConfig):
     """Class representing a ECDD configuration class."""
 
     average_run_length_map = {

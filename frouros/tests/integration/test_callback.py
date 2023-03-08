@@ -29,7 +29,7 @@ from frouros.detectors.concept_drift import (
     STEPD,
 )
 from frouros.detectors.concept_drift.base import ConceptDriftBase
-from frouros.detectors.concept_drift.ddm_based.base import DDMBased
+from frouros.detectors.concept_drift.streaming.ddm_based.base import DDMBased
 from frouros.detectors.data_drift.batch import (
     BhattacharyyaDistance,
     CVMTest,

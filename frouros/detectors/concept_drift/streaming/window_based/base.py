@@ -3,17 +3,17 @@
 import abc
 from typing import Union
 
-from frouros.detectors.concept_drift.base import (
-    ConceptDriftBase,
-    ConceptDriftBaseConfig,
+from frouros.detectors.concept_drift.streaming.base import (
+    ConceptDriftStreamingBase,
+    ConceptDriftStreamingBaseConfig,
 )
 
 
-class WindowBaseConfig(ConceptDriftBaseConfig):
+class WindowBaseConfig(ConceptDriftStreamingBaseConfig):
     """Class representing a window based configuration class."""
 
 
-class WindowBased(ConceptDriftBase):
+class WindowBased(ConceptDriftStreamingBase):
     """Abstract class representing a window based."""
 
     config_type = WindowBaseConfig
