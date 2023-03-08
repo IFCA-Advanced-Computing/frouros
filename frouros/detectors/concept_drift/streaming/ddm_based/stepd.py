@@ -6,7 +6,10 @@ import numpy as np  # type: ignore
 from scipy.stats import norm  # type: ignore
 
 from frouros.callbacks import Callback
-from frouros.detectors.concept_drift.ddm_based.base import DDMBaseConfig, DDMBased
+from frouros.detectors.concept_drift.streaming.ddm_based.base import (
+    DDMBaseConfig,
+    DDMBased,
+)
 from frouros.utils.data_structures import AccuracyQueue
 
 

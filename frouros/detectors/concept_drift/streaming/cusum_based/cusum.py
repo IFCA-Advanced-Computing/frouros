@@ -2,7 +2,7 @@
 
 import numpy as np  # type: ignore
 
-from frouros.detectors.concept_drift.cusum_based.base import (
+from frouros.detectors.concept_drift.streaming.cusum_based.base import (
     CUSUMBase,
     CUSUMBaseConfig,
     DeltaConfig,

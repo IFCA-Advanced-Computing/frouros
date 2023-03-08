@@ -8,7 +8,7 @@ from scipy.stats import ks_2samp  # type: ignore
 import numpy as np  # type: ignore
 
 from frouros.callbacks import Callback
-from frouros.detectors.concept_drift.window_based.base import (
+from frouros.detectors.concept_drift.streaming.window_based.base import (
     WindowBaseConfig,
     WindowBased,
 )

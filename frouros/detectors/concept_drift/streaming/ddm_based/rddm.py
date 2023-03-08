@@ -3,7 +3,10 @@
 from typing import List, Optional, Union
 
 from frouros.callbacks import Callback
-from frouros.detectors.concept_drift.ddm_based.base import DDMBaseConfig, DDMErrorBased
+from frouros.detectors.concept_drift.streaming.ddm_based.base import (
+    DDMBaseConfig,
+    DDMErrorBased,
+)
 from frouros.utils.data_structures import CircularQueue
 from frouros.utils.stats import Mean
 

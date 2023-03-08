@@ -56,7 +56,7 @@ class ConceptDriftBaseConfig(abc.ABC):
 
 
 class ConceptDriftBase(DetectorBase):
-    """Abstract class representing a delayed target."""
+    """Abstract class representing a concept drift streaming."""
 
     config_type = ConceptDriftBaseConfig
 
