@@ -67,7 +67,7 @@ pip install frouros
 
 The currently implemented detectors are listed in the following diagram.
 
-```latex
+$$
 \usepackage{tikz}
 \usetikzlibrary{trees}
  
@@ -170,13 +170,13 @@ The currently implemented detectors are listed in the following diagram.
     edge from parent node [draw = none, left] {}}};
  
 \end{tikzpicture}
-```
+$$
 
 ## Datasets
 
 Some well-known datasets and synthetic generators are provided and listed in the following diagram.
 
-```latex
+$$
 \usepackage{tikz}
 \usetikzlibrary{trees}
  
@@ -197,4 +197,4 @@ Some well-known datasets and synthetic generators are provided and listed in the
     edge from parent node [draw = none, left] {}};
  
 \end{tikzpicture}
-```
+$$
