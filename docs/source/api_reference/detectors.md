@@ -22,10 +22,21 @@ The {mod}`frouros.detectors` module contains drift detection algorithms.
 ```{currentmodule} frouros.detectors.concept_drift
 ```
 
-### CUSUM Test
+### Streaming
 
 ```{eval-rst}
-.. automodule:: frouros.detectors.concept_drift.cusum_based
+.. automodule:: frouros.detectors.concept_drift.streaming
+    :no-members:
+    :no-inherited-members:
+```
+
+```{currentmodule} frouros.detectors.concept_drift.streaming
+```
+
+#### CUSUM Test
+
+```{eval-rst}
+.. automodule:: frouros.detectors.concept_drift.streaming.cusum_based
     :no-members:
     :no-inherited-members:
 ```
@@ -43,10 +54,10 @@ The {mod}`frouros.detectors` module contains drift detection algorithms.
     PageHinkleyConfig
 ```
 
-### DDM Based
+#### DDM Based
 
 ```{eval-rst}
-.. automodule:: frouros.detectors.concept_drift.ddm_based
+.. automodule:: frouros.detectors.concept_drift.streaming.ddm_based
     :no-members:
     :no-inherited-members:
 ```
@@ -72,10 +83,10 @@ The {mod}`frouros.detectors` module contains drift detection algorithms.
     STEPDConfig
 ```
 
-### Window Based
+#### Window Based
 
 ```{eval-rst}
-.. automodule:: frouros.detectors.concept_drift.window_based
+.. automodule:: frouros.detectors.concept_drift.streaming.window_based
     :no-members:
     :no-inherited-members:
 ```
