@@ -1,0 +1,1 @@
+"""Detection methods init."""
