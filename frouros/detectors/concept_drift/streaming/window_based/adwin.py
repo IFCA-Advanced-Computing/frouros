@@ -145,8 +145,8 @@ class Bucket:
 
         idx_start = self.array_size - num_items_deleted
         # fmt: off
-        self.total[idx_start:self.array_size] = 0
-        self.variance[idx_start:self.array_size] = 0
+        self.total[idx_start:self.array_size] = 0.0
+        self.variance[idx_start:self.array_size] = 0.0
         # fmt: on
 
         self.idx -= num_items_deleted
@@ -168,6 +168,7 @@ class ADWINConfig(WindowBaseConfig):
         clock: int = 32,
         delta: float = 0.002,
         m: int = 5,
+        min_window_size: int = 5,
         min_num_instances: int = 10,
     ) -> None:
         """Init method.
@@ -179,6 +180,9 @@ class ADWINConfig(WindowBaseConfig):
         :param m: controls the amount of memory used and
         the closeness of the cutpoints checked
         :type m: int
+        :param min_window_size: minimum numbers of instances
+        per window to start looking for changes
+        :type min_window_size: int
         :param min_num_instances: minimum numbers of instances
         to start looking for changes
         :type min_num_instances: int
@@ -187,6 +191,7 @@ class ADWINConfig(WindowBaseConfig):
         self.clock = clock
         self.delta = delta
         self.m = m
+        self.min_window_size = min_window_size
 
     @property
     def clock(self) -> int:
@@ -251,6 +256,27 @@ class ADWINConfig(WindowBaseConfig):
         if value < 1:
             raise ValueError("m value must be greater than 0.")
         self._m = value
+
+    @property
+    def min_window_size(self) -> int:
+        """Minimum window size value property.
+
+        :return: minimum window size value per each window
+        :rtype: int
+        """
+        return self._min_window_size
+
+    @min_window_size.setter
+    def min_window_size(self, value: int) -> None:
+        """Minimum window size value setter.
+
+        :param value: value to be set
+        :type value: float
+        :raises ValueError: Value error exception
+        """
+        if value < 1:
+            raise ValueError("min_window_size value must be greater than 0.")
+        self._min_window_size = value
 
 
 class ADWIN(WindowBased):
@@ -359,6 +385,15 @@ class ADWIN(WindowBased):
         self._additional_vars["variance"] = value
 
     @property
+    def variance_window(self) -> float:
+        """Variance in window value property.
+
+        :return: variance in window value
+        :rtype: float
+        """
+        return self.variance / self.width
+
+    @property
     def width(self) -> int:
         """Width value property.
 
@@ -422,7 +457,7 @@ class ADWIN(WindowBased):
         self._additional_vars["num_max_buckets"] = value
 
     def _insert_bucket(self, value: float) -> None:
-        self._insert_bucket_data(variance=0, value=value, bucket=self.buckets[0])
+        self._insert_bucket_data(variance=0.0, value=value, bucket=self.buckets[0])
         self.width += 1
         incremental_variance = (
             (self.width - 1)
@@ -430,7 +465,7 @@ class ADWIN(WindowBased):
             * (value - self.total / (self.width - 1))
             / self.width
             if self.width > 1
-            else 0
+            else 0.0
         )
         self.variance += incremental_variance
         self.total += value
@@ -454,9 +489,10 @@ class ADWIN(WindowBased):
         self.width -= bucket_size
         self.total -= bucket.total[0]
         bucket_mean = bucket.total[0] / bucket_size
+        window_mean = self.total / self.width
         incremental_variance = bucket.variance[0] + bucket_size * self.width * (
-            bucket_mean - self.total / self.width
-        ) * (bucket_mean - self.total / self.width) / (bucket_size + self.width)
+            bucket_mean - window_mean
+        ) * (bucket_mean - window_mean) / (bucket_size + self.width)
         self.variance -= incremental_variance
 
         bucket.remove()
@@ -504,18 +540,16 @@ class ADWIN(WindowBased):
             idx += 1
 
     def _calculate_threshold(self, w0_instances: int, w1_instances: int) -> float:
-        # NOTE: Review this formula
-        delta_prime = self.config.delta / np.log(  # type: ignore
-            w0_instances + w1_instances
-        )
-        # Has highlighted in river library, the use of the inverse (reciprocal)
+        delta_prime = np.log(2 * np.log(self.width) / self.config.delta)  # type: ignore
+        # Has highlighted in river library, the use of the reciprocal
         # of m allows to avoid extra divisions
-        m_inv = 1 / (w0_instances - self._min_instances) + 1 / (
-            w1_instances - self._min_instances
+        min_window_size = self.config.min_window_size + 1  # type: ignore
+        m_reciprocal = 1 / (w0_instances - min_window_size) + 1 / (
+            w1_instances - min_window_size
         )
         epsilon = (
-            np.sqrt(2 * m_inv * self.variance * delta_prime)
-            + 2 / 3 * delta_prime * m_inv
+            np.sqrt(2 * m_reciprocal * self.variance_window * delta_prime)
+            + 2 / 3 * delta_prime * m_reciprocal
         )
         return epsilon
 
@@ -525,7 +559,6 @@ class ADWIN(WindowBased):
         self.num_instances += 1
         self._insert_bucket(value=value)
 
-        # self.drift = False
         if (
             self.num_instances % self.config.clock == 0  # type: ignore
             and self.width > self.config.min_num_instances  # type: ignore
@@ -546,6 +579,7 @@ class ADWIN(WindowBased):
                     bucket = self.buckets[i]
                     for j in range(bucket.idx - 1):
                         bucket_size = self._bucket_size(index=i)
+
                         w0_instances += bucket_size
                         w1_instances -= bucket_size
                         w0_total += bucket.total[j]
@@ -556,8 +590,11 @@ class ADWIN(WindowBased):
                             break
 
                         if (
-                            w1_instances > self._min_instances
-                            and w0_instances > self._min_instances  # type: ignore
+                            w1_instances > self.config.min_window_size  # type: ignore
+                            and (
+                                w0_instances
+                                > self.config.min_window_size  # type: ignore
+                            )
                         ):
                             w0_mean = w0_total / w0_instances
                             w1_mean = w1_total / w1_instances
@@ -571,8 +608,6 @@ class ADWIN(WindowBased):
                                 if self.width > 0:
                                     w0_instances -= self._delete_bucket()
                                     flag_exit = True
-                                    # FIXME: Reset here?  # pylint: disable=fixme
-                                    # self._reset()
                                     break
 
     def reset(self) -> None:

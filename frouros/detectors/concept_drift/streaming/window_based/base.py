@@ -19,9 +19,5 @@ class WindowBased(ConceptDriftStreamingBase):
     config_type = WindowBaseConfig
 
     @abc.abstractmethod
-    def reset(self) -> None:
-        """Reset method."""
-
-    @abc.abstractmethod
     def _update(self, value: Union[int, float], **kwargs) -> None:
         pass
