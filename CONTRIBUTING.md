@@ -1,0 +1,30 @@
+# How to contribute
+
+## Adding feature or solving a bug.
+
+Recommended steps for first time contributors:
+
+1. Fork repository on GitHub.
+2. Set up develop environment (it is not mandatory, but we highly recommend the use of a [virtual environment](https://docs.python.org/3.9/library/venv.html)):
+    ```bash
+    python3 -m venv .venv
+    source .venv/bin/activate
+   ```
+3. Download and install development version:
+    ```bash
+    git clone https://github.com/<ACCOUNT>/frouros  ## Replace <ACCOUNT> with your GitHub account
+    cd frouros
+    git checkout main
+    git pull
+    pip install -e .
+   ```
+4. After adding and committing your fix or feature, ensure that code coverage is at least 90% (otherwise the PR will be rejected) and that linting is successfully executed using the following command:
+    ```bash
+   tox
+   ```
+5. Create pull request to the original repository.
+
+## Reporting bugs.
+
+1. Check that there is not an issue that currently highlights the bug or a pull request that solves it.
+2. Create an [issue](https://github.com/IFCA/frouros/issues/new) in GitHub.
