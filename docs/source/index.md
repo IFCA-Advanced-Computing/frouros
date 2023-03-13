@@ -25,5 +25,6 @@ installation
 concepts
 api_reference
 examples
+contribute
 about
 ```
