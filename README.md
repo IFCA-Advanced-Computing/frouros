@@ -19,7 +19,7 @@
   </a>
 </p>
 
-<p align="center">Frouros is a Python library for drift detection in Machine Learning problems.</p>
+<p align="center">Frouros is a Python library for drift detection in machine learning systems.</p>
 
 Frouros provides a combination of classical and more recent algorithms for drift detection, both for detecting concept and data drift.
 
