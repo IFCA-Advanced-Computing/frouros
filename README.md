@@ -23,7 +23,7 @@
 
 Frouros provides a combination of classical and more recent algorithms for drift detection, both for detecting concept and data drift.
 
-## Quickstart
+## ⚡️ Quickstart
 
 As a quick and easy example, we can generate two normal distributions in order to use a data drift detector like Kolmogorov-Smirnov. This method tries to verify if generated samples come from the same distribution or not. If they come from different distributions, it means that there is data drift.
 
@@ -55,7 +55,7 @@ p_value < alpha
 
 More examples can be found [here](https://frouros.readthedocs.io/en/latest/examples.html).
 
-## Installation
+## 🛠 Installation
 
 Frouros supports Python 3.8, 3.9 and 3.10 versions. It can be installed via pip:
 
@@ -74,3 +74,11 @@ The currently implemented detectors are listed in the following diagram.
 Some well-known datasets and synthetic generators are provided and listed in the following diagram.
 
 ![Datasets diagram](images/datasets.png)
+
+## 👍 Contributing
+
+Check out the [contribution](https://github.com/IFCA/frouros/blob/main/CONTRIBUTING.md) section.
+
+## 📝 License
+
+Frouros is an open-source software licensed under the [BSD-3-Clause license](https://github.com/IFCA/frouros/blob/main/LICENSE).
