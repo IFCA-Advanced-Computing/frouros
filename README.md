@@ -69,12 +69,6 @@ The currently implemented detectors are listed in the following diagram.
 
 ![Detectors diagram](images/detectors.png)
 
-## Datasets
-
-Some well-known datasets and synthetic generators are provided and listed in the following diagram.
-
-![Datasets diagram](images/datasets.png)
-
 ## 👍 Contributing
 
 Check out the [contribution](https://github.com/IFCA/frouros/blob/main/CONTRIBUTING.md) section.
