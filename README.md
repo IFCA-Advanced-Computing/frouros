@@ -13,6 +13,10 @@
   <a href="https://frouros.readthedocs.io/">
     <img src="https://readthedocs.org/projects/frouros/badge/?version=latest" alt="documentation"/>
   </a>
+  <!-- PyPI -->
+  <a href="https://pypi.org/project/frouros">
+    <img src="https://img.shields.io/pypi/v/frouros.svg?label=release&color=blue" alt="pypi">
+  </a>
   <!-- License -->
   <a href="https://opensource.org/licenses/BSD-3-Clause">
     <img src="https://img.shields.io/badge/License-BSD%203--Clause-blue.svg" alt="bsd_3_license">
