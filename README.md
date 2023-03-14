@@ -63,7 +63,7 @@ Frouros supports Python 3.8, 3.9 and 3.10 versions. It can be installed via pip:
 pip install frouros
 ```
 
-## Drift detection methods
+## 🕵🏻‍♂️️ Drift detection methods
 
 The currently implemented detectors are listed in the following diagram.
 
@@ -72,6 +72,19 @@ The currently implemented detectors are listed in the following diagram.
 ## 👍 Contributing
 
 Check out the [contribution](https://github.com/IFCA/frouros/blob/main/CONTRIBUTING.md) section.
+
+## 💬 Citation
+
+Although Frouros paper is still in preprint, if you want to cite it you can use the [preprint](https://arxiv.org/abs/2208.06868) version (to be replaced by the paper once is published).
+
+```bibtex
+@article{cespedes2022frouros,
+  title={Frouros: A Python library for drift detection in Machine Learning problems},
+  author={C{\'e}spedes Sisniega, Jaime and L{\'o}pez Garc{\'\i}a, {\'A}lvaro },
+  journal={arXiv preprint arXiv:2208.06868},
+  year={2022}
+}
+```
 
 ## 📝 License
 
