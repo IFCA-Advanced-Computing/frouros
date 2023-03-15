@@ -29,7 +29,74 @@ Frouros provides a combination of classical and more recent algorithms for drift
 
 ## ⚡️ Quickstart
 
-As a quick and easy example, we can generate two normal distributions in order to use a data drift detector like Kolmogorov-Smirnov. This method tries to verify if generated samples come from the same distribution or not. If they come from different distributions, it means that there is data drift.
+### Concept drift
+
+As a quick example, we can use the wine dataset to which concept drift it is induced in order to show the use of a concept drift detector like DDM (Drift Detection Method).
+
+```python
+import numpy as np
+from sklearn.datasets import load_wine
+from sklearn.linear_model import LogisticRegression
+from sklearn.model_selection import train_test_split
+from sklearn.pipeline import Pipeline
+from sklearn.preprocessing import StandardScaler
+
+from frouros.detectors.concept_drift import DDM, DDMConfig
+
+np.random.seed(seed=31)
+
+# Load wine dataset
+X, y = load_wine(return_X_y=True)
+
+# Split train (70%) and test (30%)
+(
+    X_train,
+    X_test,
+    y_train,
+    y_test,
+) = train_test_split(X, y, train_size=0.7, random_state=31)
+
+# IMPORTANT: Induce/simulate concept drift in the last part (20%)
+# of y_test by modifying some labels (50% approx). Therefore, changing P(y|X))
+drift_size = int(y_test.shape[0] * 0.2)
+y_test_drift = y_test[-drift_size:]
+modify_idx = np.random.rand(*y_test_drift.shape) <= 0.5
+y_test_drift[modify_idx] = (y_test_drift[modify_idx] + 1) % len(np.unique(y_test))
+y_test[-drift_size:] = y_test_drift
+
+# Define and fit model
+pipeline = Pipeline(
+    [
+        ("scaler", StandardScaler()),
+        ("model", LogisticRegression()),
+    ]
+)
+pipeline.fit(X=X_train, y=y_train)
+
+# Detector configuration and instantiation
+config = DDMConfig(warning_level=2.0,
+                   drift_level=3.0,
+                   min_num_instances=30,)
+detector = DDM(config=config)
+
+# Simulate data stream (assuming test label available after prediction)
+for i, (X, y) in enumerate(zip(X_test, y_test)):
+    y_pred = pipeline.predict(X.reshape(1, -1))
+    error = 1 - int(y_pred == y)
+    detector.update(value=error)
+    status = detector.status
+    if status["drift"]:
+        print(f"Drift detected at index {i}")
+        break
+
+# >> Drift detected at index 44
+```
+
+More concept drift examples can be found [here](https://frouros.readthedocs.io/en/latest/examples.html#data-drift).
+
+### Data drift
+
+As a quick example, we can generate two normal distributions in order to use a data drift detector like Kolmogorov-Smirnov. This method tries to verify if generated samples come from the same distribution or not. If they come from different distributions, it means that there is data drift.
 
 ```python
 import numpy as np
@@ -57,7 +124,7 @@ p_value < alpha
 >> > True  # Drift detected. We can reject H0, so both samples come from different distributions.
 ```
 
-More examples can be found [here](https://frouros.readthedocs.io/en/latest/examples.html).
+More data drift examples can be found [here](https://frouros.readthedocs.io/en/latest/examples.html#data-drift).
 
 ## 🛠 Installation
 
