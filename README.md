@@ -89,39 +89,64 @@ for i, (X, y) in enumerate(zip(X_test, y_test)):
         print(f"Drift detected at index {i}")
         break
 
-# >> Drift detected at index 44
+>> Drift detected at index 44
 ```
 
 More concept drift examples can be found [here](https://frouros.readthedocs.io/en/latest/examples.html#data-drift).
 
 ### Data drift
 
-As a quick example, we can generate two normal distributions in order to use a data drift detector like Kolmogorov-Smirnov. This method tries to verify if generated samples come from the same distribution or not. If they come from different distributions, it means that there is data drift.
+As a quick example, we can use the iris dataset to which data drift in order to show the use of a data drift detector like Kolmogorov-Smirnov test.
 
 ```python
 import numpy as np
+from sklearn.datasets import load_iris
+from sklearn.model_selection import train_test_split
+from sklearn.tree import DecisionTreeClassifier
+
 from frouros.detectors.data_drift import KSTest
 
-np.random.seed(31)
-# X samples from a normal distribution with mean=2 and std=2
-x_mean = 2
-x_std = 2
-# Y samples a normal distribution with mean=1 and std=2
-y_mean = 1
-y_std = 2
+np.random.seed(seed=31)
 
-num_samples = 10000
-X_ref = np.random.normal(x_mean, x_std, num_samples)
-X_test = np.random.normal(y_mean, y_std, num_samples)
+# Load iris dataset
+X, y = load_iris(return_X_y=True)
 
-alpha = 0.01  # significance level for the hypothesis test
+# Split train (70%) and test (30%)
+(
+    X_train,
+    X_test,
+    y_train,
+    y_test,
+) = train_test_split(X, y, train_size=0.7, random_state=31)
 
+# Set the feature index to which detector is applied
+dim_idx = 0
+
+# IMPORTANT: Induce/simulate data drift in the selected feature of y_test by
+# applying some gaussian noise. Therefore, changing P(X))
+X_test[:, dim_idx] += np.random.normal(
+    loc=0.0,
+    scale=3.0,
+    size=X_test.shape[0],
+)
+
+# Define and fit model
+model = DecisionTreeClassifier(random_state=31)
+model.fit(X=X_train, y=y_train)
+
+# Set significance level for hypothesis testing
+alpha = 0.001
+# Define and fit detector
 detector = KSTest()
-detector.fit(X=X_ref)
-statistic, p_value = detector.compare(X=X_test)
+detector.fit(X=X_train[:, dim_idx])
 
-p_value < alpha
->> > True  # Drift detected. We can reject H0, so both samples come from different distributions.
+# Apply detector to the selected feature of X_test
+result = detector.compare(X=X_test[:, dim_idx])
+
+# Check if drift is taking place
+result[0].p_value < alpha
+>> True # Data drift detected.
+# Therefore, we can reject H0 (both samples come from the same distribution).
 ```
 
 More data drift examples can be found [here](https://frouros.readthedocs.io/en/latest/examples.html#data-drift).
