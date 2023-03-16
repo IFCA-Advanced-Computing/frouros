@@ -1,6 +1,6 @@
 # Welcome to Frouros
 
-A Python library for drift detection in Machine Learning problems.
+An open source Python library for drift detection in machine learning systems.
 
 In order to start using `frouros`, we highly recommend to check {doc}`concepts <concepts>` section to get a quick idea of what `frouros` is capable of, and what it is not yet capable of. Subsequently, we recommend taking a look at the {doc}`examples <examples>` section since it is the best way to start using `frouros`.
 
@@ -10,7 +10,7 @@ Read {doc}`installation <installation>` instructions to start using `frouros`.
 
 ```{include} ../../README.md
 :start-after: Quickstart
-:end-before: Installation
+:end-before: 🛠
 ```
 
 ```{warning}
