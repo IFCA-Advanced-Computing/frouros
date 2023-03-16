@@ -17,6 +17,10 @@
   <a href="https://pypi.org/project/frouros">
     <img src="https://img.shields.io/pypi/v/frouros.svg?label=release&color=blue" alt="pypi">
   </a>
+  <!-- Python -->
+  <a href="https://pypi.org/project/frouros">
+    <img src="https://img.shields.io/pypi/pyversions/frouros" alt="python">
+  </a>
   <!-- License -->
   <a href="https://opensource.org/licenses/BSD-3-Clause">
     <img src="https://img.shields.io/badge/License-BSD%203--Clause-blue.svg" alt="bsd_3_license">
@@ -153,7 +157,7 @@ More data drift examples can be found [here](https://frouros.readthedocs.io/en/l
 
 ## 🛠 Installation
 
-Frouros supports Python 3.8, 3.9 and 3.10 versions. It can be installed via pip:
+Frouros can be installed via pip:
 
 ```bash
 pip install frouros
