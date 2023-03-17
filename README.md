@@ -27,9 +27,25 @@
   </a>
 </p>
 
-<p align="center">Frouros is a Python library for drift detection in machine learning systems.</p>
+Frouros is a Python library for drift detection in machine learning systems that provides a combination of classical and more recent algorithms for both concept and data drift detection.
 
-Frouros provides a combination of classical and more recent algorithms for drift detection, both for detecting concept and data drift.
+<p align="center">
+    <i>
+        "Everything changes and nothing stands still"
+    </i>
+</p>
+<p align="center">
+    <i>
+        "You could not step twice into the same river"
+    </i>
+</p>
+<div align="center" style="width: 70%;">
+    <p align="right">
+        <i>
+            Heraclitus of Ephesus (535-475 BCE.)
+        </i>
+    </p>
+</div>
 
 ## ⚡️ Quickstart
 
