@@ -74,6 +74,7 @@ numpydoc_class_members_toctree = False
 #
 html_theme = "sphinx_book_theme"
 html_title = "Frouros"
+html_logo = "../../images/logo.png"
 
 # Theme options
 
@@ -82,6 +83,9 @@ html_theme_options = {
     "use_repository_button": True,
     "use_issues_button": True,
     "show_prev_next": False,
+    "logo": {
+        "alt_text": "frouros_logo",
+    },
 }
 
 # Add any paths that contain custom static files (such as style sheets) here,
