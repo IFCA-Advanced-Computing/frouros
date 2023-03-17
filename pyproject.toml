@@ -1,6 +1,6 @@
 [project]
 name = "frouros"
-version = "0.2.0"
+version = "0.2.1"
 description = "A Python library for drift detection in Machine Learning problems"
 authors = [
     {name = "Jaime Céspedes Sisniega", email = "cespedes@ifca.unican.es"}
@@ -26,8 +26,9 @@ classifiers = [
     "Programming Language :: Python :: 3.8",
     "Programming Language :: Python :: 3.9",
     "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
 ]
-requires-python = ">=3.8,<3.11"
+requires-python = ">=3.8,<3.12"
 dependencies = [
     "matplotlib>=3.6.0,<3.7",
     "numpy>=1.24.0,<1.25",
