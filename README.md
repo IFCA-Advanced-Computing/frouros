@@ -1,4 +1,8 @@
-[//]: # (![Frouros logo]&#40;logo.svg&#41;)
+<p align="center">
+  <img height="115px" src="images/logo.png" alt="frouros_logo">
+</p>
+
+---
 
 <p align="center">
   <!-- CI -->
@@ -46,6 +50,8 @@ Frouros is a Python library for drift detection in machine learning systems that
         </i>
     </p>
 </div>
+
+----
 
 ## ⚡️ Quickstart
 
@@ -183,7 +189,7 @@ pip install frouros
 
 The currently implemented detectors are listed in the following diagram.
 
-![Detectors diagram](images/detectors.png)
+![Detectors diagram](/images/detectors.png)
 
 ## 👍 Contributing
 
