@@ -137,7 +137,9 @@ The {mod}`frouros.detectors` module contains drift detection algorithms.
     :toctree: auto_generated/
     :template: class.md
 
+    BhattacharyyaDistance
     EMD
+    HellingerDistance
     HistogramIntersection
     JS
     KL
