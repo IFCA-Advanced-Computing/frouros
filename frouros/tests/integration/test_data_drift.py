@@ -1,6 +1,6 @@
 """Test data drift detectors."""
 
-from typing import Tuple
+from typing import Tuple, Union
 
 import pytest  # type: ignore
 import numpy as np  # type: ignore
@@ -241,6 +241,56 @@ def test_batch_distance_based_multivariate_same_distribution(
     statistic, _ = detector.compare(X=X_test)
 
     assert np.isclose(statistic, expected_distance)
+
+
+@pytest.mark.parametrize(
+    "detector, expected_distance",
+    [(MMD(chunk_size=10), 0.12183835), (MMD(chunk_size=None), 0.12183835)],
+)
+def test_batch_distance_based_chunk_size_valid(
+    X_ref_multivariate: np.ndarray,  # noqa: N803
+    X_test_multivariate: np.ndarray,  # noqa: N803
+    detector: DataDriftBatchBase,
+    expected_distance: float,
+) -> None:
+    """Test batch distance based chunk size valid method.
+
+    :param X_ref_multivariate: reference multivariate data
+    :type X_ref_multivariate: numpy.ndarray
+    :param X_test_multivariate: test multivariate data
+    :type X_test_multivariate: numpy.ndarray
+    :param detector: detector test
+    :type detector: DataDriftBatchBase
+    :param expected_distance: expected distance value
+    :type expected_distance: float
+    """
+    _ = detector.fit(X=X_ref_multivariate)
+    statistic, _ = detector.compare(X=X_test_multivariate)
+
+    assert np.isclose(statistic, expected_distance)
+
+
+@pytest.mark.parametrize(
+    "chunk_size, expected_exception",
+    [
+        (1.5, TypeError),
+        ("10", TypeError),
+        (-1, ValueError),
+    ],
+)
+def test_batch_distance_based_chunk_size_invalid(
+    chunk_size: Union[int, float, str],
+    expected_exception: Union[TypeError, ValueError],
+) -> None:
+    """Test batch distance based chunk size invalid method.
+
+    :param chunk_size: chunk size
+    :type chunk_size: Union[int, float, str]
+    :param expected_exception: expected exception
+    :type expected_exception: Union[TypeError, ValueError]
+    """
+    with pytest.raises(expected_exception):
+        _ = MMD(chunk_size=chunk_size)  # type: ignore
 
 
 @pytest.mark.parametrize(

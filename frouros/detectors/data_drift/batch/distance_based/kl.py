@@ -47,6 +47,7 @@ class KL(DistanceProbabilityBasedBase):
         self,
         X_ref: np.ndarray,  # noqa: N803
         X: np.ndarray,  # noqa: N803
+        **kwargs,
     ) -> DistanceResult:
         kl = self._kl(X=X_ref, Y=X, num_bins=self.num_bins, **self.kwargs)
         distance = DistanceResult(distance=kl)
