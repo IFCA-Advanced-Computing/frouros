@@ -26,7 +26,7 @@ class JS(DistanceProbabilityBasedBase):
         self,
         num_bins: int = 10,
         callbacks: Optional[Union[Callback, List[Callback]]] = None,
-        **kwargs
+        **kwargs,
     ) -> None:
         """Init method.
 
@@ -50,6 +50,7 @@ class JS(DistanceProbabilityBasedBase):
         self,
         X_ref: np.ndarray,  # noqa: N803
         X: np.ndarray,  # noqa: N803
+        **kwargs,
     ) -> DistanceResult:
         js = self._js(X=X_ref, Y=X, num_bins=self.num_bins, **self.kwargs)
         distance = DistanceResult(distance=js)
@@ -61,7 +62,7 @@ class JS(DistanceProbabilityBasedBase):
         Y: np.ndarray,
         *,
         num_bins: int,
-        **kwargs: Dict[str, Any]
+        **kwargs: Dict[str, Any],
     ) -> float:
         (  # noqa: N806
             X_ref_rvs,

@@ -175,7 +175,7 @@ class DataDriftBase(DetectorBase):
             self._check_array(X=value)
         self._X_ref = value
 
-    def fit(self, X: np.ndarray) -> Dict[str, Any]:  # noqa: N803
+    def fit(self, X: np.ndarray, **kwargs) -> Dict[str, Any]:  # noqa: N803
         """Fit detector.
 
         :param X: feature data
@@ -186,7 +186,7 @@ class DataDriftBase(DetectorBase):
         self._check_fit_dimensions(X=X)
         for callback in self.callbacks:  # type: ignore
             callback.on_fit_start()
-        self._fit(X=X)
+        self._fit(X=X, **kwargs)
         for callback in self.callbacks:  # type: ignore
             callback.on_fit_end()
 

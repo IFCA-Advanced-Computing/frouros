@@ -45,6 +45,7 @@ class EMD(DistanceBasedBase):
         self,
         X_ref: np.ndarray,  # noqa: N803
         X: np.ndarray,  # noqa: N803
+        **kwargs,
     ) -> DistanceResult:
         emd = self._emd(X=X_ref, Y=X, **self.kwargs)
         distance = DistanceResult(distance=emd)

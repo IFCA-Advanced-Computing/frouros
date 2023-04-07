@@ -108,6 +108,7 @@ class DistanceBasedBase(DataDriftBatchBase):
         self,
         X_ref: np.ndarray,  # noqa: N803
         X: np.ndarray,  # noqa: N803
+        **kwargs,
     ) -> DistanceResult:
         pass
 
@@ -166,6 +167,7 @@ class DistanceBinsBasedBase(DistanceBasedBase):
         self,
         X_ref: np.ndarray,  # noqa: N803
         X: np.ndarray,  # noqa: N803
+        **kwargs,
     ) -> DistanceResult:
         distance_bins = self._distance_measure_bins(X_ref=X_ref, X=X)
         distance = DistanceResult(distance=distance_bins)
@@ -186,7 +188,9 @@ class DistanceBinsBasedBase(DistanceBasedBase):
 
     @abc.abstractmethod
     def _distance_measure_bins(
-        self, X_ref: np.ndarray, X: np.ndarray  # noqa: N803
+        self,
+        X_ref: np.ndarray,  # noqa: N803
+        X: np.ndarray,  # noqa: N803
     ) -> float:
         pass
 
@@ -246,6 +250,7 @@ class DistanceProbabilityBasedBase(DistanceBasedBase):
         self,
         X_ref: np.ndarray,  # noqa: N803
         X: np.ndarray,  # noqa: N803
+        **kwargs,
     ) -> DistanceResult:
         pass
 
