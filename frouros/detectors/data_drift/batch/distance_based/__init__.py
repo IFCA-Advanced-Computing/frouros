@@ -3,7 +3,7 @@
 from .bhattacharyya_distance import BhattacharyyaDistance
 from .emd import EMD
 from .hellinger_distance import HellingerDistance
-from .histogram_intersection import HistogramIntersection
+from .hi_normalized_complement import HINormalizedComplement
 from .js import JS
 from .kl import KL
 from .psi import PSI
@@ -13,7 +13,7 @@ __all__ = [
     "BhattacharyyaDistance",
     "EMD",
     "HellingerDistance",
-    "HistogramIntersection",
+    "HINormalizedComplement",
     "JS",
     "KL",
     "PSI",
