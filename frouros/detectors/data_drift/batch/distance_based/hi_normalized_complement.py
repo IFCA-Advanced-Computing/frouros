@@ -1,4 +1,4 @@
-"""Histogram intersection module."""
+"""HI (Histogram intersection) normalized complement module."""
 
 from typing import List, Optional, Union
 
@@ -10,8 +10,8 @@ from frouros.detectors.data_drift.batch.distance_based.base import (
 )
 
 
-class HistogramIntersection(DistanceBinsBasedBase):
-    """Histogram intersection [swain1991color]_ detector.
+class HINormalizedComplement(DistanceBinsBasedBase):
+    """HI (Histogram intersection) normalized complement [swain1991color]_ detector.
 
     :References:
 
@@ -33,7 +33,7 @@ class HistogramIntersection(DistanceBinsBasedBase):
         :type callbacks: Optional[Union[Callback, List[Callback]]]
         """
         super().__init__(
-            statistical_method=self._histogram_intersection,
+            statistical_method=self._hi_normalized_complement,
             statistical_kwargs={
                 "num_bins": num_bins,
             },
@@ -46,13 +46,13 @@ class HistogramIntersection(DistanceBinsBasedBase):
         X_ref: np.ndarray,  # noqa: N803
         X: np.ndarray,  # noqa: N803
     ) -> float:
-        no_intersection = self._histogram_intersection(
+        intersection_normalized_complement = self._hi_normalized_complement(
             X=X_ref, Y=X, num_bins=self.num_bins
         )
-        return no_intersection
+        return intersection_normalized_complement
 
     @staticmethod
-    def _histogram_intersection(
+    def _hi_normalized_complement(
         X: np.ndarray,  # noqa: N803
         Y: np.ndarray,
         *,
@@ -68,6 +68,6 @@ class HistogramIntersection(DistanceBinsBasedBase):
         X_hist = X_hist / X.shape[0]  # noqa: N806
         Y_hist, _ = np.histogram(Y, bins=num_bins, range=hist_range)  # noqa: N806
         Y_hist = Y_hist / Y.shape[0]  # noqa: N806
-        no_intersection = 1 - np.sum(np.minimum(X_hist, Y_hist))
+        intersection_normalized_complement = 1 - np.sum(np.minimum(X_hist, Y_hist))
 
-        return no_intersection
+        return intersection_normalized_complement

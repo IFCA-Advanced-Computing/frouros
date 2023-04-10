@@ -10,7 +10,7 @@ from frouros.detectors.data_drift.batch import (
     BhattacharyyaDistance,
     EMD,
     HellingerDistance,
-    HistogramIntersection,
+    HINormalizedComplement,
     PSI,
     JS,
     KL,
@@ -61,7 +61,7 @@ def test_batch_distance_based_categorical(
         (EMD(), 3.85346006),
         (JS(), 0.67010107),
         (KL(), np.inf),
-        (HistogramIntersection(), 0.78),
+        (HINormalizedComplement(), 0.78),
     ],
 )
 def test_batch_distance_based_univariate(

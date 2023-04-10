@@ -140,7 +140,7 @@ The {mod}`frouros.detectors` module contains drift detection algorithms.
     BhattacharyyaDistance
     EMD
     HellingerDistance
-    HistogramIntersection
+    HINormalizedComplement
     JS
     KL
     MMD
