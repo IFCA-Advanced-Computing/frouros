@@ -1,6 +1,6 @@
 """Data drift detection methods init."""
 
-from .batch import (
+from .batch import (  # noqa: F401
     BhattacharyyaDistance,
     ChiSquareTest,
     CVMTest,
@@ -15,7 +15,7 @@ from .batch import (
     WelchTTest,
 )
 
-from .streaming import IncrementalKSTest
+from .streaming import IncrementalKSTest, MMD as MMDStreaming  # noqa: N811
 
 __all__ = [
     "BhattacharyyaDistance",
@@ -29,6 +29,6 @@ __all__ = [
     "KL",
     "KSTest",
     "PSI",
-    "MMD",
+    "MMDStreaming",
     "WelchTTest",
 ]

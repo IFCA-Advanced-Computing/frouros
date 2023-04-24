@@ -14,62 +14,6 @@ from frouros.detectors.data_drift.base import (
 )
 
 
-class StatisticalResult(ResultBase):
-    """Statistical result class."""
-
-    def __init__(
-        self,
-        statistic: Union[int, float],
-        p_value: Union[int, float],
-    ) -> None:
-        """Init method.
-
-        :param statistic: statistic value
-        :type statistic: Union[int, float]
-        :param p_value: p-value
-        :type p_value: Union[int, float]
-        """
-        super().__init__()
-        self.statistic = statistic
-        self.p_value = p_value
-
-    @property
-    def statistic(self) -> Union[int, float]:
-        """Statistic value property.
-
-        :return: statistic value
-        :rtype: Union[int, float]
-        """
-        return self._statistic
-
-    @statistic.setter
-    def statistic(self, value: Union[int, float]) -> None:
-        """Statistic value setter.
-
-        :param value: value to be set
-        :type value: Union[int, float]
-        """
-        self._statistic = value
-
-    @property
-    def p_value(self) -> Union[int, float]:
-        """P-value property.
-
-        :return: p-value
-        :rtype: Union[int, float]
-        """
-        return self._p_value
-
-    @p_value.setter
-    def p_value(self, value: Union[int, float]) -> None:
-        """P-value setter.
-
-        :param value: value to be set
-        :type value: Union[int, float]
-        """
-        self._p_value = value
-
-
 class DataDriftStreamingBase(DataDriftBase):
     """Abstract class representing a data drift streaming detector."""
 
