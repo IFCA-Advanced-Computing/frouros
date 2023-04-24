@@ -48,6 +48,8 @@ class IncrementalKSTest(StatisticalTestBase):
 
         :param callbacks: callbacks
         :type callbacks: Optional[Union[Callback, List[Callback]]]
+        :param window_size: window size
+        :type window_size: int
         """
         super().__init__(
             data_type=NumericalData(),
