@@ -85,5 +85,4 @@ class MMD(DistanceBasedBase):
 
         # FIXME: Handle callback logs. Now are ignored.  # pylint: disable=fixme
         distance, _ = self.mmd.compare(X=np.array(self.X_queue))
-        distance = DistanceResult(distance=distance)
         return distance

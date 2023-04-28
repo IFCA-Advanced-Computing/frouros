@@ -40,5 +40,6 @@
     :template: class.md
 
     History
+    mSPRT
     WarningSamplesBuffer
 ```

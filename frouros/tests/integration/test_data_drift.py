@@ -326,7 +326,7 @@ def test_streaming_statistical_univariate_same_distribution(
     _ = detector.fit(X=X_ref)
 
     for value in X_test:
-        test = detector.update(value=value)  # type: ignore
+        test, _ = detector.update(value=value)  # type: ignore
 
     # Check last statistic and p-value
     assert np.isclose(test.statistic, expected_statistic)
@@ -366,7 +366,7 @@ def test_streaming_statistical_univariate_different_distribution(
     _ = detector.fit(X=X_ref)
 
     for value in X_test:
-        test = detector.update(value=value)  # type: ignore
+        test, _ = detector.update(value=value)  # type: ignore
 
     # Check last statistic and p-value
     assert np.isclose(test.statistic, expected_statistic)
@@ -400,7 +400,7 @@ def test_streaming_distance_based_univariate_same_distribution(
     _ = detector.fit(X=X_ref)
 
     for value in X_test:
-        result = detector.update(value=value)  # type: ignore
+        result, _ = detector.update(value=value)  # type: ignore
 
     # Check last distance
     assert np.isclose(result.distance, expected_distance)
@@ -436,7 +436,7 @@ def test_streaming_distance_based_univariate_different_distribution(
     _ = detector.fit(X=X_ref)
 
     for value in X_test:
-        result = detector.update(value=value)  # type: ignore
+        result, _ = detector.update(value=value)  # type: ignore
 
     # Check last distance
     assert np.isclose(result.distance, expected_distance)
