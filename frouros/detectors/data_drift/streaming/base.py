@@ -2,7 +2,7 @@
 
 import abc
 
-from typing import Any, Optional, List, Union
+from typing import Any, Dict, Optional, List, Tuple, Union
 import numpy as np  # type: ignore
 
 from frouros.callbacks import Callback
@@ -49,7 +49,7 @@ class DataDriftStreamingBase(DataDriftBase):
 
     def update(
         self, value: Union[int, float]
-    ) -> tuple[Optional[ResultBase], dict[str, Any]]:
+    ) -> Tuple[Optional[ResultBase], Dict[str, Any]]:
         """Update detector.
 
         :param value: value to use to update the detector

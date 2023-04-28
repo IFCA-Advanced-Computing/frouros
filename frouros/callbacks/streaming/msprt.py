@@ -1,6 +1,6 @@
 """mSPRT (Mixing Sequentially Probability Ratio Test) callback module."""
 
-from typing import Union, Optional
+from typing import Union, Tuple, Optional
 
 import numpy as np  # type: ignore
 from scipy.stats import norm  # type: ignore
@@ -130,7 +130,7 @@ class mSPRT(StreamingCallback):  # noqa: N801 # pylint: disable=invalid-name
         tau_squared = sigma_squared * minus_b_cdf / (1 / b * norm.pdf(b) - minus_b_cdf)
         return tau_squared
 
-    def _calculate_p_value(self, value: float) -> tuple[float, float]:
+    def _calculate_p_value(self, value: float) -> Tuple[float, float]:
         likelihood = self._likelihood_normal_mixing_distribution(
             mean=self.incremental_mean.get(),
             sigma=self.sigma,
