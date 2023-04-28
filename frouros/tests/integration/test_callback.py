@@ -189,7 +189,7 @@ def _fit_model(model, X, y):  # noqa: N803
         HDDMW,
         RDDM,
         STEPD,
-    ],
+    ],  # pylint: disable=too-many-locals
 )
 def test_streaming_warning_samples_buffer_on_concept_drift(
     dataset_simple: Tuple[Tuple[np.ndarray, np.ndarray], Tuple[np.ndarray, np.ndarray]],
