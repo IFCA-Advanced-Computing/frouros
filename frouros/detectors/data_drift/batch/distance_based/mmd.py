@@ -51,9 +51,9 @@ class MMD(DistanceBasedBase):
     ) -> None:
         """Init method.
 
-        :param kernel: kernel function to use
+        :param kernel: kernel function
         :type kernel: Callable
-        :param chunk_size:
+        :param chunk_size: chunk size value
         :type chunk_size: Optional[int]
         :param callbacks: callbacks
         :type callbacks: Optional[Union[Callback, List[Callback]]]
