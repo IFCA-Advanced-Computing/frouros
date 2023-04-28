@@ -28,6 +28,7 @@ class MMD(DistanceBasedBase):
     def __init__(
         self,
         kernel: Callable = rbf_kernel,
+        chunk_size: Optional[int] = None,
         callbacks: Optional[Union[Callback, List[Callback]]] = None,
         window_size: int = 10,
     ) -> None:
@@ -35,6 +36,8 @@ class MMD(DistanceBasedBase):
 
         :param kernel: kernel function
         :type kernel: Callable
+        :param chunk_size: chunk size value
+        :type chunk_size: Optional[int]
         :param callbacks: callbacks
         :type callbacks: Optional[Union[Callback, List[Callback]]]
         :param window_size: window size
@@ -45,7 +48,10 @@ class MMD(DistanceBasedBase):
             statistical_type=MultivariateData(),
             callbacks=callbacks,
         )
-        self.mmd = MMDBatch(kernel=kernel)
+        self.mmd = MMDBatch(
+            kernel=kernel,
+            chunk_size=chunk_size,
+        )
         self.window_size = window_size
         self.X_queue = CircularQueue(max_len=self.window_size)
 
