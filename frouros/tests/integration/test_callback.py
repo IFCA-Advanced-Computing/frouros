@@ -12,6 +12,7 @@ from frouros.callbacks.batch import (
 )
 from frouros.callbacks.streaming import (
     History,
+    mSPRT,
     WarningSamplesBuffer,
 )
 from frouros.detectors.concept_drift import (
@@ -44,10 +45,11 @@ from frouros.detectors.data_drift.batch import (
     WelchTTest,
 )
 from frouros.detectors.data_drift.batch.base import DataDriftBatchBase
+from frouros.detectors.data_drift.streaming import MMD as MMDStreaming  # noqa: N811
 
 
 @pytest.mark.parametrize(
-    "detector, expected_distance, expected_p_value",
+    "detector_class, expected_distance, expected_p_value",
     [
         (BhattacharyyaDistance, 0.55516059, 0.0),
         (EMD, 3.85346006, 0.0),
@@ -62,7 +64,7 @@ from frouros.detectors.data_drift.batch.base import DataDriftBatchBase
 def test_batch_permutation_test_data_univariate_different_distribution(
     X_ref_univariate: np.ndarray,  # noqa: N803
     X_test_univariate: np.ndarray,
-    detector: DataDriftBatchBase,
+    detector_class: DataDriftBatchBase,
     expected_distance: float,
     expected_p_value: float,
 ) -> None:
@@ -72,8 +74,8 @@ def test_batch_permutation_test_data_univariate_different_distribution(
     :type X_ref_univariate: numpy.ndarray
     :param X_test_univariate: test univariate data
     :type X_test_univariate: numpy.ndarray
-    :param detector: detector distance
-    :type detector: DataDriftBatchBase
+    :param detector_class: detector distance
+    :type detector_class: DataDriftBatchBase
     :param expected_distance: expected distance value
     :type expected_distance: float
     :param expected_p_value: expected p-value value
@@ -82,7 +84,7 @@ def test_batch_permutation_test_data_univariate_different_distribution(
     np.random.seed(seed=31)
 
     permutation_test_name = "permutation_test"
-    detector = detector(  # type: ignore
+    detector = detector_class(  # type: ignore
         callbacks=[
             PermutationTestOnBatchData(
                 num_permutations=100,
@@ -100,13 +102,13 @@ def test_batch_permutation_test_data_univariate_different_distribution(
 
 
 @pytest.mark.parametrize(
-    "detector",
+    "detector_class",
     [CVMTest, KSTest, WelchTTest],
 )
 def test_batch_reset_on_data_drift(
     X_ref_univariate,  # noqa: N803
     X_test_univariate,
-    detector: DataDriftBatchBase,
+    detector_class: DataDriftBatchBase,
     mocker,
 ) -> None:
     """Test batch reset on data drift callback.
@@ -115,19 +117,25 @@ def test_batch_reset_on_data_drift(
     :type X_ref_univariate: numpy.ndarray
     :param X_test_univariate: test univariate data
     :type X_test_univariate: numpy.ndarray
-    :param detector: detector distance
-    :type detector: DataDriftBatchBase
+    :param detector_class: detector distance
+    :type detector_class: DataDriftBatchBase
     """
     mocker.patch("frouros.detectors.data_drift.batch.base.DataDriftBatchBase.reset")
 
-    detector = detector(callbacks=[ResetOnBatchDataDrift(alpha=0.01)])  # type: ignore
+    detector = detector_class(  # type: ignore
+        callbacks=[
+            ResetOnBatchDataDrift(
+                alpha=0.01,
+            ),
+        ],
+    )
     _ = detector.fit(X=X_ref_univariate)
     _ = detector.compare(X=X_test_univariate)
     detector.reset.assert_called_once()  # type: ignore # pylint: disable=no-member
 
 
 @pytest.mark.parametrize(
-    "detector",
+    "detector_class",
     [
         ADWIN,
         CUSUM,
@@ -145,17 +153,17 @@ def test_batch_reset_on_data_drift(
 )
 def test_streaming_history_on_concept_drift(
     model_errors: List[int],
-    detector: ConceptDriftBase,
+    detector_class: ConceptDriftBase,
 ):
     """Test streaming history on concept drift callback.
 
     :param model_errors: model errors
     :type model_errors: List[int]
-    :param detector: concept drift detector
-    :type detector: ConceptDriftBase
+    :param detector_class: concept drift detector
+    :type detector_class: ConceptDriftBase
     """
     name = "history"
-    detector = detector(callbacks=History(name=name))  # type: ignore
+    detector = detector_class(callbacks=History(name=name))  # type: ignore
 
     for error in model_errors:
         history = detector.update(value=error)
@@ -172,7 +180,7 @@ def _fit_model(model, X, y):  # noqa: N803
 
 
 @pytest.mark.parametrize(
-    "detector",
+    "detector_class",
     [
         DDM,
         ECDDWT,
@@ -186,7 +194,7 @@ def _fit_model(model, X, y):  # noqa: N803
 def test_streaming_warning_samples_buffer_on_concept_drift(
     dataset_simple: Tuple[Tuple[np.ndarray, np.ndarray], Tuple[np.ndarray, np.ndarray]],
     model: sklearn.pipeline.Pipeline,
-    detector: DDMBased,
+    detector_class: DDMBased,
 ):
     """Test streaming warning samples buffer on concept drift callback.
 
@@ -194,12 +202,12 @@ def test_streaming_warning_samples_buffer_on_concept_drift(
     :type dataset_simple: Tuple[Tuple[numpy.ndarray, numpy.ndarray],
     :param model: trained model
     :type model: sklearn.pipeline.Pipeline
-    :param detector: concept drift detector
-    :type detector: DDMBased
+    :param detector_class: concept drift detector
+    :type detector_class: DDMBased
     """
     _, test = dataset_simple  # noqa: N806
 
-    detector = detector(
+    detector = detector_class(
         callbacks=WarningSamplesBuffer(name="samples"),  # type: ignore
     )
 
@@ -225,3 +233,66 @@ def test_streaming_warning_samples_buffer_on_concept_drift(
                 y_extra.clear()
                 detector.reset()
                 model = _fit_model(model=model, X=X_new_ref, y=y_new_ref)
+
+
+@pytest.mark.parametrize(
+    "detector_class,"
+    " expected_drift_idx,"
+    " expected_distance_mean,"
+    " expected_p_value,"
+    " expected_likelihood",
+    [
+        (MMDStreaming, 70, 0.3622854, 0.0324733, 30.79452443),
+    ],
+)
+def test_streaming_msprt_multivariate_different_distribution(
+    X_ref_multivariate: np.ndarray,  # noqa: N803
+    X_test_multivariate: np.ndarray,
+    detector_class: DataDriftBatchBase,
+    expected_drift_idx: int,
+    expected_distance_mean: float,
+    expected_p_value: float,
+    expected_likelihood: float,
+) -> None:
+    """Test streaming mSPRT test on data callback.
+
+    :param X_ref_multivariate: reference multivariate data
+    :type X_ref_multivariate: numpy.ndarray
+    :param X_test_multivariate: test multivariate data
+    :type X_test_multivariate: numpy.ndarray
+    :param detector_class: detector distance
+    :type detector_class: DataDriftBatchBase
+    :param expected_drift_idx: expected drift index
+    :type expected_drift_idx: int
+    :param expected_distance_mean: expected distance mean value
+    :type expected_distance_mean: float
+    :param expected_p_value: expected p-value value
+    :type expected_p_value: float
+    :param expected_likelihood: expected likelihood value
+    :type expected_likelihood: float
+    """
+    np.random.seed(seed=31)
+
+    alpha = 0.05
+
+    detector = detector_class(  # type: ignore
+        callbacks=mSPRT(
+            alpha=alpha,
+            sigma=0.5,
+        ),
+        window_size=5,
+    )
+    _ = detector.fit(X=X_ref_multivariate)
+
+    drift_idx = -1
+    for i, sample in enumerate(X_test_multivariate, start=1):
+        value, callbacks_logs = detector.update(value=sample)
+        if value is not None:
+            if callbacks_logs["mSPRT"]["p_value"] < alpha:
+                drift_idx = i
+                break
+
+    assert np.isclose(drift_idx, expected_drift_idx)
+    assert np.isclose(callbacks_logs["mSPRT"]["distance_mean"], expected_distance_mean)
+    assert np.isclose(callbacks_logs["mSPRT"]["p_value"], expected_p_value)
+    assert np.isclose(callbacks_logs["mSPRT"]["likelihood"], expected_likelihood)
