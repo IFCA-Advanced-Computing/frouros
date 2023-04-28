@@ -21,7 +21,7 @@ class mSPRT(StreamingCallback):  # noqa: N801 # pylint: disable=invalid-name
 
     def __init__(
         self,
-        alpha: float = 0.05,
+        alpha: float,
         sigma: float = 1.0,
         tau: Optional[float] = None,
         truncation: int = 1,
@@ -96,6 +96,10 @@ class mSPRT(StreamingCallback):  # noqa: N801 # pylint: disable=invalid-name
         if value is not None and not isinstance(value, float):
             raise TypeError("tau must be a float or None")
         self._tau = value
+
+    def on_fit_end(self, **kwargs) -> None:
+        """On fit end method."""
+        self.incremental_mean.num_values = len(kwargs["X"])
 
     def on_update_end(self, value: Union[int, float], **kwargs) -> None:
         """On update end method.
