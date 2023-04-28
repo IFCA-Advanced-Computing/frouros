@@ -1,4 +1,4 @@
-"""Data drift batch distance based detection methods' init."""
+"""Data drift streaming distance based detection methods' init."""
 
 from .mmd import MMD
 

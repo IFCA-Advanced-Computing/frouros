@@ -4,6 +4,6 @@ from .distance_based import MMD
 from .statistical_test import IncrementalKSTest
 
 __all__ = [
-    "MMD",
     "IncrementalKSTest",
+    "MMD",
 ]
