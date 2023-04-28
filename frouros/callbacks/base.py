@@ -55,13 +55,13 @@ class Callback(abc.ABC):
     #         )
     #     self._detector = value
 
-    def on_fit_start(self) -> None:
+    def on_fit_start(self, **kwargs) -> None:
         """On fit start method."""
 
-    def on_fit_end(self) -> None:
+    def on_fit_end(self, **kwargs) -> None:
         """On fit end method."""
 
-    def on_drift_detected(self) -> None:
+    def on_drift_detected(self, **kwargs) -> None:
         """On drift detected method."""
 
     @abc.abstractmethod

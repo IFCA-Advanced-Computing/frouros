@@ -188,7 +188,7 @@ class DataDriftBase(DetectorBase):
             callback.on_fit_start()
         self._fit(X=X, **kwargs)
         for callback in self.callbacks:  # type: ignore
-            callback.on_fit_end()
+            callback.on_fit_end(X=X, **kwargs)
 
         logs = self._get_callbacks_logs()
         return logs
