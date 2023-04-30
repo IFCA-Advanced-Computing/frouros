@@ -1,6 +1,6 @@
 [project]
 name = "frouros"
-version = "0.2.5"
+version = "0.2.6"
 description = "A Python library for drift detection in Machine Learning problems"
 authors = [
     {name = "Jaime Céspedes Sisniega", email = "cespedes@ifca.unican.es"}
