@@ -242,7 +242,7 @@ def test_streaming_warning_samples_buffer_on_concept_drift(
     " expected_p_value,"
     " expected_likelihood",
     [
-        (MMDStreaming, 40, 0.08821576, 0.00494882, 202.06836342),
+        (MMDStreaming, 31, 0.34147982, 0.0487643, 20.50680424),
     ],
 )
 def test_streaming_msprt_multivariate_different_distribution(

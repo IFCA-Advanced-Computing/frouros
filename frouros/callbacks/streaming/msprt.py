@@ -97,10 +97,6 @@ class mSPRT(StreamingCallback):  # noqa: N801 # pylint: disable=invalid-name
             raise TypeError("tau must be a float or None")
         self._tau = value
 
-    def on_fit_end(self, **kwargs) -> None:
-        """On fit end method."""
-        self.incremental_mean.num_values = len(kwargs["X"])
-
     def on_update_end(self, value: Union[int, float], **kwargs) -> None:
         """On update end method.
 
@@ -108,7 +104,7 @@ class mSPRT(StreamingCallback):  # noqa: N801 # pylint: disable=invalid-name
         :type value: int
         """
         self.incremental_mean.update(value=value)
-        self.p_value, likelihood = self._calculate_p_value(value=value)
+        self.p_value, likelihood = self._calculate_p_value()
 
         self.logs.update(
             {
@@ -134,14 +130,13 @@ class mSPRT(StreamingCallback):  # noqa: N801 # pylint: disable=invalid-name
         tau_squared = sigma_squared * minus_b_cdf / (1 / b * norm.pdf(b) - minus_b_cdf)
         return tau_squared
 
-    def _calculate_p_value(self, value: float) -> Tuple[float, float]:
+    def _calculate_p_value(self) -> Tuple[float, float]:
         likelihood = self._likelihood_normal_mixing_distribution(
             mean=self.incremental_mean.get(),
             sigma=self.sigma,
             sigma_squared=self.sigma_squared,
             tau_squared=self.tau_squared,
             two_sigma_squared=self.two_sigma_squared,
-            value=value,
             n=self.detector.num_instances,  # type: ignore
         )
         p_value = min(
@@ -157,7 +152,6 @@ class mSPRT(StreamingCallback):  # noqa: N801 # pylint: disable=invalid-name
         sigma_squared: float,
         tau_squared: float,
         two_sigma_squared: float,
-        value: float,
         n: int,
     ) -> float:
         n_tau_squared = n * tau_squared
@@ -165,7 +159,7 @@ class mSPRT(StreamingCallback):  # noqa: N801 # pylint: disable=invalid-name
         likelihood = (sigma / np.sqrt(sigma_squared_plus_n_tau_squared)) * np.exp(
             n
             * n_tau_squared
-            * (mean - value) ** 2
-            / (two_sigma_squared * (sigma_squared_plus_n_tau_squared))
+            * mean**2  # (mean - theta) ** 2, theta = 0 (H_0 value, no distance)
+            / (two_sigma_squared * sigma_squared_plus_n_tau_squared)
         )
         return likelihood
