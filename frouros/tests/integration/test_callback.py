@@ -57,7 +57,7 @@ from frouros.detectors.data_drift.streaming import MMD as MMDStreaming  # noqa: 
         (HINormalizedComplement, 0.78, 0.0),
         (JS, 0.67010107, 0.0),
         (KL, np.inf, 0.0),
-        (MMD, 0.71529206, 0.0),
+        (MMD, 0.69509004, 0.0),
         (PSI, 461.20379435, 0.0),
     ],
 )

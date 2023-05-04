@@ -69,7 +69,7 @@ class MMD(DistanceBasedBase):
         self.kernel = kernel
         self.chunk_size = chunk_size
         self._chunk_size_x = None
-        self._expected_k_x = None
+        self._expected_k_xx = None
         self._X_num_samples = None
 
     @property
@@ -155,22 +155,24 @@ class MMD(DistanceBasedBase):
             num_chunks = (
                 math.ceil(self._X_num_samples / self._chunk_size_x) ** 2  # type: ignore
             )
-            k_x_sum = np.array(
+            k_xx_sum = np.array(
                 [
                     self.kernel(*X_chunk).sum()
+                    - len(X_chunk[0])  # Remove diagonal (j!=i case)
                     for X_chunk in tqdm.tqdm(  # noqa: N806
                         X_chunks_combinations, total=num_chunks  # noqa: N806
                     )
                 ]
             ).sum()
         else:
-            k_x_sum = np.array(
+            k_xx_sum = np.array(
                 [
                     self.kernel(*X_chunk).sum()
+                    - len(X_chunk[0])  # Remove diagonal (j!=i case)
                     for X_chunk in X_chunks_combinations  # noqa: N806
                 ]
             ).sum()
-        self._expected_k_x = k_x_sum / (
+        self._expected_k_xx = k_xx_sum / (
             self._X_num_samples * (self._X_num_samples - 1)  # type: ignore
         )
 
@@ -223,15 +225,16 @@ class MMD(DistanceBasedBase):
             num_chunks_xy = (
                 math.ceil(len(X) / self._chunk_size_x) * num_chunks_y  # type: ignore
             )
-            sum_y = np.array(
+            k_yy_sum = np.array(
                 [
                     kernel(*Y_chunk).sum()
+                    - len(Y_chunk[0])  # Remove diagonal (j!=i case)
                     for Y_chunk in tqdm.tqdm(  # noqa: N806
                         Y_chunks_combinations, total=num_chunks_y_combinations
                     )
                 ]
             ).sum()
-            sum_xy = np.array(
+            k_xy_sum = np.array(
                 [
                     kernel(*XY_chunk).sum()
                     for XY_chunk in tqdm.tqdm(  # noqa: N806
@@ -240,22 +243,22 @@ class MMD(DistanceBasedBase):
                 ]
             ).sum()
         else:
-            sum_y = np.array(
+            k_yy_sum = np.array(
                 [
                     kernel(*Y_chunk).sum()
+                    - len(Y_chunk[0])  # Remove diagonal (j!=i case)
                     for Y_chunk in Y_chunks_combinations  # noqa: N806
                 ]
             ).sum()
-            sum_xy = np.array(
+            k_xy_sum = np.array(
                 [
                     kernel(*XY_chunk).sum()
                     for XY_chunk in XY_chunks_combinations  # noqa: N806
                 ]
             ).sum()
-
         mmd = (
-            self._expected_k_x
-            + sum_y / (Y_num_samples * (Y_num_samples - 1))
-            - 2 * sum_xy / (self._X_num_samples * Y_num_samples)  # type: ignore
+            self._expected_k_xx
+            + k_yy_sum / (Y_num_samples * (Y_num_samples - 1))
+            - 2 * k_xy_sum / (self._X_num_samples * Y_num_samples)  # type: ignore
         )
         return mmd
