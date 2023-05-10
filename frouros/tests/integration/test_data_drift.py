@@ -190,7 +190,7 @@ def test_batch_statistical_univariate(
     assert np.isclose(p_value, expected_p_value)
 
 
-@pytest.mark.parametrize("detector, expected_distance", [(MMD(), 0.12183835)])
+@pytest.mark.parametrize("detector, expected_distance", [(MMD(), 0.10163633)])
 def test_batch_distance_based_multivariate_different_distribution(
     X_ref_multivariate: np.ndarray,  # noqa: N803
     X_test_multivariate: np.ndarray,  # noqa: N803
@@ -214,7 +214,7 @@ def test_batch_distance_based_multivariate_different_distribution(
     assert np.isclose(statistic, expected_distance)
 
 
-@pytest.mark.parametrize("detector, expected_distance", [(MMD(), 0.03590599)])
+@pytest.mark.parametrize("detector, expected_distance", [(MMD(), 0.01570397)])
 def test_batch_distance_based_multivariate_same_distribution(
     multivariate_distribution_p: Tuple[np.ndarray, np.ndarray],
     detector: DataDriftBatchBase,
@@ -248,7 +248,7 @@ def test_batch_distance_based_multivariate_same_distribution(
 
 @pytest.mark.parametrize(
     "detector, expected_distance",
-    [(MMD(chunk_size=10), 0.12183835), (MMD(chunk_size=None), 0.12183835)],
+    [(MMD(chunk_size=10), 0.10163633), (MMD(chunk_size=None), 0.10163633)],
 )
 def test_batch_distance_based_chunk_size_valid(
     X_ref_multivariate: np.ndarray,  # noqa: N803
@@ -270,7 +270,7 @@ def test_batch_distance_based_chunk_size_valid(
     _ = detector.fit(X=X_ref_multivariate)
     statistic, _ = detector.compare(X=X_test_multivariate)
 
-    assert np.isclose(statistic, expected_distance)
+    assert np.isclose(statistic.distance, expected_distance)
 
 
 @pytest.mark.parametrize(
@@ -376,7 +376,7 @@ def test_streaming_statistical_univariate_different_distribution(
 @pytest.mark.parametrize(
     "detector, expected_distance",
     [
-        (MMDStreaming(), 0.09793799),
+        (MMDStreaming(window_size=10), -0.02327412),
     ],
 )
 def test_streaming_distance_based_univariate_same_distribution(
@@ -409,7 +409,7 @@ def test_streaming_distance_based_univariate_same_distribution(
 @pytest.mark.parametrize(
     "detector, expected_distance",
     [
-        (MMDStreaming(), 0.98688562),
+        (MMDStreaming(window_size=10), 0.8656735),
     ],
 )
 def test_streaming_distance_based_univariate_different_distribution(

@@ -10,6 +10,7 @@ import numpy as np  # type: ignore
 from tqdm import tqdm  # type: ignore
 
 from frouros.utils.logger import logger
+from frouros.utils.data_structures import CircularQueue
 
 
 class Stat(abc.ABC):
@@ -90,6 +91,57 @@ class Mean(IncrementalStat):
             raise TypeError("value must be of type int or float.")
         self.num_values += 1
         self.mean += (value - self.mean) / self.num_values
+
+    def get(self) -> float:
+        """Get method."""
+        return self.mean
+
+
+class CircularMean(IncrementalStat):
+    """Circular mean class."""
+
+    def __init__(self, size: int) -> None:
+        """Init method.
+
+        :param size: size of the circular mean
+        :type size: int
+        """
+        self.size = size
+        self.mean = 0.0
+        self.queue = CircularQueue(max_len=self.size)
+
+    @property
+    def size(self) -> int:
+        """Size property.
+
+        :return: size value
+        :rtype: int
+        """
+        return self._size
+
+    @size.setter
+    def size(self, value: int) -> None:
+        """Size setter.
+
+        :param value: value to be set
+        :type value: int
+        :raises ValueError: Value error exception
+        """
+        if value < 0:
+            raise ValueError("size must be greater of equal than 0.")
+        self._size = value
+
+    def update(self, value: Union[int, float]) -> None:
+        """Update the mean value sequentially.
+
+        :param value: value to use to update the mean
+        :type value: int
+        :raises TypeError: Type error exception
+        """
+        # FIXME: Inefficient implementation  # pylint: disable=fixme
+        self.queue.enqueue(value=value)
+        queue = np.array(self.queue.queue)
+        self.mean = np.mean(queue[queue != np.array(None)])
 
     def get(self) -> float:
         """Get method."""

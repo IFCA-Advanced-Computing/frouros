@@ -57,7 +57,7 @@ from frouros.detectors.data_drift.streaming import MMD as MMDStreaming  # noqa: 
         (HINormalizedComplement, 0.78, 0.0),
         (JS, 0.67010107, 0.0),
         (KL, np.inf, 0.0),
-        (MMD, 0.71529206, 0.0),
+        (MMD, 0.69509004, 0.0),
         (PSI, 461.20379435, 0.0),
     ],
 )
@@ -242,7 +242,7 @@ def test_streaming_warning_samples_buffer_on_concept_drift(
     " expected_p_value,"
     " expected_likelihood",
     [
-        (MMDStreaming, 31, 0.34147982, 0.0487643, 20.50680424),
+        (MMDStreaming, 5, 0.27193007, 0.00989585, 101.05240437),
     ],
 )
 def test_streaming_msprt_multivariate_different_distribution(
@@ -273,12 +273,14 @@ def test_streaming_msprt_multivariate_different_distribution(
     """
     np.random.seed(seed=31)
 
-    alpha = 0.05
+    alpha = 0.01
 
     detector = detector_class(  # type: ignore
         callbacks=mSPRT(
             alpha=alpha,
-            sigma=0.5,
+            sigma=1,
+            tau=1,
+            lambda_=32,
         ),
         window_size=5,
     )
@@ -292,7 +294,7 @@ def test_streaming_msprt_multivariate_different_distribution(
                 drift_idx = i
                 break
 
-    assert np.isclose(drift_idx, expected_drift_idx)
+    assert drift_idx == expected_drift_idx
     assert np.isclose(callbacks_logs["mSPRT"]["distance_mean"], expected_distance_mean)
     assert np.isclose(callbacks_logs["mSPRT"]["p_value"], expected_p_value)
     assert np.isclose(callbacks_logs["mSPRT"]["likelihood"], expected_likelihood)
