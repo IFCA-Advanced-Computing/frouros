@@ -1,13 +1,13 @@
 """MMD (Maximum Mean Discrepancy) module."""
 
-from typing import Callable, Optional, List, Union
+from typing import Any, Callable, Dict, Optional, List, Tuple, Union
 
 import numpy as np  # type: ignore
 
 from frouros.callbacks import Callback
+from frouros.detectors.data_drift.base import NumericalData, MultivariateData
 from frouros.detectors.data_drift.batch import MMD as MMDBatch  # noqa: N811
 from frouros.detectors.data_drift.batch.distance_based.mmd import rbf_kernel
-from frouros.detectors.data_drift.base import NumericalData, MultivariateData
 from frouros.detectors.data_drift.streaming.distance_based.base import (
     DistanceBasedBase,
     DistanceResult,
@@ -27,21 +27,21 @@ class MMD(DistanceBasedBase):
 
     def __init__(
         self,
+        window_size: int,
         kernel: Callable = rbf_kernel,
         chunk_size: Optional[int] = None,
         callbacks: Optional[Union[Callback, List[Callback]]] = None,
-        window_size: int = 10,
     ) -> None:
         """Init method.
 
+        :param window_size: window size
+        :type window_size: int
         :param kernel: kernel function
         :type kernel: Callable
         :param chunk_size: chunk size value
         :type chunk_size: Optional[int]
         :param callbacks: callbacks
         :type callbacks: Optional[Union[Callback, List[Callback]]]
-        :param window_size: window size
-        :type window_size: int
         """
         super().__init__(
             data_type=NumericalData(),
@@ -81,6 +81,7 @@ class MMD(DistanceBasedBase):
         self.X_ref = self.mmd.X_ref
 
     def _reset(self) -> None:
+        super()._reset()
         self.mmd.reset()
 
     def _update(self, value: Union[int, float]) -> Optional[DistanceResult]:
@@ -92,3 +93,9 @@ class MMD(DistanceBasedBase):
         # FIXME: Handle callback logs. Now are ignored.  # pylint: disable=fixme
         distance, _ = self.mmd.compare(X=np.array(self.X_queue))
         return distance
+
+    def _compare(
+        self,
+        X: np.ndarray,  # noqa: N803
+    ) -> Tuple[Optional[DistanceResult], Dict[str, Any]]:  # noqa: N803
+        return self.mmd.compare(X=X)

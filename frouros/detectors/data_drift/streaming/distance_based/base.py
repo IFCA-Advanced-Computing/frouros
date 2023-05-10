@@ -1,7 +1,7 @@
 """Data drift distance based base module."""
 
 import abc
-from typing import Optional, Union
+from typing import Any, Dict, Optional, Tuple, Union
 
 import numpy as np  # type: ignore
 
@@ -58,4 +58,25 @@ class DistanceBasedBase(DataDriftStreamingBase):
 
     @abc.abstractmethod
     def _update(self, value: Union[int, float]) -> Optional[DistanceResult]:
+        pass
+
+    def compare(
+        self,
+        X: np.ndarray,  # noqa: N803
+    ) -> Tuple[Optional[DistanceResult], Dict[str, Any]]:
+        """Compare detector.
+
+        :param X: data to use to compare the detector
+        :type X: np.ndarray
+        :return: update result
+        :rtype: Tuple[Optional[DistanceResult], Dict[str, Any]]
+        """
+        result = self._compare(X=X)
+        return result
+
+    @abc.abstractmethod
+    def _compare(
+        self,
+        X: np.ndarray,  # noqa: N803
+    ) -> Tuple[Optional[DistanceResult], Dict[str, Any]]:
         pass

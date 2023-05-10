@@ -2,11 +2,11 @@
 
 import itertools
 import math
-from typing import Callable, Iterator, Optional, List, Union
+from typing import Callable, Generator, Optional, List, Union
 
 import numpy as np  # type: ignore
-from scipy.spatial.distance import cdist  # type: ignore
 import tqdm  # type: ignore
+from scipy.spatial.distance import cdist  # type: ignore
 
 from frouros.callbacks import Callback
 from frouros.detectors.data_drift.base import MultivariateData
@@ -69,8 +69,9 @@ class MMD(DistanceBasedBase):
         self.kernel = kernel
         self.chunk_size = chunk_size
         self._chunk_size_x = None
-        self._expected_k_xx = None
-        self._X_num_samples = None
+        self.X_chunks_combinations = None
+        self.X_num_samples = None
+        self.expected_k_xx = None
 
     @property
     def chunk_size(self) -> Optional[int]:
@@ -137,10 +138,10 @@ class MMD(DistanceBasedBase):
         # Add dimension only for the kernel calculation (if dim == 1)
         if X.ndim == 1:
             X = np.expand_dims(X, axis=1)  # noqa: N806
-        self._X_num_samples = len(X)  # type: ignore # noqa: N806
+        self.X_num_samples = len(self.X_ref)  # type: ignore # noqa: N806
 
         self._chunk_size_x = (
-            self._X_num_samples
+            self.X_num_samples
             if self.chunk_size is None
             else self.chunk_size  # type: ignore
         )
@@ -149,35 +150,37 @@ class MMD(DistanceBasedBase):
             data=X,
             chunk_size=self._chunk_size_x,  # type: ignore
         )
-        X_chunks_combinations = itertools.product(X_chunks, repeat=2)  # noqa: N806
+        xx_chunks_combinations = itertools.product(X_chunks, repeat=2)  # noqa: N806
 
         if kwargs.get("verbose", False):
             num_chunks = (
-                math.ceil(self._X_num_samples / self._chunk_size_x) ** 2  # type: ignore
+                math.ceil(self.X_num_samples / self._chunk_size_x) ** 2  # type: ignore
             )
-            k_xx_sum = np.array(
-                [
-                    self.kernel(*X_chunk).sum()
-                    - len(X_chunk[0])  # Remove diagonal (j!=i case)
-                    for X_chunk in tqdm.tqdm(  # noqa: N806
-                        X_chunks_combinations, total=num_chunks  # noqa: N806
-                    )
-                ]
-            ).sum()
-        else:
-            k_xx_sum = np.array(
-                [
-                    self.kernel(*X_chunk).sum()
-                    - len(X_chunk[0])  # Remove diagonal (j!=i case)
-                    for X_chunk in X_chunks_combinations  # noqa: N806
-                ]
-            ).sum()
-        self._expected_k_xx = k_xx_sum / (
-            self._X_num_samples * (self._X_num_samples - 1)  # type: ignore
+            xx_chunks_combinations = tqdm.tqdm(
+                xx_chunks_combinations,
+                total=num_chunks,
+            )
+
+        k_xx_sum = (
+            self._compute_kernel(
+                chunk_combinations=xx_chunks_combinations,  # type: ignore
+                kernel=self.kernel,
+            )
+            # Remove diagonal (j!=i case)
+            - self.X_num_samples  # type: ignore
+        )
+
+        self.expected_k_xx = k_xx_sum / (  # type: ignore
+            self.X_num_samples * (self.X_num_samples - 1)  # type: ignore
         )
 
     @staticmethod
-    def _get_chunks(data: np.ndarray, chunk_size: int) -> Iterator:
+    def _compute_kernel(chunk_combinations: Generator, kernel: Callable) -> float:
+        k_sum = np.array([kernel(*chunk).sum() for chunk in chunk_combinations]).sum()
+        return k_sum
+
+    @staticmethod
+    def _get_chunks(data: np.ndarray, chunk_size: int) -> Generator:
         chunks = (
             data[i : i + chunk_size]  # noqa: E203
             for i in range(0, len(data), chunk_size)
@@ -201,64 +204,54 @@ class MMD(DistanceBasedBase):
             data=X,
             chunk_size=self._chunk_size_x,  # type: ignore
         )
-        Y_num_samples = len(Y)  # noqa: N806
-        chunk_size_y = Y_num_samples if self.chunk_size is None else self.chunk_size
-        Y_chunks, Y_chunks_copy = itertools.tee(  # noqa: N806
+        y_num_samples = len(Y)  # noqa: N806
+        chunk_size_y = y_num_samples if self.chunk_size is None else self.chunk_size
+        y_chunks, y_chunks_copy = itertools.tee(  # noqa: N806
             self._get_chunks(
                 data=Y,
                 chunk_size=chunk_size_y,  # type: ignore
             ),
             2,
         )
-        Y_chunks_combinations = itertools.product(  # noqa: N806
-            Y_chunks,
+        y_chunks_combinations = itertools.product(  # noqa: N806
+            y_chunks,
             repeat=2,
         )
-        XY_chunks_combinations = itertools.product(  # noqa: N806
+        xy_chunks_combinations = itertools.product(  # noqa: N806
             X_chunks,
-            Y_chunks_copy,
+            y_chunks_copy,
         )
 
         if kwargs.get("verbose", False):
-            num_chunks_y = math.ceil(Y_num_samples / self.chunk_size)  # type: ignore
+            num_chunks_y = math.ceil(y_num_samples / chunk_size_y)  # type: ignore
             num_chunks_y_combinations = num_chunks_y**2
             num_chunks_xy = (
                 math.ceil(len(X) / self._chunk_size_x) * num_chunks_y  # type: ignore
             )
-            k_yy_sum = np.array(
-                [
-                    kernel(*Y_chunk).sum()
-                    - len(Y_chunk[0])  # Remove diagonal (j!=i case)
-                    for Y_chunk in tqdm.tqdm(  # noqa: N806
-                        Y_chunks_combinations, total=num_chunks_y_combinations
-                    )
-                ]
-            ).sum()
-            k_xy_sum = np.array(
-                [
-                    kernel(*XY_chunk).sum()
-                    for XY_chunk in tqdm.tqdm(  # noqa: N806
-                        XY_chunks_combinations, total=num_chunks_xy
-                    )
-                ]
-            ).sum()
-        else:
-            k_yy_sum = np.array(
-                [
-                    kernel(*Y_chunk).sum()
-                    - len(Y_chunk[0])  # Remove diagonal (j!=i case)
-                    for Y_chunk in Y_chunks_combinations  # noqa: N806
-                ]
-            ).sum()
-            k_xy_sum = np.array(
-                [
-                    kernel(*XY_chunk).sum()
-                    for XY_chunk in XY_chunks_combinations  # noqa: N806
-                ]
-            ).sum()
+            y_chunks_combinations = tqdm.tqdm(
+                y_chunks_combinations,
+                total=num_chunks_y_combinations,
+            )
+            xy_chunks_combinations = tqdm.tqdm(
+                xy_chunks_combinations,
+                total=num_chunks_xy,
+            )
+
+        k_yy_sum = (
+            self._compute_kernel(
+                chunk_combinations=y_chunks_combinations,  # type: ignore
+                kernel=kernel,
+            )
+            # Remove diagonal (j!=i case)
+            - y_num_samples  # type: ignore
+        )
+        k_xy_sum = self._compute_kernel(
+            chunk_combinations=xy_chunks_combinations,  # type: ignore
+            kernel=kernel,
+        )
         mmd = (
-            self._expected_k_xx
-            + k_yy_sum / (Y_num_samples * (Y_num_samples - 1))
-            - 2 * k_xy_sum / (self._X_num_samples * Y_num_samples)  # type: ignore
+            self.expected_k_xx  # type: ignore
+            + k_yy_sum / (y_num_samples * (y_num_samples - 1))
+            - 2 * k_xy_sum / (self.X_num_samples * y_num_samples)  # type: ignore
         )
         return mmd
