@@ -90,46 +90,33 @@ class Mean(IncrementalStat):
         if not isinstance(value, (int, float)):
             raise TypeError("value must be of type int or float.")
         self.num_values += 1
-        self.mean += (value - self.mean) / self.num_values
+        self.mean += self.incremental_op(
+            value=value,
+            element=self.mean,
+            size=self.num_values,
+        )
+
+    @staticmethod
+    def incremental_op(
+        value: Union[int, float],
+        element: Union[int, float],
+        size: int,
+    ) -> float:
+        """Incremental operation."""
+        return (value - element) / size
 
     def get(self) -> float:
         """Get method."""
         return self.mean
 
 
-class CircularMean(IncrementalStat):
+class CircularMean(Mean):
     """Circular mean class."""
 
     def __init__(self, size: int) -> None:
-        """Init method.
-
-        :param size: size of the circular mean
-        :type size: int
-        """
-        self.size = size
-        self.mean = 0.0
-        self.queue = CircularQueue(max_len=self.size)
-
-    @property
-    def size(self) -> int:
-        """Size property.
-
-        :return: size value
-        :rtype: int
-        """
-        return self._size
-
-    @size.setter
-    def size(self, value: int) -> None:
-        """Size setter.
-
-        :param value: value to be set
-        :type value: int
-        :raises ValueError: Value error exception
-        """
-        if value < 0:
-            raise ValueError("size must be greater of equal than 0.")
-        self._size = value
+        """Init method."""
+        super().__init__()
+        self.queue = CircularQueue(max_len=size)
 
     def update(self, value: Union[int, float]) -> None:
         """Update the mean value sequentially.
@@ -138,14 +125,15 @@ class CircularMean(IncrementalStat):
         :type value: int
         :raises TypeError: Type error exception
         """
-        # FIXME: Inefficient implementation  # pylint: disable=fixme
-        self.queue.enqueue(value=value)
-        queue = np.array(self.queue.queue)
-        self.mean = np.mean(queue[queue != np.array(None)])
-
-    def get(self) -> float:
-        """Get method."""
-        return self.mean
+        if not isinstance(value, (int, float)):
+            raise TypeError("value must be of type int or float.")
+        element = self.queue.enqueue(value=value)
+        self.num_values = len(self.queue)
+        self.mean += self.incremental_op(
+            value=value,
+            element=self.mean if element is None else element,
+            size=self.num_values,
+        )
 
 
 class EWMA(IncrementalStat):

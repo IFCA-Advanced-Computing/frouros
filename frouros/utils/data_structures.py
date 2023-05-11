@@ -1,7 +1,6 @@
 """Data structures module."""
 
-from typing import Optional, List, Union  # noqa: TYP001
-
+from typing import Any, Optional, List, Union
 
 import numpy as np  # type: ignore
 
@@ -115,20 +114,20 @@ class CircularQueue:
         self._max_len = value
 
     @property
-    def queue(self) -> List[Optional[bool]]:
+    def queue(self) -> List[Optional[Any]]:
         """Queue property.
 
         :return: queue
-        :rtype: List[Optional[bool]]
+        :rtype: List[Optional[Any]]
         """
         return self._queue
 
     @queue.setter
-    def queue(self, value: List[Optional[bool]]) -> None:
+    def queue(self, value: List[Optional[Any]]) -> None:
         """Queue setter.
 
         :param value: value to be set
-        :type value: List[Optional[bool]]
+        :type value: List[Optional[Any]]
         :raises ValueError: Value error exception
         """
         if not isinstance(value, list):
@@ -151,10 +150,10 @@ class CircularQueue:
         self.last = -1
         self.queue = [None] * self.max_len
 
-    def dequeue(self) -> bool:
+    def dequeue(self) -> Any:
         """Dequeue oldest element.
 
-        :rtype: bool
+        :rtype: value: Any
         :raises EmptyQueue: Empty queue error exception
         """
         if self.is_empty():
@@ -164,17 +163,19 @@ class CircularQueue:
         self.count -= 1
         return element  # type: ignore
 
-    def enqueue(self, value: Union[np.ndarray, float]) -> None:
+    def enqueue(self, value: Union[np.ndarray, int, float]) -> Optional[Any]:
         """Enqueue element/s.
 
         :param value: value to be enqueued
         :type value: Union[np.ndarray, float]
+        :return element: dequeued element
+        :rtype: Optional[Any]
         """
-        if self.is_full():
-            _ = self.dequeue()
+        element = self.dequeue() if self.is_full() else None
         self.last = (self.last + 1) % self.max_len
         self.queue[self.last] = value  # type: ignore
         self.count += 1
+        return element
 
     def is_empty(self) -> bool:
         """Check if queue is empty.
@@ -205,13 +206,13 @@ class CircularQueue:
         self.first = self.last
         self.count = 1
 
-    def __getitem__(self, idx: int) -> float:
+    def __getitem__(self, idx: int) -> Any:
         """Get queue item by position.
 
         :param idx: position index
         :type idx: int
         :return: queue item
-        :rtype: float
+        :rtype: Any
         """
         return self.queue[idx]  # type: ignore
 
