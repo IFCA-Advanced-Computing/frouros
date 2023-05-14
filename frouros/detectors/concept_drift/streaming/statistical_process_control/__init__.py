@@ -1,4 +1,4 @@
-"""Concept drift DDM based detection methods' init."""
+"""Concept drift SPC (statistical process control) detection methods' init."""
 
 from .ddm import DDM, DDMConfig
 from .ecdd import ECDDWT, ECDDWTConfig

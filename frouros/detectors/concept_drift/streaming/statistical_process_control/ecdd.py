@@ -5,8 +5,8 @@ from typing import List, Optional, Union
 import numpy as np  # type: ignore
 
 from frouros.callbacks import Callback
-from frouros.detectors.concept_drift.streaming.ddm_based.base import (
-    DDMBased,
+from frouros.detectors.concept_drift.streaming.statistical_process_control.base import (
+    SPCBase,
     ECDDBaseConfig,
 )
 from frouros.utils.stats import EWMA, Mean
@@ -23,7 +23,7 @@ class ECDDWTConfig(ECDDBaseConfig):
     """
 
 
-class ECDDWT(DDMBased):
+class ECDDWT(SPCBase):
     """ECDDWT (EWMA Concept Drift Detection Warning) [ross2012exponentially]_ detector.
 
     :References:

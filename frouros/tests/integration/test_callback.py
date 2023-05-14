@@ -30,7 +30,9 @@ from frouros.detectors.concept_drift import (
     STEPD,
 )
 from frouros.detectors.concept_drift.base import ConceptDriftBase
-from frouros.detectors.concept_drift.streaming.ddm_based.base import DDMBased
+from frouros.detectors.concept_drift.streaming.statistical_process_control.base import (
+    SPCBase,
+)
 from frouros.detectors.data_drift.batch import (
     BhattacharyyaDistance,
     CVMTest,
@@ -194,7 +196,7 @@ def _fit_model(model, X, y):  # noqa: N803
 def test_streaming_warning_samples_buffer_on_concept_drift(
     dataset_simple: Tuple[Tuple[np.ndarray, np.ndarray], Tuple[np.ndarray, np.ndarray]],
     model: sklearn.pipeline.Pipeline,
-    detector_class: DDMBased,
+    detector_class: SPCBase,
 ):
     """Test streaming warning samples buffer on concept drift callback.
 
@@ -203,7 +205,7 @@ def test_streaming_warning_samples_buffer_on_concept_drift(
     :param model: trained model
     :type model: sklearn.pipeline.Pipeline
     :param detector_class: concept drift detector
-    :type detector_class: DDMBased
+    :type detector_class: SPCBase
     """
     _, test = dataset_simple  # noqa: N806
 

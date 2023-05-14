@@ -3,13 +3,13 @@
 from contextlib import suppress
 from typing import Union
 
-from frouros.detectors.concept_drift.streaming.ddm_based.base import (
-    DDMBaseConfig,
-    DDMErrorBased,
+from frouros.detectors.concept_drift.streaming.statistical_process_control.base import (
+    SPCBaseConfig,
+    SPCErrorBase,
 )
 
 
-class DDMConfig(DDMBaseConfig):
+class DDMConfig(SPCBaseConfig):
     """DDM (Drift detection method) [gama2004learning]_ configuration.
 
     :References:
@@ -22,7 +22,7 @@ class DDMConfig(DDMBaseConfig):
     """
 
 
-class DDM(DDMErrorBased):
+class DDM(SPCErrorBase):
     """DDM (Drift detection method) [gama2004learning]_ detector.
 
     :References:

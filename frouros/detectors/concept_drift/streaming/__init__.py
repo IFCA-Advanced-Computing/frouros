@@ -9,7 +9,7 @@ from .cusum_based import (
     PageHinkley,
     PageHinkleyConfig,
 )
-from .ddm_based import (
+from .statistical_process_control import (
     DDM,
     DDMConfig,
     ECDDWT,
