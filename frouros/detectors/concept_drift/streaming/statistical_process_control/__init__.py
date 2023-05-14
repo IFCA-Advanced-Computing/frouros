@@ -5,7 +5,6 @@ from .ecdd import ECDDWT, ECDDWTConfig
 from .eddm import EDDM, EDDMConfig
 from .hddm import HDDMA, HDDMAConfig, HDDMW, HDDMWConfig
 from .rddm import RDDM, RDDMConfig
-from .stepd import STEPD, STEPDConfig
 
 __all__ = [
     "DDM",
@@ -18,8 +17,6 @@ __all__ = [
     "HDDMAConfig",
     "HDDMW",
     "HDDMWConfig",
-    "STEPD",
-    "STEPDConfig",
     "RDDM",
     "RDDMConfig",
 ]

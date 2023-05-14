@@ -22,14 +22,14 @@ from .statistical_process_control import (
     HDDMWConfig,
     RDDM,
     RDDMConfig,
-    STEPD,
-    STEPDConfig,
 )
 from .window_based import (
     ADWIN,
     ADWINConfig,
     KSWIN,
     KSWINConfig,
+    STEPD,
+    STEPDConfig,
 )
 
 __all__ = [

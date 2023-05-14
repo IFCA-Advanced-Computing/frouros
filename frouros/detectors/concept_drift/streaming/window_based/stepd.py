@@ -6,14 +6,14 @@ import numpy as np  # type: ignore
 from scipy.stats import norm  # type: ignore
 
 from frouros.callbacks import Callback
-from frouros.detectors.concept_drift.streaming.statistical_process_control.base import (
-    SPCBaseConfig,
-    SPCBase,
+from frouros.detectors.concept_drift.streaming.window_based.base import (
+    WindowBaseConfig,
+    WindowBased,
 )
 from frouros.utils.data_structures import AccuracyQueue
 
 
-class STEPDConfig(SPCBaseConfig):
+class STEPDConfig(WindowBaseConfig):
     """STEPD (Statistical test of equal proportions) [nishida2007detecting]_ configuration.
 
     :References:
@@ -88,7 +88,7 @@ class STEPDConfig(SPCBaseConfig):
         self._alpha_w = value
 
 
-class STEPD(SPCBase):
+class STEPD(WindowBased):
     """STEPD (Statistical test of equal proportions) [nishida2007detecting]_ detector.
 
     :References:
