@@ -3,15 +3,15 @@
 from typing import List, Optional, Union
 
 from frouros.callbacks import Callback
-from frouros.detectors.concept_drift.streaming.ddm_based.base import (
-    DDMBaseConfig,
-    DDMErrorBased,
+from frouros.detectors.concept_drift.streaming.statistical_process_control.base import (
+    SPCBaseConfig,
+    SPCErrorBase,
 )
 from frouros.utils.data_structures import CircularQueue
 from frouros.utils.stats import Mean
 
 
-class RDDMConfig(DDMBaseConfig):
+class RDDMConfig(SPCBaseConfig):
     """RDDM (Reactive Drift detection method) [barros2017rddm]_ configuration.
 
     :References:
@@ -110,7 +110,7 @@ class RDDMConfig(DDMBaseConfig):
         self._max_num_instances_warning = value
 
 
-class RDDM(DDMErrorBased):
+class RDDM(SPCErrorBase):
     """RDDM (Reactive Drift detection method) [barros2017rddm]_ detector.
 
     :References:

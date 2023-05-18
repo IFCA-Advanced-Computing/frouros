@@ -9,7 +9,7 @@ from .cusum_based import (
     PageHinkley,
     PageHinkleyConfig,
 )
-from .ddm_based import (
+from .statistical_process_control import (
     DDM,
     DDMConfig,
     ECDDWT,
@@ -22,14 +22,14 @@ from .ddm_based import (
     HDDMWConfig,
     RDDM,
     RDDMConfig,
-    STEPD,
-    STEPDConfig,
 )
 from .window_based import (
     ADWIN,
     ADWINConfig,
     KSWIN,
     KSWINConfig,
+    STEPD,
+    STEPDConfig,
 )
 
 __all__ = [

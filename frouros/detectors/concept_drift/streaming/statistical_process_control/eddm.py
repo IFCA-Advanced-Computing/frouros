@@ -6,13 +6,13 @@ from typing import List, Optional, Union
 import numpy as np  # type: ignore
 
 from frouros.callbacks import Callback
-from frouros.detectors.concept_drift.streaming.ddm_based.base import (
-    DDMBaseConfig,
-    DDMBased,
+from frouros.detectors.concept_drift.streaming.statistical_process_control.base import (
+    SPCBaseConfig,
+    SPCBase,
 )
 
 
-class EDDMConfig(DDMBaseConfig):
+class EDDMConfig(SPCBaseConfig):
     """EDDM (Early drift detection method) [baena2006early]_ configuration.
 
     :References:
@@ -133,7 +133,7 @@ class EDDMConfig(DDMBaseConfig):
         self._min_num_misclassified_instances = value
 
 
-class EDDM(DDMBased):
+class EDDM(SPCBase):
     """EDDM (Early drift detection method) [baena2006early]_ detector.
 
     :References:

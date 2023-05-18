@@ -6,14 +6,14 @@ import numpy as np  # type: ignore
 from scipy.stats import norm  # type: ignore
 
 from frouros.callbacks import Callback
-from frouros.detectors.concept_drift.streaming.ddm_based.base import (
-    DDMBaseConfig,
-    DDMBased,
+from frouros.detectors.concept_drift.streaming.window_based.base import (
+    WindowBaseConfig,
+    WindowBased,
 )
 from frouros.utils.data_structures import AccuracyQueue
 
 
-class STEPDConfig(DDMBaseConfig):
+class STEPDConfig(WindowBaseConfig):
     """STEPD (Statistical test of equal proportions) [nishida2007detecting]_ configuration.
 
     :References:
@@ -88,7 +88,7 @@ class STEPDConfig(DDMBaseConfig):
         self._alpha_w = value
 
 
-class STEPD(DDMBased):
+class STEPD(WindowBased):
     """STEPD (Statistical test of equal proportions) [nishida2007detecting]_ detector.
 
     :References:
@@ -122,9 +122,28 @@ class STEPD(DDMBased):
             "window_accuracy": AccuracyQueue(max_len=self.config.min_num_instances),
             **self.additional_vars,  # type: ignore
         }
+        self.warning = False
         self._set_additional_vars_callback()
         self._min_num_instances = 2 * self.config.min_num_instances
         self._distribution = norm()
+
+    @property
+    def warning(self) -> bool:
+        """Warning property.
+
+        :return: warning
+        :rtype: bool
+        """
+        return self._warning
+
+    @warning.setter
+    def warning(self, value: bool) -> None:
+        """Warning setter.
+
+        :param value: value to be set
+        :type value: bool
+        """
+        self._warning = value
 
     @property
     def correct_total(self) -> int:

@@ -1,4 +1,4 @@
-"""Supervised DDM based base module."""
+"""Concept drift SPC (statistical process control) base module."""
 
 import abc
 from typing import Dict, List, Optional, Tuple, Union
@@ -14,8 +14,8 @@ from frouros.detectors.concept_drift.exceptions import InvalidAverageRunLengthEr
 from frouros.utils.stats import Mean
 
 
-class DDMBaseConfig(ConceptDriftStreamingBaseConfig):
-    """Class representing a DDM based configuration class."""
+class SPCBaseConfig(ConceptDriftStreamingBaseConfig):
+    """Class representing a SPC configuration class."""
 
     def __init__(
         self,
@@ -82,20 +82,20 @@ class DDMBaseConfig(ConceptDriftStreamingBaseConfig):
         self._warning_level = value
 
 
-class DDMBased(ConceptDriftStreamingBase):
-    """Abstract class representing a DDM based estimator."""
+class SPCBase(ConceptDriftStreamingBase):
+    """Abstract class representing an SPC estimator."""
 
-    config_type = DDMBaseConfig
+    config_type = SPCBaseConfig
 
     def __init__(
         self,
-        config: Optional[DDMBaseConfig] = None,
+        config: Optional[SPCBaseConfig] = None,
         callbacks: Optional[Union[Callback, List[Callback]]] = None,
     ) -> None:
         """Init method.
 
         :param config: configuration parameters
-        :type config: Optional[DDMBaseConfig]
+        :type config: Optional[SPCBaseConfig]
         :param callbacks: callbacks
         :type callbacks: Optional[Union[Callback, List[Callback]]]
         """
@@ -145,20 +145,20 @@ class DDMBased(ConceptDriftStreamingBase):
         pass
 
 
-class DDMErrorBased(DDMBased):
-    """Abstract class representing a DDM error based estimator."""
+class SPCErrorBase(SPCBase):
+    """Abstract class representing a SPC error estimator."""
 
-    config_type = DDMBaseConfig
+    config_type = SPCBaseConfig
 
     def __init__(
         self,
-        config: Optional[DDMBaseConfig] = None,
+        config: Optional[SPCBaseConfig] = None,
         callbacks: Optional[Union[Callback, List[Callback]]] = None,
     ) -> None:
         """Init method.
 
         :param config: configuration parameters
-        :type config: Optional[DDMBaseConfig]
+        :type config: Optional[SPCBaseConfig]
         :param callbacks: callbacks
         :type callbacks: Optional[Union[Callback, List[Callback]]]
         """
