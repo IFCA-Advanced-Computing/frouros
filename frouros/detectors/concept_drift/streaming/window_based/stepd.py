@@ -122,9 +122,28 @@ class STEPD(WindowBased):
             "window_accuracy": AccuracyQueue(max_len=self.config.min_num_instances),
             **self.additional_vars,  # type: ignore
         }
+        self.warning = False
         self._set_additional_vars_callback()
         self._min_num_instances = 2 * self.config.min_num_instances
         self._distribution = norm()
+
+    @property
+    def warning(self) -> bool:
+        """Warning property.
+
+        :return: warning
+        :rtype: bool
+        """
+        return self._warning
+
+    @warning.setter
+    def warning(self, value: bool) -> None:
+        """Warning setter.
+
+        :param value: value to be set
+        :type value: bool
+        """
+        self._warning = value
 
     @property
     def correct_total(self) -> int:
