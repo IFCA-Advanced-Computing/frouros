@@ -54,10 +54,10 @@ The {mod}`frouros.detectors` module contains drift detection algorithms.
     PageHinkleyConfig
 ```
 
-#### DDM Based
+#### Statistical Process Control
 
 ```{eval-rst}
-.. automodule:: frouros.detectors.concept_drift.streaming.ddm_based
+.. automodule:: frouros.detectors.concept_drift.streaming.statistical_process_control
     :no-members:
     :no-inherited-members:
 ```
@@ -79,8 +79,6 @@ The {mod}`frouros.detectors` module contains drift detection algorithms.
     HDDMWConfig
     RDDM
     RDDMConfig
-    STEPD
-    STEPDConfig
 ```
 
 #### Window Based
@@ -100,6 +98,8 @@ The {mod}`frouros.detectors` module contains drift detection algorithms.
     ADWINConfig
     KSWIN
     KSWINConfig
+    STEPD
+    STEPDConfig
 ```
 
 ## Data drift
