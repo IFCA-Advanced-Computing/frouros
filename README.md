@@ -189,7 +189,135 @@ pip install frouros
 
 The currently implemented detectors are listed in the following diagram.
 
-![Detectors diagram](/images/detectors.png)
+<table>
+<thead>
+  <tr>
+    <th>Drift detector</th>
+    <th>Type</th>
+    <th>Family</th>
+    <th>Method</th>
+    <th>Reference</th>
+  </tr>
+</thead>
+<tbody>
+  <tr>
+    <td rowspan="12">Concept Drift</td>
+    <td rowspan="12">Streaming</td>
+    <td rowspan="3">CUMSUM</td>
+    <td>CUMSUM</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>Geometric moving average</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>Page Hinkley</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td rowspan="6">Statistical process control</td>
+    <td>DDM</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>ECDD-WT</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>EDDM</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>HDDM-A</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>HDDM-W</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>RDDM</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td rowspan="3">Window based</td>
+    <td>ADWIN</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>KSWIN</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>STEPD</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td rowspan="14">Data drift</td>
+    <td rowspan="12">Batch</td>
+    <td rowspan="8">Distance based</td>
+    <td>Bhattacharyya distance</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>Earth Mover's distance</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>Hellinger distance</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>Histogram intersection normalized complement</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>Jensen-Shannon distance</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>Kullback-Leibler divergence</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>MMD</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>PSI</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td rowspan="4">Statistical test</td>
+    <td>Chi-square test</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>Cramér-von Mises test</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>Kolmogorov-Smirnov test</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>Welch's T-Test</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td rowspan="2">Streaming</td>
+    <td>Distance based</td>
+    <td>MMD</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>Statistical test</td>
+    <td>Incremental Kolmogorov-Smirnov test</td>
+    <td></td>
+  </tr>
+</tbody>
+</table>
 
 ## Who is using Frouros?
 
