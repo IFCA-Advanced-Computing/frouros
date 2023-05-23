@@ -191,6 +191,16 @@ The currently implemented detectors are listed in the following diagram.
 
 ![Detectors diagram](/images/detectors.png)
 
+## Who is using Frouros?
+
+Frouros is actively beins used by the following projects to implement drift
+detection in machine learning pipelines:
+
+ * [AI4EOSC](https://ai4eosc.eu).
+ * [iMagine](https://imagine-ai.eu).
+
+If you want your project listed here, do not hesitate to send us a pull request.
+
 ## 👍 Contributing
 
 Check out the [contribution](https://github.com/IFCA/frouros/blob/main/CONTRIBUTING.md) section.
