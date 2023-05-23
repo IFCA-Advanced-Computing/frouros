@@ -211,3 +211,7 @@ Although Frouros paper is still in preprint, if you want to cite it you can use 
 ## 📝 License
 
 Frouros is an open-source software licensed under the [BSD-3-Clause license](https://github.com/IFCA/frouros/blob/main/LICENSE).
+
+## Acknowledgements
+
+Frouros has received funding from the  Agencia Estatal de Investigaci ́on, Unidad de Excelencia María de Maeztu, ref. MDM-2017-0765.
