@@ -1,23 +1,8 @@
 # Examples
 
-## Concept drift
-
 ```{toctree}
----
-maxdepth: 1
----
-examples/concept_drift/DDM_simple
-examples/concept_drift/DDM_advance
-```
+:maxdepth: 2
 
-## Data drift
-
-```{toctree}
----
-maxdepth: 1
----
-examples/data_drift/MMD_simple
-examples/data_drift/MMD_advance
-examples/data_drift/univariate_detector
-examples/data_drift/multivariate_detector
+examples/concept_drift
+examples/data_drift
 ```

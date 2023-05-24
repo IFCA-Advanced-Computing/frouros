@@ -133,7 +133,10 @@ dmypy.json
 
 # Sphinx
 docs/_build/
+docs/source/_static/
 docs/source/api_reference/auto_generated/
+docs/source/api_reference/*/auto_generated/
+docs/source/api_reference/*/*/auto_generated/
 
 # Tests
 test-result.xml
