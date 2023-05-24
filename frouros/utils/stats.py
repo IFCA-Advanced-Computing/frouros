@@ -262,4 +262,5 @@ def permutation(  # pylint: disable=too-many-arguments,too-many-locals
             iterable=tqdm(permuted_data) if verbose else permuted_data,
         ).get()
 
-    return permuted_statistics
+    # FIXME: explore requirement of abs in permuted_statistic  # pylint: disable=fixme
+    return np.abs(permuted_statistics)
