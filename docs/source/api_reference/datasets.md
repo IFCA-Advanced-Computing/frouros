@@ -1,42 +1,10 @@
 # Datasets
 
-```{eval-rst}
-.. automodule:: frouros.datasets
-    :no-members:
-    :no-inherited-members:
-```
+The {mod}`frouros.datasets` module contains datasets.
 
-```{currentmodule} frouros.datasets
-```
+```{toctree}
+:maxdepth: 2
 
-## Real
-
-```{eval-rst}
-.. automodule:: frouros.datasets.real
-    :no-members:
-    :no-inherited-members:
-```
-
-```{eval-rst}
-.. autosummary::
-    :toctree: auto_generated/
-    :template: class.md
-
-    Elec2
-```
-
-## Synthetic
-
-```{eval-rst}
-.. automodule:: frouros.datasets.synthetic
-    :no-members:
-    :no-inherited-members:
-```
-
-```{eval-rst}
-.. autosummary::
-    :toctree: auto_generated/
-    :template: class.md
-
-    SEA
+datasets/real
+datasets/synthetic
 ```
