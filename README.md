@@ -17,6 +17,10 @@
   <a href="https://frouros.readthedocs.io/">
     <img src="https://readthedocs.org/projects/frouros/badge/?version=latest" alt="documentation"/>
   </a>
+  <!-- Downloads -->
+  <a href="https://pepy.tech/project/frouros">
+    <img src="https://static.pepy.tech/badge/frouros/month" alt="downloads"/>
+  </a>
   <!-- PyPI -->
   <a href="https://pypi.org/project/frouros">
     <img src="https://img.shields.io/pypi/v/frouros.svg?label=release&color=blue" alt="pypi">
