@@ -356,4 +356,4 @@ Frouros is an open-source software licensed under the [BSD-3-Clause license](htt
 
 ## Acknowledgements
 
-Frouros has received funding from the  Agencia Estatal de Investigaci ́on, Unidad de Excelencia María de Maeztu, ref. MDM-2017-0765.
+Frouros has received funding from the Agencia Estatal de Investigación, Unidad de Excelencia María de Maeztu, ref. MDM-2017-0765.
