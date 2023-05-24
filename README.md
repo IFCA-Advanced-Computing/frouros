@@ -191,7 +191,7 @@ pip install frouros
 
 ## 🕵🏻‍♂️️ Drift detection methods
 
-The currently implemented detectors are listed in the following diagram.
+The currently implemented detectors are listed in the following table.
 
 <table>
 <thead>
@@ -205,7 +205,7 @@ The currently implemented detectors are listed in the following diagram.
 </thead>
 <tbody>
   <tr>
-    <td rowspan="12">Concept Drift</td>
+    <td rowspan="12">Concept drift</td>
     <td rowspan="12">Streaming</td>
     <td rowspan="3">CUMSUM</td>
     <td>CUMSUM</td>
