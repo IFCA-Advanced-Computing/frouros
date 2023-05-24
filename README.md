@@ -323,7 +323,7 @@ The currently implemented detectors are listed in the following diagram.
 </tbody>
 </table>
 
-## Who is using Frouros?
+## ✅ Who is using Frouros?
 
 Frouros is actively being used by the following projects to implement drift
 detection in machine learning pipelines:
@@ -354,6 +354,6 @@ Although Frouros paper is still in preprint, if you want to cite it you can use 
 
 Frouros is an open-source software licensed under the [BSD-3-Clause license](https://github.com/IFCA/frouros/blob/main/LICENSE).
 
-## Acknowledgements
+## 🙏 Acknowledgements
 
 Frouros has received funding from the Agencia Estatal de Investigación, Unidad de Excelencia María de Maeztu, ref. MDM-2017-0765.
