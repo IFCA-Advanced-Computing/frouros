@@ -26,5 +26,5 @@ Recommended steps for first time contributors:
 
 ## Reporting bugs.
 
-1. Check that there is not an issue that currently highlights the bug or a pull request that solves it.
+1. Check that there is not an [issue](https://github.com/IFCA/frouros/issues) that currently highlights the bug or a [pull request](https://github.com/IFCA/frouros/pulls) that solves it.
 2. Create an [issue](https://github.com/IFCA/frouros/issues/new) in GitHub.
