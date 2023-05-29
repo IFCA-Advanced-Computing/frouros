@@ -199,6 +199,8 @@ The currently implemented detectors are listed in the following table.
     <th>Drift detector</th>
     <th>Type</th>
     <th>Family</th>
+    <th>Univariate (U) / Multivariate (M)</th>
+    <th>Numerical (N) / Categorical (C)</th>
     <th>Method</th>
     <th>Reference</th>
   </tr>
@@ -208,52 +210,76 @@ The currently implemented detectors are listed in the following table.
     <td rowspan="12">Concept drift</td>
     <td rowspan="12">Streaming</td>
     <td rowspan="3">CUMSUM</td>
+    <td>U</td>
+    <td>N</td>
     <td>CUMSUM</td>
     <td><a href="https://doi.org/10.2307/2333009">Page (1954)</a></td>
   </tr>
   <tr>
+    <td>U</td>
+    <td>N</td>
     <td>Geometric moving average</td>
     <td><a href="https://doi.org/10.2307/1266443">Roberts (1959)</a></td>
   </tr>
   <tr>
+    <td>U</td>
+    <td>N</td>
     <td>Page Hinkley</td>
     <td><a href="https://doi.org/10.2307/2333009">Page (1954)</a></td>
   </tr>
   <tr>
     <td rowspan="6">Statistical process control</td>
+    <td>U</td>
+    <td>N</td>
     <td>DDM</td>
     <td><a href="https://doi.org/10.1007/978-3-540-28645-5_29">Gama et al. (2004)</a></td>
   </tr>
   <tr>
+    <td>U</td>
+    <td>N</td>
     <td>ECDD-WT</td>
     <td><a href="https://doi.org/10.1016/j.patrec.2011.08.019">Ross et al. (2012)</a></td>
   </tr>
   <tr>
+    <td>U</td>
+    <td>N</td>
     <td>EDDM</td>
     <td><a href="https://www.researchgate.net/publication/245999704_Early_Drift_Detection_Method">Baena-Garcıa et al. (2006)</a></td>
   </tr>
   <tr>
+    <td>U</td>
+    <td>N</td>
     <td>HDDM-A</td>
     <td><a href="https://doi.org/10.1109/TKDE.2014.2345382">Frias-Blanco et al. (2014)</a></td>
   </tr>
   <tr>
+    <td>U</td>
+    <td>N</td>
     <td>HDDM-W</td>
     <td><a href="https://doi.org/10.1109/TKDE.2014.2345382">Frias-Blanco et al. (2014)</a></td>
   </tr>
   <tr>
+    <td>U</td>
+    <td>N</td>
     <td>RDDM</td>
     <td><a href="https://doi.org/10.1016/j.eswa.2017.08.023">Barros et al. (2017)</a></td>
   </tr>
   <tr>
     <td rowspan="3">Window based</td>
+    <td>U</td>
+    <td>N</td>
     <td>ADWIN</td>
     <td><a href="https://doi.org/10.1137/1.9781611972771.42">Bifet and Gavalda (2007)</a></td>
   </tr>
   <tr>
+    <td>U</td>
+    <td>N</td>
     <td>KSWIN</td>
     <td><a href="https://doi.org/10.1016/j.neucom.2019.11.111">Raab et al. (2020)</a></td>
   </tr>
   <tr>
+    <td>U</td>
+    <td>N</td>
     <td>STEPD</td>
     <td><a href="https://doi.org/10.1007/978-3-540-75488-6_27">Nishida and Yamauchi (2007)</a></td>
   </tr>
@@ -261,62 +287,90 @@ The currently implemented detectors are listed in the following table.
     <td rowspan="14">Data drift</td>
     <td rowspan="12">Batch</td>
     <td rowspan="8">Distance based</td>
+    <td>U</td>
+    <td>N</td>
     <td>Bhattacharyya distance</td>
     <td><a href="https://www.jstor.org/stable/25047882">Bhattacharyya (1946)</a></td>
   </tr>
   <tr>
+    <td>U</td>
+    <td>N</td>
     <td>Earth Mover's distance</td>
     <td><a href="https://doi.org/10.1023/A:1026543900054">Rubner et al. (2000)</a></td>
   </tr>
   <tr>
+    <td>U</td>
+    <td>N</td>
     <td>Hellinger distance</td>
     <td><a href="https://doi.org/10.1515/CRLL.1909.136.210">Hellinger (1909)</a></td>
   </tr>
   <tr>
+    <td>U</td>
+    <td>N</td>
     <td>Histogram intersection normalized complement</td>
     <td><a href="https://doi.org/10.1007/BF00130487">Swain and Ballard (1991)</a></td>
   </tr>
   <tr>
+    <td>U</td>
+    <td>N</td>
     <td>Jensen-Shannon distance</td>
     <td><a href="https://doi.org/10.1109/18.61115">Lin (1991)</a></td>
   </tr>
   <tr>
+    <td>U</td>
+    <td>N</td>
     <td>Kullback-Leibler divergence</td>
     <td><a href="https://doi.org/10.1214/aoms/1177729694">Kullback and Leibler (1951)</a></td>
   </tr>
   <tr>
+    <td>M</td>
+    <td>N</td>
     <td>MMD</td>
     <td><a href="https://dl.acm.org/doi/10.5555/2188385.2188410">Gretton et al. (2012)</a></td>
   </tr>
   <tr>
+    <td>U</td>
+    <td>N</td>
     <td>PSI</td>
     <td><a href="https://doi.org/10.1057/jors.2008.144">Wu and Olson (2010)</a></td>
   </tr>
   <tr>
     <td rowspan="4">Statistical test</td>
+    <td>U</td>
+    <td>C</td>
     <td>Chi-square test</td>
     <td><a href="https://doi.org/10.1080/14786440009463897">Pearson (1900)</a></td>
   </tr>
   <tr>
+    <td>U</td>
+    <td>N</td>
     <td>Cramér-von Mises test</td>
     <td><a href="https://doi.org/10.1080/03461238.1928.10416862">Cramér (1902)</a></td>
   </tr>
   <tr>
+    <td>U</td>
+    <td>N</td>
     <td>Kolmogorov-Smirnov test</td>
     <td><a href="https://doi.org/10.2307/2280095">Massey Jr (1951)</a></td>
   </tr>
   <tr>
+    <td>U</td>
+    <td>N</td>
     <td>Welch's T-Test</td>
     <td><a href="https://doi.org/10.2307/2332510">Welch (1947)</a></td>
   </tr>
   <tr>
     <td rowspan="2">Streaming</td>
     <td>Distance based</td>
+    <td>M</td>
+    <td>N</td>
     <td>MMD</td>
     <td><a href="https://dl.acm.org/doi/10.5555/2188385.2188410">Gretton et al. (2012)</a></td>
   </tr>
   <tr>
     <td>Statistical test</td>
+    <td>U</td>
+    <td>N</td>
     <td>Incremental Kolmogorov-Smirnov test</td>
     <td><a href="https://doi.org/10.1145/2939672.2939836">dos Reis et al. (2016)</a></td>
   </tr>
