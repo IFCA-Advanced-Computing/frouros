@@ -193,6 +193,28 @@ pip install frouros
 
 The currently implemented detectors are listed in the following table.
 
+<style>
+    table {
+      width: 100%;
+      text-align: center;
+      border-collapse: collapse;
+      border: 1px solid grey;
+    }
+
+    th, td {
+      text-align: center;
+      border: 1px solid grey;
+    }
+
+    th {
+      padding: 4px;
+    }
+
+    td {
+      padding: 8px;
+    }
+</style>
+
 <table>
 <thead>
   <tr>
