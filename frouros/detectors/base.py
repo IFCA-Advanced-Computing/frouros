@@ -74,5 +74,6 @@ class DetectorBase(abc.ABC):
         """
         return (
             f"{self.__class__.__name__}"
-            f"(callbacks=[{', '.join(self.callbacks)}])"  # type: ignore
+            f"(callbacks=["
+            f"{', '.join([*map(str, self.callbacks)])}])"  # type: ignore
         )
