@@ -1,5 +1,7 @@
 # How to contribute
 
+Frouros is an open-source project. Anyone with an interest in the project can join the community and contribute to it in different ways. The following sections describe how you can contribute.
+
 ## Adding a feature or solving a bug
 
 Recommended steps for first time contributors:
