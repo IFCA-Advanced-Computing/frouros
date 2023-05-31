@@ -4,9 +4,10 @@ import multiprocessing
 from typing import Any, Callable, Dict, List, Optional, Tuple
 
 import numpy as np  # type: ignore
+from scipy.stats import norm  # type: ignore
 
 from frouros.callbacks.batch.base import BatchCallback
-from frouros.utils.stats import permutation
+from frouros.utils.stats import permutation, z_score
 
 
 class PermutationTestOnBatchData(BatchCallback):
@@ -120,7 +121,14 @@ class PermutationTestOnBatchData(BatchCallback):
             random_state=random_state,
             verbose=verbose,
         )
-        p_value = (observed_statistic < permuted_statistic).mean()  # type: ignore
+        permuted_statistic = np.array(permuted_statistic)
+        # Use z-score to calculate p-value
+        observed_z_score = z_score(
+            value=observed_statistic,
+            mean=permuted_statistic.mean(),  # type: ignore
+            std=permuted_statistic.std(),  # type: ignore
+        )
+        p_value = norm.sf(np.abs(observed_z_score)) * 2
         return permuted_statistic, p_value
 
     def on_compare_end(self, **kwargs) -> None:

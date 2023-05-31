@@ -264,3 +264,22 @@ def permutation(  # pylint: disable=too-many-arguments,too-many-locals
 
     # FIXME: explore if abs must be used in permuted_statistic  # pylint: disable=fixme
     return permuted_statistics
+
+
+def z_score(
+    value: np.ndarray,
+    mean: float,
+    std: float,
+) -> np.ndarray:
+    """Z-score method.
+
+    :param value: value to use to compute the z-score
+    :type value: np.ndarray
+    :param mean: mean value
+    :type mean: float
+    :param std: standard deviation value
+    :type std: float
+    :return: z-score
+    :rtype: np.ndarray
+    """
+    return (value - mean) / std
