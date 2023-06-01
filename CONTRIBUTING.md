@@ -7,7 +7,7 @@ Frouros is an open-source project. Anyone with an interest in the project can jo
 Recommended steps for first time contributors:
 
 1. Fork repository on GitHub.
-2. Set up develop environment (it is not mandatory, but we highly recommend the use of a [virtual environment](https://docs.python.org/3.9/library/venv.html)):
+2. Set up develop environment (it is not mandatory, but we highly recommend the use of a [virtual environment](https://docs.python.org/3.11/library/venv.html)):
     ```bash
     python3 -m venv .venv
     source .venv/bin/activate
