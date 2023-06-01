@@ -49,13 +49,13 @@ Drift detection methods can be classified according to the type of drift they ca
 
 Their main objective is to **detect concept drift**. They are closely related to data stream mining, online and incremental learning. 
 
-At the time of writing this, Frouros only implements *concept drift* detectors that work in a streaming manner. This means that the detector can only be updated with a single sample each time. 
+At the time of writing this, Frouros only implements *concept drift* detectors that work in a {doc}`streaming </api_reference/detectors/concept_drift/streaming>` manner. This means that the detector can only be updated with a single sample each time. 
 
 ### Data drift
 
 On the other hand, there are problems where it is very costly or even impossible to obtain labels in a reasonable amount of time (see [verification latency](#verification-latency-or-delay)). In this case, is not possible to directly check if *concept drift* is occurring, so **detect data drift** becomes the main objective of these type of methods.
 
-Al the time of writing this, Frouros implements detectors that are capable to work in {ref}`batch <batch>` or {ref}`streaming <streaming>` mode. In addition, we can difference between univariate and multivariate data drift detectors, according to the type of feature/covariate distributions used.
+At the time of writing this, Frouros implements detectors that are capable to work in {doc}`batch </api_reference/detectors/data_drift/batch>` or {doc}`streaming </api_reference/detectors/data_drift/streaming>` mode. In addition, we can difference between univariate and multivariate data drift detectors, according to the type of feature/covariate distributions used.
 ```{bibliography}
 :filter: docname in docnames
 ```
