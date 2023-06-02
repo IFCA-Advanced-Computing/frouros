@@ -2,10 +2,9 @@
 
 from typing import Tuple, Union
 
-import pytest  # type: ignore
 import numpy as np  # type: ignore
+import pytest  # type: ignore
 
-from frouros.detectors.data_drift.batch.base import BaseDataDriftBatch
 from frouros.detectors.data_drift.batch import (
     BhattacharyyaDistance,
     EMD,
@@ -22,6 +21,7 @@ from frouros.detectors.data_drift.batch import (
     KSTest,
     WelchTTest,
 )
+from frouros.detectors.data_drift.batch.base import BaseDataDriftBatch
 from frouros.detectors.data_drift.streaming import (  # noqa: N811
     IncrementalKSTest,
     MMD as MMDStreaming,

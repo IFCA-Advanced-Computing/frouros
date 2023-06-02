@@ -8,7 +8,6 @@ import numpy as np  # type: ignore
 
 from frouros.detectors.data_drift.batch.base import BaseDataDriftBatch
 
-
 StatisticalResult = namedtuple("StatisticalResult", ["statistic", "p_value"])
 
 

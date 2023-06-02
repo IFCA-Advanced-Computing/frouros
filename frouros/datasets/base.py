@@ -2,9 +2,9 @@
 
 import abc
 import tempfile
-from typing import Any, List, Optional, Union
 import urllib.parse
 from pathlib import Path
+from typing import Any, List, Optional, Union
 
 import numpy as np  # type: ignore
 import requests

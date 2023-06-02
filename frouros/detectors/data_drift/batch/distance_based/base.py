@@ -15,7 +15,6 @@ from frouros.detectors.data_drift.base import (
 )
 from frouros.detectors.data_drift.batch.base import BaseDataDriftBatch
 
-
 DistanceResult = namedtuple("DistanceResult", ["distance"])
 
 

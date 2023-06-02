@@ -7,11 +7,11 @@
 from typing import Optional, List, Union
 
 import numpy as np  # type: ignore
-from scipy.stats.distributions import kstwo  # type: ignore
 from scipy.stats._stats_py import (  # type: ignore
     _compute_prob_outside_square,
     _compute_outer_prob_inside_method,
 )
+from scipy.stats.distributions import kstwo  # type: ignore
 
 from frouros.callbacks.base import BaseCallback
 from frouros.detectors.data_drift.base import NumericalData, UnivariateData

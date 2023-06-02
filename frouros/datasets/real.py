@@ -4,6 +4,7 @@ from typing import Optional
 
 import numpy as np  # type: ignore
 from scipy.io import arff  # type: ignore
+
 from frouros.datasets.base import BaseDatasetDownload
 
 

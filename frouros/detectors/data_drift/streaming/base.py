@@ -1,8 +1,8 @@
 """Base data drift batch module."""
 
 import abc
-
 from typing import Any, Dict, Optional, List, Tuple, Union
+
 import numpy as np  # type: ignore
 
 from frouros.callbacks.base import BaseCallback

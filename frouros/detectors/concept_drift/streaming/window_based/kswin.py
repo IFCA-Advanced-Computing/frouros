@@ -1,11 +1,11 @@
 """KSWIN (Kolmogorov-Smirnov Windowing) module."""
 
-from collections import deque
 import itertools
+from collections import deque
 from typing import List, Optional, Union
 
-from scipy.stats import ks_2samp  # type: ignore
 import numpy as np  # type: ignore
+from scipy.stats import ks_2samp  # type: ignore
 
 from frouros.callbacks.base import BaseCallback
 from frouros.detectors.concept_drift.streaming.window_based.base import (

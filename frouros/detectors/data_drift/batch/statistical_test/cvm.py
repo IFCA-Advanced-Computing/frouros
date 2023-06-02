@@ -7,11 +7,11 @@ from scipy.stats import cramervonmises_2samp  # type: ignore
 
 from frouros.callbacks.base import BaseCallback
 from frouros.detectors.data_drift.base import NumericalData, UnivariateData
-from frouros.detectors.data_drift.exceptions import InsufficientSamplesError
 from frouros.detectors.data_drift.batch.statistical_test.base import (
     BaseStatisticalTest,
     StatisticalResult,
 )
+from frouros.detectors.data_drift.exceptions import InsufficientSamplesError
 
 
 class CVMTest(BaseStatisticalTest):

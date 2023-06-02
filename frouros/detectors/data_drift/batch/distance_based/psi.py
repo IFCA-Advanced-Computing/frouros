@@ -1,8 +1,8 @@
 """PSI (Population Stability Index) module."""
 
 import sys
-
 from typing import List, Optional, Union
+
 import numpy as np  # type: ignore
 
 from frouros.callbacks.base import BaseCallback

@@ -2,10 +2,10 @@
 
 from typing import Callable, Tuple
 
-import pytest  # type: ignore
 import numpy as np  # type: ignore
+import pytest  # type: ignore
 
-from frouros.detectors.concept_drift.base import BaseConceptDrift
+from frouros.detectors.concept_drift import ADWIN, ADWINConfig, KSWIN, KSWINConfig
 from frouros.detectors.concept_drift import (
     CUSUM,
     CUSUMConfig,
@@ -30,8 +30,7 @@ from frouros.detectors.concept_drift import (
     STEPD,
     STEPDConfig,
 )
-from frouros.detectors.concept_drift import ADWIN, ADWINConfig, KSWIN, KSWINConfig
-
+from frouros.detectors.concept_drift.base import BaseConceptDrift
 
 MIN_NUM_INSTANCES = 30
 CUMSUM_ARGS = {

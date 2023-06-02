@@ -1,7 +1,6 @@
 """Base callback streaming module."""
 
 import abc
-
 from typing import Union
 
 from frouros.callbacks.base import BaseCallback

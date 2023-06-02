@@ -9,8 +9,8 @@ from typing import Any, Callable, Dict, Optional, List, Union
 import numpy as np  # type: ignore
 from tqdm import tqdm  # type: ignore
 
-from frouros.utils.logger import logger
 from frouros.utils.data_structures import CircularQueue
+from frouros.utils.logger import logger
 
 
 class BaseStat(abc.ABC):

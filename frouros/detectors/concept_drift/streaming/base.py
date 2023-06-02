@@ -1,7 +1,6 @@
 """Base concept drift streaming module."""
 
 import abc
-
 from typing import Union
 
 from frouros.detectors.concept_drift.base import (
