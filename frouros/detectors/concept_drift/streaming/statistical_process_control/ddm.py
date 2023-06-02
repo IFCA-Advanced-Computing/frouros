@@ -4,12 +4,12 @@ from contextlib import suppress
 from typing import Union
 
 from frouros.detectors.concept_drift.streaming.statistical_process_control.base import (
-    SPCBaseConfig,
+    BaseSPCConfig,
     SPCErrorBase,
 )
 
 
-class DDMConfig(SPCBaseConfig):
+class DDMConfig(BaseSPCConfig):
     """DDM (Drift detection method) [gama2004learning]_ configuration.
 
     :References:

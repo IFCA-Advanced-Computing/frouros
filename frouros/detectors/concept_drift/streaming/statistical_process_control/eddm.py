@@ -7,12 +7,12 @@ import numpy as np  # type: ignore
 
 from frouros.callbacks import Callback
 from frouros.detectors.concept_drift.streaming.statistical_process_control.base import (
-    SPCBaseConfig,
+    BaseSPCConfig,
     SPCBase,
 )
 
 
-class EDDMConfig(SPCBaseConfig):
+class EDDMConfig(BaseSPCConfig):
     """EDDM (Early drift detection method) [baena2006early]_ configuration.
 
     :References:

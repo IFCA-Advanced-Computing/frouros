@@ -7,13 +7,13 @@ import numpy as np  # type: ignore
 
 from frouros.callbacks import Callback
 from frouros.detectors.concept_drift.streaming.statistical_process_control.base import (
-    SPCBaseConfig,
+    BaseSPCConfig,
     SPCBase,
 )
 from frouros.utils.stats import EWMA, Mean
 
 
-class HDDMBaseConfig(SPCBaseConfig):
+class HDDMBaseConfig(BaseSPCConfig):
     """HDDM (Hoeffding's drift detection method) [frias2014online]_ configuration.
 
     :References:

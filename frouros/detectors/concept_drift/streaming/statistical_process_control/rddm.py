@@ -4,14 +4,14 @@ from typing import List, Optional, Union
 
 from frouros.callbacks import Callback
 from frouros.detectors.concept_drift.streaming.statistical_process_control.base import (
-    SPCBaseConfig,
+    BaseSPCConfig,
     SPCErrorBase,
 )
 from frouros.utils.data_structures import CircularQueue
 from frouros.utils.stats import Mean
 
 
-class RDDMConfig(SPCBaseConfig):
+class RDDMConfig(BaseSPCConfig):
     """RDDM (Reactive Drift detection method) [barros2017rddm]_ configuration.
 
     :References:

@@ -1,4 +1,4 @@
-"""Concept drift SPC (statistical process control) base module."""
+"""Base concept drift SPC (statistical process control) module."""
 
 import abc
 from typing import Dict, List, Optional, Tuple, Union
@@ -14,7 +14,7 @@ from frouros.detectors.concept_drift.exceptions import InvalidAverageRunLengthEr
 from frouros.utils.stats import Mean
 
 
-class SPCBaseConfig(BaseConceptDriftStreamingConfig):
+class BaseSPCConfig(BaseConceptDriftStreamingConfig):
     """Class representing a SPC configuration class."""
 
     def __init__(
@@ -85,17 +85,17 @@ class SPCBaseConfig(BaseConceptDriftStreamingConfig):
 class SPCBase(BaseConceptDriftStreaming):
     """Abstract class representing an SPC estimator."""
 
-    config_type = SPCBaseConfig
+    config_type = BaseSPCConfig
 
     def __init__(
         self,
-        config: Optional[SPCBaseConfig] = None,
+        config: Optional[BaseSPCConfig] = None,
         callbacks: Optional[Union[Callback, List[Callback]]] = None,
     ) -> None:
         """Init method.
 
         :param config: configuration parameters
-        :type config: Optional[SPCBaseConfig]
+        :type config: Optional[BaseSPCConfig]
         :param callbacks: callbacks
         :type callbacks: Optional[Union[Callback, List[Callback]]]
         """
@@ -148,17 +148,17 @@ class SPCBase(BaseConceptDriftStreaming):
 class SPCErrorBase(SPCBase):
     """Abstract class representing a SPC error estimator."""
 
-    config_type = SPCBaseConfig
+    config_type = BaseSPCConfig
 
     def __init__(
         self,
-        config: Optional[SPCBaseConfig] = None,
+        config: Optional[BaseSPCConfig] = None,
         callbacks: Optional[Union[Callback, List[Callback]]] = None,
     ) -> None:
         """Init method.
 
         :param config: configuration parameters
-        :type config: Optional[SPCBaseConfig]
+        :type config: Optional[BaseSPCConfig]
         :param callbacks: callbacks
         :type callbacks: Optional[Union[Callback, List[Callback]]]
         """
