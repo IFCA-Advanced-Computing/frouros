@@ -9,13 +9,13 @@ from frouros.detectors.data_drift.base import NumericalData, MultivariateData
 from frouros.detectors.data_drift.batch import MMD as MMDBatch  # noqa: N811
 from frouros.detectors.data_drift.batch.distance_based.mmd import rbf_kernel
 from frouros.detectors.data_drift.streaming.distance_based.base import (
-    DistanceBasedBase,
+    BaseDistanceBased,
     DistanceResult,
 )
 from frouros.utils.data_structures import CircularQueue
 
 
-class MMD(DistanceBasedBase):
+class MMD(BaseDistanceBased):
     """MMD (Maximum Mean Discrepancy) [gretton2012kernel]_ detector.
 
     :References:

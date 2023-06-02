@@ -1,4 +1,4 @@
-"""Data drift distance based base module."""
+"""Base data drift distance based module."""
 
 import abc
 from typing import Any, Dict, Optional, Tuple, Union
@@ -45,7 +45,7 @@ class DistanceResult(BaseResult):
         self._distance = value
 
 
-class DistanceBasedBase(BaseDataDriftStreaming):
+class BaseDistanceBased(BaseDataDriftStreaming):
     """Abstract class representing a distance based."""
 
     @abc.abstractmethod
