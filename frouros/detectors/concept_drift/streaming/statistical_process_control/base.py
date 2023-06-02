@@ -82,7 +82,7 @@ class BaseSPCConfig(BaseConceptDriftStreamingConfig):
         self._warning_level = value
 
 
-class SPCBase(BaseConceptDriftStreaming):
+class BaseSPC(BaseConceptDriftStreaming):
     """Abstract class representing an SPC estimator."""
 
     config_type = BaseSPCConfig
@@ -145,7 +145,7 @@ class SPCBase(BaseConceptDriftStreaming):
         pass
 
 
-class SPCErrorBase(SPCBase):
+class SPCErrorBase(BaseSPC):
     """Abstract class representing a SPC error estimator."""
 
     config_type = BaseSPCConfig

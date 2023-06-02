@@ -31,7 +31,7 @@ from frouros.detectors.concept_drift import (
 )
 from frouros.detectors.concept_drift.base import BaseConceptDrift
 from frouros.detectors.concept_drift.streaming.statistical_process_control.base import (
-    SPCBase,
+    BaseSPC,
 )
 from frouros.detectors.data_drift.batch import (
     BhattacharyyaDistance,
@@ -199,7 +199,7 @@ def _fit_model(model, X, y):  # noqa: N803
 def test_streaming_warning_samples_buffer_on_concept_drift(
     dataset_simple: Tuple[Tuple[np.ndarray, np.ndarray], Tuple[np.ndarray, np.ndarray]],
     model: sklearn.pipeline.Pipeline,
-    detector_class: SPCBase,
+    detector_class: BaseSPC,
 ):
     """Test streaming warning samples buffer on concept drift callback.
 
@@ -208,7 +208,7 @@ def test_streaming_warning_samples_buffer_on_concept_drift(
     :param model: trained model
     :type model: sklearn.pipeline.Pipeline
     :param detector_class: concept drift detector
-    :type detector_class: SPCBase
+    :type detector_class: BaseSPC
     """
     _, test = dataset_simple  # noqa: N806
 

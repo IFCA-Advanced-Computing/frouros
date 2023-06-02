@@ -8,7 +8,7 @@ import numpy as np  # type: ignore
 from frouros.callbacks import Callback
 from frouros.detectors.concept_drift.streaming.statistical_process_control.base import (
     BaseSPCConfig,
-    SPCBase,
+    BaseSPC,
 )
 from frouros.utils.stats import EWMA, Mean
 
@@ -318,7 +318,7 @@ class HoeffdingTwoSidedTest(HoeffdingOneSidedTest):
             self.y = copy.deepcopy(self.z)
 
 
-class HDDMA(SPCBase):
+class HDDMA(BaseSPC):
     """HDDM-A (Hoeffding's drift detection method with A-Test) [frias2014online]_ detector.
 
     :References:
@@ -614,7 +614,7 @@ class McDiarmidTwoSidedTest(McDiarmidOneSidedTest):
             self.sample_decrease_2.update(value=value)
 
 
-class HDDMW(SPCBase):
+class HDDMW(BaseSPC):
     """HDDM-W (Hoeffding's drift detection method with W-Test) [frias2014online]_ detector.
 
     :References:
