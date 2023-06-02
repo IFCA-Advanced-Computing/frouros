@@ -5,7 +5,7 @@ import abc
 from typing import Any, Dict, Optional, List, Tuple, Union
 import numpy as np  # type: ignore
 
-from frouros.callbacks import BaseCallback
+from frouros.callbacks.base import BaseCallback
 from frouros.detectors.data_drift.base import (
     BaseDataDrift,
     BaseDataType,

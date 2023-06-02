@@ -5,7 +5,7 @@ from typing import Any, Dict, List, Optional, Union
 import numpy as np  # type: ignore
 from scipy.special import rel_entr  # type: ignore
 
-from frouros.callbacks import BaseCallback
+from frouros.callbacks.base import BaseCallback
 from frouros.detectors.data_drift.batch.distance_based.base import (
     BaseDistanceBasedProbability,
     DistanceResult,

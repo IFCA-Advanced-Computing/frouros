@@ -8,7 +8,7 @@ import numpy as np  # type: ignore
 import tqdm  # type: ignore
 from scipy.spatial.distance import cdist  # type: ignore
 
-from frouros.callbacks import BaseCallback
+from frouros.callbacks.base import BaseCallback
 from frouros.detectors.data_drift.base import MultivariateData
 from frouros.detectors.data_drift.batch.distance_based.base import (
     BaseDistanceBased,

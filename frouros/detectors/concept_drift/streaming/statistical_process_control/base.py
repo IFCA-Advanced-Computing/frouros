@@ -5,7 +5,7 @@ from typing import Dict, List, Optional, Tuple, Union
 
 import numpy as np  # type: ignore
 
-from frouros.callbacks import BaseCallback
+from frouros.callbacks.base import BaseCallback
 from frouros.detectors.concept_drift.streaming.base import (
     BaseConceptDriftStreamingConfig,
     BaseConceptDriftStreaming,

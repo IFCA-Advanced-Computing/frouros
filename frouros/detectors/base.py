@@ -5,7 +5,7 @@ from typing import Any, Dict, List, Optional, Union
 
 import numpy as np  # type: ignore
 
-from frouros.callbacks import BaseCallback
+from frouros.callbacks.base import BaseCallback
 
 
 class BaseDetector(abc.ABC):

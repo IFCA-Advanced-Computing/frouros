@@ -7,7 +7,7 @@ from typing import Any, Callable, Dict, Optional, List, Tuple, Union
 import numpy as np  # type: ignore
 from scipy.stats import rv_histogram  # type: ignore
 
-from frouros.callbacks import BaseCallback
+from frouros.callbacks.base import BaseCallback
 from frouros.detectors.data_drift.base import (
     NumericalData,
     BaseStatisticalType,

@@ -2,7 +2,7 @@
 
 from typing import List, Optional, Union
 
-from frouros.callbacks import BaseCallback
+from frouros.callbacks.base import BaseCallback
 from frouros.detectors.concept_drift.streaming.statistical_process_control.base import (
     BaseSPCConfig,
     BaseSPCError,

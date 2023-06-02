@@ -4,7 +4,7 @@ from typing import Any, Callable, Dict, Optional, List, Tuple, Union
 
 import numpy as np  # type: ignore
 
-from frouros.callbacks import BaseCallback
+from frouros.callbacks.base import BaseCallback
 from frouros.detectors.data_drift.base import NumericalData, MultivariateData
 from frouros.detectors.data_drift.batch import MMD as MMDBatch  # noqa: N811
 from frouros.detectors.data_drift.batch.distance_based.mmd import rbf_kernel

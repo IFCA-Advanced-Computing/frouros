@@ -5,7 +5,7 @@ from typing import Optional, List, Union
 import numpy as np  # type: ignore
 from scipy.stats import ttest_ind  # type: ignore
 
-from frouros.callbacks import BaseCallback
+from frouros.callbacks.base import BaseCallback
 from frouros.detectors.data_drift.base import NumericalData, UnivariateData
 from frouros.detectors.data_drift.batch.statistical_test.base import (
     BaseStatisticalTest,

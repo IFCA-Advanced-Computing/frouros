@@ -4,7 +4,7 @@ from typing import List, Optional, Union
 
 import numpy as np  # type: ignore
 
-from frouros.callbacks import BaseCallback
+from frouros.callbacks.base import BaseCallback
 from frouros.detectors.data_drift.batch.distance_based.base import (
     BaseDistanceBasedBins,
 )

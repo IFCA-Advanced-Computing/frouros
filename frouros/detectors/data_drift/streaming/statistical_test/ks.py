@@ -13,7 +13,7 @@ from scipy.stats._stats_py import (  # type: ignore
     _compute_outer_prob_inside_method,
 )
 
-from frouros.callbacks import BaseCallback
+from frouros.callbacks.base import BaseCallback
 from frouros.detectors.data_drift.base import NumericalData, UnivariateData
 from frouros.detectors.data_drift.streaming.statistical_test.base import (
     BaseStatisticalTest,

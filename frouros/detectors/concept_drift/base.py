@@ -3,7 +3,8 @@
 import abc
 from typing import Any, Dict, List, Optional, Union
 
-from frouros.callbacks import BaseCallback, History
+from frouros.callbacks import History
+from frouros.callbacks.base import BaseCallback
 from frouros.detectors.base import BaseDetector
 
 

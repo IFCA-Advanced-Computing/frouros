@@ -6,7 +6,7 @@ from typing import Optional, List, Tuple, Union
 import numpy as np  # type: ignore
 from scipy.stats import chi2_contingency  # type: ignore
 
-from frouros.callbacks import BaseCallback
+from frouros.callbacks.base import BaseCallback
 from frouros.detectors.data_drift.base import CategoricalData, UnivariateData
 from frouros.detectors.data_drift.batch.statistical_test.base import (  # type: ignore
     BaseStatisticalTest,
