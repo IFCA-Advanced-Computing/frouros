@@ -6,11 +6,11 @@ import numpy as np  # type: ignore
 
 from frouros.callbacks import Callback
 from frouros.detectors.data_drift.batch.distance_based.base import (
-    DistanceBinsBasedBase,
+    BaseDistanceBasedBins,
 )
 
 
-class HellingerDistance(DistanceBinsBasedBase):
+class HellingerDistance(BaseDistanceBasedBins):
     """Hellinger distance [hellinger1909neue]_ detector.
 
     :References:
@@ -65,7 +65,7 @@ class HellingerDistance(DistanceBinsBasedBase):
         (  # noqa: N806
             X_percents,
             Y_percents,
-        ) = DistanceBinsBasedBase._calculate_bins_values(
+        ) = BaseDistanceBasedBins._calculate_bins_values(
             X_ref=X, X=Y, num_bins=num_bins
         )
         hellinger = (

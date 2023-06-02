@@ -7,12 +7,12 @@ import numpy as np  # type: ignore
 
 from frouros.callbacks import Callback
 from frouros.detectors.data_drift.batch.distance_based.base import (
-    DistanceBinsBasedBase,
+    BaseDistanceBasedBins,
     DistanceResult,
 )
 
 
-class PSI(DistanceBinsBasedBase):
+class PSI(BaseDistanceBasedBins):
     """PSI (Population Stability Index) [wu2010enterprise]_ detector.
 
     :References:
@@ -66,7 +66,7 @@ class PSI(DistanceBinsBasedBase):
         (  # noqa: N806
             X_percents,
             Y_percents,
-        ) = DistanceBinsBasedBase._calculate_bins_values(
+        ) = BaseDistanceBasedBins._calculate_bins_values(
             X_ref=X, X=Y, num_bins=num_bins
         )
         # Replace 0.0 values with the smallest number possible

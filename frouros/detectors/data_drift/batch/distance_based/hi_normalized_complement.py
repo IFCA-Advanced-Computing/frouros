@@ -6,11 +6,11 @@ import numpy as np  # type: ignore
 
 from frouros.callbacks import Callback
 from frouros.detectors.data_drift.batch.distance_based.base import (
-    DistanceBinsBasedBase,
+    BaseDistanceBasedBins,
 )
 
 
-class HINormalizedComplement(DistanceBinsBasedBase):
+class HINormalizedComplement(BaseDistanceBasedBins):
     """HI (Histogram intersection) normalized complement [swain1991color]_ detector.
 
     :References:

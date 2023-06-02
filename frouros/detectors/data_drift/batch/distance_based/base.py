@@ -113,8 +113,8 @@ class BaseDistanceBased(BaseDataDriftBatch):
         pass
 
 
-class DistanceBinsBasedBase(BaseDistanceBased):
-    """Abstract class representing a distance bins based detector."""
+class BaseDistanceBasedBins(BaseDistanceBased):
+    """Abstract class representing a distance based bins detector."""
 
     def __init__(
         self,

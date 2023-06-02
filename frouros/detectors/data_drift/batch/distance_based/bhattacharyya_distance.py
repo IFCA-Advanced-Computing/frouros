@@ -6,11 +6,11 @@ import numpy as np  # type: ignore
 
 from frouros.callbacks import Callback
 from frouros.detectors.data_drift.batch.distance_based.base import (
-    DistanceBinsBasedBase,
+    BaseDistanceBasedBins,
 )
 
 
-class BhattacharyyaDistance(DistanceBinsBasedBase):
+class BhattacharyyaDistance(BaseDistanceBasedBins):
     """Bhattacharyya distance [bhattacharyya1946measure]_ detector.
 
     :References:
@@ -56,7 +56,7 @@ class BhattacharyyaDistance(DistanceBinsBasedBase):
         (  # noqa: N806
             X_percents,
             Y_percents,
-        ) = DistanceBinsBasedBase._calculate_bins_values(
+        ) = BaseDistanceBasedBins._calculate_bins_values(
             X_ref=X, X=Y, num_bins=num_bins
         )
         bhattacharyya = 1 - np.sum(np.sqrt(X_percents * Y_percents))
