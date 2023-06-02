@@ -10,7 +10,7 @@ from frouros.detectors.data_drift.base import (
     DataDriftBase,
     BaseDataType,
     BaseResult,
-    StatisticalTypeBase,
+    BaseStatisticalType,
 )
 
 
@@ -20,7 +20,7 @@ class DataDriftStreamingBase(DataDriftBase):
     def __init__(
         self,
         data_type: BaseDataType,
-        statistical_type: StatisticalTypeBase,
+        statistical_type: BaseStatisticalType,
         callbacks: Optional[Union[Callback, List[Callback]]] = None,
     ) -> None:
         """Init method.
@@ -28,7 +28,7 @@ class DataDriftStreamingBase(DataDriftBase):
         :param data_type: data type
         :type data_type: BaseDataType
         :param statistical_type: statistical type
-        :type statistical_type: StatisticalTypeBase
+        :type statistical_type: BaseStatisticalType
         :param callbacks: callbacks
         :type callbacks: Optional[Union[Callback], List[Callback]]
         """

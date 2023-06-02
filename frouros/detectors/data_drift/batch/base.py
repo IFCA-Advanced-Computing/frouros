@@ -9,7 +9,7 @@ from frouros.callbacks import Callback
 from frouros.detectors.data_drift.base import (
     DataDriftBase,
     BaseDataType,
-    StatisticalTypeBase,
+    BaseStatisticalType,
 )
 from frouros.detectors.data_drift.exceptions import (
     MismatchDimensionError,
@@ -22,7 +22,7 @@ class DataDriftBatchBase(DataDriftBase):
     def __init__(
         self,
         data_type: BaseDataType,
-        statistical_type: StatisticalTypeBase,
+        statistical_type: BaseStatisticalType,
         callbacks: Optional[Union[Callback, List[Callback]]] = None,
     ) -> None:
         """Init method.
@@ -30,7 +30,7 @@ class DataDriftBatchBase(DataDriftBase):
         :param data_type: data type
         :type data_type: BaseDataType
         :param statistical_type: statistical type
-        :type statistical_type: StatisticalTypeBase
+        :type statistical_type: BaseStatisticalType
         :param callbacks: callbacks
         :type callbacks: Optional[Union[Callback], List[Callback]]
         """

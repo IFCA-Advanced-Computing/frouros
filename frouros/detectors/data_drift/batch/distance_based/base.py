@@ -10,7 +10,7 @@ from scipy.stats import rv_histogram  # type: ignore
 from frouros.callbacks import Callback
 from frouros.detectors.data_drift.base import (
     NumericalData,
-    StatisticalTypeBase,
+    BaseStatisticalType,
     UnivariateData,
 )
 from frouros.detectors.data_drift.batch.base import DataDriftBatchBase
@@ -24,7 +24,7 @@ class DistanceBasedBase(DataDriftBatchBase):
 
     def __init__(
         self,
-        statistical_type: StatisticalTypeBase,
+        statistical_type: BaseStatisticalType,
         statistical_method: Callable,
         statistical_kwargs: Dict[str, Any],
         callbacks: Optional[Union[Callback, List[Callback]]] = None,
@@ -32,7 +32,7 @@ class DistanceBasedBase(DataDriftBatchBase):
         """Init method.
 
         :param statistical_type: statistical type
-        :type statistical_type: StatisticalTypeBase
+        :type statistical_type: BaseStatisticalType
         :param statistical_method: statistical method
         :type statistical_method: Callable
         :param statistical_kwargs: statistical kwargs

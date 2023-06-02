@@ -53,7 +53,7 @@ class NumericalData(BaseDataType):
         self.output_type = np.float32
 
 
-class StatisticalTypeBase(abc.ABC):
+class BaseStatisticalType(abc.ABC):
     """Abstract class representing a statistical data type."""
 
     @abc.abstractmethod
@@ -72,7 +72,7 @@ class StatisticalTypeBase(abc.ABC):
         )
 
 
-class UnivariateData(StatisticalTypeBase):
+class UnivariateData(BaseStatisticalType):
     """Class representing a univariate data type."""
 
     def __init__(self) -> None:
@@ -81,7 +81,7 @@ class UnivariateData(StatisticalTypeBase):
         self.dim_check = operator.eq
 
 
-class MultivariateData(StatisticalTypeBase):
+class MultivariateData(BaseStatisticalType):
     """Class representing a multivariate data type."""
 
     def __init__(self) -> None:
@@ -96,7 +96,7 @@ class DataDriftBase(BaseDetector):
     def __init__(
         self,
         data_type: BaseDataType,
-        statistical_type: StatisticalTypeBase,
+        statistical_type: BaseStatisticalType,
         callbacks: Optional[Union[Callback, List[Callback]]] = None,
     ) -> None:
         """Init method.
@@ -104,7 +104,7 @@ class DataDriftBase(BaseDetector):
         :param data_type: data type
         :type data_type: BaseDataType
         :param statistical_type: statistical type
-        :type statistical_type: StatisticalTypeBase
+        :type statistical_type: BaseStatisticalType
         :param callbacks: callbacks
         :type callbacks: Optional[Union[Callback, List[Callback]]]
         """
@@ -135,24 +135,24 @@ class DataDriftBase(BaseDetector):
         self._data_type = value
 
     @property
-    def statistical_type(self) -> StatisticalTypeBase:
+    def statistical_type(self) -> BaseStatisticalType:
         """Statistical type property.
 
         :return: statistical type
-        :rtype: StatisticalTypeBase
+        :rtype: BaseStatisticalType
         """
         return self._statistical_type
 
     @statistical_type.setter
-    def statistical_type(self, value: StatisticalTypeBase) -> None:
+    def statistical_type(self, value: BaseStatisticalType) -> None:
         """Statistical type setter.
 
         :param value: value to be set
-        :type value: StatisticalTypeBase
+        :type value: BaseStatisticalType
         :raises TypeError: Type error exception
         """
-        if not isinstance(value, StatisticalTypeBase):
-            raise TypeError("value must be of type StatisticalTypeBase.")
+        if not isinstance(value, BaseStatisticalType):
+            raise TypeError("value must be of type BaseStatisticalType.")
         self._statistical_type = value
 
     @property
