@@ -4,18 +4,18 @@ from typing import Any, Callable, Dict, Optional, List, Tuple, Union
 
 import numpy as np  # type: ignore
 
-from frouros.callbacks import Callback
+from frouros.callbacks.base import BaseCallback
 from frouros.detectors.data_drift.base import NumericalData, MultivariateData
 from frouros.detectors.data_drift.batch import MMD as MMDBatch  # noqa: N811
 from frouros.detectors.data_drift.batch.distance_based.mmd import rbf_kernel
 from frouros.detectors.data_drift.streaming.distance_based.base import (
-    DistanceBasedBase,
+    BaseDistanceBased,
     DistanceResult,
 )
 from frouros.utils.data_structures import CircularQueue
 
 
-class MMD(DistanceBasedBase):
+class MMD(BaseDistanceBased):
     """MMD (Maximum Mean Discrepancy) [gretton2012kernel]_ detector.
 
     :References:
@@ -30,7 +30,7 @@ class MMD(DistanceBasedBase):
         window_size: int,
         kernel: Callable = rbf_kernel,
         chunk_size: Optional[int] = None,
-        callbacks: Optional[Union[Callback, List[Callback]]] = None,
+        callbacks: Optional[Union[BaseCallback, List[BaseCallback]]] = None,
     ) -> None:
         """Init method.
 
@@ -41,7 +41,7 @@ class MMD(DistanceBasedBase):
         :param chunk_size: chunk size value
         :type chunk_size: Optional[int]
         :param callbacks: callbacks
-        :type callbacks: Optional[Union[Callback, List[Callback]]]
+        :type callbacks: Optional[Union[Callback, List[BaseCallback]]]
         """
         super().__init__(
             data_type=NumericalData(),

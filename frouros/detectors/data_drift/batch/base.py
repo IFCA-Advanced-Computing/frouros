@@ -1,38 +1,38 @@
-"""Data drift batch base module."""
+"""Base data drift batch module."""
 
 import abc
-
 from typing import Any, Dict, Optional, List, Tuple, Union
+
 import numpy as np  # type: ignore
 
-from frouros.callbacks import Callback
+from frouros.callbacks.base import BaseCallback
 from frouros.detectors.data_drift.base import (
-    DataDriftBase,
-    DataTypeBase,
-    StatisticalTypeBase,
+    BaseDataDrift,
+    BaseDataType,
+    BaseStatisticalType,
 )
 from frouros.detectors.data_drift.exceptions import (
     MismatchDimensionError,
 )
 
 
-class DataDriftBatchBase(DataDriftBase):
+class BaseDataDriftBatch(BaseDataDrift):
     """Abstract class representing a data drift batch detector."""
 
     def __init__(
         self,
-        data_type: DataTypeBase,
-        statistical_type: StatisticalTypeBase,
-        callbacks: Optional[Union[Callback, List[Callback]]] = None,
+        data_type: BaseDataType,
+        statistical_type: BaseStatisticalType,
+        callbacks: Optional[Union[BaseCallback, List[BaseCallback]]] = None,
     ) -> None:
         """Init method.
 
         :param data_type: data type
-        :type data_type: DataTypeBase
+        :type data_type: BaseDataType
         :param statistical_type: statistical type
-        :type statistical_type: StatisticalTypeBase
+        :type statistical_type: BaseStatisticalType
         :param callbacks: callbacks
-        :type callbacks: Optional[Union[Callback], List[Callback]]
+        :type callbacks: Optional[Union[Callback], List[BaseCallback]]
         """
         super().__init__(
             callbacks=callbacks,

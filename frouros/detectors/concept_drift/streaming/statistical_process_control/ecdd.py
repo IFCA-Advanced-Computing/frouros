@@ -4,15 +4,15 @@ from typing import List, Optional, Union
 
 import numpy as np  # type: ignore
 
-from frouros.callbacks import Callback
+from frouros.callbacks.base import BaseCallback
 from frouros.detectors.concept_drift.streaming.statistical_process_control.base import (
-    SPCBase,
-    ECDDBaseConfig,
+    BaseSPC,
+    BaseECDDConfig,
 )
 from frouros.utils.stats import EWMA, Mean
 
 
-class ECDDWTConfig(ECDDBaseConfig):
+class ECDDWTConfig(BaseECDDConfig):
     """ECDDWT (EWMA Concept Drift Detection Warning) [ross2012exponentially]_ configuration.
 
     :References:
@@ -23,7 +23,7 @@ class ECDDWTConfig(ECDDBaseConfig):
     """
 
 
-class ECDDWT(SPCBase):
+class ECDDWT(BaseSPC):
     """ECDDWT (EWMA Concept Drift Detection Warning) [ross2012exponentially]_ detector.
 
     :References:
@@ -38,14 +38,14 @@ class ECDDWT(SPCBase):
     def __init__(
         self,
         config: Optional[ECDDWTConfig] = None,
-        callbacks: Optional[Union[Callback, List[Callback]]] = None,
+        callbacks: Optional[Union[BaseCallback, List[BaseCallback]]] = None,
     ) -> None:
         """Init method.
 
         :param config: configuration parameters
         :type config: Optional[ECDDWTConfig]
         :param callbacks: callbacks
-        :type callbacks: Optional[Union[Callback, List[Callback]]]
+        :type callbacks: Optional[Union[Callback, List[BaseCallback]]]
         """
         super().__init__(
             config=config,  # type: ignore

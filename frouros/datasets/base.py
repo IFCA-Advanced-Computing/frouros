@@ -1,10 +1,10 @@
-"""Dataset base module."""
+"""Base dataset module."""
 
 import abc
 import tempfile
-from typing import Any, List, Optional, Union
 import urllib.parse
 from pathlib import Path
+from typing import Any, List, Optional, Union
 
 import numpy as np  # type: ignore
 import requests
@@ -17,7 +17,7 @@ from frouros.datasets.exceptions import (
 from frouros.utils.logger import logger
 
 
-class Dataset(abc.ABC):
+class BaseDatasetDownload(abc.ABC):
     """Abstract class representing a downloadable dataset."""
 
     def __init__(
@@ -175,7 +175,7 @@ class Dataset(abc.ABC):
         )
 
 
-class Generator(abc.ABC):
+class BaseDatasetGenerator(abc.ABC):
     """Abstract class representing a dataset generator."""
 
     def __init__(self, seed: Optional[int] = None) -> None:

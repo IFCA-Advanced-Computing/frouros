@@ -1,4 +1,4 @@
-"""Data drift statistical test base module."""
+"""Base data drift statistical test module."""
 
 import abc
 from collections import namedtuple
@@ -6,13 +6,12 @@ from typing import Tuple
 
 import numpy as np  # type: ignore
 
-from frouros.detectors.data_drift.batch.base import DataDriftBatchBase
-
+from frouros.detectors.data_drift.batch.base import BaseDataDriftBatch
 
 StatisticalResult = namedtuple("StatisticalResult", ["statistic", "p_value"])
 
 
-class StatisticalTestBase(DataDriftBatchBase):
+class BaseStatisticalTest(BaseDataDriftBatch):
     """Abstract class representing a statistical test."""
 
     def _apply_method(

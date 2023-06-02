@@ -2,10 +2,10 @@
 
 from typing import Callable, Tuple
 
-import pytest  # type: ignore
 import numpy as np  # type: ignore
+import pytest  # type: ignore
 
-from frouros.detectors.concept_drift.base import ConceptDriftBase
+from frouros.detectors.concept_drift import ADWIN, ADWINConfig, KSWIN, KSWINConfig
 from frouros.detectors.concept_drift import (
     CUSUM,
     CUSUMConfig,
@@ -30,8 +30,7 @@ from frouros.detectors.concept_drift import (
     STEPD,
     STEPDConfig,
 )
-from frouros.detectors.concept_drift import ADWIN, ADWINConfig, KSWIN, KSWINConfig
-
+from frouros.detectors.concept_drift.base import BaseConceptDrift
 
 MIN_NUM_INSTANCES = 30
 CUMSUM_ARGS = {
@@ -204,7 +203,7 @@ detectors = [
 def test_streaming_detector_normal(
     clf_dataset: Tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray],
     train_prediction_normal: np.ndarray,
-    detector_info: Tuple[ConceptDriftBase, Callable],
+    detector_info: Tuple[BaseConceptDrift, Callable],
 ) -> None:
     """Test streaming detector.
 
@@ -214,7 +213,7 @@ def test_streaming_detector_normal(
     :param train_prediction_normal: test prediction values
     :type train_prediction_normal: numpy.ndarray
     :param detector_info: concept drift detector and value function
-    :type detector_info: Tuple[ConceptDriftBase, Callable]
+    :type detector_info: Tuple[BaseConceptDrift, Callable]
     """
     _, _, _, y_test = clf_dataset
     y_pred = train_prediction_normal  # noqa: N806

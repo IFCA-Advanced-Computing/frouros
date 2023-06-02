@@ -1,36 +1,36 @@
-"""Data drift batch base module."""
+"""Base data drift batch module."""
 
 import abc
-
 from typing import Any, Dict, Optional, List, Tuple, Union
+
 import numpy as np  # type: ignore
 
-from frouros.callbacks import Callback
+from frouros.callbacks.base import BaseCallback
 from frouros.detectors.data_drift.base import (
-    DataDriftBase,
-    DataTypeBase,
-    ResultBase,
-    StatisticalTypeBase,
+    BaseDataDrift,
+    BaseDataType,
+    BaseResult,
+    BaseStatisticalType,
 )
 
 
-class DataDriftStreamingBase(DataDriftBase):
+class BaseDataDriftStreaming(BaseDataDrift):
     """Abstract class representing a data drift streaming detector."""
 
     def __init__(
         self,
-        data_type: DataTypeBase,
-        statistical_type: StatisticalTypeBase,
-        callbacks: Optional[Union[Callback, List[Callback]]] = None,
+        data_type: BaseDataType,
+        statistical_type: BaseStatisticalType,
+        callbacks: Optional[Union[BaseCallback, List[BaseCallback]]] = None,
     ) -> None:
         """Init method.
 
         :param data_type: data type
-        :type data_type: DataTypeBase
+        :type data_type: BaseDataType
         :param statistical_type: statistical type
-        :type statistical_type: StatisticalTypeBase
+        :type statistical_type: BaseStatisticalType
         :param callbacks: callbacks
-        :type callbacks: Optional[Union[Callback], List[Callback]]
+        :type callbacks: Optional[Union[Callback], List[BaseCallback]]
         """
         super().__init__(
             callbacks=callbacks,
@@ -49,13 +49,13 @@ class DataDriftStreamingBase(DataDriftBase):
 
     def update(
         self, value: Union[int, float]
-    ) -> Tuple[Optional[ResultBase], Dict[str, Any]]:
+    ) -> Tuple[Optional[BaseResult], Dict[str, Any]]:
         """Update detector.
 
         :param value: value to use to update the detector
         :type value: Union[int, float]
         :return: update result
-        :rtype: Optional[ResultBase]
+        :rtype: Optional[BaseResult]
         """
         self._common_checks()  # noqa: N806
         self._specific_checks(X=value)  # noqa: N806
@@ -85,5 +85,5 @@ class DataDriftStreamingBase(DataDriftBase):
         pass
 
     @abc.abstractmethod
-    def _update(self, value: Union[int, float]) -> Optional[ResultBase]:
+    def _update(self, value: Union[int, float]) -> Optional[BaseResult]:
         pass

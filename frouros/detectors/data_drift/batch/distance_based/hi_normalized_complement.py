@@ -4,13 +4,13 @@ from typing import List, Optional, Union
 
 import numpy as np  # type: ignore
 
-from frouros.callbacks import Callback
+from frouros.callbacks.base import BaseCallback
 from frouros.detectors.data_drift.batch.distance_based.base import (
-    DistanceBinsBasedBase,
+    BaseDistanceBasedBins,
 )
 
 
-class HINormalizedComplement(DistanceBinsBasedBase):
+class HINormalizedComplement(BaseDistanceBasedBins):
     """HI (Histogram intersection) normalized complement [swain1991color]_ detector.
 
     :References:
@@ -23,14 +23,14 @@ class HINormalizedComplement(DistanceBinsBasedBase):
     def __init__(
         self,
         num_bins: int = 10,
-        callbacks: Optional[Union[Callback, List[Callback]]] = None,
+        callbacks: Optional[Union[BaseCallback, List[BaseCallback]]] = None,
     ) -> None:
         """Init method.
 
         :param num_bins: number of bins in which to divide probabilities
         :type num_bins: int
         :param callbacks: callbacks
-        :type callbacks: Optional[Union[Callback, List[Callback]]]
+        :type callbacks: Optional[Union[BaseCallback, List[Callback]]]
         """
         super().__init__(
             statistical_method=self._hi_normalized_complement,

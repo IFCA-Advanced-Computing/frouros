@@ -1,20 +1,19 @@
-"""Concept drift streaming base module."""
+"""Base concept drift streaming module."""
 
 import abc
-
 from typing import Union
 
 from frouros.detectors.concept_drift.base import (
-    ConceptDriftBase,
-    ConceptDriftBaseConfig,
+    BaseConceptDrift,
+    BaseConceptDriftConfig,
 )
 
 
-class ConceptDriftStreamingBaseConfig(ConceptDriftBaseConfig):
+class BaseConceptDriftStreamingConfig(BaseConceptDriftConfig):
     """Abstract class representing a concept drift streaming configuration class."""
 
 
-class ConceptDriftStreamingBase(ConceptDriftBase):
+class BaseConceptDriftStreaming(BaseConceptDrift):
     """Abstract class representing a concept drift streaming detector."""
 
     @abc.abstractmethod

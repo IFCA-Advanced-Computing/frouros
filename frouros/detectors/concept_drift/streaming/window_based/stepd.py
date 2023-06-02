@@ -5,15 +5,15 @@ from typing import List, Optional, Union
 import numpy as np  # type: ignore
 from scipy.stats import norm  # type: ignore
 
-from frouros.callbacks import Callback
+from frouros.callbacks.base import BaseCallback
 from frouros.detectors.concept_drift.streaming.window_based.base import (
-    WindowBaseConfig,
-    WindowBased,
+    BaseWindowConfig,
+    BaseWindow,
 )
 from frouros.utils.data_structures import AccuracyQueue
 
 
-class STEPDConfig(WindowBaseConfig):
+class STEPDConfig(BaseWindowConfig):
     """STEPD (Statistical test of equal proportions) [nishida2007detecting]_ configuration.
 
     :References:
@@ -88,7 +88,7 @@ class STEPDConfig(WindowBaseConfig):
         self._alpha_w = value
 
 
-class STEPD(WindowBased):
+class STEPD(BaseWindow):
     """STEPD (Statistical test of equal proportions) [nishida2007detecting]_ detector.
 
     :References:
@@ -103,14 +103,14 @@ class STEPD(WindowBased):
     def __init__(
         self,
         config: Optional[STEPDConfig] = None,
-        callbacks: Optional[Union[Callback, List[Callback]]] = None,
+        callbacks: Optional[Union[BaseCallback, List[BaseCallback]]] = None,
     ) -> None:
         """Init method.
 
         :param config: configuration parameters
         :type config: Optional[STEPDConfig]
         :param callbacks: callbacks
-        :type callbacks: Optional[Union[Callback, List[Callback]]]
+        :type callbacks: Optional[Union[BaseCallback, List[Callback]]]
         """
         super().__init__(
             config=config,

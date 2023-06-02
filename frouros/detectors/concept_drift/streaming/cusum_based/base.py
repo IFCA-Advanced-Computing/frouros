@@ -1,17 +1,17 @@
-"""Concept drift CUSUM based base module."""
+"""Base concept drift CUSUM based module."""
 
 import abc
 from typing import List, Optional, Union
 
-from frouros.callbacks import Callback
+from frouros.callbacks.base import BaseCallback
 from frouros.detectors.concept_drift.streaming.base import (
-    ConceptDriftStreamingBase,
-    ConceptDriftStreamingBaseConfig,
+    BaseConceptDriftStreaming,
+    BaseConceptDriftStreamingConfig,
 )
 from frouros.utils.stats import Mean
 
 
-class CUSUMBaseConfig(ConceptDriftStreamingBaseConfig):
+class BaseCUSUMConfig(BaseConceptDriftStreamingConfig):
     """Class representing a CUSUM based configuration class."""
 
     def __init__(
@@ -124,22 +124,22 @@ class AlphaConfig:
         self._alpha = value
 
 
-class CUSUMBase(ConceptDriftStreamingBase):
+class BaseCUSUM(BaseConceptDriftStreaming):
     """CUSUM based algorithm class."""
 
-    config_type = CUSUMBaseConfig
+    config_type = BaseCUSUMConfig
 
     def __init__(
         self,
-        config: Optional[CUSUMBaseConfig] = None,
-        callbacks: Optional[Union[Callback, List[Callback]]] = None,
+        config: Optional[BaseCUSUMConfig] = None,
+        callbacks: Optional[Union[BaseCallback, List[BaseCallback]]] = None,
     ) -> None:
         """Init method.
 
         :param config: configuration parameters
-        :type config: Optional[CUSUMBaseConfig]
+        :type config: Optional[BaseCUSUMConfig]
         :param callbacks: callbacks
-        :type callbacks: Optional[Union[Callback, List[Callback]]]
+        :type callbacks: Optional[Union[BaseCallback, List[Callback]]]
         """
         super().__init__(
             config=config,

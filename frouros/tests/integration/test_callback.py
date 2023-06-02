@@ -29,9 +29,9 @@ from frouros.detectors.concept_drift import (
     RDDM,
     STEPD,
 )
-from frouros.detectors.concept_drift.base import ConceptDriftBase
+from frouros.detectors.concept_drift.base import BaseConceptDrift
 from frouros.detectors.concept_drift.streaming.statistical_process_control.base import (
-    SPCBase,
+    BaseSPC,
 )
 from frouros.detectors.data_drift.batch import (
     BhattacharyyaDistance,
@@ -46,7 +46,7 @@ from frouros.detectors.data_drift.batch import (
     PSI,
     WelchTTest,
 )
-from frouros.detectors.data_drift.batch.base import DataDriftBatchBase
+from frouros.detectors.data_drift.batch.base import BaseDataDriftBatch
 from frouros.detectors.data_drift.streaming import MMD as MMDStreaming  # noqa: N811
 
 
@@ -66,7 +66,7 @@ from frouros.detectors.data_drift.streaming import MMD as MMDStreaming  # noqa: 
 def test_batch_permutation_test_data_univariate_different_distribution(
     X_ref_univariate: np.ndarray,  # noqa: N803
     X_test_univariate: np.ndarray,
-    detector_class: DataDriftBatchBase,
+    detector_class: BaseDataDriftBatch,
     expected_distance: float,
     expected_p_value: float,
 ) -> None:
@@ -77,7 +77,7 @@ def test_batch_permutation_test_data_univariate_different_distribution(
     :param X_test_univariate: test univariate data
     :type X_test_univariate: numpy.ndarray
     :param detector_class: detector distance
-    :type detector_class: DataDriftBatchBase
+    :type detector_class: BaseDataDriftBatch
     :param expected_distance: expected distance value
     :type expected_distance: float
     :param expected_p_value: expected p-value value
@@ -114,7 +114,7 @@ def test_batch_permutation_test_data_univariate_different_distribution(
 def test_batch_reset_on_data_drift(
     X_ref_univariate,  # noqa: N803
     X_test_univariate,
-    detector_class: DataDriftBatchBase,
+    detector_class: BaseDataDriftBatch,
     mocker,
 ) -> None:
     """Test batch reset on data drift callback.
@@ -124,9 +124,9 @@ def test_batch_reset_on_data_drift(
     :param X_test_univariate: test univariate data
     :type X_test_univariate: numpy.ndarray
     :param detector_class: detector distance
-    :type detector_class: DataDriftBatchBase
+    :type detector_class: BaseDataDriftBatch
     """
-    mocker.patch("frouros.detectors.data_drift.batch.base.DataDriftBatchBase.reset")
+    mocker.patch("frouros.detectors.data_drift.batch.base.BaseDataDriftBatch.reset")
 
     detector = detector_class(  # type: ignore
         callbacks=[
@@ -159,14 +159,14 @@ def test_batch_reset_on_data_drift(
 )
 def test_streaming_history_on_concept_drift(
     model_errors: List[int],
-    detector_class: ConceptDriftBase,
+    detector_class: BaseConceptDrift,
 ):
     """Test streaming history on concept drift callback.
 
     :param model_errors: model errors
     :type model_errors: List[int]
     :param detector_class: concept drift detector
-    :type detector_class: ConceptDriftBase
+    :type detector_class: BaseConceptDrift
     """
     name = "history"
     detector = detector_class(callbacks=History(name=name))  # type: ignore
@@ -199,7 +199,7 @@ def _fit_model(model, X, y):  # noqa: N803
 def test_streaming_warning_samples_buffer_on_concept_drift(
     dataset_simple: Tuple[Tuple[np.ndarray, np.ndarray], Tuple[np.ndarray, np.ndarray]],
     model: sklearn.pipeline.Pipeline,
-    detector_class: SPCBase,
+    detector_class: BaseSPC,
 ):
     """Test streaming warning samples buffer on concept drift callback.
 
@@ -208,7 +208,7 @@ def test_streaming_warning_samples_buffer_on_concept_drift(
     :param model: trained model
     :type model: sklearn.pipeline.Pipeline
     :param detector_class: concept drift detector
-    :type detector_class: SPCBase
+    :type detector_class: BaseSPC
     """
     _, test = dataset_simple  # noqa: N806
 
@@ -253,7 +253,7 @@ def test_streaming_warning_samples_buffer_on_concept_drift(
 def test_streaming_msprt_multivariate_different_distribution(
     X_ref_multivariate: np.ndarray,  # noqa: N803
     X_test_multivariate: np.ndarray,
-    detector_class: DataDriftBatchBase,
+    detector_class: BaseDataDriftBatch,
     expected_drift_idx: int,
     expected_distance_mean: float,
     expected_p_value: float,
@@ -266,7 +266,7 @@ def test_streaming_msprt_multivariate_different_distribution(
     :param X_test_multivariate: test multivariate data
     :type X_test_multivariate: numpy.ndarray
     :param detector_class: detector distance
-    :type detector_class: DataDriftBatchBase
+    :type detector_class: BaseDataDriftBatch
     :param expected_drift_idx: expected drift index
     :type expected_drift_idx: int
     :param expected_distance_mean: expected distance mean value

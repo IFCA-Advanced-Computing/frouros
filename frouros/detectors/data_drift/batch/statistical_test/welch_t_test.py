@@ -5,15 +5,15 @@ from typing import Optional, List, Union
 import numpy as np  # type: ignore
 from scipy.stats import ttest_ind  # type: ignore
 
-from frouros.callbacks import Callback
+from frouros.callbacks.base import BaseCallback
 from frouros.detectors.data_drift.base import NumericalData, UnivariateData
 from frouros.detectors.data_drift.batch.statistical_test.base import (
-    StatisticalTestBase,
+    BaseStatisticalTest,
     StatisticalResult,
 )
 
 
-class WelchTTest(StatisticalTestBase):
+class WelchTTest(BaseStatisticalTest):
     """Welch's T-test [welch1947generalization]_ detector.
 
     :References:
@@ -25,12 +25,12 @@ class WelchTTest(StatisticalTestBase):
     """
 
     def __init__(
-        self, callbacks: Optional[Union[Callback, List[Callback]]] = None
+        self, callbacks: Optional[Union[BaseCallback, List[BaseCallback]]] = None
     ) -> None:
         """Init method.
 
         :param callbacks: callbacks
-        :type callbacks: Optional[Union[Callback, List[Callback]]]
+        :type callbacks: Optional[Union[Callback, List[BaseCallback]]]
         """
         super().__init__(
             data_type=NumericalData(),

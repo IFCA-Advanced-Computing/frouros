@@ -5,14 +5,14 @@ from typing import Any, Dict, List, Optional, Union
 import numpy as np  # type: ignore
 from scipy.special import rel_entr  # type: ignore
 
-from frouros.callbacks import Callback
+from frouros.callbacks.base import BaseCallback
 from frouros.detectors.data_drift.batch.distance_based.base import (
-    DistanceProbabilityBasedBase,
+    BaseDistanceBasedProbability,
     DistanceResult,
 )
 
 
-class KL(DistanceProbabilityBasedBase):
+class KL(BaseDistanceBasedProbability):
     """KL (Kullback-Leibler divergence) [kullback1951information]_ detector.
 
     :References:
@@ -25,7 +25,7 @@ class KL(DistanceProbabilityBasedBase):
     def __init__(
         self,
         num_bins: int = 10,
-        callbacks: Optional[Union[Callback, List[Callback]]] = None,
+        callbacks: Optional[Union[BaseCallback, List[BaseCallback]]] = None,
         **kwargs,
     ) -> None:
         """Init method.
@@ -33,7 +33,7 @@ class KL(DistanceProbabilityBasedBase):
         :param num_bins: number of bins in which to divide probabilities
         :type num_bins: int
         :param callbacks: number of bins in which to divide probabilities
-        :type callbacks: Optional[Union[Callback, List[Callback]]]
+        :type callbacks: Optional[Union[BaseCallback, List[Callback]]]
         """
         super().__init__(
             statistical_method=self._kl,
@@ -64,7 +64,7 @@ class KL(DistanceProbabilityBasedBase):
         (  # noqa: N806
             X_ref_rvs,
             X_rvs,
-        ) = DistanceProbabilityBasedBase._calculate_probabilities(
+        ) = BaseDistanceBasedProbability._calculate_probabilities(
             X_ref=X,
             X=Y,
             num_bins=num_bins,

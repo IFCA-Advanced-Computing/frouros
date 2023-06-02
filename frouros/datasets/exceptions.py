@@ -1,4 +1,4 @@
-"""Dataset exception module."""
+"""BaseDatasetDownload exception module."""
 
 
 class DownloadError(Exception):

@@ -1,4 +1,4 @@
-"""Data drift batch distance based base module."""
+"""Base data drift batch distance based module."""
 
 import abc
 from collections import namedtuple
@@ -7,38 +7,37 @@ from typing import Any, Callable, Dict, Optional, List, Tuple, Union
 import numpy as np  # type: ignore
 from scipy.stats import rv_histogram  # type: ignore
 
-from frouros.callbacks import Callback
+from frouros.callbacks.base import BaseCallback
 from frouros.detectors.data_drift.base import (
     NumericalData,
-    StatisticalTypeBase,
+    BaseStatisticalType,
     UnivariateData,
 )
-from frouros.detectors.data_drift.batch.base import DataDriftBatchBase
-
+from frouros.detectors.data_drift.batch.base import BaseDataDriftBatch
 
 DistanceResult = namedtuple("DistanceResult", ["distance"])
 
 
-class DistanceBasedBase(DataDriftBatchBase):
+class BaseDistanceBased(BaseDataDriftBatch):
     """Abstract class representing a distance based detector."""
 
     def __init__(
         self,
-        statistical_type: StatisticalTypeBase,
+        statistical_type: BaseStatisticalType,
         statistical_method: Callable,
         statistical_kwargs: Dict[str, Any],
-        callbacks: Optional[Union[Callback, List[Callback]]] = None,
+        callbacks: Optional[Union[BaseCallback, List[BaseCallback]]] = None,
     ) -> None:
         """Init method.
 
         :param statistical_type: statistical type
-        :type statistical_type: StatisticalTypeBase
+        :type statistical_type: BaseStatisticalType
         :param statistical_method: statistical method
         :type statistical_method: Callable
         :param statistical_kwargs: statistical kwargs
         :type statistical_kwargs: Dict[str, Any]
         :param callbacks: callbacks
-        :type callbacks: Optional[Union[Callback, List[Callback]]]
+        :type callbacks: Optional[Union[BaseCallback, List[BaseCallback]]]
         """
         super().__init__(
             data_type=NumericalData(),
@@ -113,14 +112,14 @@ class DistanceBasedBase(DataDriftBatchBase):
         pass
 
 
-class DistanceBinsBasedBase(DistanceBasedBase):
-    """Abstract class representing a distance bins based detector."""
+class BaseDistanceBasedBins(BaseDistanceBased):
+    """Abstract class representing a distance based bins detector."""
 
     def __init__(
         self,
         statistical_method,
         statistical_kwargs,
-        callbacks: Optional[Union[Callback, List[Callback]]] = None,
+        callbacks: Optional[Union[BaseCallback, List[BaseCallback]]] = None,
         num_bins: int = 10,
     ) -> None:
         """Init method.
@@ -130,7 +129,7 @@ class DistanceBinsBasedBase(DistanceBasedBase):
         :param statistical_kwargs: statistical kwargs
         :type statistical_kwargs: Dict[str, Any]
         :param callbacks: callbacks
-        :type callbacks: Optional[Union[Callback, List[Callback]]]
+        :type callbacks: Optional[Union[BaseCallback, List[Callback]]]
         :param num_bins: number of bins in which to divide probabilities
         :type num_bins: int
         """
@@ -195,14 +194,14 @@ class DistanceBinsBasedBase(DistanceBasedBase):
         pass
 
 
-class DistanceProbabilityBasedBase(DistanceBasedBase):
-    """Abstract class representing a distance probability based detector."""
+class BaseDistanceBasedProbability(BaseDistanceBased):
+    """Abstract class representing a distance based probability detector."""
 
     def __init__(
         self,
         statistical_method,
         statistical_kwargs,
-        callbacks: Optional[Union[Callback, List[Callback]]] = None,
+        callbacks: Optional[Union[BaseCallback, List[BaseCallback]]] = None,
         num_bins: int = 10,
     ) -> None:
         """Init method.
@@ -212,7 +211,7 @@ class DistanceProbabilityBasedBase(DistanceBasedBase):
         :param statistical_kwargs: statistical kwargs
         :type statistical_kwargs: Dict[str, Any]
         :param callbacks: callbacks
-        :type callbacks: Optional[Union[Callback, List[Callback]]]
+        :type callbacks: Optional[Union[Callback, List[BaseCallback]]]
         :param num_bins: number of bins in which to divide probabilities
         :type num_bins: int
         """

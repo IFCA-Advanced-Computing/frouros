@@ -5,15 +5,15 @@ from typing import List, Optional, Tuple, Union
 
 import numpy as np  # type: ignore
 
-from frouros.callbacks import Callback
+from frouros.callbacks.base import BaseCallback
 from frouros.detectors.concept_drift.streaming.statistical_process_control.base import (
-    SPCBaseConfig,
-    SPCBase,
+    BaseSPCConfig,
+    BaseSPC,
 )
 from frouros.utils.stats import EWMA, Mean
 
 
-class HDDMBaseConfig(SPCBaseConfig):
+class BaseHDDMConfig(BaseSPCConfig):
     """HDDM (Hoeffding's drift detection method) [frias2014online]_ configuration.
 
     :References:
@@ -113,7 +113,7 @@ class HDDMBaseConfig(SPCBaseConfig):
         self._two_sided_test = value
 
 
-class HDDMAConfig(HDDMBaseConfig):
+class HDDMAConfig(BaseHDDMConfig):
     """HDDM-A (Hoeffding's drift detection method A-Test) [frias2014online]_ configuration.
 
     :References:
@@ -125,7 +125,7 @@ class HDDMAConfig(HDDMBaseConfig):
     """
 
 
-class HDDMWConfig(HDDMBaseConfig):
+class HDDMWConfig(BaseHDDMConfig):
     """HDDM-W (Hoeffding's drift detection method W-Test) [frias2014online]_ configuration.
 
     :References:
@@ -318,7 +318,7 @@ class HoeffdingTwoSidedTest(HoeffdingOneSidedTest):
             self.y = copy.deepcopy(self.z)
 
 
-class HDDMA(SPCBase):
+class HDDMA(BaseSPC):
     """HDDM-A (Hoeffding's drift detection method with A-Test) [frias2014online]_ detector.
 
     :References:
@@ -334,14 +334,14 @@ class HDDMA(SPCBase):
     def __init__(
         self,
         config: Optional[HDDMAConfig] = None,
-        callbacks: Optional[Union[Callback, List[Callback]]] = None,
+        callbacks: Optional[Union[BaseCallback, List[BaseCallback]]] = None,
     ) -> None:
         """Init method.
 
         :param config: configuration parameters
         :type config: Optional[HDDMAConfig]
         :param callbacks: callbacks
-        :type callbacks: Optional[Union[Callback, List[Callback]]]
+        :type callbacks: Optional[Union[BaseCallback, List[Callback]]]
         """
         super().__init__(
             config=config,
@@ -614,7 +614,7 @@ class McDiarmidTwoSidedTest(McDiarmidOneSidedTest):
             self.sample_decrease_2.update(value=value)
 
 
-class HDDMW(SPCBase):
+class HDDMW(BaseSPC):
     """HDDM-W (Hoeffding's drift detection method with W-Test) [frias2014online]_ detector.
 
     :References:
@@ -630,14 +630,14 @@ class HDDMW(SPCBase):
     def __init__(
         self,
         config: Optional[HDDMWConfig] = None,
-        callbacks: Optional[Union[Callback, List[Callback]]] = None,
+        callbacks: Optional[Union[BaseCallback, List[BaseCallback]]] = None,
     ) -> None:
         """Init method.
 
         :param config: configuration parameters
         :type config: Optional[HDDMWConfig]
         :param callbacks: callbacks
-        :type callbacks: Optional[Union[Callback, List[Callback]]]
+        :type callbacks: Optional[Union[BaseCallback, List[Callback]]]
         """
         super().__init__(
             config=config,

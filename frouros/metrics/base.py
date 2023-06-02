@@ -1,4 +1,4 @@
-"""Metrics base module."""
+"""Base metrics module."""
 
 import abc
 from typing import Optional

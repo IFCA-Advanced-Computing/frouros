@@ -9,11 +9,11 @@ from typing import Any, Callable, Dict, Optional, List, Union
 import numpy as np  # type: ignore
 from tqdm import tqdm  # type: ignore
 
-from frouros.utils.logger import logger
 from frouros.utils.data_structures import CircularQueue
+from frouros.utils.logger import logger
 
 
-class Stat(abc.ABC):
+class BaseStat(abc.ABC):
     """Abstract class representing an statistic."""
 
     @abc.abstractmethod
@@ -21,7 +21,7 @@ class Stat(abc.ABC):
         """Get method."""
 
 
-class IncrementalStat(Stat):
+class IncrementalStat(BaseStat):
     """Abstract class representing an incremental statistic."""
 
     @abc.abstractmethod

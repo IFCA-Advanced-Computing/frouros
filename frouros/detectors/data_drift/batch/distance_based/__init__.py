@@ -6,8 +6,8 @@ from .hellinger_distance import HellingerDistance
 from .hi_normalized_complement import HINormalizedComplement
 from .js import JS
 from .kl import KL
-from .psi import PSI
 from .mmd import MMD
+from .psi import PSI
 
 __all__ = [
     "BhattacharyyaDistance",

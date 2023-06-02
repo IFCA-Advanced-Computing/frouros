@@ -5,15 +5,15 @@ from typing import Optional, List, Union
 import numpy as np  # type: ignore
 from scipy.stats import ks_2samp  # type: ignore
 
-from frouros.callbacks import Callback
+from frouros.callbacks.base import BaseCallback
 from frouros.detectors.data_drift.base import NumericalData, UnivariateData
 from frouros.detectors.data_drift.batch.statistical_test.base import (
-    StatisticalTestBase,
+    BaseStatisticalTest,
     StatisticalResult,
 )
 
 
-class KSTest(StatisticalTestBase):
+class KSTest(BaseStatisticalTest):
     """KSTest (Kolmogorov-Smirnov test) [massey1951kolmogorov]_ detector.
 
     :References:
@@ -24,12 +24,12 @@ class KSTest(StatisticalTestBase):
     """
 
     def __init__(
-        self, callbacks: Optional[Union[Callback, List[Callback]]] = None
+        self, callbacks: Optional[Union[BaseCallback, List[BaseCallback]]] = None
     ) -> None:
         """Init method.
 
         :param callbacks: callbacks
-        :type callbacks: Optional[Union[Callback, List[Callback]]]
+        :type callbacks: Optional[Union[BaseCallback, List[Callback]]]
         """
         super().__init__(
             data_type=NumericalData(),

@@ -2,11 +2,11 @@
 
 from typing import Any, Dict, List, Optional, Union
 
-from frouros.callbacks.streaming.base import StreamingCallback
-from frouros.utils.stats import Stat
+from frouros.callbacks.streaming.base import BaseCallbackStreaming
+from frouros.utils.stats import BaseStat
 
 
-class History(StreamingCallback):
+class History(BaseCallbackStreaming):
     """History callback class."""
 
     def __init__(self, name: Optional[str] = None) -> None:
@@ -49,7 +49,7 @@ class History(StreamingCallback):
             #  add_addtional_vars is called (avoid the same computation)
             self.history[var].append(
                 additional_var.get()
-                if isinstance(additional_var, Stat)
+                if isinstance(additional_var, BaseStat)
                 else additional_var
             )
 
@@ -64,11 +64,11 @@ class History(StreamingCallback):
     #
     #     :raises TypeError: Type error exception
     #     """
-    #     if not isinstance(detector, ConceptDriftBase):
+    #     if not isinstance(detector, BaseConceptDrift):
     #         raise TypeError(
     #             f"callback {self.__class__.name} cannot be used with detector"
     #             f" {detector.__class__name}. Must be used with a detector of "
-    #             f"type ConceptDriftBase."
+    #             f"type BaseConceptDrift."
     #         )
     #     self.detector = detector
 

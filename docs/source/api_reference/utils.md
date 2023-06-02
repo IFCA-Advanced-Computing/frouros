@@ -56,7 +56,6 @@
     :toctree: auto_generated/
     :template: class.md
 
-    Stat
     IncrementalStat
     Mean
     EWMA

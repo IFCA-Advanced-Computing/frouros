@@ -1,13 +1,14 @@
-"""Concept drift base module."""
+"""Base concept drift module."""
 
 import abc
 from typing import Any, Dict, List, Optional, Union
 
-from frouros.callbacks import Callback, History
-from frouros.detectors.base import DetectorBase
+from frouros.callbacks import History
+from frouros.callbacks.base import BaseCallback
+from frouros.detectors.base import BaseDetector
 
 
-class ConceptDriftBaseConfig(abc.ABC):
+class BaseConceptDriftConfig(abc.ABC):
     """Abstract class representing a concept drift configuration class."""
 
     def __init__(
@@ -55,22 +56,22 @@ class ConceptDriftBaseConfig(abc.ABC):
         )
 
 
-class ConceptDriftBase(DetectorBase):
+class BaseConceptDrift(BaseDetector):
     """Abstract class representing a concept drift streaming."""
 
-    config_type = ConceptDriftBaseConfig
+    config_type = BaseConceptDriftConfig
 
     def __init__(
         self,
-        config: Optional[ConceptDriftBaseConfig] = None,
-        callbacks: Optional[Union[Callback, List[Callback]]] = None,
+        config: Optional[BaseConceptDriftConfig] = None,
+        callbacks: Optional[Union[BaseCallback, List[BaseCallback]]] = None,
     ) -> None:
         """Init method.
 
         :param config: configuration parameters
-        :type config: Optional[ConceptDriftBaseConfig]
+        :type config: Optional[BaseConceptDriftConfig]
         :param callbacks: callbacks
-        :type callbacks: Optional[Union[Callback, List[Callback]]]
+        :type callbacks: Optional[Union[BaseCallback, List[Callback]]]
         """
         super().__init__(callbacks=callbacks)
         self.config = config  # type: ignore
@@ -108,20 +109,20 @@ class ConceptDriftBase(DetectorBase):
         self._additional_vars = value if value is not None else {}
 
     @property
-    def config(self) -> ConceptDriftBaseConfig:
+    def config(self) -> BaseConceptDriftConfig:
         """Config property.
 
         :return: configuration parameters of the estimator
-        :rtype: ConceptDriftBaseConfig
+        :rtype: BaseConceptDriftConfig
         """
         return self._config
 
     @config.setter
-    def config(self, value: Optional[ConceptDriftBaseConfig]) -> None:
+    def config(self, value: Optional[BaseConceptDriftConfig]) -> None:
         """Config setter.
 
         :param value: value to be set
-        :type value: ConceptDriftBaseConfig
+        :type value: BaseConceptDriftConfig
         :raises TypeError: Type error exception
         """
         if value is not None:

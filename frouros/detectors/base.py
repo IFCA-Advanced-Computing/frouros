@@ -1,51 +1,54 @@
-"""Detector base module."""
+"""Base detector module."""
 
 import abc
 from typing import Any, Dict, List, Optional, Union
 
 import numpy as np  # type: ignore
 
-from frouros.callbacks import Callback
+from frouros.callbacks.base import BaseCallback
 
 
-class DetectorBase(abc.ABC):
+class BaseDetector(abc.ABC):
     """Abstract class representing a detector."""
 
     def __init__(
         self,
-        callbacks: Optional[Union[Callback, List[Callback]]] = None,
+        callbacks: Optional[Union[BaseCallback, List[BaseCallback]]] = None,
     ) -> None:
         """Init method.
 
         :param callbacks: callbacks
-        :type callbacks: Optional[Union[Callback, List[Callback]]]
+        :type callbacks: Optional[Union[BaseCallback, List[Callback]]]
         """
         self.callbacks = callbacks  # type: ignore
 
     @property
-    def callbacks(self) -> Optional[List[Callback]]:
+    def callbacks(self) -> Optional[List[BaseCallback]]:
         """Callbacks property.
 
         :return: callbacks
-        :rtype: Optional[List[Callback]]
+        :rtype: Optional[List[BaseCallback]]
         """
         return self._callbacks  # type: ignore
 
     @callbacks.setter
-    def callbacks(self, value: Optional[Union[Callback, List[Callback]]]) -> None:
+    def callbacks(
+        self,
+        value: Optional[Union[BaseCallback, List[BaseCallback]]],
+    ) -> None:
         """Callbacks setter.
 
         :param value: value to be set
-        :type value: Optional[Union[Callback, List[Callback]]]
+        :type value: Optional[Union[BaseCallback, List[Callback]]]
         :raises TypeError: Type error exception
         """
         if value is not None:
-            if isinstance(value, Callback):
+            if isinstance(value, BaseCallback):
                 self._callbacks = [value]
             elif not all(
-                isinstance(callback, Callback) for callback in value  # type: ignore
+                isinstance(callback, BaseCallback) for callback in value  # type: ignore
             ):
-                raise TypeError("value must be of type None or a list of Callback.")
+                raise TypeError("value must be of type None or a list of BaseCallback.")
             else:
                 self._callbacks = value  # type: ignore
         else:

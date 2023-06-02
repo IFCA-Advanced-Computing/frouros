@@ -7,16 +7,16 @@
 from typing import Optional, List, Union
 
 import numpy as np  # type: ignore
-from scipy.stats.distributions import kstwo  # type: ignore
 from scipy.stats._stats_py import (  # type: ignore
     _compute_prob_outside_square,
     _compute_outer_prob_inside_method,
 )
+from scipy.stats.distributions import kstwo  # type: ignore
 
-from frouros.callbacks import Callback
+from frouros.callbacks.base import BaseCallback
 from frouros.detectors.data_drift.base import NumericalData, UnivariateData
 from frouros.detectors.data_drift.streaming.statistical_test.base import (
-    StatisticalTestBase,
+    BaseStatisticalTest,
     StatisticalResult,
 )
 from frouros.utils.data_structures import CircularQueue
@@ -27,7 +27,7 @@ from frouros.utils.data_structures import CircularQueue
 MAX_AUTO_N = 10000
 
 
-class IncrementalKSTest(StatisticalTestBase):
+class IncrementalKSTest(BaseStatisticalTest):
     """IncrementalKSTest (Incremental Kolmogorov-Smirnov test) [dos2016fast]_ detector.
 
     :References:
@@ -41,13 +41,13 @@ class IncrementalKSTest(StatisticalTestBase):
 
     def __init__(
         self,
-        callbacks: Optional[Union[Callback, List[Callback]]] = None,
+        callbacks: Optional[Union[BaseCallback, List[BaseCallback]]] = None,
         window_size: int = 10,
     ) -> None:
         """Init method.
 
         :param callbacks: callbacks
-        :type callbacks: Optional[Union[Callback, List[Callback]]]
+        :type callbacks: Optional[Union[BaseCallback, List[Callback]]]
         :param window_size: window size
         :type window_size: int
         """

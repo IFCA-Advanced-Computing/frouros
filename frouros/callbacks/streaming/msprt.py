@@ -4,11 +4,11 @@ from typing import Union, Tuple, Optional
 
 import numpy as np  # type: ignore
 
-from frouros.callbacks.streaming.base import StreamingCallback
+from frouros.callbacks.streaming.base import BaseCallbackStreaming
 from frouros.utils.stats import CircularMean
 
 
-class mSPRT(StreamingCallback):  # noqa: N801 # pylint: disable=invalid-name
+class mSPRT(BaseCallbackStreaming):  # noqa: N801 # pylint: disable=invalid-name
     """mSPRT (mixing Sequentially Probability Ratio Test) callback class.
 
     :References:

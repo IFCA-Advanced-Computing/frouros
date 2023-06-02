@@ -3,13 +3,13 @@
 import numpy as np  # type: ignore
 
 from frouros.detectors.concept_drift.streaming.cusum_based.base import (
-    CUSUMBase,
-    CUSUMBaseConfig,
+    BaseCUSUM,
+    BaseCUSUMConfig,
     DeltaConfig,
 )
 
 
-class CUSUMConfig(CUSUMBaseConfig, DeltaConfig):
+class CUSUMConfig(BaseCUSUMConfig, DeltaConfig):
     """CUSUM [page1954continuous]_ configuration.
 
     :References:
@@ -35,13 +35,13 @@ class CUSUMConfig(CUSUMBaseConfig, DeltaConfig):
         to start looking for changes
         :type min_num_instances: int
         """
-        CUSUMBaseConfig.__init__(
+        BaseCUSUMConfig.__init__(
             self, lambda_=lambda_, min_num_instances=min_num_instances
         )
         DeltaConfig.__init__(self, delta=delta)
 
 
-class CUSUM(CUSUMBase):
+class CUSUM(BaseCUSUM):
     """CUSUM [page1954continuous]_ detector.
 
     :References:

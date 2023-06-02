@@ -6,15 +6,15 @@ from typing import Optional, List, Tuple, Union
 import numpy as np  # type: ignore
 from scipy.stats import chi2_contingency  # type: ignore
 
-from frouros.callbacks import Callback
+from frouros.callbacks.base import BaseCallback
 from frouros.detectors.data_drift.base import CategoricalData, UnivariateData
 from frouros.detectors.data_drift.batch.statistical_test.base import (  # type: ignore
-    StatisticalTestBase,
+    BaseStatisticalTest,
     StatisticalResult,
 )
 
 
-class ChiSquareTest(StatisticalTestBase):
+class ChiSquareTest(BaseStatisticalTest):
     """ChiSquareTest (Chi-square test) [pearson1900x]_ detector.
 
     :References:
@@ -28,12 +28,12 @@ class ChiSquareTest(StatisticalTestBase):
     """
 
     def __init__(
-        self, callbacks: Optional[Union[Callback, List[Callback]]] = None
+        self, callbacks: Optional[Union[BaseCallback, List[BaseCallback]]] = None
     ) -> None:
         """Init method.
 
         :param callbacks: callbacks
-        :type callbacks: Optional[Union[Callback, List[Callback]]]
+        :type callbacks: Optional[Union[Callback, List[BaseCallback]]]
         """
         super().__init__(
             data_type=CategoricalData(),

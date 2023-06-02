@@ -4,10 +4,11 @@ from typing import Optional
 
 import numpy as np  # type: ignore
 from scipy.io import arff  # type: ignore
-from frouros.datasets.base import Dataset
+
+from frouros.datasets.base import BaseDatasetDownload
 
 
-class Elec2(Dataset):
+class Elec2(BaseDatasetDownload):
     """Elec2 dataset [harries1999splice]_.
 
     :References:

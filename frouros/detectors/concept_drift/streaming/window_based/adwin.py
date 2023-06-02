@@ -5,10 +5,10 @@ from typing import List, Optional, Union
 
 import numpy as np  # type: ignore
 
-from frouros.callbacks import Callback
+from frouros.callbacks.base import BaseCallback
 from frouros.detectors.concept_drift.streaming.window_based.base import (
-    WindowBaseConfig,
-    WindowBased,
+    BaseWindowConfig,
+    BaseWindow,
 )
 
 
@@ -152,7 +152,7 @@ class Bucket:
         self.idx -= num_items_deleted
 
 
-class ADWINConfig(WindowBaseConfig):
+class ADWINConfig(BaseWindowConfig):
     """ADWIN (ADaptive WINdowing) [bifet2007learning]_ configuration.
 
     :References:
@@ -279,7 +279,7 @@ class ADWINConfig(WindowBaseConfig):
         self._min_window_size = value
 
 
-class ADWIN(WindowBased):
+class ADWIN(BaseWindow):
     """ADWIN (ADaptive WINdowing) [bifet2007learning]_ detector.
 
     :References:
@@ -295,14 +295,14 @@ class ADWIN(WindowBased):
     def __init__(
         self,
         config: Optional[ADWINConfig] = None,
-        callbacks: Optional[Union[Callback, List[Callback]]] = None,
+        callbacks: Optional[Union[BaseCallback, List[BaseCallback]]] = None,
     ) -> None:
         """Init method.
 
         :param config: configuration parameters
         :type config: Optional[ADWINConfig]
         :param callbacks: callbacks
-        :type callbacks: Optional[Union[Callback, List[Callback]]]
+        :type callbacks: Optional[Union[Callback, List[BaseCallback]]]
         """
         super().__init__(
             config=config,

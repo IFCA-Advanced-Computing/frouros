@@ -5,16 +5,16 @@ from typing import Optional, List, Union
 import numpy as np  # type: ignore
 from scipy.stats import cramervonmises_2samp  # type: ignore
 
-from frouros.callbacks import Callback
+from frouros.callbacks.base import BaseCallback
 from frouros.detectors.data_drift.base import NumericalData, UnivariateData
-from frouros.detectors.data_drift.exceptions import InsufficientSamplesError
 from frouros.detectors.data_drift.batch.statistical_test.base import (
-    StatisticalTestBase,
+    BaseStatisticalTest,
     StatisticalResult,
 )
+from frouros.detectors.data_drift.exceptions import InsufficientSamplesError
 
 
-class CVMTest(StatisticalTestBase):
+class CVMTest(BaseStatisticalTest):
     """CVMTest (Cramér-von Mises test) [cramer1928composition]_ detector.
 
     :References:
@@ -25,12 +25,12 @@ class CVMTest(StatisticalTestBase):
     """
 
     def __init__(
-        self, callbacks: Optional[Union[Callback, List[Callback]]] = None
+        self, callbacks: Optional[Union[BaseCallback, List[BaseCallback]]] = None
     ) -> None:
         """Init method.
 
         :param callbacks: callbacks
-        :type callbacks: Optional[Union[Callback, List[Callback]]]
+        :type callbacks: Optional[Union[Callback, List[BaseCallback]]]
         """
         super().__init__(
             data_type=NumericalData(),
@@ -38,7 +38,7 @@ class CVMTest(StatisticalTestBase):
             callbacks=callbacks,
         )
 
-    @StatisticalTestBase.X_ref.setter  # type: ignore[attr-defined]
+    @BaseStatisticalTest.X_ref.setter  # type: ignore[attr-defined]
     def X_ref(self, value: Optional[np.ndarray]) -> None:  # noqa: N802
         """Reference data setter.
 

@@ -1,20 +1,20 @@
-"""Concept drift SPC (statistical process control) base module."""
+"""Base concept drift SPC (statistical process control) module."""
 
 import abc
 from typing import Dict, List, Optional, Tuple, Union
 
 import numpy as np  # type: ignore
 
-from frouros.callbacks import Callback
-from frouros.detectors.concept_drift.streaming.base import (
-    ConceptDriftStreamingBaseConfig,
-    ConceptDriftStreamingBase,
-)
+from frouros.callbacks.base import BaseCallback
 from frouros.detectors.concept_drift.exceptions import InvalidAverageRunLengthError
+from frouros.detectors.concept_drift.streaming.base import (
+    BaseConceptDriftStreamingConfig,
+    BaseConceptDriftStreaming,
+)
 from frouros.utils.stats import Mean
 
 
-class SPCBaseConfig(ConceptDriftStreamingBaseConfig):
+class BaseSPCConfig(BaseConceptDriftStreamingConfig):
     """Class representing a SPC configuration class."""
 
     def __init__(
@@ -82,22 +82,22 @@ class SPCBaseConfig(ConceptDriftStreamingBaseConfig):
         self._warning_level = value
 
 
-class SPCBase(ConceptDriftStreamingBase):
+class BaseSPC(BaseConceptDriftStreaming):
     """Abstract class representing an SPC estimator."""
 
-    config_type = SPCBaseConfig
+    config_type = BaseSPCConfig
 
     def __init__(
         self,
-        config: Optional[SPCBaseConfig] = None,
-        callbacks: Optional[Union[Callback, List[Callback]]] = None,
+        config: Optional[BaseSPCConfig] = None,
+        callbacks: Optional[Union[BaseCallback, List[BaseCallback]]] = None,
     ) -> None:
         """Init method.
 
         :param config: configuration parameters
-        :type config: Optional[SPCBaseConfig]
+        :type config: Optional[BaseSPCConfig]
         :param callbacks: callbacks
-        :type callbacks: Optional[Union[Callback, List[Callback]]]
+        :type callbacks: Optional[Union[Callback, List[BaseCallback]]]
         """
         super().__init__(
             config=config,
@@ -145,22 +145,22 @@ class SPCBase(ConceptDriftStreamingBase):
         pass
 
 
-class SPCErrorBase(SPCBase):
+class BaseSPCError(BaseSPC):
     """Abstract class representing a SPC error estimator."""
 
-    config_type = SPCBaseConfig
+    config_type = BaseSPCConfig
 
     def __init__(
         self,
-        config: Optional[SPCBaseConfig] = None,
-        callbacks: Optional[Union[Callback, List[Callback]]] = None,
+        config: Optional[BaseSPCConfig] = None,
+        callbacks: Optional[Union[BaseCallback, List[BaseCallback]]] = None,
     ) -> None:
         """Init method.
 
         :param config: configuration parameters
-        :type config: Optional[SPCBaseConfig]
+        :type config: Optional[BaseSPCConfig]
         :param callbacks: callbacks
-        :type callbacks: Optional[Union[Callback, List[Callback]]]
+        :type callbacks: Optional[Union[Callback, List[BaseCallback]]]
         """
         super().__init__(
             config=config,
@@ -273,7 +273,7 @@ class SPCErrorBase(SPCBase):
         pass
 
 
-class ECDDBaseConfig(ConceptDriftStreamingBaseConfig):
+class BaseECDDConfig(BaseConceptDriftStreamingConfig):
     """Class representing a ECDD configuration class."""
 
     average_run_length_map = {

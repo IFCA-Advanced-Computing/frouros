@@ -2,16 +2,16 @@
 
 from typing import List, Optional, Union
 
-from frouros.callbacks import Callback
+from frouros.callbacks.base import BaseCallback
 from frouros.detectors.concept_drift.streaming.statistical_process_control.base import (
-    SPCBaseConfig,
-    SPCErrorBase,
+    BaseSPCConfig,
+    BaseSPCError,
 )
 from frouros.utils.data_structures import CircularQueue
 from frouros.utils.stats import Mean
 
 
-class RDDMConfig(SPCBaseConfig):
+class RDDMConfig(BaseSPCConfig):
     """RDDM (Reactive Drift detection method) [barros2017rddm]_ configuration.
 
     :References:
@@ -110,7 +110,7 @@ class RDDMConfig(SPCBaseConfig):
         self._max_num_instances_warning = value
 
 
-class RDDM(SPCErrorBase):
+class RDDM(BaseSPCError):
     """RDDM (Reactive Drift detection method) [barros2017rddm]_ detector.
 
     :References:
@@ -125,14 +125,14 @@ class RDDM(SPCErrorBase):
     def __init__(
         self,
         config: Optional[RDDMConfig] = None,
-        callbacks: Optional[Union[Callback, List[Callback]]] = None,
+        callbacks: Optional[Union[BaseCallback, List[BaseCallback]]] = None,
     ) -> None:
         """Init method.
 
         :param config: configuration parameters
         :type config: Optional[RDDMConfig]
         :param callbacks: callbacks
-        :type callbacks: Optional[Union[Callback, List[Callback]]]
+        :type callbacks: Optional[Union[BaseCallback, List[Callback]]]
         """
         super().__init__(
             config=config,

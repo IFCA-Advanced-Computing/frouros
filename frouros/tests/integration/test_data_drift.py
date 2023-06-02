@@ -2,10 +2,9 @@
 
 from typing import Tuple, Union
 
-import pytest  # type: ignore
 import numpy as np  # type: ignore
+import pytest  # type: ignore
 
-from frouros.detectors.data_drift.batch.base import DataDriftBatchBase
 from frouros.detectors.data_drift.batch import (
     BhattacharyyaDistance,
     EMD,
@@ -22,6 +21,7 @@ from frouros.detectors.data_drift.batch import (
     KSTest,
     WelchTTest,
 )
+from frouros.detectors.data_drift.batch.base import BaseDataDriftBatch
 from frouros.detectors.data_drift.streaming import (  # noqa: N811
     IncrementalKSTest,
     MMD as MMDStreaming,
@@ -70,7 +70,7 @@ def test_batch_distance_based_categorical(
 def test_batch_distance_based_univariate(
     X_ref_univariate: np.ndarray,  # noqa: N803
     X_test_univariate: np.ndarray,  # noqa: N803
-    detector: DataDriftBatchBase,
+    detector: BaseDataDriftBatch,
     expected_distance: float,
 ) -> None:
     """Test batch distance based univariate method.
@@ -80,7 +80,7 @@ def test_batch_distance_based_univariate(
     :param X_test_univariate: test univariate data
     :type X_test_univariate: numpy.ndarray
     :param detector: detector distance
-    :type detector: DataDriftBatchBase
+    :type detector: BaseDataDriftBatch
     :param expected_distance: expected p-value value
     :type expected_distance: float
     """
@@ -101,7 +101,7 @@ def test_batch_distance_based_univariate(
 def test_batch_distance_bins_based_univariate_different_distribution(
     X_ref_univariate: np.ndarray,  # noqa: N803
     X_test_univariate: np.ndarray,  # noqa: N803
-    detector: DataDriftBatchBase,
+    detector: BaseDataDriftBatch,
     expected_distance: float,
 ) -> None:
     """Test batch distance bins based univariate different distribution method.
@@ -111,7 +111,7 @@ def test_batch_distance_bins_based_univariate_different_distribution(
     :param X_test_univariate: test univariate data
     :type X_test_univariate: numpy.ndarray
     :param detector: detector distance
-    :type detector: DataDriftBatchBase
+    :type detector: BaseDataDriftBatch
     :param expected_distance: expected p-value value
     :type expected_distance: float
     """
@@ -131,7 +131,7 @@ def test_batch_distance_bins_based_univariate_different_distribution(
 )
 def test_batch_distance_bins_based_univariate_same_distribution(
     univariate_distribution_p: Tuple[float, float],
-    detector: DataDriftBatchBase,
+    detector: BaseDataDriftBatch,
     expected_distance: float,
     num_samples: int = 500,
 ) -> None:
@@ -140,7 +140,7 @@ def test_batch_distance_bins_based_univariate_same_distribution(
     :param univariate_distribution_p: mean and standard deviation of distribution p
     :type univariate_distribution_p: Tuple[float, float]
     :param detector: detector distance
-    :type detector: DataDriftBatchBase
+    :type detector: BaseDataDriftBatch
     :param expected_distance: expected p-value value
     :type expected_distance: float
     """
@@ -166,7 +166,7 @@ def test_batch_distance_bins_based_univariate_same_distribution(
 )
 def test_batch_statistical_univariate(
     elec2_dataset: Tuple[np.ndarray, np.ndarray, np.ndarray],
-    detector: DataDriftBatchBase,
+    detector: BaseDataDriftBatch,
     expected_statistic: float,
     expected_p_value: float,
 ) -> None:
@@ -175,7 +175,7 @@ def test_batch_statistical_univariate(
     :param elec2_dataset: Elec2 raw dataset
     :type elec2_dataset: Tuple[numpy.ndarray, numpy.ndarray, numpy.ndarray]
     :param detector: detector test
-    :type detector: DataDriftBatchBase
+    :type detector: BaseDataDriftBatch
     :param expected_statistic: expected statistic value
     :type expected_statistic: float
     :param expected_p_value: expected p-value value
@@ -194,7 +194,7 @@ def test_batch_statistical_univariate(
 def test_batch_distance_based_multivariate_different_distribution(
     X_ref_multivariate: np.ndarray,  # noqa: N803
     X_test_multivariate: np.ndarray,  # noqa: N803
-    detector: DataDriftBatchBase,
+    detector: BaseDataDriftBatch,
     expected_distance: float,
 ) -> None:
     """Test batch distance based multivariate different distribution method.
@@ -204,7 +204,7 @@ def test_batch_distance_based_multivariate_different_distribution(
     :param X_test_multivariate: test multivariate data
     :type X_test_multivariate: numpy.ndarray
     :param detector: detector test
-    :type detector: DataDriftBatchBase
+    :type detector: BaseDataDriftBatch
     :param expected_distance: expected distance value
     :type expected_distance: float
     """
@@ -217,7 +217,7 @@ def test_batch_distance_based_multivariate_different_distribution(
 @pytest.mark.parametrize("detector, expected_distance", [(MMD(), 0.01570397)])
 def test_batch_distance_based_multivariate_same_distribution(
     multivariate_distribution_p: Tuple[np.ndarray, np.ndarray],
-    detector: DataDriftBatchBase,
+    detector: BaseDataDriftBatch,
     expected_distance: float,
     num_samples: int = 100,
 ) -> None:
@@ -226,7 +226,7 @@ def test_batch_distance_based_multivariate_same_distribution(
     :param multivariate_distribution_p: mean and covariance matrix of distribution p
     :type multivariate_distribution_p: Tuple[numpy.ndarray, numpy.ndarray]
     :param detector: detector test
-    :type detector: DataDriftBatchBase
+    :type detector: BaseDataDriftBatch
     :param num_samples: number of random samples
     :type num_samples: int
     :param expected_distance: expected distance value
@@ -253,7 +253,7 @@ def test_batch_distance_based_multivariate_same_distribution(
 def test_batch_distance_based_chunk_size_valid(
     X_ref_multivariate: np.ndarray,  # noqa: N803
     X_test_multivariate: np.ndarray,  # noqa: N803
-    detector: DataDriftBatchBase,
+    detector: BaseDataDriftBatch,
     expected_distance: float,
 ) -> None:
     """Test batch distance based chunk size valid method.
@@ -263,7 +263,7 @@ def test_batch_distance_based_chunk_size_valid(
     :param X_test_multivariate: test multivariate data
     :type X_test_multivariate: numpy.ndarray
     :param detector: detector test
-    :type detector: DataDriftBatchBase
+    :type detector: BaseDataDriftBatch
     :param expected_distance: expected distance value
     :type expected_distance: float
     """
@@ -304,7 +304,7 @@ def test_batch_distance_based_chunk_size_invalid(
 )
 def test_streaming_statistical_univariate_same_distribution(
     univariate_distribution_p: Tuple[float, float],
-    detector: DataDriftBatchBase,
+    detector: BaseDataDriftBatch,
     expected_statistic: float,
     expected_p_value: float,
 ) -> None:
@@ -313,7 +313,7 @@ def test_streaming_statistical_univariate_same_distribution(
     :param univariate_distribution_p: mean and standard deviation of distribution p
     :type univariate_distribution_p: Tuple[float, float]
     :param detector: detector statistical test
-    :type detector: DataDriftStreamingBase
+    :type detector: BaseDataDriftStreaming
     :param expected_statistic: expected statistic value
     :type expected_statistic: float
     :param expected_p_value: expected p-value
@@ -342,7 +342,7 @@ def test_streaming_statistical_univariate_same_distribution(
 def test_streaming_statistical_univariate_different_distribution(
     univariate_distribution_p: Tuple[float, float],
     univariate_distribution_q: Tuple[float, float],
-    detector: DataDriftBatchBase,
+    detector: BaseDataDriftBatch,
     expected_statistic: float,
     expected_p_value: float,
 ) -> None:
@@ -353,7 +353,7 @@ def test_streaming_statistical_univariate_different_distribution(
     :param univariate_distribution_q: mean and standard deviation of distribution q
     :type univariate_distribution_q: Tuple[float, float]
     :param detector: detector statistical test
-    :type detector: DataDriftStreamingBase
+    :type detector: BaseDataDriftStreaming
     :param expected_statistic: expected statistic value
     :type expected_statistic: float
     :param expected_p_value: expected p-value
@@ -381,7 +381,7 @@ def test_streaming_statistical_univariate_different_distribution(
 )
 def test_streaming_distance_based_univariate_same_distribution(
     univariate_distribution_p: Tuple[float, float],
-    detector: DataDriftBatchBase,
+    detector: BaseDataDriftBatch,
     expected_distance: float,
 ) -> None:
     """Test streaming distance based univariate same distribution method.
@@ -389,7 +389,7 @@ def test_streaming_distance_based_univariate_same_distribution(
     :param univariate_distribution_p: mean and standard deviation of distribution p
     :type univariate_distribution_p: Tuple[float, float]
     :param detector: detector statistical test
-    :type detector: DataDriftStreamingBase
+    :type detector: BaseDataDriftStreaming
     :param expected_distance: expected distance value
     :type expected_distance: float
     """
@@ -415,7 +415,7 @@ def test_streaming_distance_based_univariate_same_distribution(
 def test_streaming_distance_based_univariate_different_distribution(
     univariate_distribution_p: Tuple[float, float],
     univariate_distribution_q: Tuple[float, float],
-    detector: DataDriftBatchBase,
+    detector: BaseDataDriftBatch,
     expected_distance: float,
 ) -> None:
     """Test streaming distance based univariate different distribution method.
@@ -425,7 +425,7 @@ def test_streaming_distance_based_univariate_different_distribution(
     :param univariate_distribution_q: mean and standard deviation of distribution q
     :type univariate_distribution_q: Tuple[float, float]
     :param detector: detector statistical test
-    :type detector: DataDriftStreamingBase
+    :type detector: BaseDataDriftStreaming
     :param expected_distance: expected distance value
     :type expected_distance: float
     """

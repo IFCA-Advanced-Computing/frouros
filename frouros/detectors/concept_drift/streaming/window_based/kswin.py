@@ -1,20 +1,20 @@
 """KSWIN (Kolmogorov-Smirnov Windowing) module."""
 
-from collections import deque
 import itertools
+from collections import deque
 from typing import List, Optional, Union
 
-from scipy.stats import ks_2samp  # type: ignore
 import numpy as np  # type: ignore
+from scipy.stats import ks_2samp  # type: ignore
 
-from frouros.callbacks import Callback
+from frouros.callbacks.base import BaseCallback
 from frouros.detectors.concept_drift.streaming.window_based.base import (
-    WindowBaseConfig,
-    WindowBased,
+    BaseWindowConfig,
+    BaseWindow,
 )
 
 
-class KSWINConfig(WindowBaseConfig):
+class KSWINConfig(BaseWindowConfig):
     """KSWIN (Kolmogorov-Smirnov Windowing) [raab2020reactive]_ configuration.
 
     :References:
@@ -101,7 +101,7 @@ class KSWINConfig(WindowBaseConfig):
         self._num_test_instances = value
 
 
-class KSWIN(WindowBased):
+class KSWIN(BaseWindow):
     """KSWIN (Kolmogorov-Smirnov Windowing) [raab2020reactive]_ detector.
 
     :References:
@@ -116,14 +116,14 @@ class KSWIN(WindowBased):
     def __init__(
         self,
         config: Optional[KSWINConfig] = None,
-        callbacks: Optional[Union[Callback, List[Callback]]] = None,
+        callbacks: Optional[Union[BaseCallback, List[BaseCallback]]] = None,
     ) -> None:
         """Init method.
 
         :param config: configuration parameters
         :type config: Optional[KSWINConfig]
         :param callbacks: callbacks
-        :type callbacks: Optional[Union[Callback, List[Callback]]]
+        :type callbacks: Optional[Union[BaseCallback, List[Callback]]]
         """
         super().__init__(
             config=config,

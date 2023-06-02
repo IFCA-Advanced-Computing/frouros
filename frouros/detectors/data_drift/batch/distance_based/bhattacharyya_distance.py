@@ -4,13 +4,13 @@ from typing import List, Optional, Union
 
 import numpy as np  # type: ignore
 
-from frouros.callbacks import Callback
+from frouros.callbacks.base import BaseCallback
 from frouros.detectors.data_drift.batch.distance_based.base import (
-    DistanceBinsBasedBase,
+    BaseDistanceBasedBins,
 )
 
 
-class BhattacharyyaDistance(DistanceBinsBasedBase):
+class BhattacharyyaDistance(BaseDistanceBasedBins):
     """Bhattacharyya distance [bhattacharyya1946measure]_ detector.
 
     :References:
@@ -23,14 +23,14 @@ class BhattacharyyaDistance(DistanceBinsBasedBase):
     def __init__(
         self,
         num_bins: int = 10,
-        callbacks: Optional[Union[Callback, List[Callback]]] = None,
+        callbacks: Optional[Union[BaseCallback, List[BaseCallback]]] = None,
     ) -> None:
         """Init method.
 
         :param num_bins: number of bins in which to divide probabilities
         :type num_bins: int
         :param callbacks: callbacks
-        :type callbacks: Optional[Union[Callback, List[Callback]]]
+        :type callbacks: Optional[Union[BaseCallback, List[Callback]]]
         """
         super().__init__(
             statistical_method=self._bhattacharyya,
@@ -56,7 +56,7 @@ class BhattacharyyaDistance(DistanceBinsBasedBase):
         (  # noqa: N806
             X_percents,
             Y_percents,
-        ) = DistanceBinsBasedBase._calculate_bins_values(
+        ) = BaseDistanceBasedBins._calculate_bins_values(
             X_ref=X, X=Y, num_bins=num_bins
         )
         bhattacharyya = 1 - np.sum(np.sqrt(X_percents * Y_percents))

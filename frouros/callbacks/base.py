@@ -1,10 +1,10 @@
-"""Callbacks base module."""
+"""Base callback module."""
 
 import abc
 from typing import Optional
 
 
-class Callback(abc.ABC):
+class BaseCallback(abc.ABC):
     """Abstract class representing a callback."""
 
     def __init__(self, name: Optional[str] = None) -> None:
@@ -43,15 +43,15 @@ class Callback(abc.ABC):
         self.detector = detector
 
     # @property
-    # def detector(self) -> Optional[ConceptDriftBase, DataDriftBatchBase]:
+    # def detector(self) -> Optional[BaseConceptDrift, BaseDataDriftBatch]:
     #     return self._detector
     #
     # @detector.setter
-    # def detector(self, value: Optional[ConceptDriftBase, DataDriftBatchBase]) -> None:
+    # def detector(self, value: Optional[BaseConceptDrift, BaseDataDriftBatch]) -> None:
     #     if not isinstance(
-    #             value, (ConceptDriftBase, DataDriftBatchBase)):
+    #             value, (BaseConceptDrift, BaseDataDriftBatch)):
     #         raise TypeError(
-    #             "value must be of type ConceptDriftBase or DataDriftBatchBase."
+    #             "value must be of type BaseConceptDrift or BaseDataDriftBatch."
     #         )
     #     self._detector = value
 

@@ -6,11 +6,11 @@ from typing import Any, Callable, Dict, List, Optional, Tuple
 import numpy as np  # type: ignore
 from scipy.stats import norm  # type: ignore
 
-from frouros.callbacks.batch.base import BatchCallback
+from frouros.callbacks.batch.base import BaseCallbackBatch
 from frouros.utils.stats import permutation, z_score
 
 
-class PermutationTestOnBatchData(BatchCallback):
+class PermutationTestOnBatchData(BaseCallbackBatch):
     """Permutation test on batch data callback class."""
 
     def __init__(
@@ -163,11 +163,11 @@ class PermutationTestOnBatchData(BatchCallback):
     #
     #     :raises TypeError: Type error exception
     #     """
-    #     if not isinstance(detector, DataDriftBatchBase):
+    #     if not isinstance(detector, BaseDataDriftBatch):
     #         raise TypeError(
     #             f"callback {self.__class__.name} cannot be used with detector"
     #             f" {detector.__class__name}. Must be used with a detector of "
-    #             f"type DataDriftBatchBase."
+    #             f"type BaseDataDriftBatch."
     #         )
     #     self.detector = detector
 
