@@ -1,4 +1,4 @@
-"""Dataset base module."""
+"""Base dataset module."""
 
 import abc
 import tempfile
@@ -17,7 +17,7 @@ from frouros.datasets.exceptions import (
 from frouros.utils.logger import logger
 
 
-class Dataset(abc.ABC):
+class BaseDatasetDownload(abc.ABC):
     """Abstract class representing a downloadable dataset."""
 
     def __init__(

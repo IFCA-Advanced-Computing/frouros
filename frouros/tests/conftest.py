@@ -364,7 +364,7 @@ def train_prediction_normal(
 def concept_drift_dataset_simple() -> Tuple[
     Tuple[np.ndarray, np.ndarray], Tuple[np.ndarray, np.ndarray]
 ]:
-    """Dataset with multiple concepts to induce concept drift.
+    """BaseDatasetDownload with multiple concepts to induce concept drift.
 
     :return: dataset split in reference and test
     :rtype: Tuple[Tuple[numpy.ndarray, numpy.ndarray],
