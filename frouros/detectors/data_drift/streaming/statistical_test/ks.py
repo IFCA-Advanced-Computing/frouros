@@ -16,7 +16,7 @@ from scipy.stats._stats_py import (  # type: ignore
 from frouros.callbacks import Callback
 from frouros.detectors.data_drift.base import NumericalData, UnivariateData
 from frouros.detectors.data_drift.streaming.statistical_test.base import (
-    StatisticalTestBase,
+    BaseStatisticalTest,
     StatisticalResult,
 )
 from frouros.utils.data_structures import CircularQueue
@@ -27,7 +27,7 @@ from frouros.utils.data_structures import CircularQueue
 MAX_AUTO_N = 10000
 
 
-class IncrementalKSTest(StatisticalTestBase):
+class IncrementalKSTest(BaseStatisticalTest):
     """IncrementalKSTest (Incremental Kolmogorov-Smirnov test) [dos2016fast]_ detector.
 
     :References:

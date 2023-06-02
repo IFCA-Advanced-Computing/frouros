@@ -69,7 +69,7 @@ class StatisticalResult(BaseResult):
         self._p_value = value
 
 
-class StatisticalTestBase(BaseDataDriftStreaming):
+class BaseStatisticalTest(BaseDataDriftStreaming):
     """Abstract class representing a statistical test."""
 
     @abc.abstractmethod
