@@ -13,7 +13,7 @@ class BaseWindowConfig(BaseConceptDriftStreamingConfig):
     """Class representing a window based configuration class."""
 
 
-class WindowBased(BaseConceptDriftStreaming):
+class BaseWindow(BaseConceptDriftStreaming):
     """Abstract class representing a window based."""
 
     config_type = BaseWindowConfig

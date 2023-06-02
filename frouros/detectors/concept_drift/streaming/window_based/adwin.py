@@ -8,7 +8,7 @@ import numpy as np  # type: ignore
 from frouros.callbacks import Callback
 from frouros.detectors.concept_drift.streaming.window_based.base import (
     BaseWindowConfig,
-    WindowBased,
+    BaseWindow,
 )
 
 
@@ -279,7 +279,7 @@ class ADWINConfig(BaseWindowConfig):
         self._min_window_size = value
 
 
-class ADWIN(WindowBased):
+class ADWIN(BaseWindow):
     """ADWIN (ADaptive WINdowing) [bifet2007learning]_ detector.
 
     :References:

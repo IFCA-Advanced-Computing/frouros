@@ -8,7 +8,7 @@ from scipy.stats import norm  # type: ignore
 from frouros.callbacks import Callback
 from frouros.detectors.concept_drift.streaming.window_based.base import (
     BaseWindowConfig,
-    WindowBased,
+    BaseWindow,
 )
 from frouros.utils.data_structures import AccuracyQueue
 
@@ -88,7 +88,7 @@ class STEPDConfig(BaseWindowConfig):
         self._alpha_w = value
 
 
-class STEPD(WindowBased):
+class STEPD(BaseWindow):
     """STEPD (Statistical test of equal proportions) [nishida2007detecting]_ detector.
 
     :References:
