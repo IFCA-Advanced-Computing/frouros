@@ -6,11 +6,11 @@ from typing import Union
 
 from frouros.detectors.concept_drift.base import (
     ConceptDriftBase,
-    ConceptDriftBaseConfig,
+    BaseConceptDriftConfig,
 )
 
 
-class ConceptDriftStreamingBaseConfig(ConceptDriftBaseConfig):
+class ConceptDriftStreamingBaseConfig(BaseConceptDriftConfig):
     """Abstract class representing a concept drift streaming configuration class."""
 
 
