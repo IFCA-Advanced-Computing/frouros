@@ -5,7 +5,7 @@ from typing import List, Optional, Union
 
 from frouros.callbacks import Callback
 from frouros.detectors.concept_drift.streaming.base import (
-    ConceptDriftStreamingBase,
+    BaseConceptDriftStreaming,
     BaseConceptDriftStreamingConfig,
 )
 from frouros.utils.stats import Mean
@@ -124,7 +124,7 @@ class AlphaConfig:
         self._alpha = value
 
 
-class CUSUMBase(ConceptDriftStreamingBase):
+class CUSUMBase(BaseConceptDriftStreaming):
     """CUSUM based algorithm class."""
 
     config_type = CUSUMBaseConfig

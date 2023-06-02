@@ -14,7 +14,7 @@ class BaseConceptDriftStreamingConfig(BaseConceptDriftConfig):
     """Abstract class representing a concept drift streaming configuration class."""
 
 
-class ConceptDriftStreamingBase(BaseConceptDrift):
+class BaseConceptDriftStreaming(BaseConceptDrift):
     """Abstract class representing a concept drift streaming detector."""
 
     @abc.abstractmethod

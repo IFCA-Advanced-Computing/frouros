@@ -8,7 +8,7 @@ import numpy as np  # type: ignore
 from frouros.callbacks import Callback
 from frouros.detectors.concept_drift.streaming.base import (
     BaseConceptDriftStreamingConfig,
-    ConceptDriftStreamingBase,
+    BaseConceptDriftStreaming,
 )
 from frouros.detectors.concept_drift.exceptions import InvalidAverageRunLengthError
 from frouros.utils.stats import Mean
@@ -82,7 +82,7 @@ class SPCBaseConfig(BaseConceptDriftStreamingConfig):
         self._warning_level = value
 
 
-class SPCBase(ConceptDriftStreamingBase):
+class SPCBase(BaseConceptDriftStreaming):
     """Abstract class representing an SPC estimator."""
 
     config_type = SPCBaseConfig
