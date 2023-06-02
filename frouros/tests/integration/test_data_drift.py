@@ -313,7 +313,7 @@ def test_streaming_statistical_univariate_same_distribution(
     :param univariate_distribution_p: mean and standard deviation of distribution p
     :type univariate_distribution_p: Tuple[float, float]
     :param detector: detector statistical test
-    :type detector: DataDriftStreamingBase
+    :type detector: BaseDataDriftStreaming
     :param expected_statistic: expected statistic value
     :type expected_statistic: float
     :param expected_p_value: expected p-value
@@ -353,7 +353,7 @@ def test_streaming_statistical_univariate_different_distribution(
     :param univariate_distribution_q: mean and standard deviation of distribution q
     :type univariate_distribution_q: Tuple[float, float]
     :param detector: detector statistical test
-    :type detector: DataDriftStreamingBase
+    :type detector: BaseDataDriftStreaming
     :param expected_statistic: expected statistic value
     :type expected_statistic: float
     :param expected_p_value: expected p-value
@@ -389,7 +389,7 @@ def test_streaming_distance_based_univariate_same_distribution(
     :param univariate_distribution_p: mean and standard deviation of distribution p
     :type univariate_distribution_p: Tuple[float, float]
     :param detector: detector statistical test
-    :type detector: DataDriftStreamingBase
+    :type detector: BaseDataDriftStreaming
     :param expected_distance: expected distance value
     :type expected_distance: float
     """
@@ -425,7 +425,7 @@ def test_streaming_distance_based_univariate_different_distribution(
     :param univariate_distribution_q: mean and standard deviation of distribution q
     :type univariate_distribution_q: Tuple[float, float]
     :param detector: detector statistical test
-    :type detector: DataDriftStreamingBase
+    :type detector: BaseDataDriftStreaming
     :param expected_distance: expected distance value
     :type expected_distance: float
     """

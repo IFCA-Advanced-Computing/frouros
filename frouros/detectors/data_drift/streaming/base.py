@@ -1,4 +1,4 @@
-"""Data drift batch base module."""
+"""Base data drift batch module."""
 
 import abc
 
@@ -14,7 +14,7 @@ from frouros.detectors.data_drift.base import (
 )
 
 
-class DataDriftStreamingBase(BaseDataDrift):
+class BaseDataDriftStreaming(BaseDataDrift):
     """Abstract class representing a data drift streaming detector."""
 
     def __init__(

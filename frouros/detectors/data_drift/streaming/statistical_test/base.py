@@ -7,7 +7,7 @@ import numpy as np  # type: ignore
 
 from frouros.detectors.data_drift.base import BaseResult
 from frouros.detectors.data_drift.streaming.base import (
-    DataDriftStreamingBase,
+    BaseDataDriftStreaming,
 )
 
 
@@ -69,7 +69,7 @@ class StatisticalResult(BaseResult):
         self._p_value = value
 
 
-class StatisticalTestBase(DataDriftStreamingBase):
+class StatisticalTestBase(BaseDataDriftStreaming):
     """Abstract class representing a statistical test."""
 
     @abc.abstractmethod

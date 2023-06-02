@@ -7,7 +7,7 @@ import numpy as np  # type: ignore
 
 from frouros.detectors.data_drift.base import BaseResult
 from frouros.detectors.data_drift.streaming.base import (
-    DataDriftStreamingBase,
+    BaseDataDriftStreaming,
 )
 
 
@@ -45,7 +45,7 @@ class DistanceResult(BaseResult):
         self._distance = value
 
 
-class DistanceBasedBase(DataDriftStreamingBase):
+class DistanceBasedBase(BaseDataDriftStreaming):
     """Abstract class representing a distance based."""
 
     @abc.abstractmethod
