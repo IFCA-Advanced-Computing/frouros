@@ -145,7 +145,7 @@ class BaseSPC(BaseConceptDriftStreaming):
         pass
 
 
-class SPCErrorBase(BaseSPC):
+class BaseSPCError(BaseSPC):
     """Abstract class representing a SPC error estimator."""
 
     config_type = BaseSPCConfig

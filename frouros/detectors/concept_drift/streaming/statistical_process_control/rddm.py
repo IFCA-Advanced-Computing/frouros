@@ -5,7 +5,7 @@ from typing import List, Optional, Union
 from frouros.callbacks import Callback
 from frouros.detectors.concept_drift.streaming.statistical_process_control.base import (
     BaseSPCConfig,
-    SPCErrorBase,
+    BaseSPCError,
 )
 from frouros.utils.data_structures import CircularQueue
 from frouros.utils.stats import Mean
@@ -110,7 +110,7 @@ class RDDMConfig(BaseSPCConfig):
         self._max_num_instances_warning = value
 
 
-class RDDM(SPCErrorBase):
+class RDDM(BaseSPCError):
     """RDDM (Reactive Drift detection method) [barros2017rddm]_ detector.
 
     :References:

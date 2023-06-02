@@ -5,7 +5,7 @@ from typing import Union
 
 from frouros.detectors.concept_drift.streaming.statistical_process_control.base import (
     BaseSPCConfig,
-    SPCErrorBase,
+    BaseSPCError,
 )
 
 
@@ -22,7 +22,7 @@ class DDMConfig(BaseSPCConfig):
     """
 
 
-class DDM(SPCErrorBase):
+class DDM(BaseSPCError):
     """DDM (Drift detection method) [gama2004learning]_ detector.
 
     :References:
