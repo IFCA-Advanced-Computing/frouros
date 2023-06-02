@@ -8,7 +8,7 @@ import numpy as np  # type: ignore
 from frouros.callbacks import Callback
 from frouros.detectors.data_drift.base import (
     DataDriftBase,
-    DataTypeBase,
+    BaseDataType,
     StatisticalTypeBase,
 )
 from frouros.detectors.data_drift.exceptions import (
@@ -21,14 +21,14 @@ class DataDriftBatchBase(DataDriftBase):
 
     def __init__(
         self,
-        data_type: DataTypeBase,
+        data_type: BaseDataType,
         statistical_type: StatisticalTypeBase,
         callbacks: Optional[Union[Callback, List[Callback]]] = None,
     ) -> None:
         """Init method.
 
         :param data_type: data type
-        :type data_type: DataTypeBase
+        :type data_type: BaseDataType
         :param statistical_type: statistical type
         :type statistical_type: StatisticalTypeBase
         :param callbacks: callbacks

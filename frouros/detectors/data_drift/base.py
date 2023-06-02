@@ -16,7 +16,7 @@ class BaseResult(abc.ABC):
     """Abstract class representing a result."""
 
 
-class DataTypeBase(abc.ABC):
+class BaseDataType(abc.ABC):
     """Abstract class representing a data type."""
 
     @abc.abstractmethod
@@ -35,7 +35,7 @@ class DataTypeBase(abc.ABC):
         )
 
 
-class CategoricalData(DataTypeBase):
+class CategoricalData(BaseDataType):
     """Class representing categorical data."""
 
     def __init__(self) -> None:
@@ -44,7 +44,7 @@ class CategoricalData(DataTypeBase):
         self.output_type = None
 
 
-class NumericalData(DataTypeBase):
+class NumericalData(BaseDataType):
     """Class representing numerical data."""
 
     def __init__(self) -> None:
@@ -95,14 +95,14 @@ class DataDriftBase(BaseDetector):
 
     def __init__(
         self,
-        data_type: DataTypeBase,
+        data_type: BaseDataType,
         statistical_type: StatisticalTypeBase,
         callbacks: Optional[Union[Callback, List[Callback]]] = None,
     ) -> None:
         """Init method.
 
         :param data_type: data type
-        :type data_type: DataTypeBase
+        :type data_type: BaseDataType
         :param statistical_type: statistical type
         :type statistical_type: StatisticalTypeBase
         :param callbacks: callbacks
@@ -114,24 +114,24 @@ class DataDriftBase(BaseDetector):
         self.X_ref = None  # type: ignore
 
     @property
-    def data_type(self) -> DataTypeBase:
+    def data_type(self) -> BaseDataType:
         """Data type property.
 
         :return: data type
-        :rtype: DataTypeBase
+        :rtype: BaseDataType
         """
         return self._data_type
 
     @data_type.setter
-    def data_type(self, value: DataTypeBase) -> None:
+    def data_type(self, value: BaseDataType) -> None:
         """Data type setter.
 
         :param value: value to be set
-        :type value: DataTypeBase
+        :type value: BaseDataType
         :raises TypeError: Type error exception
         """
-        if not isinstance(value, DataTypeBase):
-            raise TypeError("value must be of type DataTypeBase.")
+        if not isinstance(value, BaseDataType):
+            raise TypeError("value must be of type BaseDataType.")
         self._data_type = value
 
     @property
