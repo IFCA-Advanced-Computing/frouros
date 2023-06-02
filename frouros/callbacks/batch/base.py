@@ -1,12 +1,12 @@
-"""Batch base test module."""
+"""Base callback batch module."""
 
 import abc
 
 from frouros.callbacks.base import BaseCallback
 
 
-class BatchCallback(BaseCallback):
-    """Batch callback class."""
+class BaseCallbackBatch(BaseCallback):
+    """Callback batch class."""
 
     def on_compare_start(self) -> None:
         """On compare start method."""

@@ -2,10 +2,10 @@
 
 from typing import Optional
 
-from frouros.callbacks.batch.base import BatchCallback
+from frouros.callbacks.batch.base import BaseCallbackBatch
 
 
-class ResetOnBatchDataDrift(BatchCallback):
+class ResetOnBatchDataDrift(BaseCallbackBatch):
     """Reset on batch data drift callback class."""
 
     def __init__(self, alpha: float, name: Optional[str] = None) -> None:

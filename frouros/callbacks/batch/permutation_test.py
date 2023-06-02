@@ -6,11 +6,11 @@ from typing import Any, Callable, Dict, List, Optional, Tuple
 import numpy as np  # type: ignore
 from scipy.stats import norm  # type: ignore
 
-from frouros.callbacks.batch.base import BatchCallback
+from frouros.callbacks.batch.base import BaseCallbackBatch
 from frouros.utils.stats import permutation, z_score
 
 
-class PermutationTestOnBatchData(BatchCallback):
+class PermutationTestOnBatchData(BaseCallbackBatch):
     """Permutation test on batch data callback class."""
 
     def __init__(
