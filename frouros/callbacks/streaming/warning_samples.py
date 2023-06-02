@@ -3,10 +3,10 @@
 import copy
 from typing import Any, List, Optional, Union
 
-from frouros.callbacks.streaming.base import StreamingCallback
+from frouros.callbacks.streaming.base import BaseCallbackStreaming
 
 
-class WarningSamplesBuffer(StreamingCallback):
+class WarningSamplesBuffer(BaseCallbackStreaming):
     """Store warning samples as a buffer callback class."""
 
     def __init__(self, name: Optional[str] = None) -> None:

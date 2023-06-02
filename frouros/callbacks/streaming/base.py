@@ -1,4 +1,4 @@
-"""Streaming base test module."""
+"""Base callback streaming module."""
 
 import abc
 
@@ -7,8 +7,8 @@ from typing import Union
 from frouros.callbacks.base import BaseCallback
 
 
-class StreamingCallback(BaseCallback):
-    """Streaming callback class."""
+class BaseCallbackStreaming(BaseCallback):
+    """Callback streaming class."""
 
     def on_update_start(self, value: Union[int, float], **kwargs) -> None:
         """On update start method."""

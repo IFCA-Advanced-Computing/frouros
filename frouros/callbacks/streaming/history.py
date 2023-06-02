@@ -2,11 +2,11 @@
 
 from typing import Any, Dict, List, Optional, Union
 
-from frouros.callbacks.streaming.base import StreamingCallback
+from frouros.callbacks.streaming.base import BaseCallbackStreaming
 from frouros.utils.stats import Stat
 
 
-class History(StreamingCallback):
+class History(BaseCallbackStreaming):
     """History callback class."""
 
     def __init__(self, name: Optional[str] = None) -> None:
