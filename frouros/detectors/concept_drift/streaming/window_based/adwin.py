@@ -5,7 +5,7 @@ from typing import List, Optional, Union
 
 import numpy as np  # type: ignore
 
-from frouros.callbacks import Callback
+from frouros.callbacks import BaseCallback
 from frouros.detectors.concept_drift.streaming.window_based.base import (
     BaseWindowConfig,
     BaseWindow,
@@ -295,14 +295,14 @@ class ADWIN(BaseWindow):
     def __init__(
         self,
         config: Optional[ADWINConfig] = None,
-        callbacks: Optional[Union[Callback, List[Callback]]] = None,
+        callbacks: Optional[Union[BaseCallback, List[BaseCallback]]] = None,
     ) -> None:
         """Init method.
 
         :param config: configuration parameters
         :type config: Optional[ADWINConfig]
         :param callbacks: callbacks
-        :type callbacks: Optional[Union[Callback, List[Callback]]]
+        :type callbacks: Optional[Union[Callback, List[BaseCallback]]]
         """
         super().__init__(
             config=config,

@@ -4,7 +4,7 @@ from typing import Any, Callable, Dict, Optional, List, Tuple, Union
 
 import numpy as np  # type: ignore
 
-from frouros.callbacks import Callback
+from frouros.callbacks import BaseCallback
 from frouros.detectors.data_drift.base import NumericalData, MultivariateData
 from frouros.detectors.data_drift.batch import MMD as MMDBatch  # noqa: N811
 from frouros.detectors.data_drift.batch.distance_based.mmd import rbf_kernel
@@ -30,7 +30,7 @@ class MMD(BaseDistanceBased):
         window_size: int,
         kernel: Callable = rbf_kernel,
         chunk_size: Optional[int] = None,
-        callbacks: Optional[Union[Callback, List[Callback]]] = None,
+        callbacks: Optional[Union[BaseCallback, List[BaseCallback]]] = None,
     ) -> None:
         """Init method.
 
@@ -41,7 +41,7 @@ class MMD(BaseDistanceBased):
         :param chunk_size: chunk size value
         :type chunk_size: Optional[int]
         :param callbacks: callbacks
-        :type callbacks: Optional[Union[Callback, List[Callback]]]
+        :type callbacks: Optional[Union[Callback, List[BaseCallback]]]
         """
         super().__init__(
             data_type=NumericalData(),

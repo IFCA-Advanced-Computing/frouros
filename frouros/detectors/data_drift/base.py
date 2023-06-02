@@ -7,7 +7,7 @@ from typing import Any, Dict, List, Optional, Union
 
 import numpy as np  # type: ignore
 
-from frouros.callbacks import Callback
+from frouros.callbacks import BaseCallback
 from frouros.detectors.base import BaseDetector
 from frouros.detectors.data_drift.exceptions import DimensionError, MissingFitError
 
@@ -97,7 +97,7 @@ class BaseDataDrift(BaseDetector):
         self,
         data_type: BaseDataType,
         statistical_type: BaseStatisticalType,
-        callbacks: Optional[Union[Callback, List[Callback]]] = None,
+        callbacks: Optional[Union[BaseCallback, List[BaseCallback]]] = None,
     ) -> None:
         """Init method.
 
@@ -106,7 +106,7 @@ class BaseDataDrift(BaseDetector):
         :param statistical_type: statistical type
         :type statistical_type: BaseStatisticalType
         :param callbacks: callbacks
-        :type callbacks: Optional[Union[Callback, List[Callback]]]
+        :type callbacks: Optional[Union[BaseCallback, List[Callback]]]
         """
         super().__init__(callbacks=callbacks)
         self.data_type = data_type

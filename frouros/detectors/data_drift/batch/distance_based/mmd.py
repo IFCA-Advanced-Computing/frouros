@@ -8,7 +8,7 @@ import numpy as np  # type: ignore
 import tqdm  # type: ignore
 from scipy.spatial.distance import cdist  # type: ignore
 
-from frouros.callbacks import Callback
+from frouros.callbacks import BaseCallback
 from frouros.detectors.data_drift.base import MultivariateData
 from frouros.detectors.data_drift.batch.distance_based.base import (
     BaseDistanceBased,
@@ -47,7 +47,7 @@ class MMD(BaseDistanceBased):
         self,
         kernel: Callable = rbf_kernel,
         chunk_size: Optional[int] = None,
-        callbacks: Optional[Union[Callback, List[Callback]]] = None,
+        callbacks: Optional[Union[BaseCallback, List[BaseCallback]]] = None,
     ) -> None:
         """Init method.
 
@@ -56,7 +56,7 @@ class MMD(BaseDistanceBased):
         :param chunk_size: chunk size value
         :type chunk_size: Optional[int]
         :param callbacks: callbacks
-        :type callbacks: Optional[Union[Callback, List[Callback]]]
+        :type callbacks: Optional[Union[BaseCallback, List[BaseCallback]]]
         """
         super().__init__(
             statistical_type=MultivariateData(),

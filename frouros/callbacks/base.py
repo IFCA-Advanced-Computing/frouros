@@ -1,10 +1,10 @@
-"""Callbacks base module."""
+"""Base callback module."""
 
 import abc
 from typing import Optional
 
 
-class Callback(abc.ABC):
+class BaseCallback(abc.ABC):
     """Abstract class representing a callback."""
 
     def __init__(self, name: Optional[str] = None) -> None:

@@ -7,7 +7,7 @@ from typing import List, Optional, Union
 from scipy.stats import ks_2samp  # type: ignore
 import numpy as np  # type: ignore
 
-from frouros.callbacks import Callback
+from frouros.callbacks import BaseCallback
 from frouros.detectors.concept_drift.streaming.window_based.base import (
     BaseWindowConfig,
     BaseWindow,
@@ -116,14 +116,14 @@ class KSWIN(BaseWindow):
     def __init__(
         self,
         config: Optional[KSWINConfig] = None,
-        callbacks: Optional[Union[Callback, List[Callback]]] = None,
+        callbacks: Optional[Union[BaseCallback, List[BaseCallback]]] = None,
     ) -> None:
         """Init method.
 
         :param config: configuration parameters
         :type config: Optional[KSWINConfig]
         :param callbacks: callbacks
-        :type callbacks: Optional[Union[Callback, List[Callback]]]
+        :type callbacks: Optional[Union[BaseCallback, List[Callback]]]
         """
         super().__init__(
             config=config,

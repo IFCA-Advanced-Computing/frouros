@@ -2,10 +2,10 @@
 
 import abc
 
-from frouros.callbacks.base import Callback
+from frouros.callbacks.base import BaseCallback
 
 
-class BatchCallback(Callback):
+class BatchCallback(BaseCallback):
     """Batch callback class."""
 
     def on_compare_start(self) -> None:

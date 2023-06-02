@@ -4,10 +4,10 @@ import abc
 
 from typing import Union
 
-from frouros.callbacks.base import Callback
+from frouros.callbacks.base import BaseCallback
 
 
-class StreamingCallback(Callback):
+class StreamingCallback(BaseCallback):
     """Streaming callback class."""
 
     def on_update_start(self, value: Union[int, float], **kwargs) -> None:

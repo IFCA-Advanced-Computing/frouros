@@ -3,7 +3,7 @@
 import abc
 from typing import Any, Dict, List, Optional, Union
 
-from frouros.callbacks import Callback, History
+from frouros.callbacks import BaseCallback, History
 from frouros.detectors.base import BaseDetector
 
 
@@ -63,14 +63,14 @@ class BaseConceptDrift(BaseDetector):
     def __init__(
         self,
         config: Optional[BaseConceptDriftConfig] = None,
-        callbacks: Optional[Union[Callback, List[Callback]]] = None,
+        callbacks: Optional[Union[BaseCallback, List[BaseCallback]]] = None,
     ) -> None:
         """Init method.
 
         :param config: configuration parameters
         :type config: Optional[BaseConceptDriftConfig]
         :param callbacks: callbacks
-        :type callbacks: Optional[Union[Callback, List[Callback]]]
+        :type callbacks: Optional[Union[BaseCallback, List[Callback]]]
         """
         super().__init__(callbacks=callbacks)
         self.config = config  # type: ignore

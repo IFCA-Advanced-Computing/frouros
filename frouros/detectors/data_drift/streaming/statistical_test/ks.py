@@ -13,7 +13,7 @@ from scipy.stats._stats_py import (  # type: ignore
     _compute_outer_prob_inside_method,
 )
 
-from frouros.callbacks import Callback
+from frouros.callbacks import BaseCallback
 from frouros.detectors.data_drift.base import NumericalData, UnivariateData
 from frouros.detectors.data_drift.streaming.statistical_test.base import (
     BaseStatisticalTest,
@@ -41,13 +41,13 @@ class IncrementalKSTest(BaseStatisticalTest):
 
     def __init__(
         self,
-        callbacks: Optional[Union[Callback, List[Callback]]] = None,
+        callbacks: Optional[Union[BaseCallback, List[BaseCallback]]] = None,
         window_size: int = 10,
     ) -> None:
         """Init method.
 
         :param callbacks: callbacks
-        :type callbacks: Optional[Union[Callback, List[Callback]]]
+        :type callbacks: Optional[Union[BaseCallback, List[Callback]]]
         :param window_size: window size
         :type window_size: int
         """

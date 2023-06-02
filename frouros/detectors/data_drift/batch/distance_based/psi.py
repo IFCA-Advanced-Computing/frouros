@@ -5,7 +5,7 @@ import sys
 from typing import List, Optional, Union
 import numpy as np  # type: ignore
 
-from frouros.callbacks import Callback
+from frouros.callbacks import BaseCallback
 from frouros.detectors.data_drift.batch.distance_based.base import (
     BaseDistanceBasedBins,
     DistanceResult,
@@ -25,14 +25,14 @@ class PSI(BaseDistanceBasedBins):
     def __init__(
         self,
         num_bins: int = 10,
-        callbacks: Optional[Union[Callback, List[Callback]]] = None,
+        callbacks: Optional[Union[BaseCallback, List[BaseCallback]]] = None,
     ) -> None:
         """Init method.
 
         :param num_bins: number of bins in which to divide probabilities
         :type num_bins: int
         :param callbacks: callbacks
-        :type callbacks: Optional[Union[Callback, List[Callback]]]
+        :type callbacks: Optional[Union[Callback, List[BaseCallback]]]
         """
         super().__init__(
             statistical_method=self._psi,

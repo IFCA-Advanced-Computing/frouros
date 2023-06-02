@@ -5,7 +5,7 @@ import abc
 from typing import Any, Dict, Optional, List, Tuple, Union
 import numpy as np  # type: ignore
 
-from frouros.callbacks import Callback
+from frouros.callbacks import BaseCallback
 from frouros.detectors.data_drift.base import (
     BaseDataDrift,
     BaseDataType,
@@ -21,7 +21,7 @@ class BaseDataDriftStreaming(BaseDataDrift):
         self,
         data_type: BaseDataType,
         statistical_type: BaseStatisticalType,
-        callbacks: Optional[Union[Callback, List[Callback]]] = None,
+        callbacks: Optional[Union[BaseCallback, List[BaseCallback]]] = None,
     ) -> None:
         """Init method.
 
@@ -30,7 +30,7 @@ class BaseDataDriftStreaming(BaseDataDrift):
         :param statistical_type: statistical type
         :type statistical_type: BaseStatisticalType
         :param callbacks: callbacks
-        :type callbacks: Optional[Union[Callback], List[Callback]]
+        :type callbacks: Optional[Union[Callback], List[BaseCallback]]
         """
         super().__init__(
             callbacks=callbacks,

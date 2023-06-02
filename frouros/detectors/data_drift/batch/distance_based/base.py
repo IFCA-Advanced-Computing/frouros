@@ -7,7 +7,7 @@ from typing import Any, Callable, Dict, Optional, List, Tuple, Union
 import numpy as np  # type: ignore
 from scipy.stats import rv_histogram  # type: ignore
 
-from frouros.callbacks import Callback
+from frouros.callbacks import BaseCallback
 from frouros.detectors.data_drift.base import (
     NumericalData,
     BaseStatisticalType,
@@ -27,7 +27,7 @@ class BaseDistanceBased(BaseDataDriftBatch):
         statistical_type: BaseStatisticalType,
         statistical_method: Callable,
         statistical_kwargs: Dict[str, Any],
-        callbacks: Optional[Union[Callback, List[Callback]]] = None,
+        callbacks: Optional[Union[BaseCallback, List[BaseCallback]]] = None,
     ) -> None:
         """Init method.
 
@@ -38,7 +38,7 @@ class BaseDistanceBased(BaseDataDriftBatch):
         :param statistical_kwargs: statistical kwargs
         :type statistical_kwargs: Dict[str, Any]
         :param callbacks: callbacks
-        :type callbacks: Optional[Union[Callback, List[Callback]]]
+        :type callbacks: Optional[Union[BaseCallback, List[BaseCallback]]]
         """
         super().__init__(
             data_type=NumericalData(),
@@ -120,7 +120,7 @@ class BaseDistanceBasedBins(BaseDistanceBased):
         self,
         statistical_method,
         statistical_kwargs,
-        callbacks: Optional[Union[Callback, List[Callback]]] = None,
+        callbacks: Optional[Union[BaseCallback, List[BaseCallback]]] = None,
         num_bins: int = 10,
     ) -> None:
         """Init method.
@@ -130,7 +130,7 @@ class BaseDistanceBasedBins(BaseDistanceBased):
         :param statistical_kwargs: statistical kwargs
         :type statistical_kwargs: Dict[str, Any]
         :param callbacks: callbacks
-        :type callbacks: Optional[Union[Callback, List[Callback]]]
+        :type callbacks: Optional[Union[BaseCallback, List[Callback]]]
         :param num_bins: number of bins in which to divide probabilities
         :type num_bins: int
         """
@@ -202,7 +202,7 @@ class BaseDistanceBasedProbability(BaseDistanceBased):
         self,
         statistical_method,
         statistical_kwargs,
-        callbacks: Optional[Union[Callback, List[Callback]]] = None,
+        callbacks: Optional[Union[BaseCallback, List[BaseCallback]]] = None,
         num_bins: int = 10,
     ) -> None:
         """Init method.
@@ -212,7 +212,7 @@ class BaseDistanceBasedProbability(BaseDistanceBased):
         :param statistical_kwargs: statistical kwargs
         :type statistical_kwargs: Dict[str, Any]
         :param callbacks: callbacks
-        :type callbacks: Optional[Union[Callback, List[Callback]]]
+        :type callbacks: Optional[Union[Callback, List[BaseCallback]]]
         :param num_bins: number of bins in which to divide probabilities
         :type num_bins: int
         """

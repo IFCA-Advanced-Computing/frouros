@@ -3,7 +3,7 @@
 import abc
 from typing import List, Optional, Union
 
-from frouros.callbacks import Callback
+from frouros.callbacks import BaseCallback
 from frouros.detectors.concept_drift.streaming.base import (
     BaseConceptDriftStreaming,
     BaseConceptDriftStreamingConfig,
@@ -132,14 +132,14 @@ class BaseCUSUM(BaseConceptDriftStreaming):
     def __init__(
         self,
         config: Optional[BaseCUSUMConfig] = None,
-        callbacks: Optional[Union[Callback, List[Callback]]] = None,
+        callbacks: Optional[Union[BaseCallback, List[BaseCallback]]] = None,
     ) -> None:
         """Init method.
 
         :param config: configuration parameters
         :type config: Optional[BaseCUSUMConfig]
         :param callbacks: callbacks
-        :type callbacks: Optional[Union[Callback, List[Callback]]]
+        :type callbacks: Optional[Union[BaseCallback, List[Callback]]]
         """
         super().__init__(
             config=config,
