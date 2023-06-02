@@ -90,7 +90,7 @@ class MultivariateData(BaseStatisticalType):
         self.dim_check = operator.ge
 
 
-class DataDriftBase(BaseDetector):
+class BaseDataDrift(BaseDetector):
     """Abstract class representing a data drift detector."""
 
     def __init__(

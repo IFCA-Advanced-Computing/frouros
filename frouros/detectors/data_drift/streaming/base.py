@@ -7,14 +7,14 @@ import numpy as np  # type: ignore
 
 from frouros.callbacks import Callback
 from frouros.detectors.data_drift.base import (
-    DataDriftBase,
+    BaseDataDrift,
     BaseDataType,
     BaseResult,
     BaseStatisticalType,
 )
 
 
-class DataDriftStreamingBase(DataDriftBase):
+class DataDriftStreamingBase(BaseDataDrift):
     """Abstract class representing a data drift streaming detector."""
 
     def __init__(

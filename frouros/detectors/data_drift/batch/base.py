@@ -7,7 +7,7 @@ import numpy as np  # type: ignore
 
 from frouros.callbacks import Callback
 from frouros.detectors.data_drift.base import (
-    DataDriftBase,
+    BaseDataDrift,
     BaseDataType,
     BaseStatisticalType,
 )
@@ -16,7 +16,7 @@ from frouros.detectors.data_drift.exceptions import (
 )
 
 
-class DataDriftBatchBase(DataDriftBase):
+class DataDriftBatchBase(BaseDataDrift):
     """Abstract class representing a data drift batch detector."""
 
     def __init__(
