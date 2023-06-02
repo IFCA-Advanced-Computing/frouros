@@ -1,7 +1,7 @@
 """Geometric Moving Average module."""
 
 from frouros.detectors.concept_drift.streaming.cusum_based.base import (
-    CUSUMBase,
+    BaseCUSUM,
     BaseCUSUMConfig,
     AlphaConfig,
 )
@@ -40,7 +40,7 @@ class GeometricMovingAverageConfig(BaseCUSUMConfig, AlphaConfig):
         AlphaConfig.__init__(self, alpha=alpha)
 
 
-class GeometricMovingAverage(CUSUMBase):
+class GeometricMovingAverage(BaseCUSUM):
     """Geometric Moving Average [robertst1959control]_ detector.
 
     :References:

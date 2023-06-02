@@ -1,7 +1,7 @@
 """Page Hinkley module."""
 
 from frouros.detectors.concept_drift.streaming.cusum_based.base import (
-    CUSUMBase,
+    BaseCUSUM,
     BaseCUSUMConfig,
     DeltaConfig,
     AlphaConfig,
@@ -44,7 +44,7 @@ class PageHinkleyConfig(BaseCUSUMConfig, DeltaConfig, AlphaConfig):
         AlphaConfig.__init__(self, alpha=alpha)
 
 
-class PageHinkley(CUSUMBase):
+class PageHinkley(BaseCUSUM):
     """Page Hinkley [page1954continuous]_ detector.
 
     :References:

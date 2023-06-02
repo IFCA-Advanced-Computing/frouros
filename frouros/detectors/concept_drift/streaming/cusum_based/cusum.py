@@ -3,7 +3,7 @@
 import numpy as np  # type: ignore
 
 from frouros.detectors.concept_drift.streaming.cusum_based.base import (
-    CUSUMBase,
+    BaseCUSUM,
     BaseCUSUMConfig,
     DeltaConfig,
 )
@@ -41,7 +41,7 @@ class CUSUMConfig(BaseCUSUMConfig, DeltaConfig):
         DeltaConfig.__init__(self, delta=delta)
 
 
-class CUSUM(CUSUMBase):
+class CUSUM(BaseCUSUM):
     """CUSUM [page1954continuous]_ detector.
 
     :References:

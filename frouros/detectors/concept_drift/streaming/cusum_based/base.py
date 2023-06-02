@@ -124,7 +124,7 @@ class AlphaConfig:
         self._alpha = value
 
 
-class CUSUMBase(BaseConceptDriftStreaming):
+class BaseCUSUM(BaseConceptDriftStreaming):
     """CUSUM based algorithm class."""
 
     config_type = BaseCUSUMConfig
