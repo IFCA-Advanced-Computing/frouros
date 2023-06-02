@@ -13,7 +13,7 @@ from frouros.detectors.concept_drift.streaming.statistical_process_control.base 
 from frouros.utils.stats import EWMA, Mean
 
 
-class HDDMBaseConfig(BaseSPCConfig):
+class BaseHDDMConfig(BaseSPCConfig):
     """HDDM (Hoeffding's drift detection method) [frias2014online]_ configuration.
 
     :References:
@@ -113,7 +113,7 @@ class HDDMBaseConfig(BaseSPCConfig):
         self._two_sided_test = value
 
 
-class HDDMAConfig(HDDMBaseConfig):
+class HDDMAConfig(BaseHDDMConfig):
     """HDDM-A (Hoeffding's drift detection method A-Test) [frias2014online]_ configuration.
 
     :References:
@@ -125,7 +125,7 @@ class HDDMAConfig(HDDMBaseConfig):
     """
 
 
-class HDDMWConfig(HDDMBaseConfig):
+class HDDMWConfig(BaseHDDMConfig):
     """HDDM-W (Hoeffding's drift detection method W-Test) [frias2014online]_ configuration.
 
     :References:
