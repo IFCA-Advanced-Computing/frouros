@@ -9,12 +9,12 @@ from frouros.callbacks import Callback
 from frouros.detectors.data_drift.base import NumericalData, UnivariateData
 from frouros.detectors.data_drift.exceptions import InsufficientSamplesError
 from frouros.detectors.data_drift.batch.statistical_test.base import (
-    StatisticalTestBase,
+    BaseStatisticalTest,
     StatisticalResult,
 )
 
 
-class CVMTest(StatisticalTestBase):
+class CVMTest(BaseStatisticalTest):
     """CVMTest (Cramér-von Mises test) [cramer1928composition]_ detector.
 
     :References:
@@ -38,7 +38,7 @@ class CVMTest(StatisticalTestBase):
             callbacks=callbacks,
         )
 
-    @StatisticalTestBase.X_ref.setter  # type: ignore[attr-defined]
+    @BaseStatisticalTest.X_ref.setter  # type: ignore[attr-defined]
     def X_ref(self, value: Optional[np.ndarray]) -> None:  # noqa: N802
         """Reference data setter.
 

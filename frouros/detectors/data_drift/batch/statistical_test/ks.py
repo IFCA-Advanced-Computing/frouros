@@ -8,12 +8,12 @@ from scipy.stats import ks_2samp  # type: ignore
 from frouros.callbacks import Callback
 from frouros.detectors.data_drift.base import NumericalData, UnivariateData
 from frouros.detectors.data_drift.batch.statistical_test.base import (
-    StatisticalTestBase,
+    BaseStatisticalTest,
     StatisticalResult,
 )
 
 
-class KSTest(StatisticalTestBase):
+class KSTest(BaseStatisticalTest):
     """KSTest (Kolmogorov-Smirnov test) [massey1951kolmogorov]_ detector.
 
     :References:

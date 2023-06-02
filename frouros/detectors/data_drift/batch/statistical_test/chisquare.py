@@ -9,12 +9,12 @@ from scipy.stats import chi2_contingency  # type: ignore
 from frouros.callbacks import Callback
 from frouros.detectors.data_drift.base import CategoricalData, UnivariateData
 from frouros.detectors.data_drift.batch.statistical_test.base import (  # type: ignore
-    StatisticalTestBase,
+    BaseStatisticalTest,
     StatisticalResult,
 )
 
 
-class ChiSquareTest(StatisticalTestBase):
+class ChiSquareTest(BaseStatisticalTest):
     """ChiSquareTest (Chi-square test) [pearson1900x]_ detector.
 
     :References:

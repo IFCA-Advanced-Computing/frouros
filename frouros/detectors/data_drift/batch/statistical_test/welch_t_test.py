@@ -8,12 +8,12 @@ from scipy.stats import ttest_ind  # type: ignore
 from frouros.callbacks import Callback
 from frouros.detectors.data_drift.base import NumericalData, UnivariateData
 from frouros.detectors.data_drift.batch.statistical_test.base import (
-    StatisticalTestBase,
+    BaseStatisticalTest,
     StatisticalResult,
 )
 
 
-class WelchTTest(StatisticalTestBase):
+class WelchTTest(BaseStatisticalTest):
     """Welch's T-test [welch1947generalization]_ detector.
 
     :References:
