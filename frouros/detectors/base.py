@@ -32,7 +32,10 @@ class BaseDetector(abc.ABC):
         return self._callbacks  # type: ignore
 
     @callbacks.setter
-    def callbacks(self, value: Optional[Union[BaseCallback, List[BaseCallback]]]) -> None:
+    def callbacks(
+        self,
+        value: Optional[Union[BaseCallback, List[BaseCallback]]],
+    ) -> None:
         """Callbacks setter.
 
         :param value: value to be set
@@ -43,7 +46,7 @@ class BaseDetector(abc.ABC):
             if isinstance(value, BaseCallback):
                 self._callbacks = [value]
             elif not all(
-                    isinstance(callback, BaseCallback) for callback in value  # type: ignore
+                isinstance(callback, BaseCallback) for callback in value  # type: ignore
             ):
                 raise TypeError("value must be of type None or a list of BaseCallback.")
             else:
