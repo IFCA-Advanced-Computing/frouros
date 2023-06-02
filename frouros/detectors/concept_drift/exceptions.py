@@ -1,4 +1,4 @@
-"""Supervised exception module."""
+"""Concept drift exception module."""
 
 
 class InvalidAverageRunLengthError(Exception):
