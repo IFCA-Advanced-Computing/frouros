@@ -13,7 +13,7 @@ from frouros.utils.logger import logger
 from frouros.utils.data_structures import CircularQueue
 
 
-class Stat(abc.ABC):
+class BaseStat(abc.ABC):
     """Abstract class representing an statistic."""
 
     @abc.abstractmethod
@@ -21,7 +21,7 @@ class Stat(abc.ABC):
         """Get method."""
 
 
-class IncrementalStat(Stat):
+class IncrementalStat(BaseStat):
     """Abstract class representing an incremental statistic."""
 
     @abc.abstractmethod

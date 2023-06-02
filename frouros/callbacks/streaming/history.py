@@ -3,7 +3,7 @@
 from typing import Any, Dict, List, Optional, Union
 
 from frouros.callbacks.streaming.base import BaseCallbackStreaming
-from frouros.utils.stats import Stat
+from frouros.utils.stats import BaseStat
 
 
 class History(BaseCallbackStreaming):
@@ -49,7 +49,7 @@ class History(BaseCallbackStreaming):
             #  add_addtional_vars is called (avoid the same computation)
             self.history[var].append(
                 additional_var.get()
-                if isinstance(additional_var, Stat)
+                if isinstance(additional_var, BaseStat)
                 else additional_var
             )
 
