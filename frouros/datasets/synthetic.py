@@ -4,11 +4,11 @@ from typing import Tuple, Iterator
 
 import numpy as np  # type: ignore
 
-from frouros.datasets.base import Generator
+from frouros.datasets.base import BaseDatasetGenerator
 from frouros.datasets.exceptions import InvalidBlockError
 
 
-class SEA(Generator):
+class SEA(BaseDatasetGenerator):
     """SEA generator [street2001streaming]_.
 
     :References:
@@ -59,7 +59,7 @@ class SEA(Generator):
         return dataset
 
 
-class Dummy(Generator):
+class Dummy(BaseDatasetGenerator):
     """Dummy generator class."""
 
     @staticmethod

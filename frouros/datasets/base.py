@@ -175,7 +175,7 @@ class BaseDatasetDownload(abc.ABC):
         )
 
 
-class Generator(abc.ABC):
+class BaseDatasetGenerator(abc.ABC):
     """Abstract class representing a dataset generator."""
 
     def __init__(self, seed: Optional[int] = None) -> None:
