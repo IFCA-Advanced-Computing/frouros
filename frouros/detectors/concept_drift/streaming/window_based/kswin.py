@@ -9,12 +9,12 @@ import numpy as np  # type: ignore
 
 from frouros.callbacks import Callback
 from frouros.detectors.concept_drift.streaming.window_based.base import (
-    WindowBaseConfig,
+    BaseWindowConfig,
     WindowBased,
 )
 
 
-class KSWINConfig(WindowBaseConfig):
+class KSWINConfig(BaseWindowConfig):
     """KSWIN (Kolmogorov-Smirnov Windowing) [raab2020reactive]_ configuration.
 
     :References:

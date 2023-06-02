@@ -7,7 +7,7 @@ import numpy as np  # type: ignore
 
 from frouros.callbacks import Callback
 from frouros.detectors.concept_drift.streaming.window_based.base import (
-    WindowBaseConfig,
+    BaseWindowConfig,
     WindowBased,
 )
 
@@ -152,7 +152,7 @@ class Bucket:
         self.idx -= num_items_deleted
 
 
-class ADWINConfig(WindowBaseConfig):
+class ADWINConfig(BaseWindowConfig):
     """ADWIN (ADaptive WINdowing) [bifet2007learning]_ configuration.
 
     :References:
