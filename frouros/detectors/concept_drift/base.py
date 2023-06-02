@@ -55,7 +55,7 @@ class BaseConceptDriftConfig(abc.ABC):
         )
 
 
-class ConceptDriftBase(BaseDetector):
+class BaseConceptDrift(BaseDetector):
     """Abstract class representing a concept drift streaming."""
 
     config_type = BaseConceptDriftConfig

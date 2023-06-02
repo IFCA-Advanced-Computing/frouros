@@ -64,11 +64,11 @@ class History(StreamingCallback):
     #
     #     :raises TypeError: Type error exception
     #     """
-    #     if not isinstance(detector, ConceptDriftBase):
+    #     if not isinstance(detector, BaseConceptDrift):
     #         raise TypeError(
     #             f"callback {self.__class__.name} cannot be used with detector"
     #             f" {detector.__class__name}. Must be used with a detector of "
-    #             f"type ConceptDriftBase."
+    #             f"type BaseConceptDrift."
     #         )
     #     self.detector = detector
 

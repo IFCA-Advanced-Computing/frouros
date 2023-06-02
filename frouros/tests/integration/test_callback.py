@@ -29,7 +29,7 @@ from frouros.detectors.concept_drift import (
     RDDM,
     STEPD,
 )
-from frouros.detectors.concept_drift.base import ConceptDriftBase
+from frouros.detectors.concept_drift.base import BaseConceptDrift
 from frouros.detectors.concept_drift.streaming.statistical_process_control.base import (
     SPCBase,
 )
@@ -159,14 +159,14 @@ def test_batch_reset_on_data_drift(
 )
 def test_streaming_history_on_concept_drift(
     model_errors: List[int],
-    detector_class: ConceptDriftBase,
+    detector_class: BaseConceptDrift,
 ):
     """Test streaming history on concept drift callback.
 
     :param model_errors: model errors
     :type model_errors: List[int]
     :param detector_class: concept drift detector
-    :type detector_class: ConceptDriftBase
+    :type detector_class: BaseConceptDrift
     """
     name = "history"
     detector = detector_class(callbacks=History(name=name))  # type: ignore
