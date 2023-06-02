@@ -273,7 +273,7 @@ class BaseSPCError(BaseSPC):
         pass
 
 
-class ECDDBaseConfig(BaseConceptDriftStreamingConfig):
+class BaseECDDConfig(BaseConceptDriftStreamingConfig):
     """Class representing a ECDD configuration class."""
 
     average_run_length_map = {
