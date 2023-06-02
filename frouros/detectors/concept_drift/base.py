@@ -4,7 +4,7 @@ import abc
 from typing import Any, Dict, List, Optional, Union
 
 from frouros.callbacks import Callback, History
-from frouros.detectors.base import DetectorBase
+from frouros.detectors.base import BaseDetector
 
 
 class ConceptDriftBaseConfig(abc.ABC):
@@ -55,7 +55,7 @@ class ConceptDriftBaseConfig(abc.ABC):
         )
 
 
-class ConceptDriftBase(DetectorBase):
+class ConceptDriftBase(BaseDetector):
     """Abstract class representing a concept drift streaming."""
 
     config_type = ConceptDriftBaseConfig

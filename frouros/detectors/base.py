@@ -1,4 +1,4 @@
-"""Detector base module."""
+"""Base detector module."""
 
 import abc
 from typing import Any, Dict, List, Optional, Union
@@ -8,7 +8,7 @@ import numpy as np  # type: ignore
 from frouros.callbacks import Callback
 
 
-class DetectorBase(abc.ABC):
+class BaseDetector(abc.ABC):
     """Abstract class representing a detector."""
 
     def __init__(

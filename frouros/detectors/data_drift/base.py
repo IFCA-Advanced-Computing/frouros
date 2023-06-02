@@ -8,7 +8,7 @@ from typing import Any, Dict, List, Optional, Union
 import numpy as np  # type: ignore
 
 from frouros.callbacks import Callback
-from frouros.detectors.base import DetectorBase
+from frouros.detectors.base import BaseDetector
 from frouros.detectors.data_drift.exceptions import DimensionError, MissingFitError
 
 
@@ -90,7 +90,7 @@ class MultivariateData(StatisticalTypeBase):
         self.dim_check = operator.ge
 
 
-class DataDriftBase(DetectorBase):
+class DataDriftBase(BaseDetector):
     """Abstract class representing a data drift detector."""
 
     def __init__(
