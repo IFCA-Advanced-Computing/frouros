@@ -7,12 +7,12 @@ from scipy.spatial.distance import jensenshannon  # type: ignore
 
 from frouros.callbacks import Callback
 from frouros.detectors.data_drift.batch.distance_based.base import (
-    DistanceProbabilityBasedBase,
+    BaseDistanceBasedProbability,
     DistanceResult,
 )
 
 
-class JS(DistanceProbabilityBasedBase):
+class JS(BaseDistanceBasedProbability):
     """JS (Jensen-Shannon distance) [lin1991divergence]_ detector.
 
     :References:
@@ -67,7 +67,7 @@ class JS(DistanceProbabilityBasedBase):
         (  # noqa: N806
             X_ref_rvs,
             X_rvs,
-        ) = DistanceProbabilityBasedBase._calculate_probabilities(
+        ) = BaseDistanceBasedProbability._calculate_probabilities(
             X_ref=X,
             X=Y,
             num_bins=num_bins,

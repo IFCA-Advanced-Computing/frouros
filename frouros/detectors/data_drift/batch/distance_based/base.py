@@ -195,8 +195,8 @@ class BaseDistanceBasedBins(BaseDistanceBased):
         pass
 
 
-class DistanceProbabilityBasedBase(BaseDistanceBased):
-    """Abstract class representing a distance probability based detector."""
+class BaseDistanceBasedProbability(BaseDistanceBased):
+    """Abstract class representing a distance based probability detector."""
 
     def __init__(
         self,
