@@ -11,7 +11,7 @@ from scipy.spatial.distance import cdist  # type: ignore
 from frouros.callbacks import Callback
 from frouros.detectors.data_drift.base import MultivariateData
 from frouros.detectors.data_drift.batch.distance_based.base import (
-    DistanceBasedBase,
+    BaseDistanceBased,
     DistanceResult,
 )
 
@@ -33,7 +33,7 @@ def rbf_kernel(
     return np.exp(-cdist(X, Y, "sqeuclidean") / 2 * std**2)
 
 
-class MMD(DistanceBasedBase):
+class MMD(BaseDistanceBased):
     """MMD (Maximum Mean Discrepancy) [gretton2012kernel]_ detector.
 
     :References:

@@ -8,12 +8,12 @@ from scipy.stats import wasserstein_distance  # type: ignore
 from frouros.callbacks import Callback
 from frouros.detectors.data_drift.base import UnivariateData
 from frouros.detectors.data_drift.batch.distance_based.base import (
-    DistanceBasedBase,
+    BaseDistanceBased,
     DistanceResult,
 )
 
 
-class EMD(DistanceBasedBase):
+class EMD(BaseDistanceBased):
     """EMD (Earth Mover's Distance) [rubner2000earth]_ detector.
 
     :References:

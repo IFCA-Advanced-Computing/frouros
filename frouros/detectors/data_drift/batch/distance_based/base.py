@@ -1,4 +1,4 @@
-"""Data drift batch distance based base module."""
+"""Base data drift batch distance based module."""
 
 import abc
 from collections import namedtuple
@@ -19,7 +19,7 @@ from frouros.detectors.data_drift.batch.base import BaseDataDriftBatch
 DistanceResult = namedtuple("DistanceResult", ["distance"])
 
 
-class DistanceBasedBase(BaseDataDriftBatch):
+class BaseDistanceBased(BaseDataDriftBatch):
     """Abstract class representing a distance based detector."""
 
     def __init__(
@@ -113,7 +113,7 @@ class DistanceBasedBase(BaseDataDriftBatch):
         pass
 
 
-class DistanceBinsBasedBase(DistanceBasedBase):
+class DistanceBinsBasedBase(BaseDistanceBased):
     """Abstract class representing a distance bins based detector."""
 
     def __init__(
@@ -195,7 +195,7 @@ class DistanceBinsBasedBase(DistanceBasedBase):
         pass
 
 
-class DistanceProbabilityBasedBase(DistanceBasedBase):
+class DistanceProbabilityBasedBase(BaseDistanceBased):
     """Abstract class representing a distance probability based detector."""
 
     def __init__(
