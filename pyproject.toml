@@ -1,7 +1,7 @@
 [project]
 name = "frouros"
 version = "0.3.1"
-description = "A Python library for drift detection in Machine Learning problems"
+description = "An open source Python library for drift detection in Machine Learning problems"
 authors = [
     {name = "Jaime Céspedes Sisniega", email = "cespedes@ifca.unican.es"}
 ]
@@ -15,18 +15,24 @@ keywords = [
     "data-drift",
     "machine-learning",
     "data-science",
+    "machine-learning-operations",
+    "machine-learning-systems",
 ]
 classifiers = [
     "Development Status :: 5 - Production/Stable",
+    "Intended Audience :: Developers",
     "Intended Audience :: Science/Research",
+    "License :: OSI Approved :: BSD License",
     "Topic :: Scientific/Engineering",
     "Topic :: Scientific/Engineering :: Artificial Intelligence",
     "Topic :: Scientific/Engineering :: Mathematics",
+    "Topic :: Software Development",
     "Topic :: Software Development :: Libraries :: Python Modules",
     "Programming Language :: Python :: 3.8",
     "Programming Language :: Python :: 3.9",
     "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3 :: Only",
 ]
 requires-python = ">=3.8,<3.12"
 dependencies = [
