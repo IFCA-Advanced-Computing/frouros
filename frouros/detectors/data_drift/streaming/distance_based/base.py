@@ -5,13 +5,13 @@ from typing import Any, Dict, Optional, Tuple, Union
 
 import numpy as np  # type: ignore
 
-from frouros.detectors.data_drift.base import ResultBase
+from frouros.detectors.data_drift.base import BaseResult
 from frouros.detectors.data_drift.streaming.base import (
     DataDriftStreamingBase,
 )
 
 
-class DistanceResult(ResultBase):
+class DistanceResult(BaseResult):
     """Distance result class."""
 
     def __init__(

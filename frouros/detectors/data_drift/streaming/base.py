@@ -9,7 +9,7 @@ from frouros.callbacks import Callback
 from frouros.detectors.data_drift.base import (
     DataDriftBase,
     DataTypeBase,
-    ResultBase,
+    BaseResult,
     StatisticalTypeBase,
 )
 
@@ -49,13 +49,13 @@ class DataDriftStreamingBase(DataDriftBase):
 
     def update(
         self, value: Union[int, float]
-    ) -> Tuple[Optional[ResultBase], Dict[str, Any]]:
+    ) -> Tuple[Optional[BaseResult], Dict[str, Any]]:
         """Update detector.
 
         :param value: value to use to update the detector
         :type value: Union[int, float]
         :return: update result
-        :rtype: Optional[ResultBase]
+        :rtype: Optional[BaseResult]
         """
         self._common_checks()  # noqa: N806
         self._specific_checks(X=value)  # noqa: N806
@@ -85,5 +85,5 @@ class DataDriftStreamingBase(DataDriftBase):
         pass
 
     @abc.abstractmethod
-    def _update(self, value: Union[int, float]) -> Optional[ResultBase]:
+    def _update(self, value: Union[int, float]) -> Optional[BaseResult]:
         pass

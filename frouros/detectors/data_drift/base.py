@@ -1,4 +1,4 @@
-"""Data drift base module."""
+"""Base data drift module."""
 
 
 import abc
@@ -12,7 +12,7 @@ from frouros.detectors.base import BaseDetector
 from frouros.detectors.data_drift.exceptions import DimensionError, MissingFitError
 
 
-class ResultBase(abc.ABC):
+class BaseResult(abc.ABC):
     """Abstract class representing a result."""
 
 
