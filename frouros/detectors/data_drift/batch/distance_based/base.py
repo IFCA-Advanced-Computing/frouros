@@ -13,13 +13,13 @@ from frouros.detectors.data_drift.base import (
     BaseStatisticalType,
     UnivariateData,
 )
-from frouros.detectors.data_drift.batch.base import DataDriftBatchBase
+from frouros.detectors.data_drift.batch.base import BaseDataDriftBatch
 
 
 DistanceResult = namedtuple("DistanceResult", ["distance"])
 
 
-class DistanceBasedBase(DataDriftBatchBase):
+class DistanceBasedBase(BaseDataDriftBatch):
     """Abstract class representing a distance based detector."""
 
     def __init__(

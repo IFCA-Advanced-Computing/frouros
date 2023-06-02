@@ -6,13 +6,13 @@ from typing import Tuple
 
 import numpy as np  # type: ignore
 
-from frouros.detectors.data_drift.batch.base import DataDriftBatchBase
+from frouros.detectors.data_drift.batch.base import BaseDataDriftBatch
 
 
 StatisticalResult = namedtuple("StatisticalResult", ["statistic", "p_value"])
 
 
-class StatisticalTestBase(DataDriftBatchBase):
+class StatisticalTestBase(BaseDataDriftBatch):
     """Abstract class representing a statistical test."""
 
     def _apply_method(

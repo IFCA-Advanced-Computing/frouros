@@ -56,11 +56,11 @@ class ResetOnBatchDataDrift(BatchCallback):
     #
     #     :raises TypeError: Type error exception
     #     """
-    #     if not isinstance(detector, DataDriftBatchBase):
+    #     if not isinstance(detector, BaseDataDriftBatch):
     #         raise TypeError(
     #             f"callback {self.__class__.name} cannot be used with detector"
     #             f" {detector.__class__name}. Must be used with a detector of "
-    #             f"type DataDriftBatchBase."
+    #             f"type BaseDataDriftBatch."
     #         )
     #     self.detector = detector
 

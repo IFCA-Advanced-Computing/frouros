@@ -43,15 +43,15 @@ class Callback(abc.ABC):
         self.detector = detector
 
     # @property
-    # def detector(self) -> Optional[BaseConceptDrift, DataDriftBatchBase]:
+    # def detector(self) -> Optional[BaseConceptDrift, BaseDataDriftBatch]:
     #     return self._detector
     #
     # @detector.setter
-    # def detector(self, value: Optional[BaseConceptDrift, DataDriftBatchBase]) -> None:
+    # def detector(self, value: Optional[BaseConceptDrift, BaseDataDriftBatch]) -> None:
     #     if not isinstance(
-    #             value, (BaseConceptDrift, DataDriftBatchBase)):
+    #             value, (BaseConceptDrift, BaseDataDriftBatch)):
     #         raise TypeError(
-    #             "value must be of type BaseConceptDrift or DataDriftBatchBase."
+    #             "value must be of type BaseConceptDrift or BaseDataDriftBatch."
     #         )
     #     self._detector = value
 
