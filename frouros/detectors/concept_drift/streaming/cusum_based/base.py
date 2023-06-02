@@ -1,4 +1,4 @@
-"""Concept drift CUSUM based base module."""
+"""Base concept drift CUSUM based module."""
 
 import abc
 from typing import List, Optional, Union
@@ -11,7 +11,7 @@ from frouros.detectors.concept_drift.streaming.base import (
 from frouros.utils.stats import Mean
 
 
-class CUSUMBaseConfig(BaseConceptDriftStreamingConfig):
+class BaseCUSUMConfig(BaseConceptDriftStreamingConfig):
     """Class representing a CUSUM based configuration class."""
 
     def __init__(
@@ -127,17 +127,17 @@ class AlphaConfig:
 class CUSUMBase(BaseConceptDriftStreaming):
     """CUSUM based algorithm class."""
 
-    config_type = CUSUMBaseConfig
+    config_type = BaseCUSUMConfig
 
     def __init__(
         self,
-        config: Optional[CUSUMBaseConfig] = None,
+        config: Optional[BaseCUSUMConfig] = None,
         callbacks: Optional[Union[Callback, List[Callback]]] = None,
     ) -> None:
         """Init method.
 
         :param config: configuration parameters
-        :type config: Optional[CUSUMBaseConfig]
+        :type config: Optional[BaseCUSUMConfig]
         :param callbacks: callbacks
         :type callbacks: Optional[Union[Callback, List[Callback]]]
         """

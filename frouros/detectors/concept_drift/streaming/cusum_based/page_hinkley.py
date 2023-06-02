@@ -2,13 +2,13 @@
 
 from frouros.detectors.concept_drift.streaming.cusum_based.base import (
     CUSUMBase,
-    CUSUMBaseConfig,
+    BaseCUSUMConfig,
     DeltaConfig,
     AlphaConfig,
 )
 
 
-class PageHinkleyConfig(CUSUMBaseConfig, DeltaConfig, AlphaConfig):
+class PageHinkleyConfig(BaseCUSUMConfig, DeltaConfig, AlphaConfig):
     """Page Hinkley [page1954continuous]_ configuration.
 
     :References:
@@ -37,7 +37,7 @@ class PageHinkleyConfig(CUSUMBaseConfig, DeltaConfig, AlphaConfig):
         :param alpha: forgetting factor value
         :type alpha: float
         """
-        CUSUMBaseConfig.__init__(
+        BaseCUSUMConfig.__init__(
             self, min_num_instances=min_num_instances, lambda_=lambda_
         )
         DeltaConfig.__init__(self, delta=delta)
