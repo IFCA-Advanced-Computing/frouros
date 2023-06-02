@@ -7,14 +7,14 @@ import numpy as np  # type: ignore
 
 from frouros.callbacks import Callback
 from frouros.detectors.concept_drift.streaming.base import (
-    ConceptDriftStreamingBaseConfig,
+    BaseConceptDriftStreamingConfig,
     ConceptDriftStreamingBase,
 )
 from frouros.detectors.concept_drift.exceptions import InvalidAverageRunLengthError
 from frouros.utils.stats import Mean
 
 
-class SPCBaseConfig(ConceptDriftStreamingBaseConfig):
+class SPCBaseConfig(BaseConceptDriftStreamingConfig):
     """Class representing a SPC configuration class."""
 
     def __init__(
@@ -273,7 +273,7 @@ class SPCErrorBase(SPCBase):
         pass
 
 
-class ECDDBaseConfig(ConceptDriftStreamingBaseConfig):
+class ECDDBaseConfig(BaseConceptDriftStreamingConfig):
     """Class representing a ECDD configuration class."""
 
     average_run_length_map = {

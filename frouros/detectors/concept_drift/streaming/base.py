@@ -10,7 +10,7 @@ from frouros.detectors.concept_drift.base import (
 )
 
 
-class ConceptDriftStreamingBaseConfig(BaseConceptDriftConfig):
+class BaseConceptDriftStreamingConfig(BaseConceptDriftConfig):
     """Abstract class representing a concept drift streaming configuration class."""
 
 

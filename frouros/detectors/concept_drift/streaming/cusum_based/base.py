@@ -6,12 +6,12 @@ from typing import List, Optional, Union
 from frouros.callbacks import Callback
 from frouros.detectors.concept_drift.streaming.base import (
     ConceptDriftStreamingBase,
-    ConceptDriftStreamingBaseConfig,
+    BaseConceptDriftStreamingConfig,
 )
 from frouros.utils.stats import Mean
 
 
-class CUSUMBaseConfig(ConceptDriftStreamingBaseConfig):
+class CUSUMBaseConfig(BaseConceptDriftStreamingConfig):
     """Class representing a CUSUM based configuration class."""
 
     def __init__(

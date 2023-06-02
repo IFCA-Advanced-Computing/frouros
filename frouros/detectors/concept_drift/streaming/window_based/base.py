@@ -5,11 +5,11 @@ from typing import Union
 
 from frouros.detectors.concept_drift.streaming.base import (
     ConceptDriftStreamingBase,
-    ConceptDriftStreamingBaseConfig,
+    BaseConceptDriftStreamingConfig,
 )
 
 
-class WindowBaseConfig(ConceptDriftStreamingBaseConfig):
+class WindowBaseConfig(BaseConceptDriftStreamingConfig):
     """Class representing a window based configuration class."""
 
 
