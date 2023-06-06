@@ -4,7 +4,7 @@ from typing import List, Optional, Union
 
 import numpy as np  # type: ignore
 
-from frouros.callbacks.base import BaseCallback
+from frouros.callbacks.streaming.base import BaseCallbackStreaming
 from frouros.detectors.concept_drift.streaming.statistical_process_control.base import (
     BaseSPC,
     BaseECDDConfig,
@@ -38,14 +38,17 @@ class ECDDWT(BaseSPC):
     def __init__(
         self,
         config: Optional[ECDDWTConfig] = None,
-        callbacks: Optional[Union[BaseCallback, List[BaseCallback]]] = None,
+        callbacks: Optional[
+            Union[BaseCallbackStreaming, List[BaseCallbackStreaming]]
+        ] = None,
     ) -> None:
         """Init method.
 
         :param config: configuration parameters
         :type config: Optional[ECDDWTConfig]
         :param callbacks: callbacks
-        :type callbacks: Optional[Union[Callback, List[BaseCallback]]]
+        :type callbacks: Optional[Union[BaseCallbackStreaming,
+        List[BaseCallbackStreaming]]]
         """
         super().__init__(
             config=config,  # type: ignore

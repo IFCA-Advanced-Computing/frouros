@@ -4,8 +4,9 @@ import abc
 from typing import Any, Dict, List, Optional, Union
 
 from frouros.callbacks import History
-from frouros.callbacks.base import BaseCallback
+from frouros.callbacks.streaming.base import BaseCallbackStreaming
 from frouros.detectors.base import BaseDetector
+from frouros.utils.checks import check_callbacks
 
 
 class BaseConceptDriftConfig(abc.ABC):
@@ -64,16 +65,23 @@ class BaseConceptDrift(BaseDetector):
     def __init__(
         self,
         config: Optional[BaseConceptDriftConfig] = None,
-        callbacks: Optional[Union[BaseCallback, List[BaseCallback]]] = None,
+        callbacks: Optional[
+            Union[BaseCallbackStreaming, List[BaseCallbackStreaming]]
+        ] = None,
     ) -> None:
         """Init method.
 
         :param config: configuration parameters
         :type config: Optional[BaseConceptDriftConfig]
         :param callbacks: callbacks
-        :type callbacks: Optional[Union[BaseCallback, List[Callback]]]
+        :type callbacks: Optional[Union[BaseCallbackStreaming,
+        List[BaseCallbackStreaming]]]
         """
-        super().__init__(callbacks=callbacks)
+        check_callbacks(
+            callbacks=callbacks,
+            expected_cls=BaseCallbackStreaming,  # type: ignore
+        )
+        super().__init__(callbacks=callbacks)  # type: ignore
         self.config = config  # type: ignore
         self.additional_vars = None
 

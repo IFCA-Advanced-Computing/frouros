@@ -5,7 +5,7 @@ from typing import Any, Dict, List, Optional, Union
 import numpy as np  # type: ignore
 from scipy.special import rel_entr  # type: ignore
 
-from frouros.callbacks.base import BaseCallback
+from frouros.callbacks.batch.base import BaseCallbackBatch
 from frouros.detectors.data_drift.batch.distance_based.base import (
     BaseDistanceBasedProbability,
     DistanceResult,
@@ -25,7 +25,7 @@ class KL(BaseDistanceBasedProbability):
     def __init__(
         self,
         num_bins: int = 10,
-        callbacks: Optional[Union[BaseCallback, List[BaseCallback]]] = None,
+        callbacks: Optional[Union[BaseCallbackBatch, List[BaseCallbackBatch]]] = None,
         **kwargs,
     ) -> None:
         """Init method.
@@ -33,7 +33,7 @@ class KL(BaseDistanceBasedProbability):
         :param num_bins: number of bins in which to divide probabilities
         :type num_bins: int
         :param callbacks: number of bins in which to divide probabilities
-        :type callbacks: Optional[Union[BaseCallback, List[Callback]]]
+        :type callbacks: Optional[Union[BaseCallbackBatch, List[BaseCallbackBatch]]]
         """
         super().__init__(
             statistical_method=self._kl,

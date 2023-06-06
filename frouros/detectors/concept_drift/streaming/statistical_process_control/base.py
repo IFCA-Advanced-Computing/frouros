@@ -5,7 +5,7 @@ from typing import Dict, List, Optional, Tuple, Union
 
 import numpy as np  # type: ignore
 
-from frouros.callbacks.base import BaseCallback
+from frouros.callbacks.streaming.base import BaseCallbackStreaming
 from frouros.detectors.concept_drift.exceptions import InvalidAverageRunLengthError
 from frouros.detectors.concept_drift.streaming.base import (
     BaseConceptDriftStreamingConfig,
@@ -90,14 +90,17 @@ class BaseSPC(BaseConceptDriftStreaming):
     def __init__(
         self,
         config: Optional[BaseSPCConfig] = None,
-        callbacks: Optional[Union[BaseCallback, List[BaseCallback]]] = None,
+        callbacks: Optional[
+            Union[BaseCallbackStreaming, List[BaseCallbackStreaming]]
+        ] = None,
     ) -> None:
         """Init method.
 
         :param config: configuration parameters
         :type config: Optional[BaseSPCConfig]
         :param callbacks: callbacks
-        :type callbacks: Optional[Union[Callback, List[BaseCallback]]]
+        :type callbacks: Optional[Union[BaseCallbackStreaming,
+        List[BaseCallbackStreaming]]]
         """
         super().__init__(
             config=config,
@@ -153,14 +156,17 @@ class BaseSPCError(BaseSPC):
     def __init__(
         self,
         config: Optional[BaseSPCConfig] = None,
-        callbacks: Optional[Union[BaseCallback, List[BaseCallback]]] = None,
+        callbacks: Optional[
+            Union[BaseCallbackStreaming, List[BaseCallbackStreaming]]
+        ] = None,
     ) -> None:
         """Init method.
 
         :param config: configuration parameters
         :type config: Optional[BaseSPCConfig]
         :param callbacks: callbacks
-        :type callbacks: Optional[Union[Callback, List[BaseCallback]]]
+        :type callbacks: Optional[Union[BaseCallbackStreaming,
+        List[BaseCallbackStreaming]]]
         """
         super().__init__(
             config=config,

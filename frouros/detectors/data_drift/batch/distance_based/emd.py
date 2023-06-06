@@ -5,7 +5,7 @@ from typing import List, Optional, Union
 import numpy as np  # type: ignore
 from scipy.stats import wasserstein_distance  # type: ignore
 
-from frouros.callbacks.base import BaseCallback
+from frouros.callbacks.batch.base import BaseCallbackBatch
 from frouros.detectors.data_drift.base import UnivariateData
 from frouros.detectors.data_drift.batch.distance_based.base import (
     BaseDistanceBased,
@@ -25,13 +25,13 @@ class EMD(BaseDistanceBased):
 
     def __init__(
         self,
-        callbacks: Optional[Union[BaseCallback, List[BaseCallback]]] = None,
+        callbacks: Optional[Union[BaseCallbackBatch, List[BaseCallbackBatch]]] = None,
         **kwargs,
     ) -> None:
         """Init method.
 
         :param callbacks: callbacks
-        :type callbacks: Optional[Union[BaseCallback, List[Callback]]]
+        :type callbacks: Optional[Union[BaseCallbackBatch, List[BaseCallbackBatch]]]
         """
         super().__init__(
             statistical_type=UnivariateData(),

@@ -5,7 +5,7 @@ from typing import List, Optional, Union
 
 import numpy as np  # type: ignore
 
-from frouros.callbacks.base import BaseCallback
+from frouros.callbacks.streaming.base import BaseCallbackStreaming
 from frouros.detectors.concept_drift.streaming.statistical_process_control.base import (
     BaseSPCConfig,
     BaseSPC,
@@ -148,14 +148,17 @@ class EDDM(BaseSPC):
     def __init__(
         self,
         config: Optional[EDDMConfig] = None,
-        callbacks: Optional[Union[BaseCallback, List[BaseCallback]]] = None,
+        callbacks: Optional[
+            Union[BaseCallbackStreaming, List[BaseCallbackStreaming]]
+        ] = None,
     ) -> None:
         """Init method.
 
         :param config: configuration parameters
         :type config: Optional[EDDMConfig]
         :param callbacks: callbacks
-        :type callbacks: Optional[Union[BaseCallback, List[Callback]]]
+        :type callbacks: Optional[Union[BaseCallbackStreaming,
+        List[BaseCallbackStreaming]]]
         """
         # mean_distance_error = 0.0
         super().__init__(

@@ -5,7 +5,7 @@ from typing import Any, Dict, Optional, List, Tuple, Union
 
 import numpy as np  # type: ignore
 
-from frouros.callbacks.base import BaseCallback
+from frouros.callbacks.batch.base import BaseCallbackBatch
 from frouros.detectors.data_drift.base import (
     BaseDataDrift,
     BaseDataType,
@@ -14,6 +14,7 @@ from frouros.detectors.data_drift.base import (
 from frouros.detectors.data_drift.exceptions import (
     MismatchDimensionError,
 )
+from frouros.utils.checks import check_callbacks
 
 
 class BaseDataDriftBatch(BaseDataDrift):
@@ -23,7 +24,7 @@ class BaseDataDriftBatch(BaseDataDrift):
         self,
         data_type: BaseDataType,
         statistical_type: BaseStatisticalType,
-        callbacks: Optional[Union[BaseCallback, List[BaseCallback]]] = None,
+        callbacks: Optional[Union[BaseCallbackBatch, List[BaseCallbackBatch]]] = None,
     ) -> None:
         """Init method.
 
@@ -32,10 +33,14 @@ class BaseDataDriftBatch(BaseDataDrift):
         :param statistical_type: statistical type
         :type statistical_type: BaseStatisticalType
         :param callbacks: callbacks
-        :type callbacks: Optional[Union[Callback], List[BaseCallback]]
+        :type callbacks: Optional[Union[BaseCallbackBatch], List[BaseCallbackBatch]]
         """
-        super().__init__(
+        check_callbacks(
             callbacks=callbacks,
+            expected_cls=BaseCallbackBatch,  # type: ignore
+        )
+        super().__init__(
+            callbacks=callbacks,  # type: ignore
             data_type=data_type,
             statistical_type=statistical_type,
         )

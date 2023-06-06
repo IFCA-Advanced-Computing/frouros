@@ -5,7 +5,7 @@ from typing import Optional, List, Union
 import numpy as np  # type: ignore
 from scipy.stats import cramervonmises_2samp  # type: ignore
 
-from frouros.callbacks.base import BaseCallback
+from frouros.callbacks.batch.base import BaseCallbackBatch
 from frouros.detectors.data_drift.base import NumericalData, UnivariateData
 from frouros.detectors.data_drift.batch.statistical_test.base import (
     BaseStatisticalTest,
@@ -25,12 +25,13 @@ class CVMTest(BaseStatisticalTest):
     """
 
     def __init__(
-        self, callbacks: Optional[Union[BaseCallback, List[BaseCallback]]] = None
+        self,
+        callbacks: Optional[Union[BaseCallbackBatch, List[BaseCallbackBatch]]] = None,
     ) -> None:
         """Init method.
 
         :param callbacks: callbacks
-        :type callbacks: Optional[Union[Callback, List[BaseCallback]]]
+        :type callbacks: Optional[Union[BaseCallbackBatch, List[BaseCallbackBatch]]]
         """
         super().__init__(
             data_type=NumericalData(),

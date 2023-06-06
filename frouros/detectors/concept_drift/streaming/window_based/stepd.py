@@ -5,7 +5,7 @@ from typing import List, Optional, Union
 import numpy as np  # type: ignore
 from scipy.stats import norm  # type: ignore
 
-from frouros.callbacks.base import BaseCallback
+from frouros.callbacks.streaming.base import BaseCallbackStreaming
 from frouros.detectors.concept_drift.streaming.window_based.base import (
     BaseWindowConfig,
     BaseWindow,
@@ -103,14 +103,17 @@ class STEPD(BaseWindow):
     def __init__(
         self,
         config: Optional[STEPDConfig] = None,
-        callbacks: Optional[Union[BaseCallback, List[BaseCallback]]] = None,
+        callbacks: Optional[
+            Union[BaseCallbackStreaming, List[BaseCallbackStreaming]]
+        ] = None,
     ) -> None:
         """Init method.
 
         :param config: configuration parameters
         :type config: Optional[STEPDConfig]
         :param callbacks: callbacks
-        :type callbacks: Optional[Union[BaseCallback, List[Callback]]]
+        :type callbacks: Optional[Union[BaseCallbackStreaming,
+        List[BaseCallbackStreaming]]]
         """
         super().__init__(
             config=config,
