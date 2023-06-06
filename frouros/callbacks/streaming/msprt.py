@@ -139,13 +139,9 @@ class mSPRT(BaseCallbackStreaming):  # noqa: N801 # pylint: disable=invalid-name
         self.mean = CircularMean(size=self.detector.window_size)  # type: ignore
         self.theta = self.detector.compare(X=kwargs["X"])[0].distance  # type: ignore
 
-    def on_update_end(self, value: Union[int, float], **kwargs) -> None:
-        """On update end method.
-
-        :param value: value to update detector
-        :type value: int
-        """
-        self.mean.update(value=value)  # type: ignore
+    def on_update_end(self, **kwargs) -> None:
+        """On update end method."""
+        self.mean.update(value=kwargs["value"])  # type: ignore
         self.p_value, likelihood = self._calculate_p_value()
 
         self.logs.update(

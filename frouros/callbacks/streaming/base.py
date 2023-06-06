@@ -1,7 +1,6 @@
 """Base callback streaming module."""
 
 import abc
-from typing import Union
 
 from frouros.callbacks.base import BaseCallback
 
@@ -9,10 +8,10 @@ from frouros.callbacks.base import BaseCallback
 class BaseCallbackStreaming(BaseCallback):
     """Callback streaming class."""
 
-    def on_update_start(self, value: Union[int, float], **kwargs) -> None:
+    def on_update_start(self, **kwargs) -> None:
         """On update start method."""
 
-    def on_update_end(self, value: Union[int, float], **kwargs) -> None:
+    def on_update_end(self, **kwargs) -> None:
         """On update end method."""
 
     # FIXME: set_detector method as a workaround to  # pylint: disable=fixme
