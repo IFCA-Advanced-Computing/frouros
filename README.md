@@ -377,6 +377,12 @@ The currently implemented detectors are listed in the following table.
 </tbody>
 </table>
 
+## ❗ What is and what is not Frouros?
+
+Unlike other libraries that in addition to provide drift detection algorithms, include other functionalities such as anomaly/outlier detection, adversarial detection, imbalance learning, among others, Frouros has and will **ONLY** have one purpose: **drift detection**.
+
+We firmly believe that machine learning related libraries or frameworks should not follow [Jack of all trades, master of none](https://en.wikipedia.org/wiki/Jack_of_all_trades,_master_of_none) principle. Instead, they should be focused on a single task and do it well.
+
 ## ✅ Who is using Frouros?
 
 Frouros is actively being used by the following projects to implement drift
