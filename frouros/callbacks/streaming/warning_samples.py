@@ -1,7 +1,7 @@
 """Warning samples buffer callback module."""
 
 import copy
-from typing import Any, List, Optional, Union
+from typing import Any, List, Optional
 
 from frouros.callbacks.streaming.base import BaseCallbackStreaming
 
@@ -20,16 +20,12 @@ class WarningSamplesBuffer(BaseCallbackStreaming):
         self.y: List[Any] = []
         self._start_warning = False
 
-    def on_update_start(self, value: Union[int, float], **kwargs) -> None:
+    def on_update_start(self, **kwargs) -> None:
         """On update start method."""
         self._start_warning = not self.detector.warning  # type: ignore
 
-    def on_update_end(self, value: Union[int, float], **kwargs) -> None:
-        """On update end method.
-
-        :param value: value to update detector
-        :type value: int
-        """
+    def on_update_end(self, **kwargs) -> None:
+        """On update end method."""
         self.logs = {
             "X": copy.deepcopy(self.X),
             "y": copy.deepcopy(self.y),

@@ -8,7 +8,7 @@ from frouros.callbacks.base import BaseCallback
 class BaseCallbackBatch(BaseCallback):
     """Callback batch class."""
 
-    def on_compare_start(self) -> None:
+    def on_compare_start(self, **kwargs) -> None:
         """On compare start method."""
 
     def on_compare_end(self, **kwargs) -> None:
