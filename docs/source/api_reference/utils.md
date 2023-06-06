@@ -27,22 +27,6 @@
     AccuracyQueue
 ```
 
-## Decorators
-
-```{eval-rst}
-.. automodule:: frouros.utils.decorators
-    :no-members:
-    :no-inherited-members:
-```
-
-```{eval-rst}
-.. autosummary::
-    :toctree: auto_generated/
-    :template: function.md
-
-    check_func_parameters
-```
-
 ## Stats
 
 ```{eval-rst}
