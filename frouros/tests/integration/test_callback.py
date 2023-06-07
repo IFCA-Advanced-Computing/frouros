@@ -8,7 +8,7 @@ import sklearn  # type: ignore # pylint: disable=import-error
 
 from frouros.callbacks.batch import (
     PermutationTestOnBatchData,
-    ResetOnBatchDataDrift,
+    ResetStatisticalTestDataDrift,
 )
 from frouros.callbacks.streaming import (
     HistoryConceptDrift,
@@ -111,13 +111,13 @@ def test_batch_permutation_test_data_univariate_different_distribution(
     "detector_class",
     [CVMTest, KSTest, WelchTTest],
 )
-def test_batch_reset_on_data_drift(
+def test_batch_reset_on_statistical_test_data_drift(
     X_ref_univariate,  # noqa: N803
     X_test_univariate,
     detector_class: BaseDataDriftBatch,
     mocker,
 ) -> None:
-    """Test batch reset on data drift callback.
+    """Test batch reset on statistical test data drift callback.
 
     :param X_ref_univariate: reference univariate data
     :type X_ref_univariate: numpy.ndarray
@@ -130,7 +130,7 @@ def test_batch_reset_on_data_drift(
 
     detector = detector_class(  # type: ignore
         callbacks=[
-            ResetOnBatchDataDrift(
+            ResetStatisticalTestDataDrift(
                 alpha=0.01,
             ),
         ],

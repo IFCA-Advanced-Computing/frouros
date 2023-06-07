@@ -1,9 +1,9 @@
 """Batch callbacks init."""
 
 from .permutation_test import PermutationTestOnBatchData
-from .reset_drift import ResetOnBatchDataDrift
+from .reset import ResetStatisticalTestDataDrift
 
 __all__ = [
     "PermutationTestOnBatchData",
-    "ResetOnBatchDataDrift",
+    "ResetStatisticalTestDataDrift",
 ]

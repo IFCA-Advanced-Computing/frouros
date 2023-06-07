@@ -1,12 +1,13 @@
-"""Reset on batch data drift callback module."""
+"""Reset callback module."""
 
 from typing import Optional
 
 from frouros.callbacks.batch.base import BaseCallbackBatch
+from frouros.utils.logger import logger
 
 
-class ResetOnBatchDataDrift(BaseCallbackBatch):
-    """Reset on batch data drift callback class."""
+class ResetStatisticalTestDataDrift(BaseCallbackBatch):
+    """Reset on statistical test data drift callback class."""
 
     def __init__(self, alpha: float, name: Optional[str] = None) -> None:
         """Init method.
@@ -44,7 +45,7 @@ class ResetOnBatchDataDrift(BaseCallbackBatch):
         """On compare end method."""
         p_value = kwargs["result"].p_value
         if p_value < self.alpha:
-            print("Drift detected. Resetting detector.")
+            logger.info("Drift detected. Resetting detector...")
             self.detector.reset()  # type: ignore
 
     # FIXME: set_detector method as a workaround to  # pylint: disable=fixme

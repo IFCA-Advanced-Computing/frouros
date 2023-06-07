@@ -5,7 +5,7 @@ from typing import Any
 import pytest  # type: ignore
 
 from frouros.callbacks.base import BaseCallback
-from frouros.callbacks.batch import PermutationTestOnBatchData, ResetOnBatchDataDrift
+from frouros.callbacks.batch import PermutationTestOnBatchData, ResetStatisticalTestDataDrift
 from frouros.callbacks.batch.base import BaseCallbackBatch
 from frouros.callbacks.streaming import HistoryConceptDrift, WarningSamplesBuffer
 from frouros.callbacks.streaming.base import BaseCallbackStreaming
@@ -34,7 +34,7 @@ from frouros.utils.checks import check_callbacks
                 PermutationTestOnBatchData(
                     num_permutations=10,
                 ),
-                ResetOnBatchDataDrift(
+                ResetStatisticalTestDataDrift(
                     alpha=0.05,
                 ),
             ],
@@ -81,7 +81,7 @@ def test_check_callbacks(
                 PermutationTestOnBatchData(
                     num_permutations=10,
                 ),
-                ResetOnBatchDataDrift(
+                ResetStatisticalTestDataDrift(
                     alpha=0.05,
                 ),
             ],

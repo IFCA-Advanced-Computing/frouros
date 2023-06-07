@@ -12,5 +12,5 @@
     :template: class.md
 
     PermutationTestOnBatchData
-    ResetOnBatchDataDrift
+    ResetStatisticalTestDataDrift
 ```
