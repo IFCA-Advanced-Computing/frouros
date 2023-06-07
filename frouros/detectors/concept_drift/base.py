@@ -186,10 +186,16 @@ class BaseConceptDrift(BaseDetector):
         :type value: Union[int, float]
         """
         for callback in self.callbacks:  # type: ignore
-            callback.on_update_start(value=value, **kwargs)  # type: ignore
+            callback.on_update_start(  # type: ignore
+                value=value,
+                **kwargs,
+            )
         self._update(value=value, **kwargs)
         for callback in self.callbacks:  # type: ignore
-            callback.on_update_end(value=value, **kwargs)  # type: ignore
+            callback.on_update_end(  # type: ignore
+                value=value,
+                **kwargs,
+            )
 
         callbacks_logs = self._get_callbacks_logs()
         return callbacks_logs

@@ -185,10 +185,16 @@ class BaseDataDrift(BaseDetector):
         """
         self._check_fit_dimensions(X=X)
         for callback in self.callbacks:  # type: ignore
-            callback.on_fit_start()
+            callback.on_fit_start(
+                X=X,
+                **kwargs,
+            )
         self._fit(X=X, **kwargs)
         for callback in self.callbacks:  # type: ignore
-            callback.on_fit_end(X=X, **kwargs)
+            callback.on_fit_end(
+                X=X,
+                **kwargs,
+            )
 
         logs = self._get_callbacks_logs()
         return logs
