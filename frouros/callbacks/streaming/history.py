@@ -6,8 +6,8 @@ from frouros.callbacks.streaming.base import BaseCallbackStreaming
 from frouros.utils.stats import BaseStat
 
 
-class History(BaseCallbackStreaming):
-    """History callback class."""
+class HistoryConceptDrift(BaseCallbackStreaming):
+    """HistoryConceptDrift callback class."""
 
     def __init__(self, name: Optional[str] = None) -> None:
         """Init method.

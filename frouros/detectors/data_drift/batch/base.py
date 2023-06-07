@@ -63,10 +63,13 @@ class BaseDataDriftBatch(BaseDataDrift):
         :param X: feature data
         :type X: numpy.ndarray
         :return: compare result and callbacks logs
-        :rtype: Tuple[np.ndarray, Dict[str, Any]]
+        :rtype: Tuple[numpy.ndarray, Dict[str, Any]]
         """
         for callback in self.callbacks:  # type: ignore
-            callback.on_compare_start()  # type: ignore
+            callback.on_compare_start(  # type: ignore
+                X_ref=self.X_ref,
+                X_test=X,
+            )
         result = self._compare(X=X, **kwargs)
         for callback in self.callbacks:  # type: ignore
             callback.on_compare_end(  # type: ignore

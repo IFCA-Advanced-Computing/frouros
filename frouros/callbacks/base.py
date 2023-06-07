@@ -61,9 +61,6 @@ class BaseCallback(abc.ABC):
     def on_fit_end(self, **kwargs) -> None:
         """On fit end method."""
 
-    def on_drift_detected(self, **kwargs) -> None:
-        """On drift detected method."""
-
     @abc.abstractmethod
     def reset(self) -> None:
         """Reset method."""

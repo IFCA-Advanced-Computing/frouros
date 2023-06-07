@@ -5,9 +5,9 @@ from typing import Any
 import pytest  # type: ignore
 
 from frouros.callbacks.base import BaseCallback
-from frouros.callbacks.batch import PermutationTestOnBatchData, ResetOnBatchDataDrift
+from frouros.callbacks.batch import PermutationTestDistanceBased, ResetStatisticalTest
 from frouros.callbacks.batch.base import BaseCallbackBatch
-from frouros.callbacks.streaming import History, WarningSamplesBuffer
+from frouros.callbacks.streaming import HistoryConceptDrift, WarningSamplesBuffer
 from frouros.callbacks.streaming.base import BaseCallbackStreaming
 from frouros.utils.checks import check_callbacks
 
@@ -20,7 +20,7 @@ from frouros.utils.checks import check_callbacks
             BaseCallbackBatch,
         ),
         (
-            PermutationTestOnBatchData(
+            PermutationTestDistanceBased(
                 num_permutations=10,
             ),
             BaseCallbackBatch,
@@ -31,21 +31,21 @@ from frouros.utils.checks import check_callbacks
         ),
         (
             [
-                PermutationTestOnBatchData(
+                PermutationTestDistanceBased(
                     num_permutations=10,
                 ),
-                ResetOnBatchDataDrift(
+                ResetStatisticalTest(
                     alpha=0.05,
                 ),
             ],
             BaseCallbackBatch,
         ),
         (
-            History(),
+            HistoryConceptDrift(),
             BaseCallbackStreaming,
         ),
         (
-            [History(), WarningSamplesBuffer()],
+            [HistoryConceptDrift(), WarningSamplesBuffer()],
             BaseCallbackStreaming,
         ),
     ],
@@ -71,28 +71,28 @@ def test_check_callbacks(
     "callbacks, expected_cls",
     [
         (
-            PermutationTestOnBatchData(
+            PermutationTestDistanceBased(
                 num_permutations=10,
             ),
             BaseCallbackStreaming,
         ),
         (
             [
-                PermutationTestOnBatchData(
+                PermutationTestDistanceBased(
                     num_permutations=10,
                 ),
-                ResetOnBatchDataDrift(
+                ResetStatisticalTest(
                     alpha=0.05,
                 ),
             ],
             BaseCallbackStreaming,
         ),
         (
-            History(),
+            HistoryConceptDrift(),
             BaseCallbackBatch,
         ),
         (
-            [History(), WarningSamplesBuffer()],
+            [HistoryConceptDrift(), WarningSamplesBuffer()],
             BaseCallbackBatch,
         ),
     ],

@@ -11,6 +11,6 @@
     :toctree: auto_generated/
     :template: class.md
 
-    PermutationTestOnBatchData
-    ResetOnBatchDataDrift
+    PermutationTestDistanceBased
+    ResetStatisticalTest
 ```
