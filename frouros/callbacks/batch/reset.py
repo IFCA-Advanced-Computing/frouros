@@ -1,4 +1,4 @@
-"""Reset callback module."""
+"""Reset batch callback module."""
 
 from typing import Optional
 
@@ -6,8 +6,8 @@ from frouros.callbacks.batch.base import BaseCallbackBatch
 from frouros.utils.logger import logger
 
 
-class ResetStatisticalTestDataDrift(BaseCallbackBatch):
-    """Reset on statistical test data drift callback class."""
+class ResetStatisticalTest(BaseCallbackBatch):
+    """Reset on statistical test batch callback class."""
 
     def __init__(self, alpha: float, name: Optional[str] = None) -> None:
         """Init method.

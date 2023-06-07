@@ -8,7 +8,7 @@ import sklearn  # type: ignore # pylint: disable=import-error
 
 from frouros.callbacks.batch import (
     PermutationTestDistanceBased,
-    ResetStatisticalTestDataDrift,
+    ResetStatisticalTest,
 )
 from frouros.callbacks.streaming import (
     HistoryConceptDrift,
@@ -130,7 +130,7 @@ def test_batch_reset_on_statistical_test_data_drift(
 
     detector = detector_class(  # type: ignore
         callbacks=[
-            ResetStatisticalTestDataDrift(
+            ResetStatisticalTest(
                 alpha=0.01,
             ),
         ],
