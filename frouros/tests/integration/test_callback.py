@@ -7,7 +7,7 @@ import pytest  # type: ignore
 import sklearn  # type: ignore # pylint: disable=import-error
 
 from frouros.callbacks.batch import (
-    PermutationTestOnBatchData,
+    PermutationTestDistanceBased,
     ResetStatisticalTestDataDrift,
 )
 from frouros.callbacks.streaming import (
@@ -88,7 +88,7 @@ def test_batch_permutation_test_data_univariate_different_distribution(
     permutation_test_name = "permutation_test"
     detector = detector_class(  # type: ignore
         callbacks=[
-            PermutationTestOnBatchData(
+            PermutationTestDistanceBased(
                 num_permutations=100,
                 random_state=31,
                 num_jobs=-1,

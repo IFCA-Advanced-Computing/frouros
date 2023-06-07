@@ -1,4 +1,4 @@
-"""Permutation test on batch data callback module."""
+"""Permutation test batch callback module."""
 
 import multiprocessing
 from typing import Any, Callable, Dict, List, Optional, Tuple
@@ -10,8 +10,8 @@ from frouros.callbacks.batch.base import BaseCallbackBatch
 from frouros.utils.stats import permutation, z_score
 
 
-class PermutationTestOnBatchData(BaseCallbackBatch):
-    """Permutation test on batch data callback class."""
+class PermutationTestDistanceBased(BaseCallbackBatch):
+    """Permutation test on distance based batch callback class."""
 
     def __init__(
         self,
