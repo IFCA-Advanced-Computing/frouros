@@ -11,7 +11,7 @@ from frouros.callbacks.batch import (
     ResetOnBatchDataDrift,
 )
 from frouros.callbacks.streaming import (
-    History,
+    HistoryConceptDrift,
     mSPRT,
     WarningSamplesBuffer,
 )
@@ -169,7 +169,7 @@ def test_streaming_history_on_concept_drift(
     :type detector_class: BaseConceptDrift
     """
     name = "history"
-    detector = detector_class(callbacks=History(name=name))  # type: ignore
+    detector = detector_class(callbacks=HistoryConceptDrift(name=name))  # type: ignore
 
     for error in model_errors:
         history = detector.update(value=error)

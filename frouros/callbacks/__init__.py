@@ -1,10 +1,10 @@
 """Callbacks init."""
 
 from .batch import PermutationTestOnBatchData, ResetOnBatchDataDrift
-from .streaming import History, mSPRT, WarningSamplesBuffer
+from .streaming import HistoryConceptDrift, mSPRT, WarningSamplesBuffer
 
 __all__ = [
-    "History",
+    "HistoryConceptDrift",
     "mSPRT",
     "PermutationTestOnBatchData",
     "ResetOnBatchDataDrift",

@@ -3,7 +3,7 @@
 import abc
 from typing import Any, Dict, List, Optional, Union
 
-from frouros.callbacks import History
+from frouros.callbacks import HistoryConceptDrift
 from frouros.callbacks.streaming.base import BaseCallbackStreaming
 from frouros.detectors.base import BaseDetector
 from frouros.utils.checks import check_callbacks
@@ -92,7 +92,7 @@ class BaseConceptDrift(BaseDetector):
 
     def _set_additional_vars_callback(self) -> None:
         for callback in self.callbacks:  # type: ignore
-            if isinstance(callback, History):
+            if isinstance(callback, HistoryConceptDrift):
                 # callback.set_detector(detector=self)
                 callback.add_additional_vars(
                     vars_=self.additional_vars.keys(),  # type: ignore

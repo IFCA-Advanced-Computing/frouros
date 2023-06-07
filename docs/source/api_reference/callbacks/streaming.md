@@ -11,7 +11,7 @@
     :toctree: auto_generated/
     :template: class.md
 
-    History
+    HistoryConceptDrift
     mSPRT
     WarningSamplesBuffer
 ```
