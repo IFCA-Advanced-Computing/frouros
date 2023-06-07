@@ -20,10 +20,10 @@ from frouros.utils.checks import check_callbacks
             BaseCallbackBatch,
         ),
         (
-                PermutationTestDistanceBased(
+            PermutationTestDistanceBased(
                 num_permutations=10,
             ),
-                BaseCallbackBatch,
+            BaseCallbackBatch,
         ),
         (
             None,
@@ -41,8 +41,8 @@ from frouros.utils.checks import check_callbacks
             BaseCallbackBatch,
         ),
         (
-                HistoryConceptDrift(),
-                BaseCallbackStreaming,
+            HistoryConceptDrift(),
+            BaseCallbackStreaming,
         ),
         (
             [HistoryConceptDrift(), WarningSamplesBuffer()],
@@ -71,10 +71,10 @@ def test_check_callbacks(
     "callbacks, expected_cls",
     [
         (
-                PermutationTestDistanceBased(
+            PermutationTestDistanceBased(
                 num_permutations=10,
             ),
-                BaseCallbackStreaming,
+            BaseCallbackStreaming,
         ),
         (
             [
@@ -88,8 +88,8 @@ def test_check_callbacks(
             BaseCallbackStreaming,
         ),
         (
-                HistoryConceptDrift(),
-                BaseCallbackBatch,
+            HistoryConceptDrift(),
+            BaseCallbackBatch,
         ),
         (
             [HistoryConceptDrift(), WarningSamplesBuffer()],
