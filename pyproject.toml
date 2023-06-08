@@ -40,7 +40,7 @@ dependencies = [
     "numpy>=1.24.0,<1.25",
     "requests>=2.31.0,<2.32",
     "scipy>=1.10.0,<1.11",
-    "tqdm>=4.64.0,<4.65",
+    "tqdm>=4.65,<5",
 ]
 
 [project.optional-dependencies]
