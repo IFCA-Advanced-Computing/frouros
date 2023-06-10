@@ -11,6 +11,7 @@ from .batch import (  # noqa: F401
     KL,
     KSTest,
     PSI,
+    MannWhitneyUTest,
     MMD,
     WelchTTest,
 )
@@ -29,6 +30,7 @@ __all__ = [
     "KL",
     "KSTest",
     "PSI",
+    "MannWhitneyUTest",
     "MMDStreaming",
     "WelchTTest",
 ]
