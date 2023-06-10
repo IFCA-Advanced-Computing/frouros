@@ -43,7 +43,14 @@ class MannWhitneyUTest(BaseStatisticalTest):
         self, X_ref: np.ndarray, X: np.ndarray, **kwargs  # noqa: N803
     ) -> StatisticalResult:
         test = mannwhitneyu(
-            x=X_ref, y=X, alternative="two-sided", nan_policy="raise", **kwargs
+            x=X_ref,
+            y=X,
+            alternative="two-sided",
+            nan_policy="raise",  # pylint=unexpected-keyword-arg
+            **kwargs,
         )
-        test = StatisticalResult(statistic=test.statistic, p_value=test.pvalue)
+        test = StatisticalResult(
+            statistic=test.statistic,
+            p_value=test.pvalue,
+        )
         return test
