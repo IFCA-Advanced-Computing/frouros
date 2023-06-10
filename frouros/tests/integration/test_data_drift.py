@@ -19,6 +19,7 @@ from frouros.detectors.data_drift.batch import (
     ChiSquareTest,
     CVMTest,
     KSTest,
+    MannWhitneyUTest,
     WelchTTest,
 )
 from frouros.detectors.data_drift.batch.base import BaseDataDriftBatch
@@ -161,6 +162,7 @@ def test_batch_distance_bins_based_univariate_same_distribution(
     [
         (CVMTest(), 3776.09848103, 5.38105056e-07),
         (KSTest(), 0.99576271, 0.0),
+        (MannWhitneyUTest(), 6912.0, 0.0),
         (WelchTTest(), -287.92032554, 0.0),
     ],
 )
