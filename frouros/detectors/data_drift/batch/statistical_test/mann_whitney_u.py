@@ -42,7 +42,7 @@ class MannWhitneyUTest(BaseStatisticalTest):
     def _statistical_test(
         self, X_ref: np.ndarray, X: np.ndarray, **kwargs  # noqa: N803
     ) -> StatisticalResult:
-        test = mannwhitneyu(  # pylint=unexpected-keyword-arg
+        test = mannwhitneyu(  # pylint: disable=unexpected-keyword-arg
             x=X_ref,
             y=X,
             alternative="two-sided",
