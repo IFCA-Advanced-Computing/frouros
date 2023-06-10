@@ -1,4 +1,4 @@
-"""Welch's T-test module."""
+"""Welch's t-test module."""
 
 from typing import Optional, List, Union
 
@@ -14,7 +14,7 @@ from frouros.detectors.data_drift.batch.statistical_test.base import (
 
 
 class WelchTTest(BaseStatisticalTest):
-    """Welch's T-test [welch1947generalization]_ detector.
+    """Welch's t-test [welch1947generalization]_ detector.
 
     :References:
 
@@ -40,10 +40,20 @@ class WelchTTest(BaseStatisticalTest):
         )
 
     def _statistical_test(
-        self, X_ref: np.ndarray, X: np.ndarray, **kwargs  # noqa: N803
+        self,
+        X_ref: np.ndarray,  # noqa: N803
+        X: np.ndarray,
+        **kwargs,
     ) -> StatisticalResult:
         test = ttest_ind(
-            a=X_ref, b=X, equal_var=False, alternative="two-sided", **kwargs
+            a=X_ref,
+            b=X,
+            equal_var=False,
+            alternative="two-sided",
+            **kwargs,
         )
-        test = StatisticalResult(statistic=test.statistic, p_value=test.pvalue)
+        test = StatisticalResult(
+            statistic=test.statistic,
+            p_value=test.pvalue,
+        )
         return test

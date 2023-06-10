@@ -362,7 +362,7 @@ The currently implemented detectors are listed in the following table.
   <tr>
     <td style="text-align: center; border: 1px solid grey; padding: 8px;">U</td>
     <td style="text-align: center; border: 1px solid grey; padding: 8px;">N</td>
-    <td style="text-align: center; border: 1px solid grey; padding: 8px;">Welch's T-Test</td>
+    <td style="text-align: center; border: 1px solid grey; padding: 8px;">Welch's t-test</td>
     <td style="text-align: center; border: 1px solid grey; padding: 8px;"><a href="https://doi.org/10.2307/2332510">Welch (1947)</a></td>
   </tr>
   <tr>
