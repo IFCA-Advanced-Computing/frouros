@@ -19,7 +19,7 @@
   </a>
   <!-- Downloads -->
   <a href="https://pepy.tech/project/frouros">
-    <img src="https://static.pepy.tech/badge/frouros/month" alt="downloads"/>
+    <img src="https://static.pepy.tech/badge/frouros" alt="downloads"/>
   </a>
   <!-- PyPI -->
   <a href="https://pypi.org/project/frouros">
