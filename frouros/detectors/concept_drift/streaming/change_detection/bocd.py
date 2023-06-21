@@ -47,7 +47,7 @@ class GaussianUnknownMean(BaseBOCDModel):
     def __init__(
         self,
         prior_mean: float = 0,
-        prior_var: float = 0,
+        prior_var: float = 1,
         data_var: float = 1,
     ) -> None:
         """Init method.

@@ -1,12 +1,14 @@
 """Test concept drift detectors."""
 
-from typing import Callable, Tuple
+from typing import Callable, List, Tuple
 
 import numpy as np  # type: ignore
 import pytest  # type: ignore
 
 from frouros.detectors.concept_drift import ADWIN, ADWINConfig, KSWIN, KSWINConfig
 from frouros.detectors.concept_drift import (
+    BOCD,
+    BOCDConfig,
     CUSUM,
     CUSUMConfig,
     GeometricMovingAverage,
@@ -31,11 +33,31 @@ from frouros.detectors.concept_drift import (
     STEPDConfig,
 )
 from frouros.detectors.concept_drift.base import BaseConceptDrift
+from frouros.detectors.concept_drift.streaming.change_detection.base import (
+    BaseChangeDetection,
+)
+from frouros.detectors.concept_drift.streaming.change_detection.bocd import (
+    GaussianUnknownMean,
+)
 
 MIN_NUM_INSTANCES = 30
+BOCD_ARGS = {
+    "model": GaussianUnknownMean(
+        prior_mean=0,
+        prior_var=1,
+        data_var=0.5,
+    ),
+    "hazard": 0.01,
+}
 CUMSUM_ARGS = {
     "delta": 0.005,
     "lambda_": 50,
+}
+GEOMETRIC_MOVING_AVERAGE_ARGS = {
+    "alpha": 0.99,
+}
+PAGE_HINKLEY_ARGS = {
+    "alpha": 0.9999,
 }
 HDDM_ARGS = {
     "alpha_w": 0.005,
@@ -54,6 +76,15 @@ def error_scorer(y_true, y_pred):
 
 detectors = [
     (
+        BOCD(
+            config=BOCDConfig(
+                min_num_instances=MIN_NUM_INSTANCES,
+                **BOCD_ARGS,  # type: ignore
+            ),
+        ),
+        error_scorer,
+    ),
+    (
         CUSUM(
             config=CUSUMConfig(
                 min_num_instances=MIN_NUM_INSTANCES,
@@ -66,7 +97,7 @@ detectors = [
         GeometricMovingAverage(
             config=GeometricMovingAverageConfig(
                 min_num_instances=MIN_NUM_INSTANCES,
-                alpha=0.99,
+                **GEOMETRIC_MOVING_AVERAGE_ARGS,
             ),
         ),
         error_scorer,
@@ -75,7 +106,7 @@ detectors = [
         PageHinkley(
             config=PageHinkleyConfig(
                 min_num_instances=MIN_NUM_INSTANCES,
-                alpha=0.9999,
+                **PAGE_HINKLEY_ARGS,
             ),
         ),
         error_scorer,
@@ -222,3 +253,67 @@ def test_streaming_detector_normal(
     for y_sample_pred, y_sample in zip(y_pred, y_test):  # noqa: N806
         value_score = value_func(y_true=y_sample, y_pred=y_sample_pred)
         detector.update(value=value_score)
+
+
+CHANGE_DETECTION_MIN_NUM_INSTANCES = 1
+change_detection_detectors = [
+    (
+        BOCD(
+            config=BOCDConfig(
+                min_num_instances=CHANGE_DETECTION_MIN_NUM_INSTANCES,
+                **BOCD_ARGS,  # type: ignore
+            ),
+        ),
+        [100, 203],
+    ),
+    (
+        CUSUM(
+            config=CUSUMConfig(
+                min_num_instances=CHANGE_DETECTION_MIN_NUM_INSTANCES,
+                **CUMSUM_ARGS,
+            ),
+        ),
+        [113, 226],
+    ),
+    (
+        GeometricMovingAverage(
+            config=GeometricMovingAverageConfig(
+                min_num_instances=CHANGE_DETECTION_MIN_NUM_INSTANCES,
+                **GEOMETRIC_MOVING_AVERAGE_ARGS,
+            ),
+        ),
+        [134],
+    ),
+    (
+        PageHinkley(
+            config=PageHinkleyConfig(
+                min_num_instances=CHANGE_DETECTION_MIN_NUM_INSTANCES,
+                **PAGE_HINKLEY_ARGS,
+            ),
+        ),
+        [113, 227],
+    ),
+]
+
+
+@pytest.mark.parametrize("detector_info", change_detection_detectors)
+def test_streaming_change_detection_detector(
+    stream_drift: np.ndarray,
+    detector_info: Tuple[BaseChangeDetection, List[int]],
+) -> None:
+    """Test streaming change detection detector.
+
+    :param stream_drift: stream with drift
+    :type stream_drift: numpy.ndarray
+    :param detector_info: change detection detector and list of expected drift indices
+    :type detector_info: Tuple[BaseChangeDetection, List[int]]
+    """
+    detector, idx_drifts = detector_info
+    idx_detected_drifts = []
+    for i, val in enumerate(stream_drift):
+        detector.update(value=val)
+        if detector.status["drift"]:
+            detector.reset()
+            idx_detected_drifts.append(i)
+
+    assert idx_detected_drifts == idx_drifts

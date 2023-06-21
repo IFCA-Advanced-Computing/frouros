@@ -4,9 +4,6 @@
 from .change_detection import (
     BOCD,
     BOCDConfig,
-)
-
-from .cusum_based import (
     CUSUM,
     CUSUMConfig,
     GeometricMovingAverage,
