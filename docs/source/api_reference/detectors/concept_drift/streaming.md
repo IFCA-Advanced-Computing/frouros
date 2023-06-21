@@ -26,21 +26,6 @@ The {mod}`frouros.detectors.concept_drift.streaming` module contains streaming c
 
     BOCD
     BOCDConfig
-```
-
-## CUSUM Test
-
-```{eval-rst}
-.. automodule:: frouros.detectors.concept_drift.streaming.cusum_based
-    :no-members:
-    :no-inherited-members:
-```
-
-```{eval-rst}
-.. autosummary::
-    :toctree: auto_generated/
-    :template: class.md
-
     CUSUM
     CUSUMConfig
     GeometricMovingAverage

@@ -1,6 +1,6 @@
 """Geometric Moving Average module."""
 
-from frouros.detectors.concept_drift.streaming.cusum_based.base import (
+from frouros.detectors.concept_drift.streaming.change_detection.base import (
     BaseCUSUM,
     BaseCUSUMConfig,
     AlphaConfig,
