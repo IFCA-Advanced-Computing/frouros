@@ -3,6 +3,8 @@
 from .streaming import (
     ADWIN,
     ADWINConfig,
+    BOCD,
+    BOCDConfig,
     CUSUM,
     CUSUMConfig,
     DDM,
@@ -30,6 +32,8 @@ from .streaming import (
 __all__ = [
     "ADWIN",
     "ADWINConfig",
+    "BOCD",
+    "BOCDConfig",
     "CUSUM",
     "CUSUMConfig",
     "DDM",

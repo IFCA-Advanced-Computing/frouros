@@ -1,6 +1,11 @@
 """Concept drift streaming detection methods init."""
 # FIXME: Remove pylint disable if batch methods are added
 # pylint: skip-file
+from .change_detection import (
+    BOCD,
+    BOCDConfig,
+)
+
 from .cusum_based import (
     CUSUM,
     CUSUMConfig,
@@ -35,6 +40,8 @@ from .window_based import (
 __all__ = [
     "ADWIN",
     "ADWINConfig",
+    "BOCD",
+    "BOCDConfig",
     "CUSUM",
     "CUSUMConfig",
     "DDM",

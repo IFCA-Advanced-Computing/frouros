@@ -11,6 +11,23 @@ The {mod}`frouros.detectors.concept_drift.streaming` module contains streaming c
 ```{currentmodule} frouros.detectors.concept_drift.streaming
 ```
 
+## Change Detection
+
+```{eval-rst}
+.. automodule:: frouros.detectors.concept_drift.streaming.change_detection
+    :no-members:
+    :no-inherited-members:
+```
+
+```{eval-rst}
+.. autosummary::
+    :toctree: auto_generated/
+    :template: class.md
+
+    BOCD
+    BOCDConfig
+```
+
 ## CUSUM Test
 
 ```{eval-rst}
