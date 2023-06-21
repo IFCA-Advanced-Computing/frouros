@@ -43,8 +43,8 @@ def test_change_detection_detector(
 
     :param stream_drift: stream with drift
     :type stream_drift: numpy.ndarray
-    :param detector_info: concept drift detector and value function
-    :type detector_info: Tuple[BaseConceptDrift, Callable]
+    :param detector_info: change detection detector and list of expected drift indices
+    :type detector_info: Tuple[BaseChangeDetection, List[int]]
     """
     detector, idx_drifts = detector_info
     idx_detected_drifts = []
