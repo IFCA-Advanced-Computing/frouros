@@ -50,6 +50,34 @@ def sea() -> SEA:
     return generator
 
 
+@pytest.fixture(scope="function")
+def stream_drift() -> np.ndarray:
+    """Stream with drift.
+
+    :return: stream with drift
+    :rtype: np.ndarray
+    """
+    np.random.seed(seed=31)
+
+    dist_normal = np.random.normal(
+        loc=0.0,
+        scale=0.5,
+        size=100,
+    )
+    dist_drift_1 = np.random.normal(
+        loc=4.0,
+        scale=0.2,
+        size=100,
+    )
+    dist_drift_2 = np.random.normal(
+        loc=6.0,
+        scale=0.5,
+        size=100,
+    )
+
+    return np.concatenate((dist_normal, dist_drift_1, dist_drift_2))
+
+
 @pytest.fixture(scope="module", name="clf_dataset")
 def classification_dataset() -> Tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray]:
     """Classification dataset using SEA generator.
