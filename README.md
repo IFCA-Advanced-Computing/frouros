@@ -209,14 +209,13 @@ The currently implemented detectors are listed in the following table.
   <tr>
     <td rowspan="13" style="text-align: center; border: 1px solid grey; padding: 8px;">Concept drift</td>
     <td rowspan="13" style="text-align: center; border: 1px solid grey; padding: 8px;">Streaming</td>
-    <td rowspan="1" style="text-align: center; border: 1px solid grey; padding: 8px;">Change detection</td>
+    <td rowspan="4" style="text-align: center; border: 1px solid grey; padding: 8px;">Change detection</td>
     <td style="text-align: center; border: 1px solid grey; padding: 8px;">U</td>
     <td style="text-align: center; border: 1px solid grey; padding: 8px;">N</td>
     <td style="text-align: center; border: 1px solid grey; padding: 8px;">BOCD</td>
     <td style="text-align: center; border: 1px solid grey; padding: 8px;"><a href="https://doi.org/10.48550/arXiv.0710.3742">Adams and MacKay (2007)</a></td>
   </tr>
   <tr>
-    <td rowspan="3" style="text-align: center; border: 1px solid grey; padding: 8px;">CUSUM</td>
     <td style="text-align: center; border: 1px solid grey; padding: 8px;">U</td>
     <td style="text-align: center; border: 1px solid grey; padding: 8px;">N</td>
     <td style="text-align: center; border: 1px solid grey; padding: 8px;">CUSUM</td>
