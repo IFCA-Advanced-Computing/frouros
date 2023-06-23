@@ -1,0 +1,18 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite it as below."
+preferred-citation:
+  type: article
+  authors:
+  - family-names: "Céspedes-Sisniega"
+    given-names: "Jaime"
+    email: "cespedes@ifca.unican.es"
+    affiliation: "Instituto de Física de Cantabria (CSIC-UC)"
+    orcid: "https://orcid.org/0000-0002-6010-1212"
+  - family-names: "López-García"
+    given-names: "Álvaro"
+    email: "aloga@ifca.unican.es"
+    affiliation: "Instituto de Física de Cantabria (CSIC-UC)"
+    orcid: "https://orcid.org/0000-0002-0013-4602"
+  journal: "arXiv preprint arXiv:2208.06868"
+  title: "Frouros: A Python library for drift detection in machine learning systems"
+  year: 2022
