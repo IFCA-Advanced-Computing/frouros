@@ -415,8 +415,8 @@ Although Frouros paper is still in preprint, if you want to cite it you can use 
 
 ```bibtex
 @article{cespedes2022frouros,
-  title={Frouros: A Python library for drift detection in Machine Learning problems},
-  author={C{\'e}spedes Sisniega, Jaime and L{\'o}pez Garc{\'\i}a, {\'A}lvaro },
+  title={Frouros: A Python library for drift detection in machine learning systems},
+  author={C{\'e}spedes-Sisniega, Jaime and L{\'o}pez-Garc{\'\i}a, {\'A}lvaro },
   journal={arXiv preprint arXiv:2208.06868},
   year={2022}
 }
