@@ -1,0 +1,24 @@
+version: 2
+updates:
+
+  # Maintain depedencies for pip
+  - package-ecosystem: "pip"
+    directory: "/"
+    schedule:
+      interval: "daily"
+    labels:
+      - "dependencies"
+    reviewers:
+      - "jaime-cespedes-sisniega"
+      - "alvarolopez"
+
+  # Maintain depedencies for GitHub Actions
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    labels:
+      - "dependencies"
+    reviewers:
+      - "jaime-cespedes-sisniega"
+      - "alvarolopez"
