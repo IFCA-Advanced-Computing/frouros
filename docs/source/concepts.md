@@ -28,7 +28,7 @@ The different types of changes that are considered as a form of drift can be cat
 
 - **Data drift**: There is a change in ${P(X)}$. Therefore, this type of drift only focuses in the distribution of the covariates ${P(X)}$, so
 ${P_{[0, t]}(X) \neq P_{[t+1, \infty)}(X)}$. [Data drift methods](#data-drift) are designed to try to detect this type drift. Unlike *concept drift* taking place, the presence of *data drift* does not guarantee that model's performance is being affected, but it is highly probable that is happening. We have renamed *dataset shift* {cite}`rabanser2019failing` to *data drift*
-in order to maintain consistency with the *concept drift* definition. These data drift methods can also be used to detect label drift, where the label distribution ${P(Y)}$ is the one that changes over time, in such a way that ${P_{[0, t]}(Y) \neq P_{[t+1, \infty)}(Y)}$.
+in order to maintain consistency with the *concept drift* definition. These *data drift* methods can also be used to detect *label drift*, also known as *prior probability shift* {cite}`storkey2009training`, where the label distribution ${P(Y)}$ is the one that changes over time, in such a way that ${P_{[0, t]}(Y) \neq P_{[t+1, \infty)}(Y)}$.
 
 ## Why do I need to use a drift detector?
 
