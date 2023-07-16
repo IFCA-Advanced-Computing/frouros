@@ -16,6 +16,7 @@ from frouros.detectors.data_drift.batch import (
     MMD,
 )
 from frouros.detectors.data_drift.batch import (
+    AndersonDarlingTest,
     ChiSquareTest,
     CVMTest,
     KSTest,
@@ -160,6 +161,7 @@ def test_batch_distance_bins_based_univariate_same_distribution(
 @pytest.mark.parametrize(
     "detector, expected_statistic, expected_p_value",
     [
+        (AndersonDarlingTest(), 23171.19994366, 0.001),
         (CVMTest(), 3776.09848103, 5.38105056e-07),
         (KSTest(), 0.99576271, 0.0),
         (MannWhitneyUTest(), 6912.0, 0.0),
