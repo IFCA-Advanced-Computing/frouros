@@ -47,6 +47,7 @@ The {mod}`frouros.detectors.data_drift.batch` module contains batch data drift d
     :toctree: auto_generated/
     :template: class.md
 
+    AndersonDarlingTest
     ChiSquareTest
     CVMTest
     KSTest

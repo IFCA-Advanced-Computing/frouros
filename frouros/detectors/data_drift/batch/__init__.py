@@ -11,6 +11,7 @@ from .distance_based import (
     MMD,
 )
 from .statistical_test import (
+    AndersonDarlingTest,
     ChiSquareTest,
     CVMTest,
     KSTest,
@@ -19,6 +20,7 @@ from .statistical_test import (
 )
 
 __all__ = [
+    "AndersonDarlingTest",
     "BhattacharyyaDistance",
     "ChiSquareTest",
     "CVMTest",

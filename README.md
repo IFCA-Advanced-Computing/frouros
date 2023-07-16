@@ -290,9 +290,15 @@ The currently implemented detectors are listed in the following table.
     <td style="text-align: center; border: 1px solid grey; padding: 8px;"><a href="https://doi.org/10.1007/978-3-540-75488-6_27">Nishida and Yamauchi (2007)</a></td>
   </tr>
   <tr>
-    <td rowspan="15" style="text-align: center; border: 1px solid grey; padding: 8px;">Data drift</td>
-    <td rowspan="13" style="text-align: center; border: 1px solid grey; padding: 8px;">Batch</td>
-    <td rowspan="8" style="text-align: center; border: 1px solid grey; padding: 8px;">Distance based</td>
+    <td rowspan="16" style="text-align: center; border: 1px solid grey; padding: 8px;">Data drift</td>
+    <td rowspan="14" style="text-align: center; border: 1px solid grey; padding: 8px;">Batch</td>
+    <td rowspan="9" style="text-align: center; border: 1px solid grey; padding: 8px;">Distance based</td>
+    <td style="text-align: center; border: 1px solid grey; padding: 8px;">U</td>
+    <td style="text-align: center; border: 1px solid grey; padding: 8px;">N</td>
+    <td style="text-align: center; border: 1px solid grey; padding: 8px;">Anderson-Darling test</td>
+    <td style="text-align: center; border: 1px solid grey; padding: 8px;"><a href="https://doi.org/10.2307/2288805">Scholz and Stephens (1987)</a></td>
+  </tr>
+  <tr>
     <td style="text-align: center; border: 1px solid grey; padding: 8px;">U</td>
     <td style="text-align: center; border: 1px solid grey; padding: 8px;">N</td>
     <td style="text-align: center; border: 1px solid grey; padding: 8px;">Bhattacharyya distance</td>
