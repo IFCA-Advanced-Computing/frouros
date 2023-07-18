@@ -33,6 +33,10 @@
   <a href="https://opensource.org/licenses/BSD-3-Clause">
     <img src="https://img.shields.io/badge/License-BSD%203--Clause-blue.svg" alt="bsd_3_license">
   </a>
+  <!-- arXiv -->
+  <a href="https://arxiv.org/abs/2208.06868">
+    <img src="https://img.shields.io/badge/arXiv-2208.06868-blue.svg" alt="arxiv">
+  </a>
 </p>
 
 Frouros is a Python library for drift detection in machine learning systems that provides a combination of classical and more recent algorithms for both concept and data drift detection.
