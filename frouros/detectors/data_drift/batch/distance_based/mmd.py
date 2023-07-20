@@ -6,7 +6,6 @@ from typing import Callable, Generator, Optional, List, Union
 
 import numpy as np  # type: ignore
 import tqdm  # type: ignore
-from scipy.spatial.distance import cdist  # type: ignore
 
 from frouros.callbacks.batch.base import BaseCallbackBatch
 from frouros.detectors.data_drift.base import MultivariateData
@@ -14,23 +13,7 @@ from frouros.detectors.data_drift.batch.distance_based.base import (
     BaseDistanceBased,
     DistanceResult,
 )
-
-
-def rbf_kernel(
-    X: np.ndarray, Y: np.ndarray, std: float = 1.0  # noqa: N803
-) -> np.ndarray:
-    """Radial basis function kernel between X and Y matrices.
-
-    :param X: X matrix
-    :type X: numpy.ndarray
-    :param Y: Y matrix
-    :type Y: numpy.ndarray
-    :param std: standard deviation value
-    :type std: float
-    :return: Radial basis kernel matrix
-    :rtype: numpy.ndarray
-    """
-    return np.exp(-cdist(X, Y, "sqeuclidean") / 2 * std**2)
+from frouros.utils.kernels import rbf_kernel
 
 
 class MMD(BaseDistanceBased):
