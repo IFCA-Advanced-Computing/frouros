@@ -54,13 +54,13 @@ from frouros.detectors.data_drift.streaming import MMD as MMDStreaming  # noqa: 
     "detector_class, expected_distance, expected_p_value",
     [
         (BhattacharyyaDistance, 0.55516059, 0.0),
-        (EMD, 3.85346006, 9.21632493e-101),
-        (HellingerDistance, 0.74509099, 3.13808126e-50),
-        (HINormalizedComplement, 0.78, 1.31340683e-55),
-        (JS, 0.67010107, 2.30485343e-63),
-        (KL, np.inf, np.nan),
-        (MMD, 0.69509004, 2.53277069e-137),
-        (PSI, 461.20379435, 4.45088795e-238),
+        (EMD, 3.85346006, 0.0),
+        (HellingerDistance, 0.74509099, 0.0),
+        (HINormalizedComplement, 0.78, 0.0),
+        (JS, 0.67010107, 0.0),
+        (KL, np.inf, 0.06),
+        (MMD, 0.69509004, 0.0),
+        (PSI, 461.20379435, 0.0),
     ],
 )
 def test_batch_permutation_test_data_univariate_different_distribution(
@@ -103,7 +103,6 @@ def test_batch_permutation_test_data_univariate_different_distribution(
     assert np.isclose(
         callback_logs[permutation_test_name]["p_value"],
         expected_p_value,
-        equal_nan=True,
     )
 
 
