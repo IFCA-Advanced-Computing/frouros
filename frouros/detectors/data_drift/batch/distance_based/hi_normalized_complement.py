@@ -11,7 +11,7 @@ from frouros.detectors.data_drift.batch.distance_based.base import (
 
 
 class HINormalizedComplement(BaseDistanceBasedBins):
-    """HI (Histogram intersection) normalized complement [1]_ detector.
+    """HI (Histogram intersection) normalized complement [swain1991color]_ detector.
 
     :param num_bins: number of bins in which to divide probabilities, defaults to 10
     :type num_bins: int
@@ -20,7 +20,7 @@ class HINormalizedComplement(BaseDistanceBasedBins):
 
     :References:
 
-    .. [1] Swain, M. J., and D. H. Ballard.
+    .. [swain1991color] Swain, M. J., and D. H. Ballard.
         "Color Indexing International Journal of Computer
         Vision 7." (1991): 11-32.
 

@@ -11,7 +11,7 @@ from frouros.detectors.data_drift.batch.distance_based.base import (
 
 
 class BhattacharyyaDistance(BaseDistanceBasedBins):
-    """Bhattacharyya distance [1]_ detector.
+    """Bhattacharyya distance [bhattacharyya1946measure]_ detector.
 
     :param num_bins: number of bins in which to divide probabilities, defaults to 10
     :type num_bins: int
@@ -20,7 +20,7 @@ class BhattacharyyaDistance(BaseDistanceBasedBins):
 
     :References:
 
-    .. [1] Bhattacharyya, Anil.
+    .. [bhattacharyya1946measure] Bhattacharyya, Anil.
         "On a measure of divergence between two multinomial populations."
         Sankhyā: the indian journal of statistics (1946): 401-406.
 

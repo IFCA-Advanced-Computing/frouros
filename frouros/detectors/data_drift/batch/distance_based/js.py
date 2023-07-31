@@ -13,7 +13,7 @@ from frouros.detectors.data_drift.batch.distance_based.base import (
 
 
 class JS(BaseDistanceBasedProbability):
-    """JS (Jensen-Shannon distance) [1]_ detector.
+    """JS (Jensen-Shannon distance) [lin1991divergence]_ detector.
 
     :param num_bins: number of bins in which to divide probabilities, defaults to 10
     :type num_bins: int
@@ -24,7 +24,7 @@ class JS(BaseDistanceBasedProbability):
 
     :References:
 
-    .. [1] Lin, Jianhua.
+    .. [lin1991divergence] Lin, Jianhua.
         "Divergence measures based on the Shannon entropy."
         IEEE Transactions on Information theory 37.1 (1991): 145-151.
 

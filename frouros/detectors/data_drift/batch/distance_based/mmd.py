@@ -17,7 +17,7 @@ from frouros.utils.kernels import rbf_kernel
 
 
 class MMD(BaseDistanceBased):
-    """MMD (Maximum Mean Discrepancy) [1]_ detector.
+    """MMD (Maximum Mean Discrepancy) [gretton2012kernel]_ detector.
 
     :param kernel: kernel function, defaults to rbf_kernel
     :type kernel: Callable
@@ -28,7 +28,7 @@ class MMD(BaseDistanceBased):
 
     :References:
 
-    .. [1] Gretton, Arthur, et al.
+    .. [gretton2012kernel] Gretton, Arthur, et al.
         "A kernel two-sample test."
         The Journal of Machine Learning Research 13.1 (2012): 723-773.
 

@@ -14,7 +14,7 @@ from frouros.detectors.data_drift.batch.distance_based.base import (
 
 
 class EMD(BaseDistanceBased):
-    """EMD (Earth Mover's Distance) [1]_ detector.
+    """EMD (Earth Mover's Distance) [rubner2000earth]_ detector.
 
     :param callbacks: callbacks, defaults to None
     :type callbacks: Optional[Union[BaseCallbackBatch, List[BaseCallbackBatch]]]
@@ -23,7 +23,7 @@ class EMD(BaseDistanceBased):
 
     :References:
 
-    .. [1] Rubner, Yossi, Carlo Tomasi, and Leonidas J. Guibas.
+    .. [rubner2000earth] Rubner, Yossi, Carlo Tomasi, and Leonidas J. Guibas.
         "The earth mover's distance as a metric for image retrieval."
         International journal of computer vision 40.2 (2000): 99.
 

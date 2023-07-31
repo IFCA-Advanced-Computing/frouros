@@ -13,7 +13,7 @@ from frouros.detectors.data_drift.batch.distance_based.base import (
 
 
 class KL(BaseDistanceBasedProbability):
-    """KL (Kullback-Leibler divergence) [1]_ detector.
+    """KL (Kullback-Leibler divergence) [kullback1951information]_ detector.
 
     :param num_bins: number of bins in which to divide probabilities, defaults to 10
     :type num_bins: int
@@ -24,7 +24,7 @@ class KL(BaseDistanceBasedProbability):
 
     :References:
 
-    .. [1] Kullback, Solomon, and Richard A. Leibler.
+    .. [kullback1951information] Kullback, Solomon, and Richard A. Leibler.
         "On information and sufficiency."
         The annals of mathematical statistics 22.1 (1951): 79-86.
 

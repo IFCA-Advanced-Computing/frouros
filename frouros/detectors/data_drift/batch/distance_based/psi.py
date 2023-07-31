@@ -13,7 +13,7 @@ from frouros.detectors.data_drift.batch.distance_based.base import (
 
 
 class PSI(BaseDistanceBasedBins):
-    """PSI (Population Stability Index) [1]_ detector.
+    """PSI (Population Stability Index) [wu2010enterprise]_ detector.
 
     :param num_bins: number of bins in which to divide probabilities, defaults to 10
     :type num_bins: int
@@ -22,7 +22,7 @@ class PSI(BaseDistanceBasedBins):
 
     :References:
 
-    .. [1] Wu, Desheng, and David L. Olson.
+    .. [wu2010enterprise] Wu, Desheng, and David L. Olson.
         "Enterprise risk management: coping with model risk in a large bank."
         Journal of the Operational Research Society 61.2 (2010): 179-190.
 

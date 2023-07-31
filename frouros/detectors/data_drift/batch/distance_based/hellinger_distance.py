@@ -11,7 +11,7 @@ from frouros.detectors.data_drift.batch.distance_based.base import (
 
 
 class HellingerDistance(BaseDistanceBasedBins):
-    """Hellinger distance [1]_ detector.
+    """Hellinger distance [hellinger1909neue]_ detector.
 
     :param num_bins: number of bins in which to divide probabilities, defaults to 10
     :type num_bins: int
@@ -20,7 +20,7 @@ class HellingerDistance(BaseDistanceBasedBins):
 
     :References:
 
-    .. [1] Hellinger, Ernst.
+    .. [hellinger1909neue] Hellinger, Ernst.
         "Neue begründung der theorie quadratischer formen von unendlichvielen
         veränderlichen."
         Journal für die reine und angewandte Mathematik 1909.136 (1909): 210-271.
