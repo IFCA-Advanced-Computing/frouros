@@ -44,7 +44,7 @@ class ChiSquareTest(BaseStatisticalTest):
     StatisticalResult(statistic=9.81474665685192, p_value=0.0017311812135839511)
     """
 
-    def __init__(
+    def __init__(  # noqa: D107
         self,
         callbacks: Optional[Union[BaseCallbackBatch, List[BaseCallbackBatch]]] = None,
         **kwargs,

@@ -39,9 +39,9 @@ class JS(BaseDistanceBasedProbability):
     >>> _ = detector.fit(X=X)
     >>> detector.compare(X=Y)[0]
     DistanceResult(distance=0.41702877367162156)
-    """
+    """  # noqa: E501
 
-    def __init__(
+    def __init__(  # noqa: D107
         self,
         num_bins: int = 10,
         callbacks: Optional[Union[BaseCallbackBatch, List[BaseCallbackBatch]]] = None,

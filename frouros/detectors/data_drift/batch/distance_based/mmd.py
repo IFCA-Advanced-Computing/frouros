@@ -47,7 +47,7 @@ class MMD(BaseDistanceBased):
     DistanceResult(distance=0.02146955300299802)
     """
 
-    def __init__(
+    def __init__(  # noqa: D107
         self,
         kernel: Callable = rbf_kernel,
         chunk_size: Optional[int] = None,

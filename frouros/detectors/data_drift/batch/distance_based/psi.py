@@ -39,7 +39,7 @@ class PSI(BaseDistanceBasedBins):
     DistanceResult(distance=134.95409065116183)
     """
 
-    def __init__(
+    def __init__(  # noqa: D107
         self,
         num_bins: int = 10,
         callbacks: Optional[Union[BaseCallbackBatch, List[BaseCallbackBatch]]] = None,

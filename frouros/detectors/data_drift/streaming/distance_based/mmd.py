@@ -51,7 +51,7 @@ class MMD(BaseDistanceBased):
     ...         print(distance)
     """
 
-    def __init__(
+    def __init__(  # noqa: D107
         self,
         window_size: int,
         kernel: Callable = rbf_kernel,

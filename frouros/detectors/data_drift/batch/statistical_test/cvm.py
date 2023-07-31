@@ -39,9 +39,9 @@ class CVMTest(BaseStatisticalTest):
     >>> _ = detector.fit(X=X)
     >>> detector.compare(X=Y)[0]
     StatisticalResult(statistic=5.331699999999998, p_value=1.7705426014202885e-10)
-    """
+    """  # noqa: E501
 
-    def __init__(
+    def __init__(  # noqa: D107
         self,
         callbacks: Optional[Union[BaseCallbackBatch, List[BaseCallbackBatch]]] = None,
         **kwargs,

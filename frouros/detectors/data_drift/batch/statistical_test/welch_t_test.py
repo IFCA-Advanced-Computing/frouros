@@ -41,7 +41,7 @@ class WelchTTest(BaseStatisticalTest):
     StatisticalResult(statistic=-7.651304662806378, p_value=8.685225410826823e-13)
     """
 
-    def __init__(
+    def __init__(  # noqa: D107
         self,
         callbacks: Optional[Union[BaseCallbackBatch, List[BaseCallbackBatch]]] = None,
         **kwargs,

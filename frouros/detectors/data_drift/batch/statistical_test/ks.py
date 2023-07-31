@@ -40,7 +40,7 @@ class KSTest(BaseStatisticalTest):
     StatisticalResult(statistic=0.55, p_value=3.0406585087050305e-14)
     """
 
-    def __init__(
+    def __init__(  # noqa: D107
         self,
         callbacks: Optional[Union[BaseCallbackBatch, List[BaseCallbackBatch]]] = None,
         **kwargs,

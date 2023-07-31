@@ -44,7 +44,7 @@ class AndersonDarlingTest(BaseStatisticalTest):
     StatisticalResult(statistic=32.40316586267425, p_value=0.001)
     """
 
-    def __init__(
+    def __init__(  # noqa: D107
         self,
         callbacks: Optional[Union[BaseCallbackBatch, List[BaseCallbackBatch]]] = None,
         **kwargs,

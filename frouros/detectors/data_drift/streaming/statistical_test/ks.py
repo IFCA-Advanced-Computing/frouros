@@ -58,7 +58,7 @@ class IncrementalKSTest(BaseStatisticalTest):
     ...         print(test.statistic, test.p_value)
     """
 
-    def __init__(
+    def __init__(  # noqa: D107
         self,
         window_size: int,
         callbacks: Optional[

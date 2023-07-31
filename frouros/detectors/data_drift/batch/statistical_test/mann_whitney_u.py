@@ -41,7 +41,7 @@ class MannWhitneyUTest(BaseStatisticalTest):
     StatisticalResult(statistic=2139.0, p_value=2.7623373527697943e-12)
     """
 
-    def __init__(
+    def __init__(  # noqa: D107
         self,
         callbacks: Optional[Union[BaseCallbackBatch, List[BaseCallbackBatch]]] = None,
         **kwargs,

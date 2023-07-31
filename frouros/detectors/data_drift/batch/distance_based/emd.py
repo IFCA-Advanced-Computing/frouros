@@ -38,9 +38,9 @@ class EMD(BaseDistanceBased):
     >>> _ = detector.fit(X=X)
     >>> detector.compare(X=Y)[0]
     DistanceResult(distance=1.0686078744674332)
-    """
+    """  # noqa: E501
 
-    def __init__(
+    def __init__(  # noqa: D107
         self,
         callbacks: Optional[Union[BaseCallbackBatch, List[BaseCallbackBatch]]] = None,
         **kwargs,
