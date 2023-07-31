@@ -18,6 +18,8 @@ class EMD(BaseDistanceBased):
 
     :param callbacks: callbacks, defaults to None
     :type callbacks: Optional[Union[BaseCallbackBatch, List[BaseCallbackBatch]]]
+    :param kwargs: additional keyword arguments to pass to scipy.stats.wasserstein_distance
+    :type kwargs: Dict[str, Any]
 
     :References:
 
