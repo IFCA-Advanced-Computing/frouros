@@ -36,7 +36,8 @@ class EMD(BaseDistanceBased):
     >>> Y = np.random.normal(loc=1, scale=1, size=100)
     >>> detector = EMD()
     >>> _ = detector.fit(X=X)
-    >>> result, _ = detector.compare(X=Y)
+    >>> detector.compare(X=Y)[0]
+    DistanceResult(distance=1.0686078744674332)
     """
 
     def __init__(

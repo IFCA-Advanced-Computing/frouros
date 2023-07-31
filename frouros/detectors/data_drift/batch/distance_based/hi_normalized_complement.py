@@ -33,7 +33,8 @@ class HINormalizedComplement(BaseDistanceBasedBins):
     >>> Y = np.random.normal(loc=1, scale=1, size=100)
     >>> detector = HINormalizedComplement(num_bins=20)
     >>> _ = detector.fit(X=X)
-    >>> result, _ = detector.compare(X=Y)
+    >>> detector.compare(X=Y)[0]
+    DistanceResult(distance=0.53)
     """
 
     def __init__(

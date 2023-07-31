@@ -43,7 +43,8 @@ class MMD(BaseDistanceBased):
     >>> Y = np.random.multivariate_normal(mean=[0, 0], cov=[[2, 1], [1, 2]], size=100)
     >>> detector = MMD(kernel=partial(rbf_kernel, sigma=0.5))
     >>> _ = detector.fit(X=X)
-    >>> result, _ = detector.compare(X=Y)
+    >>> detector.compare(X=Y)[0]
+    DistanceResult(distance=0.02146955300299802)
     """
 
     def __init__(

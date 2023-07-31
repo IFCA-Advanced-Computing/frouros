@@ -34,7 +34,8 @@ class HellingerDistance(BaseDistanceBasedBins):
     >>> Y = np.random.normal(loc=1, scale=1, size=100)
     >>> detector = HellingerDistance(num_bins=20)
     >>> _ = detector.fit(X=X)
-    >>> result, _ = detector.compare(X=Y)
+    >>> detector.compare(X=Y)[0]
+    DistanceResult(distance=0.467129645775421)
     """
 
     def __init__(
