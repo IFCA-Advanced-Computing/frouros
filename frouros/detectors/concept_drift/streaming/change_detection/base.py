@@ -26,21 +26,19 @@ class BaseChangeDetection(BaseConceptDriftStreaming):
 
 
 class BaseCUSUMConfig(BaseChangeDetectionConfig):
-    """Class representing a CUSUM based configuration class."""
+    """Class representing a CUSUM based configuration class.
 
-    def __init__(
+    :param lambda_: lambda value, defaults to 50.0
+    :type lambda_: float
+    :param min_num_instances: minimum numbers of instances to start looking for changes, defaults to 30
+    :type min_num_instances: int
+    """  # noqa: E501
+
+    def __init__(  # noqa: D107
         self,
         lambda_: float = 50.0,
         min_num_instances: int = 30,
     ) -> None:
-        """Init method.
-
-        :param lambda_: lambda value
-        :type lambda_: float
-        :param min_num_instances: minimum numbers of instances
-        to start looking for changes
-        :type min_num_instances: int
-        """
         super().__init__(min_num_instances=min_num_instances)
         self.lambda_ = lambda_
 
@@ -139,25 +137,23 @@ class AlphaConfig:
 
 
 class BaseCUSUM(BaseChangeDetection):
-    """CUSUM based algorithm class."""
+    """CUSUM based algorithm class.
+
+    :param config: configuration parameters, defaults to None
+    :type config: Optional[BaseCUSUMConfig]
+    :param callbacks: callbacks, defaults to None
+    :type callbacks: Optional[Union[BaseCallbackStreaming, List[BaseCallbackStreaming]]]
+    """  # noqa: E501
 
     config_type = BaseCUSUMConfig
 
-    def __init__(
+    def __init__(  # noqa: D107
         self,
         config: Optional[BaseCUSUMConfig] = None,
         callbacks: Optional[
             Union[BaseCallbackStreaming, List[BaseCallbackStreaming]]
         ] = None,
     ) -> None:
-        """Init method.
-
-        :param config: configuration parameters
-        :type config: Optional[BaseCUSUMConfig]
-        :param callbacks: callbacks
-        :type callbacks: Optional[Union[BaseCallbackStreaming,
-        List[BaseCallbackStreaming]]]
-        """
         super().__init__(
             config=config,
             callbacks=callbacks,
