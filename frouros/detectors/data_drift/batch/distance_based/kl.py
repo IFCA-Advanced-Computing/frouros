@@ -13,13 +13,31 @@ from frouros.detectors.data_drift.batch.distance_based.base import (
 
 
 class KL(BaseDistanceBasedProbability):
-    """KL (Kullback-Leibler divergence) [kullback1951information]_ detector.
+    """KL (Kullback-Leibler divergence) [1]_ detector.
+
+    :param num_bins: number of bins in which to divide probabilities, defaults to 10
+    :type num_bins: int
+    :param callbacks: number of bins in which to divide probabilities, defaults to None
+    :type callbacks: Optional[Union[BaseCallbackBatch, List[BaseCallbackBatch]]]
+    :param kwargs: additional keyword arguments to pass to scipy.special.rel_entr
+    :type kwargs: Dict[str, Any]
 
     :References:
 
-    .. [kullback1951information] Kullback, Solomon, and Richard A. Leibler.
+    .. [1] Kullback, Solomon, and Richard A. Leibler.
         "On information and sufficiency."
         The annals of mathematical statistics 22.1 (1951): 79-86.
+
+    :Example:
+
+    >>> from frouros.detectors.data_drift import KL
+    >>> import numpy as np
+    >>> np.random.seed(seed=31)
+    >>> X = np.random.normal(loc=0, scale=1, size=100)
+    >>> Y = np.random.normal(loc=1, scale=1, size=100)
+    >>> detector = KL(num_bins=20)
+    >>> _ = detector.fit(X=X)
+    >>> result, _ = detector.compare(X=Y)
     """
 
     def __init__(
@@ -28,13 +46,6 @@ class KL(BaseDistanceBasedProbability):
         callbacks: Optional[Union[BaseCallbackBatch, List[BaseCallbackBatch]]] = None,
         **kwargs,
     ) -> None:
-        """Init method.
-
-        :param num_bins: number of bins in which to divide probabilities
-        :type num_bins: int
-        :param callbacks: number of bins in which to divide probabilities
-        :type callbacks: Optional[Union[BaseCallbackBatch, List[BaseCallbackBatch]]]
-        """
         super().__init__(
             statistical_method=self._kl,
             statistical_kwargs={**kwargs, "num_bins": num_bins},
