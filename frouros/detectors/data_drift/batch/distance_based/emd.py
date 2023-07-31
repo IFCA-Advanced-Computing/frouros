@@ -14,13 +14,27 @@ from frouros.detectors.data_drift.batch.distance_based.base import (
 
 
 class EMD(BaseDistanceBased):
-    """EMD (Earth Mover's Distance) [rubner2000earth]_ detector.
+    """EMD (Earth Mover's Distance) [1]_ detector.
+
+    :param callbacks: callbacks, defaults to None
+    :type callbacks: Optional[Union[BaseCallbackBatch, List[BaseCallbackBatch]]]
 
     :References:
 
-    .. [rubner2000earth] Rubner, Yossi, Carlo Tomasi, and Leonidas J. Guibas.
+    .. [1] Rubner, Yossi, Carlo Tomasi, and Leonidas J. Guibas.
         "The earth mover's distance as a metric for image retrieval."
         International journal of computer vision 40.2 (2000): 99.
+
+    :Example:
+
+    >>> from frouros.detectors.data_drift import EMD
+    >>> import numpy as np
+    >>> np.random.seed(seed=31)
+    >>> X = np.random.normal(loc=0, scale=1, size=100)
+    >>> Y = np.random.normal(loc=1, scale=1, size=100)
+    >>> detector = EMD()
+    >>> _ = detector.fit(X=X)
+    >>> result, _ = detector.compare(X=Y)
     """
 
     def __init__(
@@ -28,11 +42,6 @@ class EMD(BaseDistanceBased):
         callbacks: Optional[Union[BaseCallbackBatch, List[BaseCallbackBatch]]] = None,
         **kwargs,
     ) -> None:
-        """Init method.
-
-        :param callbacks: callbacks
-        :type callbacks: Optional[Union[BaseCallbackBatch, List[BaseCallbackBatch]]]
-        """
         super().__init__(
             statistical_type=UnivariateData(),
             statistical_method=self._emd,
