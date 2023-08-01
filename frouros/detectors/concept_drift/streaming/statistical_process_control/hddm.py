@@ -37,7 +37,7 @@ class BaseHDDMConfig(BaseSPCConfig):
         :param alpha_w: significance value for warning
         :type alpha_w: float
         :param two_sided_test: flag that indicates if a two-sided test is performed
-        :param two_sided_test: bool
+        :type two_sided_test: bool
         :param min_num_instances: minimum numbers of instances
         to start looking for changes
         :type min_num_instances: int
@@ -116,13 +116,36 @@ class BaseHDDMConfig(BaseSPCConfig):
 class HDDMAConfig(BaseHDDMConfig):
     """HDDM-A (Hoeffding's drift detection method A-Test) [frias2014online]_ configuration.
 
+    :param alpha_d: significance value for drift, defaults to 0.001
+    :type alpha_d: float
+    :param alpha_w: significance value for warning, defaults to 0.005
+    :type alpha_w: float
+    :param two_sided_test: flag that indicates if a two-sided test is performed, defaults to False
+    :type two_sided_test: bool
+    :param min_num_instances: minimum numbers of instances to start looking for changes, defaults to 30
+    :type min_num_instances: int
+
     :References:
 
     .. [frias2014online] Frias-Blanco, Isvani, et al.
         "Online and non-parametric drift detection methods based on Hoeffding’s bounds."
         IEEE Transactions on Knowledge and Data Engineering 27.3 (2014):
         810-823.
-    """
+    """  # noqa: E501
+
+    def __init__(  # noqa: D107
+        self,
+        alpha_d: float = 0.001,
+        alpha_w: float = 0.005,
+        two_sided_test: bool = False,
+        min_num_instances: int = 30,
+    ) -> None:
+        super().__init__(
+            alpha_d=alpha_d,
+            alpha_w=alpha_w,
+            two_sided_test=two_sided_test,
+            min_num_instances=min_num_instances,
+        )
 
 
 class HDDMWConfig(BaseHDDMConfig):
@@ -145,7 +168,7 @@ class HDDMWConfig(BaseHDDMConfig):
         "Online and non-parametric drift detection methods based on Hoeffding’s bounds."
         IEEE Transactions on Knowledge and Data Engineering 27.3 (2014):
         810-823.
-    """
+    """  # noqa: E501
 
     def __init__(  # noqa: D107
         self,
@@ -318,31 +341,49 @@ class HoeffdingTwoSidedTest(HoeffdingOneSidedTest):
 class HDDMA(BaseSPC):
     """HDDM-A (Hoeffding's drift detection method with A-Test) [frias2014online]_ detector.
 
+    :param config: configuration object of the detector, defaults to None. If None, the default configuration of :class:`HDDMAConfig` is used.
+    :type config: Optional[HDDMAConfig]
+    :param callbacks: callbacks, defaults to None
+    :type callbacks: Optional[Union[BaseCallbackStreaming, List[BaseCallbackStreaming]]]
+
     :References:
 
     .. [frias2014online] Frias-Blanco, Isvani, et al.
         "Online and non-parametric drift detection methods based on Hoeffding’s bounds."
         IEEE Transactions on Knowledge and Data Engineering 27.3 (2014):
         810-823.
-    """
+
+    :Example:
+
+    >>> from frouros.detectors.concept_drift import HDDMA
+    >>> import numpy as np
+    >>> np.random.seed(seed=31)
+    >>> dist_a = np.random.binomial(n=1, p=0.6, size=1000)
+    >>> dist_b = np.random.binomial(n=1, p=0.8, size=1000)
+    >>> stream = np.concatenate((dist_a, dist_b))
+    >>> detector = HDDMA()
+    >>> warning_flag = False
+    >>> for i, value in enumerate(stream):
+    ...     _ = detector.update(value=value)
+    ...     if detector.drift:
+    ...         print(f"Change detected at index {i}")
+    ...         break
+    ...     if not warning_flag and detector.warning:
+    ...         print(f"Warning detected at index {i}")
+    ...         warning_flag = True
+    Warning detected at index 1043
+    Change detected at index 1054
+    """  # noqa: E501
 
     config_type = HDDMAConfig  # type: ignore
 
-    def __init__(
+    def __init__(  # noqa: D107
         self,
         config: Optional[HDDMAConfig] = None,
         callbacks: Optional[
             Union[BaseCallbackStreaming, List[BaseCallbackStreaming]]
         ] = None,
     ) -> None:
-        """Init method.
-
-        :param config: configuration parameters
-        :type config: Optional[HDDMAConfig]
-        :param callbacks: callbacks
-        :type callbacks: Optional[Union[BaseCallbackStreaming,
-        List[BaseCallbackStreaming]]]
-        """
         super().__init__(
             config=config,
             callbacks=callbacks,
@@ -648,7 +689,7 @@ class HDDMW(BaseSPC):
     ...         print(f"Warning detected at index {i}")
     ...         warning_flag = True
     Warning detected at index 1017
-    Change detected at index 1029    
+    Change detected at index 1029
     """  # noqa: E501
 
     config_type = HDDMWConfig  # type: ignore
