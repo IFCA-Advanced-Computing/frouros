@@ -67,9 +67,9 @@ class GeometricMovingAverage(BaseCUSUM):
     >>> for i, value in enumerate(stream):
     ...     _ = detector.update(value=value)
     ...     if detector.drift:
-    ...         print(f"Change detected at index {i}")
+    ...         print(f"Change detected at step {i}")
     ...         break
-    Change detected at index 1071
+    Change detected at step 1071
     """  # noqa: E501
 
     config_type = GeometricMovingAverageConfig  # type: ignore

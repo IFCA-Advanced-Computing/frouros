@@ -369,13 +369,13 @@ class HDDMA(BaseSPC):
     >>> for i, value in enumerate(stream):
     ...     _ = detector.update(value=value)
     ...     if detector.drift:
-    ...         print(f"Change detected at index {i}")
+    ...         print(f"Change detected at step {i}")
     ...         break
     ...     if not warning_flag and detector.warning:
-    ...         print(f"Warning detected at index {i}")
+    ...         print(f"Warning detected at step {i}")
     ...         warning_flag = True
-    Warning detected at index 1043
-    Change detected at index 1054
+    Warning detected at step 1043
+    Change detected at step 1054
     """  # noqa: E501
 
     config_type = HDDMAConfig  # type: ignore
@@ -689,13 +689,13 @@ class HDDMW(BaseSPC):
     >>> for i, value in enumerate(stream):
     ...     _ = detector.update(value=value)
     ...     if detector.drift:
-    ...         print(f"Change detected at index {i}")
+    ...         print(f"Change detected at step {i}")
     ...         break
     ...     if not warning_flag and detector.warning:
-    ...         print(f"Warning detected at index {i}")
+    ...         print(f"Warning detected at step {i}")
     ...         warning_flag = True
-    Warning detected at index 1017
-    Change detected at index 1029
+    Warning detected at step 1017
+    Change detected at step 1029
     """  # noqa: E501
 
     config_type = HDDMWConfig  # type: ignore

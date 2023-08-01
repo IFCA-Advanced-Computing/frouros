@@ -301,9 +301,9 @@ class ADWIN(BaseWindow):
     >>> for i, value in enumerate(stream):
     ...     _ = detector.update(value=value)
     ...     if detector.drift:
-    ...         print(f"Change detected at index {i}")
+    ...         print(f"Change detected at step {i}")
     ...         break
-    Change detected at index 1055
+    Change detected at step 1055
     """  # noqa: E501
 
     config_type = ADWINConfig

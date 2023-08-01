@@ -208,9 +208,9 @@ class BOCD(BaseChangeDetection):
     >>> for i, value in enumerate(stream):
     ...     _ = detector.update(value=value)
     ...     if detector.drift:
-    ...         print(f"Change detected at index {i}")
+    ...         print(f"Change detected at step {i}")
     ...         break
-    Change detected at index 1031
+    Change detected at step 1031
     """  # noqa: E501
 
     config_type = BOCDConfig  # type: ignore

@@ -137,13 +137,13 @@ class RDDM(BaseSPCError):
     >>> for i, value in enumerate(stream):
     ...     _ = detector.update(value=value)
     ...     if detector.drift:
-    ...         print(f"Change detected at index {i}")
+    ...         print(f"Change detected at step {i}")
     ...         break
     ...     if not warning_flag and detector.warning:
-    ...         print(f"Warning detected at index {i}")
+    ...         print(f"Warning detected at step {i}")
     ...         warning_flag = True
-    Warning detected at index 1036
-    Change detected at index 1066
+    Warning detected at step 1036
+    Change detected at step 1066
     """  # noqa: E501
 
     config_type = RDDMConfig  # type: ignore

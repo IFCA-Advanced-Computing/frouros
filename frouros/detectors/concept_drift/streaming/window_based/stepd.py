@@ -111,14 +111,14 @@ class STEPD(BaseWindow):
     >>> for i, value in enumerate(stream):
     ...     _ = detector.update(value=value)
     ...     if detector.drift:
-    ...         print(f"Change detected at index {i}")
+    ...         print(f"Change detected at step {i}")
     ...         break
     ...     if detector.warning:
-    ...         print(f"Warning detected at index {i}")
-    Warning detected at index 640
-    Warning detected at index 641
-    Warning detected at index 1023
-    Change detected at index 1024
+    ...         print(f"Warning detected at step {i}")
+    Warning detected at step 640
+    Warning detected at step 641
+    Warning detected at step 1023
+    Change detected at step 1024
     """  # noqa: E501
 
     config_type = STEPDConfig  # type: ignore

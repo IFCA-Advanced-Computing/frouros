@@ -160,13 +160,13 @@ class EDDM(BaseSPC):
     >>> for i, value in enumerate(stream):
     ...     _ = detector.update(value=value)
     ...     if detector.drift:
-    ...         print(f"Change detected at index {i}")
+    ...         print(f"Change detected at step {i}")
     ...         break
     ...     if not warning_flag and detector.warning:
-    ...         print(f"Warning detected at index {i}")
+    ...         print(f"Warning detected at step {i}")
     ...         warning_flag = True
-    Warning detected at index 39
-    Change detected at index 1294
+    Warning detected at step 39
+    Change detected at step 1294
     """  # noqa: E501
 
     config_type = EDDMConfig  # type: ignore

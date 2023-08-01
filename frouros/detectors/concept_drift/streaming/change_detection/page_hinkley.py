@@ -70,9 +70,9 @@ class PageHinkley(BaseCUSUM):
     >>> for i, value in enumerate(stream):
     ...     _ = detector.update(value=value)
     ...     if detector.drift:
-    ...         print(f"Change detected at index {i}")
+    ...         print(f"Change detected at step {i}")
     ...         break
-    Change detected at index 1094
+    Change detected at step 1094
     """  # noqa: E501
 
     config_type = PageHinkleyConfig  # type: ignore

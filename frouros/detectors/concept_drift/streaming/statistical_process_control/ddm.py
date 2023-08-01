@@ -74,13 +74,13 @@ class DDM(BaseSPCError):
     >>> for i, value in enumerate(stream):
     ...     _ = detector.update(value=value)
     ...     if detector.drift:
-    ...         print(f"Change detected at index {i}")
+    ...         print(f"Change detected at step {i}")
     ...         break
     ...     if not warning_flag and detector.warning:
-    ...         print(f"Warning detected at index {i}")
+    ...         print(f"Warning detected at step {i}")
     ...         warning_flag = True
-    Warning detected at index 1049
-    Change detected at index 1131
+    Warning detected at step 1049
+    Change detected at step 1131
     """  # noqa: E501
 
     config_type = DDMConfig
