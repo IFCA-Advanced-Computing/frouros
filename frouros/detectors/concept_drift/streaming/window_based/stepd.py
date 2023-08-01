@@ -16,29 +16,26 @@ from frouros.utils.data_structures import AccuracyQueue
 class STEPDConfig(BaseWindowConfig):
     """STEPD (Statistical test of equal proportions) [nishida2007detecting]_ configuration.
 
+    :param alpha_d: significance value for overall, defaults to 0.003
+    :type alpha_d: float
+    :param alpha_w: significance value for last, defaults to 0.05
+    :type alpha_w: float
+    :param min_num_instances: minimum numbers of instances to start looking for changes, defaults to 30
+    :type min_num_instances: int
+
     :References:
 
     .. [nishida2007detecting] Nishida, Kyosuke, and Koichiro Yamauchi.
         "Detecting concept drift using statistical testing." Discovery science.
         Vol. 4755. 2007.
-    """
+    """  # noqa: E501
 
-    def __init__(
+    def __init__(  # noqa: D107
         self,
         alpha_d: float = 0.003,
         alpha_w: float = 0.05,
         min_num_instances: int = 30,
     ) -> None:
-        """Init method.
-
-        :param alpha_d: significance value for overall
-        :type alpha_d: float
-        :param alpha_w: significance value for last
-        :type alpha_w: float
-        :param min_num_instances: minimum numbers of instances
-        to start looking for changes
-        :type min_num_instances: int
-        """
         super().__init__(min_num_instances=min_num_instances)
         self.alpha_d = alpha_d
         self.alpha_w = alpha_w
@@ -91,30 +88,48 @@ class STEPDConfig(BaseWindowConfig):
 class STEPD(BaseWindow):
     """STEPD (Statistical test of equal proportions) [nishida2007detecting]_ detector.
 
+    :param config: configuration object of the detector, defaults to None. If None, the default configuration of :class:`STEPDConfig` is used.
+    :type config: Optional[STEPDConfig]
+    :param callbacks: callbacks, defaults to None
+    :type callbacks: Optional[Union[BaseCallbackStreaming, List[BaseCallbackStreaming]]]
+
     :References:
 
     .. [nishida2007detecting] Nishida, Kyosuke, and Koichiro Yamauchi.
         "Detecting concept drift using statistical testing." Discovery science.
         Vol. 4755. 2007.
-    """
+
+    :Example:
+
+    >>> from frouros.detectors.concept_drift import STEPD, STEPDConfig
+    >>> import numpy as np
+    >>> np.random.seed(seed=31)
+    >>> dist_a = np.random.binomial(n=1, p=0.8, size=1000)
+    >>> dist_b = np.random.binomial(n=1, p=0.5, size=1000)
+    >>> stream = np.concatenate((dist_a, dist_b))
+    >>> detector = STEPD(config=STEPDConfig(alpha_d=0.001, alpha_w=0.005))
+    >>> for i, value in enumerate(stream):
+    ...     _ = detector.update(value=value)
+    ...     if detector.drift:
+    ...         print(f"Change detected at index {i}")
+    ...         break
+    ...     if detector.warning:
+    ...         print(f"Warning detected at index {i}")
+    Warning detected at index 640
+    Warning detected at index 641
+    Warning detected at index 1023
+    Change detected at index 1024
+    """  # noqa: E501
 
     config_type = STEPDConfig  # type: ignore
 
-    def __init__(
+    def __init__(  # noqa: D107
         self,
         config: Optional[STEPDConfig] = None,
         callbacks: Optional[
             Union[BaseCallbackStreaming, List[BaseCallbackStreaming]]
         ] = None,
     ) -> None:
-        """Init method.
-
-        :param config: configuration parameters
-        :type config: Optional[STEPDConfig]
-        :param callbacks: callbacks
-        :type callbacks: Optional[Union[BaseCallbackStreaming,
-        List[BaseCallbackStreaming]]]
-        """
         super().__init__(
             config=config,
             callbacks=callbacks,
