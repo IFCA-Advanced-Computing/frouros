@@ -1,5 +1,8 @@
 """Geometric Moving Average module."""
 
+from typing import Optional, List, Union
+
+from frouros.callbacks.streaming.base import BaseCallbackStreaming
 from frouros.detectors.concept_drift.streaming.change_detection.base import (
     BaseCUSUM,
     BaseCUSUMConfig,
@@ -40,8 +43,8 @@ class GeometricMovingAverageConfig(BaseCUSUMConfig, AlphaConfig):
 class GeometricMovingAverage(BaseCUSUM):
     """Geometric Moving Average [robertst1959control]_ detector.
 
-    :param config: configuration object of the detector
-    :type config: GeometricMovingAverageConfig
+    :param config: configuration object of the detector, defaults to None. If None, the default configuration of :class:`GeometricMovingAverageConfig` is used.
+    :type config: Optional[GeometricMovingAverageConfig]
     :param callbacks: callbacks, defaults to None
     :type callbacks: Optional[Union[BaseCallbackStreaming, List[BaseCallbackStreaming]]]
 
@@ -60,16 +63,28 @@ class GeometricMovingAverage(BaseCUSUM):
     >>> dist_a = np.random.normal(loc=0.2, scale=0.01, size=1000)
     >>> dist_b = np.random.normal(loc=0.8, scale=0.04, size=1000)
     >>> stream = np.concatenate((dist_a, dist_b))
-    >>> detector = GeometricMovingAverage(config=GeometricMovingAverageConfig(lambda_=0.1))
+    >>> detector = GeometricMovingAverage(config=GeometricMovingAverageConfig(lambda_=0.3))
     >>> for i, value in enumerate(stream):
     ...     _ = detector.update(value=value)
     ...     if detector.drift:
     ...         print(f"Change detected at index {i}")
     ...         break
-    Change detected at index 1018
+    Change detected at index 1071
     """  # noqa: E501
 
     config_type = GeometricMovingAverageConfig  # type: ignore
+
+    def __init__(  # noqa: D107
+        self,
+        config: Optional[GeometricMovingAverageConfig] = None,
+        callbacks: Optional[
+            Union[BaseCallbackStreaming, List[BaseCallbackStreaming]]
+        ] = None,
+    ) -> None:
+        super().__init__(
+            config=config,
+            callbacks=callbacks,
+        )
 
     def _update_sum(self, error_rate: float) -> None:
         self.sum_ = self.config.alpha * self.sum_ + (  # type: ignore
