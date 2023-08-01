@@ -15,41 +15,83 @@ from frouros.utils.stats import EWMA, Mean
 class ECDDWTConfig(BaseECDDConfig):
     """ECDDWT (EWMA Concept Drift Detection Warning) [ross2012exponentially]_ configuration.
 
+    :param lambda_: weight given to recent data compared to older data, defaults to 0.2
+    :type lambda_: float
+    :param average_run_length: expected time between false positive detections [100, 400 or 1000], defaults to 400
+    :type average_run_length: int
+    :param warning_level: warning level value, defaults to 0.5
+    :type warning_level: float
+    :param min_num_instances: minimum numbers of instances to start looking for changes, defaults to 30
+    :type min_num_instances: int
+
     :References:
 
     .. [ross2012exponentially] Ross, Gordon J., et al.
         "Exponentially weighted moving average charts for detecting concept drift."
         Pattern recognition letters 33.2 (2012): 191-198.
-    """
+    """  # noqa: E501
+
+    def __init__(  # noqa: D107
+        self,
+        lambda_: float = 0.2,
+        average_run_length: int = 400,
+        warning_level: float = 0.5,
+        min_num_instances: int = 30,
+    ) -> None:
+        super().__init__(
+            lambda_=lambda_,
+            average_run_length=average_run_length,
+            warning_level=warning_level,
+            min_num_instances=min_num_instances,
+        )
 
 
 class ECDDWT(BaseSPC):
     """ECDDWT (EWMA Concept Drift Detection Warning) [ross2012exponentially]_ detector.
 
+    :param config: configuration object of the detector, defaults to None. If None, the default configuration of :class:`ECDDWTConfig` is used.
+    :type config: Optional[ECDDWTConfig]
+    :param callbacks: callbacks, defaults to None
+    :type callbacks: Optional[Union[BaseCallbackStreaming, List[BaseCallbackStreaming]]]
+
+    :Note:
+    :func:`update` method expects to receive a value of 0 if the instance is correctly classified (no error) and 1 otherwise (error).
+
     :References:
 
     .. [ross2012exponentially] Ross, Gordon J., et al.
         "Exponentially weighted moving average charts for detecting concept drift."
         Pattern recognition letters 33.2 (2012): 191-198.
-    """
+
+    :Example:
+
+    >>> from frouros.detectors.concept_drift import ECDDWT
+    >>> import numpy as np
+    >>> np.random.seed(seed=31)
+    >>> dist_a = np.random.binomial(n=1, p=0.6, size=1000)
+    >>> dist_b = np.random.binomial(n=1, p=0.8, size=1000)
+    >>> stream = np.concatenate((dist_a, dist_b))
+    >>> detector = ECDDWT()
+    >>> warning_flag = False
+    >>> for i, value in enumerate(stream):
+    ...     _ = detector.update(value=value)
+    ...     if detector.drift:
+    ...         print(f"Change detected at step {i}")
+    ...         break
+    ...     if not warning_flag and detector.warning:
+    ...         print(f"Warning detected at step {i}")
+    ...         warning_flag = True
+    """  # noqa: E501
 
     config_type = ECDDWTConfig  # type: ignore
 
-    def __init__(
+    def __init__(  # noqa: D107
         self,
         config: Optional[ECDDWTConfig] = None,
         callbacks: Optional[
             Union[BaseCallbackStreaming, List[BaseCallbackStreaming]]
         ] = None,
     ) -> None:
-        """Init method.
-
-        :param config: configuration parameters
-        :type config: Optional[ECDDWTConfig]
-        :param callbacks: callbacks
-        :type callbacks: Optional[Union[BaseCallbackStreaming,
-        List[BaseCallbackStreaming]]]
-        """
         super().__init__(
             config=config,  # type: ignore
             callbacks=callbacks,
@@ -131,11 +173,12 @@ class ECDDWT(BaseSPC):
                 * error_rate_variance
             )
             control_limit = self.config.control_limit_func(  # type: ignore
-                p=self.p.mean
+                p=self.p.mean,
             )
 
             drift_flag = self._check_threshold(
-                control_limit=control_limit, z_variance=z_variance
+                control_limit=control_limit,
+                z_variance=z_variance,
             )
 
             if drift_flag:

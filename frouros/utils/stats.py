@@ -125,8 +125,8 @@ class CircularMean(Mean):
         :type value: int
         :raises TypeError: Type error exception
         """
-        if not isinstance(value, (int, float)):
-            raise TypeError("value must be of type int or float.")
+        if not isinstance(value, (int, float, np.number)):
+            raise TypeError("value must be of type int, float or numpy number.")
         element = self.queue.enqueue(value=value)
         self.num_values = len(self.queue)
         self.mean += self.incremental_op(
@@ -195,8 +195,8 @@ class EWMA(IncrementalStat):
         :type value: int
         :raises TypeError: Type error exception
         """
-        if not isinstance(value, (int, float)):
-            raise TypeError("value must be of type int or float.")
+        if not isinstance(value, (int, float, np.number)):
+            raise TypeError("value must be of type int, float or numpy number.")
         self.mean = self.alpha * value + self.one_minus_alpha * self.mean
 
     def get(self) -> float:
