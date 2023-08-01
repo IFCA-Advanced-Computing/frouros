@@ -29,7 +29,7 @@ class ECDDWTConfig(BaseECDDConfig):
     .. [ross2012exponentially] Ross, Gordon J., et al.
         "Exponentially weighted moving average charts for detecting concept drift."
         Pattern recognition letters 33.2 (2012): 191-198.
-    """  # noqa: E501
+    """  # noqa: E501  # pylint: disable=line-too-long
 
     def __init__(  # noqa: D107
         self,
@@ -81,7 +81,7 @@ class ECDDWT(BaseSPC):
     ...     if not warning_flag and detector.warning:
     ...         print(f"Warning detected at step {i}")
     ...         warning_flag = True
-    """  # noqa: E501
+    """  # noqa: E501 # pylint: disable=line-too-long
 
     config_type = ECDDWTConfig  # type: ignore
 

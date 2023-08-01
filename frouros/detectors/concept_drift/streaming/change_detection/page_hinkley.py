@@ -28,7 +28,7 @@ class PageHinkleyConfig(BaseCUSUMConfig, DeltaConfig, AlphaConfig):
     .. [page1954continuous] Page, Ewan S.
         "Continuous inspection schemes."
         Biometrika 41.1/2 (1954): 100-115.
-    """  # noqa: E501
+    """  # noqa: E501  # pylint: disable=line-too-long
 
     def __init__(  # noqa: D107
         self,
@@ -58,7 +58,7 @@ class PageHinkley(BaseCUSUM):
         "Continuous inspection schemes."
         Biometrika 41.1/2 (1954): 100-115.
 
-        :Example:
+    :Example:
 
     >>> from frouros.detectors.concept_drift import PageHinkley
     >>> import numpy as np
@@ -73,7 +73,7 @@ class PageHinkley(BaseCUSUM):
     ...         print(f"Change detected at step {i}")
     ...         break
     Change detected at step 1094
-    """  # noqa: E501
+    """  # noqa: E501  # pylint: disable=line-too-long
 
     config_type = PageHinkleyConfig  # type: ignore
 

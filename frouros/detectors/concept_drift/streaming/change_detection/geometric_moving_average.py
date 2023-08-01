@@ -26,7 +26,7 @@ class GeometricMovingAverageConfig(BaseCUSUMConfig, AlphaConfig):
         “Control Chart Tests Based on Geometric Moving Averages.”
         Technometrics, vol. 1, no. 3, 1959, pp. 239–50.
         JSTOR, https://doi.org/10.2307/1266443.
-    """  # noqa: E501
+    """  # noqa: E501  # pylint: disable=line-too-long
 
     def __init__(  # noqa: D107
         self,
@@ -55,7 +55,7 @@ class GeometricMovingAverage(BaseCUSUM):
         Technometrics, vol. 1, no. 3, 1959, pp. 239–50.
         JSTOR, https://doi.org/10.2307/1266443.
 
-        :Example:
+    :Example:
 
     >>> from frouros.detectors.concept_drift import GeometricMovingAverage, GeometricMovingAverageConfig
     >>> import numpy as np
@@ -70,7 +70,7 @@ class GeometricMovingAverage(BaseCUSUM):
     ...         print(f"Change detected at step {i}")
     ...         break
     Change detected at step 1071
-    """  # noqa: E501
+    """  # noqa: E501  # pylint: disable=line-too-long
 
     config_type = GeometricMovingAverageConfig  # type: ignore
 

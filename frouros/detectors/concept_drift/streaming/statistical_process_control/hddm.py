@@ -131,7 +131,7 @@ class HDDMAConfig(BaseHDDMConfig):
         "Online and non-parametric drift detection methods based on Hoeffding’s bounds."
         IEEE Transactions on Knowledge and Data Engineering 27.3 (2014):
         810-823.
-    """  # noqa: E501
+    """  # noqa: E501  pylint: disable=line-too-long
 
     def __init__(  # noqa: D107
         self,
@@ -168,7 +168,7 @@ class HDDMWConfig(BaseHDDMConfig):
         "Online and non-parametric drift detection methods based on Hoeffding’s bounds."
         IEEE Transactions on Knowledge and Data Engineering 27.3 (2014):
         810-823.
-    """  # noqa: E501
+    """  # noqa: E501  # pylint: disable=line-too-long
 
     def __init__(  # noqa: D107
         self,
@@ -376,7 +376,7 @@ class HDDMA(BaseSPC):
     ...         warning_flag = True
     Warning detected at step 1043
     Change detected at step 1054
-    """  # noqa: E501
+    """  # noqa: E501  # pylint: disable=line-too-long
 
     config_type = HDDMAConfig  # type: ignore
 
@@ -696,7 +696,7 @@ class HDDMW(BaseSPC):
     ...         warning_flag = True
     Warning detected at step 1017
     Change detected at step 1029
-    """  # noqa: E501
+    """  # noqa: E501  # pylint: disable=line-too-long
 
     config_type = HDDMWConfig  # type: ignore
 

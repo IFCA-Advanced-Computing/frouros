@@ -29,7 +29,7 @@ class EDDMConfig(BaseSPCConfig):
     .. [baena2006early] Baena-Garcıa, Manuel, et al. "Early drift detection method."
         Fourth international workshop on knowledge discovery from data streams.
         Vol. 6. 2006.
-    """  # noqa: E501
+    """  # noqa: E501  # pylint: disable=line-too-long
 
     def __init__(  # noqa: D107
         self,
@@ -167,7 +167,7 @@ class EDDM(BaseSPC):
     ...         warning_flag = True
     Warning detected at step 39
     Change detected at step 1294
-    """  # noqa: E501
+    """  # noqa: E501  # pylint: disable=line-too-long
 
     config_type = EDDMConfig  # type: ignore
 

@@ -27,7 +27,7 @@ class CUSUMConfig(BaseCUSUMConfig, DeltaConfig):
     .. [page1954continuous] Page, Ewan S.
         "Continuous inspection schemes."
         Biometrika 41.1/2 (1954): 100-115.
-    """  # noqa: E501
+    """  # noqa: E501  # pylint: disable=line-too-long
 
     def __init__(  # noqa: D107
         self,
@@ -70,7 +70,7 @@ class CUSUM(BaseCUSUM):
     ...         print(f"Change detected at step {i}")
     ...         break
     Change detected at step 1086
-    """  # noqa: E501
+    """  # noqa: E501  # pylint: disable=line-too-long
 
     config_type = CUSUMConfig  # type: ignore
 

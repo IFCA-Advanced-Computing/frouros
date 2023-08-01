@@ -28,7 +28,7 @@ class STEPDConfig(BaseWindowConfig):
     .. [nishida2007detecting] Nishida, Kyosuke, and Koichiro Yamauchi.
         "Detecting concept drift using statistical testing." Discovery science.
         Vol. 4755. 2007.
-    """  # noqa: E501
+    """  # noqa: E501  # pylint: disable=line-too-long
 
     def __init__(  # noqa: D107
         self,
@@ -119,7 +119,7 @@ class STEPD(BaseWindow):
     Warning detected at step 641
     Warning detected at step 1023
     Change detected at step 1024
-    """  # noqa: E501
+    """  # noqa: E501  # pylint: disable=line-too-long
 
     config_type = STEPDConfig  # type: ignore
 

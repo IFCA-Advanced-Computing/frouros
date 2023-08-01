@@ -32,7 +32,7 @@ class BaseCUSUMConfig(BaseChangeDetectionConfig):
     :type lambda_: float
     :param min_num_instances: minimum numbers of instances to start looking for changes, defaults to 30
     :type min_num_instances: int
-    """  # noqa: E501
+    """  # noqa: E501  # pylint: disable=line-too-long
 
     def __init__(  # noqa: D107
         self,

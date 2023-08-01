@@ -172,7 +172,7 @@ class ADWINConfig(BaseWindowConfig):
         "Learning from time-changing data with adaptive windowing."
         Proceedings of the 2007 SIAM international conference on data mining.
         Society for Industrial and Applied Mathematics, 2007.
-    """  # noqa: E501
+    """  # noqa: E501  # pylint: disable=line-too-long
 
     def __init__(  # noqa: D107
         self,
@@ -304,7 +304,7 @@ class ADWIN(BaseWindow):
     ...         print(f"Change detected at step {i}")
     ...         break
     Change detected at step 1055
-    """  # noqa: E501
+    """  # noqa: E501  # pylint: disable=line-too-long
 
     config_type = ADWINConfig
 

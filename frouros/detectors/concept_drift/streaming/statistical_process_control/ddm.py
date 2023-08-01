@@ -27,7 +27,7 @@ class DDMConfig(BaseSPCConfig):
         Advances in Artificial Intelligence–SBIA 2004: 17th Brazilian Symposium on
         Artificial Intelligence, Sao Luis, Maranhao, Brazil, September 29-October 1,
         2004. Proceedings 17. Springer Berlin Heidelberg, 2004.
-    """  # noqa: E501
+    """  # noqa: E501  # pylint: disable=line-too-long
 
     def __init__(  # noqa: D107
         self,
@@ -81,7 +81,7 @@ class DDM(BaseSPCError):
     ...         warning_flag = True
     Warning detected at step 1049
     Change detected at step 1131
-    """  # noqa: E501
+    """  # noqa: E501  # pylint: disable=line-too-long
 
     config_type = DDMConfig
 

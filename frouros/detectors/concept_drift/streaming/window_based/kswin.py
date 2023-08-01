@@ -32,7 +32,7 @@ class KSWINConfig(BaseWindowConfig):
     .. [raab2020reactive] Raab, Christoph, Moritz Heusinger, and Frank-Michael Schleif.
         "Reactive soft prototype computing for concept drift streams."
         Neurocomputing 416 (2020): 340-351.
-    """  # noqa: E501
+    """  # noqa: E501  # pylint: disable=line-too-long
 
     def __init__(  # noqa: D107
         self,
@@ -126,7 +126,7 @@ class KSWIN(BaseWindow):
     ...         print(f"Change detected at step {i}")
     ...         break
     Change detected at step 1016
-    """  # noqa: E501
+    """  # noqa: E501  # pylint: disable=line-too-long
 
     config_type = KSWINConfig
 

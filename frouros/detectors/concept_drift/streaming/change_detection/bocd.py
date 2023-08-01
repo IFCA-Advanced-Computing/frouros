@@ -135,7 +135,7 @@ class BOCDConfig(BaseChangeDetectionConfig):
     .. [adams2007bayesian] Adams, Ryan Prescott, and David JC MacKay.
         "Bayesian online changepoint detection."
         arXiv preprint arXiv:0710.3742 (2007).
-    """  # noqa: E501
+    """  # noqa: E501  pylint: disable=line-too-long
 
     model_type = GaussianUnknownMean
 
@@ -211,7 +211,7 @@ class BOCD(BaseChangeDetection):
     ...         print(f"Change detected at step {i}")
     ...         break
     Change detected at step 1031
-    """  # noqa: E501
+    """  # noqa: E501  # pylint: disable=line-too-long
 
     config_type = BOCDConfig  # type: ignore
 

@@ -32,7 +32,7 @@ class RDDMConfig(BaseSPCConfig):
     .. [barros2017rddm] Barros, Roberto SM, et al.
         "RDDM: Reactive drift detection method."
         Expert Systems with Applications 90 (2017): 344-355.
-    """  # noqa: E501
+    """  # noqa: E501  # pylint: disable=line-too-long
 
     def __init__(  # noqa: D107
         self,
@@ -144,7 +144,7 @@ class RDDM(BaseSPCError):
     ...         warning_flag = True
     Warning detected at step 1036
     Change detected at step 1066
-    """  # noqa: E501
+    """  # noqa: E501  # pylint: disable=line-too-long
 
     config_type = RDDMConfig  # type: ignore
 
