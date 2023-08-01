@@ -41,8 +41,8 @@ class CUSUMConfig(BaseCUSUMConfig, DeltaConfig):
 class CUSUM(BaseCUSUM):
     """CUSUM [page1954continuous]_ detector.
 
-    :param config: configuration object of the detector
-    :type config: CUSUMConfig
+    :param config: configuration object of the detector, defaults to None. If None, the default configuration of :class:`CUSUMConfig` is used.
+    :type config: Optional[CUSUMConfig]
     :param callbacks: callbacks, defaults to None
     :type callbacks: Optional[Union[BaseCallbackStreaming, List[BaseCallbackStreaming]]]
 
@@ -54,20 +54,20 @@ class CUSUM(BaseCUSUM):
 
     :Example:
 
-    >>> from frouros.detectors.concept_drift import CUSUM, CUSUMConfig
+    >>> from frouros.detectors.concept_drift import CUSUM
     >>> import numpy as np
     >>> np.random.seed(seed=31)
     >>> dist_a = np.random.normal(loc=0.2, scale=0.01, size=1000)
     >>> dist_b = np.random.normal(loc=0.8, scale=0.04, size=1000)
     >>> stream = np.concatenate((dist_a, dist_b))
-    >>> detector = CUSUM(config=CUSUMConfig())
+    >>> detector = CUSUM()
     >>> for i, value in enumerate(stream):
     ...     _ = detector.update(value=value)
     ...     if detector.drift:
     ...         print(f"Change detected at index {i}")
     ...         break
     Change detected at index 1086
-    """
+    """  # noqa: E501
 
     config_type = CUSUMConfig  # type: ignore
 
