@@ -1,5 +1,8 @@
 """Page Hinkley module."""
 
+from typing import Optional, Union, List
+
+from frouros.callbacks.streaming.base import BaseCallbackStreaming
 from frouros.detectors.concept_drift.streaming.change_detection.base import (
     BaseCUSUM,
     BaseCUSUMConfig,
@@ -73,6 +76,18 @@ class PageHinkley(BaseCUSUM):
     """  # noqa: E501
 
     config_type = PageHinkleyConfig  # type: ignore
+
+    def __init__(  # noqa: D107
+        self,
+        config: Optional[PageHinkleyConfig] = None,
+        callbacks: Optional[
+            Union[BaseCallbackStreaming, List[BaseCallbackStreaming]]
+        ] = None,
+    ) -> None:
+        super().__init__(
+            config=config,
+            callbacks=callbacks,
+        )
 
     def _update_sum(self, error_rate: float) -> None:
         self.sum_ = self.config.alpha * self.sum_ + (  # type: ignore
