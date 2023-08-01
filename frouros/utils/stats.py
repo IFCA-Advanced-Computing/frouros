@@ -87,8 +87,8 @@ class Mean(IncrementalStat):
         :type value: int
         :raises TypeError: Type error exception
         """
-        if not isinstance(value, (int, float)):
-            raise TypeError("value must be of type int or float.")
+        if not isinstance(value, (int, float, np.number)):
+            raise TypeError("value must be of type int, float or numpy number.")
         self.num_values += 1
         self.mean += self.incremental_op(
             value=value,

@@ -1,8 +1,9 @@
 """DDM (Drift detection method) module."""
 
 from contextlib import suppress
-from typing import Union
+from typing import Union, Optional, List
 
+from frouros.callbacks.streaming.base import BaseCallbackStreaming
 from frouros.detectors.concept_drift.streaming.statistical_process_control.base import (
     BaseSPCConfig,
     BaseSPCError,
@@ -12,29 +13,89 @@ from frouros.detectors.concept_drift.streaming.statistical_process_control.base 
 class DDMConfig(BaseSPCConfig):
     """DDM (Drift detection method) [gama2004learning]_ configuration.
 
+    :param warning_level: warning level factor, defaults to 2.0
+    :type warning_level: float
+    :param drift_level: drift level factor, defaults to 3.0
+    :type drift_level: float
+    :param min_num_instances: minimum numbers of instances to start looking for changes, defaults to 30
+    :type min_num_instances: int
+
     :References:
 
     .. [gama2004learning] Gama, Joao, et al.
         "Learning with drift detection."
         Advances in Artificial Intelligence–SBIA 2004: 17th Brazilian Symposium on
-        Artificial Intelligence, Sao Luis, Maranhao, Brazil, September 29-Ocotber 1,
+        Artificial Intelligence, Sao Luis, Maranhao, Brazil, September 29-October 1,
         2004. Proceedings 17. Springer Berlin Heidelberg, 2004.
-    """
+    """  # noqa: E501
+
+    def __init__(  # noqa: D107
+        self,
+        warning_level: float = 2.0,
+        drift_level: float = 3.0,
+        min_num_instances: int = 30,
+    ) -> None:
+        super().__init__(
+            warning_level=warning_level,
+            drift_level=drift_level,
+            min_num_instances=min_num_instances,
+        )
 
 
 class DDM(BaseSPCError):
     """DDM (Drift detection method) [gama2004learning]_ detector.
 
+    :param config: configuration object of the detector, defaults to None. If None, the default configuration of :class:`DDMConfig` is used.
+    :type config: Optional[DDMConfig]
+    :param callbacks: callbacks, defaults to None
+    :type callbacks: Optional[Union[BaseCallbackStreaming, List[BaseCallbackStreaming]]]
+
+    :Note:
+    :func:`update` method expects to receive a value of 0 if the instance is correctly classified (no error) and 1 otherwise (error).
+
     :References:
 
     .. [gama2004learning] Gama, Joao, et al.
         "Learning with drift detection."
         Advances in Artificial Intelligence–SBIA 2004: 17th Brazilian Symposium on
-        Artificial Intelligence, Sao Luis, Maranhao, Brazil, September 29-Ocotber 1,
+        Artificial Intelligence, Sao Luis, Maranhao, Brazil, September 29-October 1,
         2004. Proceedings 17. Springer Berlin Heidelberg, 2004.
-    """
+
+    :Example:
+
+    >>> from frouros.detectors.concept_drift import DDM
+    >>> import numpy as np
+    >>> np.random.seed(seed=31)
+    >>> dist_a = np.random.binomial(n=1, p=0.6, size=1000)
+    >>> dist_b = np.random.binomial(n=1, p=0.8, size=1000)
+    >>> stream = np.concatenate((dist_a, dist_b))
+    >>> detector = DDM()
+    >>> warning_flag = False
+    >>> for i, value in enumerate(stream):
+    ...     _ = detector.update(value=value)
+    ...     if detector.drift:
+    ...         print(f"Change detected at index {i}")
+    ...         break
+    ...     if not warning_flag and detector.warning:
+    ...         print(f"Warning detected at index {i}")
+    ...         warning_flag = True
+    Warning detected at index 1049
+    Change detected at index 1131
+    """  # noqa: E501
 
     config_type = DDMConfig
+
+    def __init__(  # noqa: D107
+        self,
+        config: Optional[DDMConfig] = None,
+        callbacks: Optional[
+            Union[BaseCallbackStreaming, List[BaseCallbackStreaming]]
+        ] = None,
+    ) -> None:
+        super().__init__(
+            config=config,
+            callbacks=callbacks,
+        )
 
     def _update(self, value: Union[int, float], **kwargs) -> None:
         self.num_instances += 1
