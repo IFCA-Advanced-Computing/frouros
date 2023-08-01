@@ -346,6 +346,9 @@ class HDDMA(BaseSPC):
     :param callbacks: callbacks, defaults to None
     :type callbacks: Optional[Union[BaseCallbackStreaming, List[BaseCallbackStreaming]]]
 
+    :Note:
+    :func:`update` method expects to receive a value of 0 if the instance is correctly classified (no error) and 1 otherwise (error).
+
     :References:
 
     .. [frias2014online] Frias-Blanco, Isvani, et al.
@@ -662,6 +665,9 @@ class HDDMW(BaseSPC):
     :type config: Optional[HDDMWConfig]
     :param callbacks: callbacks, defaults to None
     :type callbacks: Optional[Union[BaseCallbackStreaming, List[BaseCallbackStreaming]]]
+
+    :Note:
+    :func:`update` method expects to receive a value of 0 if the instance is correctly classified (no error) and 1 otherwise (error).
 
     :References:
 
