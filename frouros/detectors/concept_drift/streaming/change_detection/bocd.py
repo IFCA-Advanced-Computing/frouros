@@ -148,7 +148,7 @@ class BOCDConfig(BaseChangeDetectionConfig):
         super().__init__(
             min_num_instances=min_num_instances,
         )
-        self.model = model
+        self.model = model  # type: ignore
         self.log_hazard = np.log(hazard)
         self.log_1_minus_hazard = np.log(1 - hazard)
 
