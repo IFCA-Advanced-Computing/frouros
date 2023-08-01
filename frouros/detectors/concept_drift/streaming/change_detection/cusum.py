@@ -1,7 +1,10 @@
 """CUSUM module."""
 
+from typing import Optional, Union, List
+
 import numpy as np  # type: ignore
 
+from frouros.callbacks.streaming.base import BaseCallbackStreaming
 from frouros.detectors.concept_drift.streaming.change_detection.base import (
     BaseCUSUM,
     BaseCUSUMConfig,
@@ -70,6 +73,18 @@ class CUSUM(BaseCUSUM):
     """  # noqa: E501
 
     config_type = CUSUMConfig  # type: ignore
+
+    def __init__(  # noqa: D107
+        self,
+        config: Optional[CUSUMConfig] = None,
+        callbacks: Optional[
+            Union[BaseCallbackStreaming, List[BaseCallbackStreaming]]
+        ] = None,
+    ) -> None:
+        super().__init__(
+            config=config,
+            callbacks=callbacks,
+        )
 
     def _update_sum(self, error_rate: float) -> None:
         self.sum_ = np.maximum(
