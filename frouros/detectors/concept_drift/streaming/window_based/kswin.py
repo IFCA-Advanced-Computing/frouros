@@ -17,34 +17,30 @@ from frouros.detectors.concept_drift.streaming.window_based.base import (
 class KSWINConfig(BaseWindowConfig):
     """KSWIN (Kolmogorov-Smirnov Windowing) [raab2020reactive]_ configuration.
 
+    :param alpha: significance value, defaults to 0.0001
+    :type alpha: float
+    :param seed: seed value, defaults to None
+    :type seed: Optional[int]
+    :param min_num_instances: minimum numbers of instances to start looking for changes, defaults to 100
+    :type min_num_instances: int
+    :param num_test_instances: numbers of instances to be used by the statistical test, defaults to 30
+    :type num_test_instances: int
+    :raises ValueError: Value error exception if seed is not valid
+
     :References:
 
     .. [raab2020reactive] Raab, Christoph, Moritz Heusinger, and Frank-Michael Schleif.
         "Reactive soft prototype computing for concept drift streams."
         Neurocomputing 416 (2020): 340-351.
-    """
+    """  # noqa: E501
 
-    def __init__(
+    def __init__(  # noqa: D107
         self,
         alpha: float = 0.0001,
         seed: Optional[int] = None,
         min_num_instances: int = 100,
         num_test_instances: int = 30,
     ) -> None:
-        """Init method.
-
-        :param alpha: significance value
-        :type alpha: float
-        :param seed: seed value
-        :type seed: Optional[int]
-        :param min_num_instances: minimum numbers of instances
-        to start looking for changes
-        :type min_num_instances: int
-        :param num_test_instances: numbers of instances
-        to be used by the statistical test
-        :type num_test_instances: int
-        :raises ValueError: Value error exception
-        """
         try:
             np.random.seed(seed=seed)
         except ValueError as e:
@@ -104,30 +100,43 @@ class KSWINConfig(BaseWindowConfig):
 class KSWIN(BaseWindow):
     """KSWIN (Kolmogorov-Smirnov Windowing) [raab2020reactive]_ detector.
 
+    :param config: configuration object of the detector, defaults to None. If None, the default configuration of :class:`KSWINConfig` is used.
+    :type config: Optional[KSWINConfig]
+    :param callbacks: callbacks, defaults to None
+    :type callbacks: Optional[Union[BaseCallbackStreaming, List[BaseCallbackStreaming]]]
+
     :References:
 
     .. [raab2020reactive] Raab, Christoph, Moritz Heusinger, and Frank-Michael Schleif.
         "Reactive soft prototype computing for concept drift streams."
         Neurocomputing 416 (2020): 340-351.
-    """
+
+    :Example:
+
+    >>> from frouros.detectors.concept_drift import KSWIN, KSWINConfig
+    >>> import numpy as np
+    >>> np.random.seed(seed=31)
+    >>> dist_a = np.random.normal(loc=0.2, scale=0.01, size=1000)
+    >>> dist_b = np.random.normal(loc=0.8, scale=0.04, size=1000)
+    >>> stream = np.concatenate((dist_a, dist_b))
+    >>> detector = KSWIN(config=KSWINConfig(seed=31))
+    >>> for i, value in enumerate(stream):
+    ...     _ = detector.update(value=value)
+    ...     if detector.drift:
+    ...         print(f"Change detected at index {i}")
+    ...         break
+    Change detected at index 1016
+    """  # noqa: E501
 
     config_type = KSWINConfig
 
-    def __init__(
+    def __init__(  # noqa: D107
         self,
         config: Optional[KSWINConfig] = None,
         callbacks: Optional[
             Union[BaseCallbackStreaming, List[BaseCallbackStreaming]]
         ] = None,
     ) -> None:
-        """Init method.
-
-        :param config: configuration parameters
-        :type config: Optional[KSWINConfig]
-        :param callbacks: callbacks
-        :type callbacks: Optional[Union[BaseCallbackStreaming,
-        List[BaseCallbackStreaming]]]
-        """
         super().__init__(
             config=config,
             callbacks=callbacks,
