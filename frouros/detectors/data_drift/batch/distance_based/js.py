@@ -15,26 +15,38 @@ from frouros.detectors.data_drift.batch.distance_based.base import (
 class JS(BaseDistanceBasedProbability):
     """JS (Jensen-Shannon distance) [lin1991divergence]_ detector.
 
+    :param num_bins: number of bins in which to divide probabilities, defaults to 10
+    :type num_bins: int
+    :param callbacks: callbacks, defaults to None
+    :type callbacks: Optional[Union[BaseCallbackBatch, List[BaseCallbackBatch]]]
+    :param kwargs: additional keyword arguments to pass to scipy.spatial.distance.jensenshannon
+    :type kwargs: Dict[str, Any]
+
     :References:
 
     .. [lin1991divergence] Lin, Jianhua.
         "Divergence measures based on the Shannon entropy."
         IEEE Transactions on Information theory 37.1 (1991): 145-151.
-    """
 
-    def __init__(
+    :Example:
+
+    >>> from frouros.detectors.data_drift import JS
+    >>> import numpy as np
+    >>> np.random.seed(seed=31)
+    >>> X = np.random.normal(loc=0, scale=1, size=100)
+    >>> Y = np.random.normal(loc=1, scale=1, size=100)
+    >>> detector = JS(num_bins=20)
+    >>> _ = detector.fit(X=X)
+    >>> detector.compare(X=Y)[0]
+    DistanceResult(distance=0.41702877367162156)
+    """  # noqa: E501
+
+    def __init__(  # noqa: D107
         self,
         num_bins: int = 10,
         callbacks: Optional[Union[BaseCallbackBatch, List[BaseCallbackBatch]]] = None,
         **kwargs,
     ) -> None:
-        """Init method.
-
-        :param num_bins: number of bins in which to divide probabilities
-        :type num_bins: int
-        :param callbacks: callbacks
-        :type callbacks: Optional[Union[BaseCallbackBatch, List[BaseCallbackBatch]]]
-        """
         super().__init__(
             statistical_method=self._js,
             statistical_kwargs={

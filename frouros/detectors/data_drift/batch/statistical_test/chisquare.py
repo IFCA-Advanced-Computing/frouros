@@ -17,6 +17,11 @@ from frouros.detectors.data_drift.batch.statistical_test.base import (  # type: 
 class ChiSquareTest(BaseStatisticalTest):
     """ChiSquareTest (Chi-square test) [pearson1900x]_ detector.
 
+    :param callbacks: callbacks, defaults to None
+    :type callbacks: Optional[Union[BaseCallbackBatch, List[BaseCallbackBatch]]]
+    :param kwargs: additional keyword arguments to pass to scipy.stats.chi2_contingency
+    :type kwargs: Dict[str, Any]
+
     :References:
 
     .. [pearson1900x] Pearson, Karl.
@@ -25,29 +30,38 @@ class ChiSquareTest(BaseStatisticalTest):
         supposed to have arisen from random sampling."
         The London, Edinburgh, and Dublin Philosophical Magazine and Journal of
         Science 50.302 (1900): 157-175.
+
+    :Example:
+
+    >>> from frouros.detectors.data_drift import ChiSquareTest
+    >>> import numpy as np
+    >>> np.random.seed(seed=31)
+    >>> X = np.random.choice(a=[0, 1], size=100, p=[0.5, 0.5])
+    >>> Y = np.random.choice(a=[0, 1], size=100, p=[0.8, 0.2])
+    >>> detector = ChiSquareTest()
+    >>> _ = detector.fit(X=X)
+    >>> detector.compare(X=Y)[0]
+    StatisticalResult(statistic=9.81474665685192, p_value=0.0017311812135839511)
     """
 
-    def __init__(
+    def __init__(  # noqa: D107
         self,
         callbacks: Optional[Union[BaseCallbackBatch, List[BaseCallbackBatch]]] = None,
+        **kwargs,
     ) -> None:
-        """Init method.
-
-        :param callbacks: callbacks
-        :type callbacks: Optional[Union[BaseCallbackBatch, List[BaseCallbackBatch]]]
-        """
         super().__init__(
             data_type=CategoricalData(),
             statistical_type=UnivariateData(),
             callbacks=callbacks,
         )
+        self.kwargs = kwargs
 
     def _statistical_test(
         self, X_ref: np.ndarray, X: np.ndarray, **kwargs  # noqa: N803
     ) -> StatisticalResult:
         f_exp, f_obs = self._calculate_frequencies(X_ref=X_ref, X=X)
         statistic, p_value, _, _ = chi2_contingency(
-            observed=np.array([f_obs, f_exp]), **kwargs
+            observed=np.array([f_obs, f_exp]), **self.kwargs
         )
 
         test = StatisticalResult(statistic=statistic, p_value=p_value)

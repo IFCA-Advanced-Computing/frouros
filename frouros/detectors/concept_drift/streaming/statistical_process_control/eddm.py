@@ -15,32 +15,29 @@ from frouros.detectors.concept_drift.streaming.statistical_process_control.base 
 class EDDMConfig(BaseSPCConfig):
     """EDDM (Early drift detection method) [baena2006early]_ configuration.
 
+    :param alpha: warning zone value, defaults to 0.95
+    :type alpha: float
+    :param beta: change zone value, defaults to 0.9
+    :type beta: float
+    :param level: level factor, defaults to 2.0
+    :type level: float
+    :param min_num_misclassified_instances: minimum numbers of instances to start looking for changes, defaults to 30
+    :type min_num_misclassified_instances: int
+
     :References:
 
     .. [baena2006early] Baena-Garcıa, Manuel, et al. "Early drift detection method."
         Fourth international workshop on knowledge discovery from data streams.
         Vol. 6. 2006.
-    """
+    """  # noqa: E501  # pylint: disable=line-too-long
 
-    def __init__(
+    def __init__(  # noqa: D107
         self,
         alpha: float = 0.95,
         beta: float = 0.9,
         level: float = 2.0,
         min_num_misclassified_instances: int = 30,
     ) -> None:
-        """Init method.
-
-        :param alpha: warning zone value
-        :type alpha: float
-        :param beta: change zone value
-        :type beta: float
-        :param level: level factor
-        :type level: float
-        :param min_num_misclassified_instances: minimum numbers of instances
-        to start looking for changes
-        :type min_num_misclassified_instances: int
-        """
         super().__init__()
         self.alpha = alpha
         self.beta = beta
@@ -136,30 +133,51 @@ class EDDMConfig(BaseSPCConfig):
 class EDDM(BaseSPC):
     """EDDM (Early drift detection method) [baena2006early]_ detector.
 
+    :param config: configuration object of the detector, defaults to None. If None, the default configuration of :class:`EDDMConfig` is used.
+    :type config: Optional[EDDMConfig]
+    :param callbacks: callbacks, defaults to None
+    :type callbacks: Optional[Union[BaseCallbackStreaming, List[BaseCallbackStreaming]]]
+
+    :Note:
+    :func:`update` method expects to receive a value of 0 if the instance is correctly classified (no error) and 1 otherwise (error).
+
     :References:
 
     .. [baena2006early] Baena-Garcıa, Manuel, et al. "Early drift detection method."
         Fourth international workshop on knowledge discovery from data streams.
         Vol. 6. 2006.
-    """
+
+    :Example:
+
+    >>> from frouros.detectors.concept_drift import EDDM
+    >>> import numpy as np
+    >>> np.random.seed(seed=31)
+    >>> dist_a = np.random.binomial(n=1, p=0.6, size=1000)
+    >>> dist_b = np.random.binomial(n=1, p=0.8, size=1000)
+    >>> stream = np.concatenate((dist_a, dist_b))
+    >>> detector = EDDM()
+    >>> warning_flag = False
+    >>> for i, value in enumerate(stream):
+    ...     _ = detector.update(value=value)
+    ...     if detector.drift:
+    ...         print(f"Change detected at step {i}")
+    ...         break
+    ...     if not warning_flag and detector.warning:
+    ...         print(f"Warning detected at step {i}")
+    ...         warning_flag = True
+    Warning detected at step 39
+    Change detected at step 1294
+    """  # noqa: E501  # pylint: disable=line-too-long
 
     config_type = EDDMConfig  # type: ignore
 
-    def __init__(
+    def __init__(  # noqa: D107
         self,
         config: Optional[EDDMConfig] = None,
         callbacks: Optional[
             Union[BaseCallbackStreaming, List[BaseCallbackStreaming]]
         ] = None,
     ) -> None:
-        """Init method.
-
-        :param config: configuration parameters
-        :type config: Optional[EDDMConfig]
-        :param callbacks: callbacks
-        :type callbacks: Optional[Union[BaseCallbackStreaming,
-        List[BaseCallbackStreaming]]]
-        """
         # mean_distance_error = 0.0
         super().__init__(
             config=config,

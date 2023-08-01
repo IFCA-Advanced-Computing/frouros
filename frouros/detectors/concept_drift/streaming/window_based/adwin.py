@@ -155,15 +155,26 @@ class Bucket:
 class ADWINConfig(BaseWindowConfig):
     """ADWIN (ADaptive WINdowing) [bifet2007learning]_ configuration.
 
+    :param clock: clock value, default to 32
+    :type clock: int
+    :param delta: confidence value, default to 0.002
+    :type delta: float
+    :param m: controls the amount of memory used and the closeness of the cutpoints checked, default to 5
+    :type m: int
+    :param min_window_size: minimum numbers of instances per window to start looking for changes, default to 5
+    :type min_window_size: int
+    :param min_num_instances: minimum numbers of instances to start looking for changes, default to 10
+    :type min_num_instances: int
+
     :References:
 
     .. [bifet2007learning] Bifet, Albert, and Ricard Gavalda.
         "Learning from time-changing data with adaptive windowing."
         Proceedings of the 2007 SIAM international conference on data mining.
         Society for Industrial and Applied Mathematics, 2007.
-    """
+    """  # noqa: E501  # pylint: disable=line-too-long
 
-    def __init__(
+    def __init__(  # noqa: D107
         self,
         clock: int = 32,
         delta: float = 0.002,
@@ -171,22 +182,6 @@ class ADWINConfig(BaseWindowConfig):
         min_window_size: int = 5,
         min_num_instances: int = 10,
     ) -> None:
-        """Init method.
-
-        :param clock: clock value
-        :type clock: int
-        :param delta: confidence value
-        :type delta: float
-        :param m: controls the amount of memory used and
-        the closeness of the cutpoints checked
-        :type m: int
-        :param min_window_size: minimum numbers of instances
-        per window to start looking for changes
-        :type min_window_size: int
-        :param min_num_instances: minimum numbers of instances
-        to start looking for changes
-        :type min_num_instances: int
-        """
         super().__init__(min_num_instances=min_num_instances)
         self.clock = clock
         self.delta = delta
@@ -282,31 +277,44 @@ class ADWINConfig(BaseWindowConfig):
 class ADWIN(BaseWindow):
     """ADWIN (ADaptive WINdowing) [bifet2007learning]_ detector.
 
+    :param config: configuration object of the detector, defaults to None. If None, the default configuration of :class:`ADWINConfig` is used.
+    :type config: Optional[ADWINConfig]
+    :param callbacks: callbacks, defaults to None
+    :type callbacks: Optional[Union[BaseCallbackStreaming, List[BaseCallbackStreaming]]]
+
     :References:
 
     .. [bifet2007learning] Bifet, Albert, and Ricard Gavalda.
         "Learning from time-changing data with adaptive windowing."
         Proceedings of the 2007 SIAM international conference on data mining.
         Society for Industrial and Applied Mathematics, 2007.
-    """
+
+    :Example:
+
+    >>> from frouros.detectors.concept_drift import ADWIN
+    >>> import numpy as np
+    >>> np.random.seed(seed=31)
+    >>> dist_a = np.random.normal(loc=0.2, scale=0.01, size=1000)
+    >>> dist_b = np.random.normal(loc=0.8, scale=0.04, size=1000)
+    >>> stream = np.concatenate((dist_a, dist_b))
+    >>> detector = ADWIN()
+    >>> for i, value in enumerate(stream):
+    ...     _ = detector.update(value=value)
+    ...     if detector.drift:
+    ...         print(f"Change detected at step {i}")
+    ...         break
+    Change detected at step 1055
+    """  # noqa: E501  # pylint: disable=line-too-long
 
     config_type = ADWINConfig
 
-    def __init__(
+    def __init__(  # noqa: D107
         self,
         config: Optional[ADWINConfig] = None,
         callbacks: Optional[
             Union[BaseCallbackStreaming, List[BaseCallbackStreaming]]
         ] = None,
     ) -> None:
-        """Init method.
-
-        :param config: configuration parameters
-        :type config: Optional[ADWINConfig]
-        :param callbacks: callbacks
-        :type callbacks: Optional[Union[BaseCallbackStreaming,
-        List[BaseCallbackStreaming]]]
-        """
         super().__init__(
             config=config,
             callbacks=callbacks,

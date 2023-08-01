@@ -303,7 +303,7 @@ def test_batch_distance_based_chunk_size_invalid(
 @pytest.mark.parametrize(
     "detector, expected_statistic, expected_p_value",
     [
-        (IncrementalKSTest(), 0.27, 0.46046910),
+        (IncrementalKSTest(window_size=10), 0.27, 0.46046910),
     ],
 )
 def test_streaming_statistical_univariate_same_distribution(
@@ -340,7 +340,7 @@ def test_streaming_statistical_univariate_same_distribution(
 @pytest.mark.parametrize(
     "detector, expected_statistic, expected_p_value",
     [
-        (IncrementalKSTest(), 1.0, 0.0),
+        (IncrementalKSTest(window_size=10), 1.0, 0.0),
     ],
 )
 def test_streaming_statistical_univariate_different_distribution(

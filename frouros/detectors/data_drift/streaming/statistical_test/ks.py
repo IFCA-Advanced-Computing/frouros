@@ -30,6 +30,11 @@ MAX_AUTO_N = 10000
 class IncrementalKSTest(BaseStatisticalTest):
     """IncrementalKSTest (Incremental Kolmogorov-Smirnov test) [dos2016fast]_ detector.
 
+    :param window_size: window size value
+    :type window_size: int
+    :param callbacks: callbacks, defaults to None
+    :type callbacks: Optional[Union[BaseCallbackStreaming, List[BaseCallbackStreaming]]]
+
     :References:
 
     .. [dos2016fast] dos Reis, Denis Moreira, et al.
@@ -37,23 +42,29 @@ class IncrementalKSTest(BaseStatisticalTest):
         test."
         Proceedings of the 22nd ACM SIGKDD international conference on knowledge
         discovery and data mining. 2016.
+
+    :Example:
+
+    >>> from frouros.detectors.data_drift import IncrementalKSTest
+    >>> import numpy as np
+    >>> np.random.seed(seed=31)
+    >>> X = np.random.normal(loc=0, scale=1, size=100)
+    >>> Y = np.random.normal(loc=1, scale=1, size=100)
+    >>> detector = IncrementalKSTest(window_size=10)
+    >>> _ = detector.fit(X=X)
+    >>> for sample in Y:
+    ...     test, _ = detector.update(value=sample)
+    ...     if test is not None:
+    ...         print(test.statistic, test.p_value)
     """
 
-    def __init__(
+    def __init__(  # noqa: D107
         self,
+        window_size: int,
         callbacks: Optional[
             Union[BaseCallbackStreaming, List[BaseCallbackStreaming]]
         ] = None,
-        window_size: int = 10,
     ) -> None:
-        """Init method.
-
-        :param callbacks: callbacks
-        :type callbacks: Optional[Union[BaseCallbackStreaming,
-        List[BaseCallbackStreaming]]]
-        :param window_size: window size
-        :type window_size: int
-        """
         super().__init__(
             data_type=NumericalData(),
             statistical_type=UnivariateData(),

@@ -13,25 +13,35 @@ from frouros.detectors.data_drift.batch.distance_based.base import (
 class BhattacharyyaDistance(BaseDistanceBasedBins):
     """Bhattacharyya distance [bhattacharyya1946measure]_ detector.
 
+    :param num_bins: number of bins in which to divide probabilities, defaults to 10
+    :type num_bins: int
+    :param callbacks: callbacks, defaults to None
+    :type callbacks: Optional[Union[BaseCallback, List[Callback]]]
+
     :References:
 
     .. [bhattacharyya1946measure] Bhattacharyya, Anil.
         "On a measure of divergence between two multinomial populations."
         Sankhyā: the indian journal of statistics (1946): 401-406.
+
+    :Example:
+
+    >>> from frouros.detectors.data_drift import BhattacharyyaDistance
+    >>> import numpy as np
+    >>> np.random.seed(seed=31)
+    >>> X = np.random.normal(loc=0, scale=1, size=100)
+    >>> Y = np.random.normal(loc=1, scale=1, size=100)
+    >>> detector = BhattacharyyaDistance(num_bins=20)
+    >>> _ = detector.fit(X=X)
+    >>> detector.compare(X=Y)
+    DistanceResult(distance=0.2182101059622703)
     """
 
-    def __init__(
+    def __init__(  # noqa: D107
         self,
         num_bins: int = 10,
         callbacks: Optional[Union[BaseCallbackBatch, List[BaseCallbackBatch]]] = None,
     ) -> None:
-        """Init method.
-
-        :param num_bins: number of bins in which to divide probabilities
-        :type num_bins: int
-        :param callbacks: callbacks
-        :type callbacks: Optional[Union[BaseCallback, List[Callback]]]
-        """
         super().__init__(
             statistical_method=self._bhattacharyya,
             statistical_kwargs={

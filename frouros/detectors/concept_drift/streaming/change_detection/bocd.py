@@ -2,12 +2,13 @@
 
 import abc
 import copy
-from typing import Union, Optional
+from typing import List, Union, Optional
 
 import numpy as np  # type: ignore
 from scipy.special import logsumexp  # type: ignore
 from scipy.stats import norm  # type: ignore
 
+from frouros.callbacks.streaming.base import BaseCallbackStreaming
 from frouros.detectors.concept_drift.streaming.change_detection.base import (
     BaseChangeDetection,
     BaseChangeDetectionConfig,
@@ -41,7 +42,8 @@ class BaseBOCDModel(abc.ABC):
 class GaussianUnknownMean(BaseBOCDModel):
     """Gaussian unknown mean model.
 
-    (adapted from the implementation in https://github.com/gwgundersen/bocd)
+    :Note:
+     Adapted from the implementation in https://github.com/gwgundersen/bocd.
     """
 
     def __init__(
@@ -121,33 +123,32 @@ class GaussianUnknownMean(BaseBOCDModel):
 class BOCDConfig(BaseChangeDetectionConfig):
     """BOCD (Bayesian Online Change Detection) [adams2007bayesian]_ configuration.
 
+    :param model: BOCD model, defaults to None. If None, :class:`frouros.detectors.concept_drift.streaming.change_detection.bocd.GaussianUnknownMean` is used.
+    :type model: Optional[BaseBOCDModel]
+    :param hazard: hazard value, defaults to 0.01
+    :type hazard: float
+    :param min_num_instances: minimum numbers of instances to start looking for changes, defaults to 30
+    :type min_num_instances: int
+
     :References:
 
     .. [adams2007bayesian] Adams, Ryan Prescott, and David JC MacKay.
         "Bayesian online changepoint detection."
         arXiv preprint arXiv:0710.3742 (2007).
-    """
+    """  # noqa: E501  pylint: disable=line-too-long
 
-    def __init__(
+    model_type = GaussianUnknownMean
+
+    def __init__(  # noqa: D107
         self,
-        model: BaseBOCDModel = GaussianUnknownMean,  # type: ignore
+        model: Optional[BaseBOCDModel] = None,  # type: ignore
         hazard: float = 0.01,
         min_num_instances: int = 30,
     ) -> None:
-        """Init method.
-
-        :param model: BOCD model
-        :type model: BaseBOCDModel
-        :param hazard: hazard value
-        :type hazard: float
-        :param min_num_instances: minimum numbers of instances
-        to start looking for changes
-        :type min_num_instances: int
-        """
         super().__init__(
             min_num_instances=min_num_instances,
         )
-        self.model = model
+        self.model = model  # type: ignore
         self.log_hazard = np.log(hazard)
         self.log_1_minus_hazard = np.log(1 - hazard)
 
@@ -168,35 +169,59 @@ class BOCDConfig(BaseChangeDetectionConfig):
         :type model: BaseBOCDModel
         :raises TypeError: if model is not an instance of BaseModel
         """
-        if not isinstance(model, BaseBOCDModel):
-            raise TypeError(
-                f"model must be an instance of BaseModel, not {type(model)}"
-            )
-        self._model = model
+        if model is not None:
+            if not isinstance(model, BaseBOCDModel):
+                raise TypeError(
+                    f"model must be an instance of BaseModel, not {type(model)}"
+                )
+            self._model = model
+        else:
+            self._model = self.model_type()
 
 
 class BOCD(BaseChangeDetection):
     """BOCD (Bayesian Online Change Detection) [adams2007bayesian]_ detector.
 
-     (adapted from the implementation in https://github.com/gwgundersen/bocd)
+    :param config: configuration object of the detector, defaults to None. If None, the default configuration of :class:`BOCDConfig` is used.
+    :type config: Optional[BOCDConfig]
+    :param callbacks: callbacks, defaults to None
+    :type callbacks: Optional[Union[BaseCallbackStreaming, List[BaseCallbackStreaming]]]
+
+    :Note:
+     Adapted from the implementation in https://github.com/gwgundersen/bocd.
 
     :References:
 
     .. [adams2007bayesian] Adams, Ryan Prescott, and David JC MacKay.
         "Bayesian online changepoint detection."
         arXiv preprint arXiv:0710.3742 (2007).
-    """
+
+    :Example:
+
+    >>> from frouros.detectors.concept_drift import BOCD
+    >>> import numpy as np
+    >>> np.random.seed(seed=31)
+    >>> dist_a = np.random.normal(loc=0.2, scale=0.01, size=1000)
+    >>> dist_b = np.random.normal(loc=0.8, scale=0.04, size=1000)
+    >>> stream = np.concatenate((dist_a, dist_b))
+    >>> detector = BOCD()
+    >>> for i, value in enumerate(stream):
+    ...     _ = detector.update(value=value)
+    ...     if detector.drift:
+    ...         print(f"Change detected at step {i}")
+    ...         break
+    Change detected at step 1031
+    """  # noqa: E501  # pylint: disable=line-too-long
 
     config_type = BOCDConfig  # type: ignore
 
-    def __init__(self, config: BOCDConfig, callbacks: list = None) -> None:
-        """Init method.
-
-        :param config: configuration object of the detector
-        :type config: BOCDConfig
-        :param callbacks: list of callbacks, defaults to None
-        :type callbacks: list, optional
-        """
+    def __init__(  # noqa: D107
+        self,
+        config: Optional[BOCDConfig] = None,
+        callbacks: Optional[
+            Union[BaseCallbackStreaming, List[BaseCallbackStreaming]]
+        ] = None,
+    ) -> None:
         super().__init__(
             config=config,
             callbacks=callbacks,

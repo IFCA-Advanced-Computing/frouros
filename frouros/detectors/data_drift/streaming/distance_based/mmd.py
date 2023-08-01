@@ -18,14 +18,40 @@ from frouros.utils.data_structures import CircularQueue
 class MMD(BaseDistanceBased):
     """MMD (Maximum Mean Discrepancy) [gretton2012kernel]_ detector.
 
+    :param window_size: window size value
+    :type window_size: int
+    :param kernel: kernel function, defaults to rbf_kernel
+    :type kernel: Callable
+    :param chunk_size: chunk size value, defaults to None
+    :type chunk_size: Optional[int]
+    :param callbacks: callbacks, defaults to None
+    :type callbacks: Optional[Union[BaseCallbackStreaming,
+    List[BaseCallbackStreaming]]]
+
     :References:
 
     .. [gretton2012kernel] Gretton, Arthur, et al.
         "A kernel two-sample test."
         The Journal of Machine Learning Research 13.1 (2012): 723-773.
+
+    :Example:
+
+    >>> from functools import partial
+    >>> from frouros.detectors.data_drift import MMDStreaming
+    >>> from frouros.utils.kernels import rbf_kernel
+    >>> import numpy as np
+    >>> np.random.seed(seed=31)
+    >>> X = np.random.multivariate_normal(mean=[1, 1], cov=[[2, 0], [0, 2]], size=100)
+    >>> Y = np.random.multivariate_normal(mean=[0, 0], cov=[[2, 1], [1, 2]], size=100)
+    >>> detector = MMDStreaming(window_size=10, kernel=partial(rbf_kernel, sigma=0.5))
+    >>> _ = detector.fit(X=X)
+    >>> for sample in Y:
+    ...     distance, _ = detector.update(value=sample)
+    ...     if distance is not None:
+    ...         print(distance)
     """
 
-    def __init__(
+    def __init__(  # noqa: D107
         self,
         window_size: int,
         kernel: Callable = rbf_kernel,
@@ -34,18 +60,6 @@ class MMD(BaseDistanceBased):
             Union[BaseCallbackStreaming, List[BaseCallbackStreaming]]
         ] = None,
     ) -> None:
-        """Init method.
-
-        :param window_size: window size
-        :type window_size: int
-        :param kernel: kernel function
-        :type kernel: Callable
-        :param chunk_size: chunk size value
-        :type chunk_size: Optional[int]
-        :param callbacks: callbacks
-        :type callbacks: Optional[Union[BaseCallbackStreaming,
-        List[BaseCallbackStreaming]]]
-        """
         super().__init__(
             data_type=NumericalData(),
             statistical_type=MultivariateData(),

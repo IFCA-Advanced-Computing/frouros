@@ -14,14 +14,27 @@ from frouros.utils.stats import Mean
 class RDDMConfig(BaseSPCConfig):
     """RDDM (Reactive Drift detection method) [barros2017rddm]_ configuration.
 
+    :param warning_level: warning level factor, defaults to 1.773
+    :type warning_level: float
+    :param drift_level: drift level factor, defaults to 2.258
+    :type drift_level: float
+    :param max_concept_size: maximum size of a concept, defaults to 40000
+    :type max_concept_size: int
+    :param min_concept_size: reduced size of a concept, defaults to 7000
+    :type min_concept_size: int
+    :param max_num_instances_warning: maximum number of instances at warning level, defaults to 1400
+    :type max_num_instances_warning: int
+    :param min_num_instances: minimum numbers of instances to start looking for changes, defaults to 129
+    :type min_num_instances: int
+
     :References:
 
     .. [barros2017rddm] Barros, Roberto SM, et al.
         "RDDM: Reactive drift detection method."
         Expert Systems with Applications 90 (2017): 344-355.
-    """
+    """  # noqa: E501  # pylint: disable=line-too-long
 
-    def __init__(
+    def __init__(  # noqa: D107
         self,
         warning_level: float = 1.773,
         drift_level: float = 2.258,
@@ -30,22 +43,6 @@ class RDDMConfig(BaseSPCConfig):
         max_num_instances_warning: int = 1400,
         min_num_instances: int = 129,
     ) -> None:
-        """Init method.
-
-        :param warning_level: warning level factor
-        :type warning_level: float
-        :param drift_level: drift level factor
-        :type drift_level: float
-        :param max_concept_size: maximum size of a concept
-        :type max_concept_size: int
-        :param min_concept_size: reduced size of a concept
-        :type min_concept_size: int
-        :param max_num_instances_warning: maximum number of instances at warning level
-        :type max_num_instances_warning: int
-        :param min_num_instances: minimum numbers of instances
-        to start looking for changes
-        :type min_num_instances: int
-        """
         super().__init__(
             drift_level=drift_level,
             warning_level=warning_level,
@@ -113,30 +110,51 @@ class RDDMConfig(BaseSPCConfig):
 class RDDM(BaseSPCError):
     """RDDM (Reactive Drift detection method) [barros2017rddm]_ detector.
 
+    :param config: configuration object of the detector, defaults to None. If None, the default configuration of :class:`RDDMConfig` is used.
+    :type config: Optional[RDDMConfig]
+    :param callbacks: callbacks, defaults to None
+    :type callbacks: Optional[Union[BaseCallbackStreaming, List[BaseCallbackStreaming]]]
+
+    :Note:
+    :func:`update` method expects to receive a value of 0 if the instance is correctly classified (no error) and 1 otherwise (error).
+
     :References:
 
     .. [barros2017rddm] Barros, Roberto SM, et al.
         "RDDM: Reactive drift detection method."
         Expert Systems with Applications 90 (2017): 344-355.
-    """
+
+    :Example:
+
+    >>> from frouros.detectors.concept_drift import RDDM
+    >>> import numpy as np
+    >>> np.random.seed(seed=31)
+    >>> dist_a = np.random.binomial(n=1, p=0.6, size=1000)
+    >>> dist_b = np.random.binomial(n=1, p=0.8, size=1000)
+    >>> stream = np.concatenate((dist_a, dist_b))
+    >>> detector = RDDM()
+    >>> warning_flag = False
+    >>> for i, value in enumerate(stream):
+    ...     _ = detector.update(value=value)
+    ...     if detector.drift:
+    ...         print(f"Change detected at step {i}")
+    ...         break
+    ...     if not warning_flag and detector.warning:
+    ...         print(f"Warning detected at step {i}")
+    ...         warning_flag = True
+    Warning detected at step 1036
+    Change detected at step 1066
+    """  # noqa: E501  # pylint: disable=line-too-long
 
     config_type = RDDMConfig  # type: ignore
 
-    def __init__(
+    def __init__(  # noqa: D107
         self,
         config: Optional[RDDMConfig] = None,
         callbacks: Optional[
             Union[BaseCallbackStreaming, List[BaseCallbackStreaming]]
         ] = None,
     ) -> None:
-        """Init method.
-
-        :param config: configuration parameters
-        :type config: Optional[RDDMConfig]
-        :param callbacks: callbacks
-        :type callbacks: Optional[Union[BaseCallbackStreaming,
-        List[BaseCallbackStreaming]]]
-        """
         super().__init__(
             config=config,
             callbacks=callbacks,

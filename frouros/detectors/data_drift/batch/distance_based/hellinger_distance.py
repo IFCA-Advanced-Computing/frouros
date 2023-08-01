@@ -13,26 +13,36 @@ from frouros.detectors.data_drift.batch.distance_based.base import (
 class HellingerDistance(BaseDistanceBasedBins):
     """Hellinger distance [hellinger1909neue]_ detector.
 
+    :param num_bins: number of bins in which to divide probabilities, defaults to 10
+    :type num_bins: int
+    :param callbacks: callbacks, defaults to None
+    :type callbacks: Optional[Union[BaseCallbackBatch, List[BaseCallbackBatch]]]
+
     :References:
 
     .. [hellinger1909neue] Hellinger, Ernst.
         "Neue begründung der theorie quadratischer formen von unendlichvielen
         veränderlichen."
         Journal für die reine und angewandte Mathematik 1909.136 (1909): 210-271.
+
+    :Example:
+
+    >>> from frouros.detectors.data_drift import HellingerDistance
+    >>> import numpy as np
+    >>> np.random.seed(seed=31)
+    >>> X = np.random.normal(loc=0, scale=1, size=100)
+    >>> Y = np.random.normal(loc=1, scale=1, size=100)
+    >>> detector = HellingerDistance(num_bins=20)
+    >>> _ = detector.fit(X=X)
+    >>> detector.compare(X=Y)[0]
+    DistanceResult(distance=0.467129645775421)
     """
 
-    def __init__(
+    def __init__(  # noqa: D107
         self,
         num_bins: int = 10,
         callbacks: Optional[Union[BaseCallbackBatch, List[BaseCallbackBatch]]] = None,
     ) -> None:
-        """Init method.
-
-        :param num_bins: number of bins in which to divide probabilities
-        :type num_bins: int
-        :param callbacks: callbacks
-        :type callbacks: Optional[Union[BaseCallbackBatch, List[BaseCallbackBatch]]]
-        """
         sqrt_div = np.sqrt(2)
         super().__init__(
             statistical_method=self._hellinger,

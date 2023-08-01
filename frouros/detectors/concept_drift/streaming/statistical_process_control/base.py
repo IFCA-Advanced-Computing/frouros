@@ -313,6 +313,8 @@ class BaseECDDConfig(BaseConceptDriftStreamingConfig):
         :type average_run_length: int
         :param lambda_: weight given to recent data compared to older data
         :type lambda_: float
+        :param warning_level: warning level value
+        :type warning_level: float
         :param min_num_instances: minimum numbers of instances
         to start looking for changes
         :type min_num_instances: int
