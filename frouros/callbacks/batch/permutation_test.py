@@ -20,10 +20,10 @@ class PermutationTestDistanceBased(BaseCallbackBatch):
     :type verbose: bool
     :param name: name value, defaults to None. If None, the name will be set to `PermutationTestDistanceBased`.
     :type name: Optional[str]
-    
+
     :Note:
     Callbacks logs are updated with the following variables:
-    
+
     - `observed_statistic`: observed statistic obtained from the distance-based detector. Same distance value returned by the `compare` method
     - `permutation_statistic`: list of statistics obtained from the permutations
     - `p_value`: p-value obtained from the permutation test
