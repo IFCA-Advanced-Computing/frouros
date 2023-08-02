@@ -20,7 +20,7 @@ class MMD(BaseDistanceBased):
 
     :param window_size: window size value
     :type window_size: int
-    :param kernel: kernel function, defaults to rbf_kernel
+    :param kernel: kernel function, defaults to :func:`rbf_kernel() <frouros.utils.kernels.rbf_kernel>`
     :type kernel: Callable
     :param chunk_size: chunk size value, defaults to None
     :type chunk_size: Optional[int]
@@ -49,7 +49,7 @@ class MMD(BaseDistanceBased):
     ...     distance, _ = detector.update(value=sample)
     ...     if distance is not None:
     ...         print(distance)
-    """
+    """  # noqa: E501  # pylint: disable=line-too-long
 
     def __init__(  # noqa: D107
         self,

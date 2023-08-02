@@ -19,7 +19,7 @@ from frouros.utils.kernels import rbf_kernel
 class MMD(BaseDistanceBased):
     """MMD (Maximum Mean Discrepancy) [gretton2012kernel]_ detector.
 
-    :param kernel: kernel function, defaults to rbf_kernel
+    :param kernel: kernel function, defaults to :func:`rbf_kernel() <frouros.utils.kernels.rbf_kernel>`
     :type kernel: Callable
     :param chunk_size: chunk size value, defaults to None
     :type chunk_size: Optional[int]
@@ -45,7 +45,7 @@ class MMD(BaseDistanceBased):
     >>> _ = detector.fit(X=X)
     >>> detector.compare(X=Y)[0]
     DistanceResult(distance=0.02146955300299802)
-    """
+    """  # noqa: E501  # pylint: disable=line-too-long
 
     def __init__(  # noqa: D107
         self,

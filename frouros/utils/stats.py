@@ -36,8 +36,9 @@ class IncrementalStat(BaseStat):
 class Mean(IncrementalStat):
     """Incremental mean class."""
 
-    def __init__(self) -> None:
-        """Init method."""
+    def __init__(  # noqa: D107
+        self,
+    ) -> None:
         self.mean = 0.0
         self.num_values = 0
 
@@ -111,10 +112,16 @@ class Mean(IncrementalStat):
 
 
 class CircularMean(Mean):
-    """Circular mean class."""
+    """Circular mean class.
 
-    def __init__(self, size: int) -> None:
-        """Init method."""
+    :param size: size of the circular mean
+    :type size: int
+    """
+
+    def __init__(  # noqa: D107
+        self,
+        size: int,
+    ) -> None:
         super().__init__()
         self.queue = CircularQueue(max_len=size)
 
@@ -137,14 +144,16 @@ class CircularMean(Mean):
 
 
 class EWMA(IncrementalStat):
-    """EWMA (Exponential Weighted Moving Average) class."""
+    """EWMA (Exponential Weighted Moving Average) class.
 
-    def __init__(self, alpha: float) -> None:
-        """Init method.
+    :param alpha: alpha value
+    :type alpha: float
+    """
 
-        :param alpha:
-        :type alpha: float
-        """
+    def __init__(  # noqa: D107
+        self,
+        alpha: float,
+    ) -> None:
         self.alpha = alpha
         self.one_minus_alpha = 1.0 - self.alpha
         self.mean = 0
@@ -228,9 +237,9 @@ def permutation(  # pylint: disable=too-many-arguments,too-many-locals
     :type num_permutations: int
     :param num_jobs: number of jobs to use
     :type num_jobs: int
-    :param random_state: random state value
+    :param random_state: random state value, defaults to None
     :type random_state: Optional[int]
-    :param verbose: verbose flag
+    :param verbose: verbose flag, defaults to False
     :type verbose: bool
     :return: permuted statistics
     :rtype: List[float]

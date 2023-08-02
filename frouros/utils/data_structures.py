@@ -1,31 +1,45 @@
 """Data structures module."""
 
-from typing import Any, Optional, List, Union
+from typing import Any, Optional, List, Union, Dict, Tuple
 
 import numpy as np  # type: ignore
 
 
 class EmptyQueueError(Exception):
-    """Empty queue exception."""
+    """Empty queue exception.
 
-    def __init__(self, *args, msg="Queue is empty.", **kwargs) -> None:
-        """Init method.
+    :param args: exception arguments
+    :type args: Tuple[Any, ...]
+    :param msg: exception message, defaults to "Queue is empty."
+    :type msg: str
+    :param kwargs: exception keyword arguments
+    :type kwargs: Dict[str, Dict[str, Any]]
+    """
 
-        :param msg: exception message
-        :type msg: str
-        """
-        super().__init__(msg, *args, **kwargs)
+    def __init__(  # noqa: D107
+        self,
+        *args: Tuple[Any, ...],
+        msg: str = "Queue is empty.",
+        **kwargs: Dict[str, Dict[str, Any]],
+    ) -> None:
+        super().__init__(
+            msg,
+            *args,
+            **kwargs,
+        )
 
 
 class CircularQueue:
-    """Class representing a circular queue."""
+    """Class representing a circular queue.
 
-    def __init__(self, max_len: int) -> None:
-        """Init method.
+    :param max_len: maximum capacity
+    :type max_len: int
+    """
 
-        :param max_len: maximum capacity
-        :type max_len: int
-        """
+    def __init__(  # noqa: D107
+        self,
+        max_len: int,
+    ) -> None:
         self.count = 0
         self.first = 0
         self.last = -1
@@ -218,14 +232,16 @@ class CircularQueue:
 
 
 class AccuracyQueue(CircularQueue):
-    """Class representing an accuracy queue."""
+    """Class representing an accuracy queue.
 
-    def __init__(self, max_len: int) -> None:
-        """Init method.
+    :param max_len: maximum capacity
+    :type max_len: int
+    """
 
-        :param max_len: maximum capacity
-        :type max_len: int
-        """
+    def __init__(  # noqa: D107
+        self,
+        max_len: int,
+    ) -> None:
         super().__init__(max_len=max_len)
         self.num_true = 0
 

@@ -5,7 +5,10 @@ from typing import Any
 from frouros.callbacks.base import BaseCallback
 
 
-def check_callbacks(callbacks: Any, expected_cls: BaseCallback) -> None:
+def check_callbacks(
+    callbacks: Any,
+    expected_cls: BaseCallback,
+) -> None:
     """Check callbacks.
 
     :param callbacks: callbacks
