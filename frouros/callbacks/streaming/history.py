@@ -36,8 +36,8 @@ class HistoryConceptDrift(BaseCallbackStreaming):
     ...     if detector.drift:
     ...         print(f"Change detected at step {i}")
     ...         break
-    >>> print(callbacks_log["history"]["drift"])
     Change detected at step 1055
+    >>> callbacks_log["history"]["drift"]
     [False, False, ..., True]
     """  # noqa: E501  # pylint: disable=line-too-long
 
