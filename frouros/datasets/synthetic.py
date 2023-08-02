@@ -1,6 +1,6 @@
 """Synthetic datasets module."""
 
-from typing import Tuple, Iterator
+from typing import Tuple, Iterator, Optional
 
 import numpy as np  # type: ignore
 
@@ -11,15 +11,38 @@ from frouros.datasets.exceptions import InvalidBlockError
 class SEA(BaseDatasetGenerator):
     """SEA generator [street2001streaming]_.
 
+    :param seed: seed value, defaults to None
+    :type seed: Optional[int]
+
     :References:
 
     .. [street2001streaming] Street, W. Nick, and YongSeog Kim.
         "A streaming ensemble algorithm (SEA) for large-scale classification."
         Proceedings of the seventh ACM SIGKDD international conference on Knowledge
         discovery and data mining. 2001.
+
+    :Example:
+
+    >>> from frouros.datasets.synthetic import SEA
+    >>> sea = SEA(seed=31)
+    >>> dataset = sea.generate_dataset(block=1, noise=0.1, num_samples=5)
+    >>> for X, y in dataset:
+    ...     print(X, y)
+    [2.86053822 9.58105567 7.70312932] 0
+    [2.08165462 1.36917049 9.08373802] 0
+    [8.36483632 1.12172604 8.3489916 ] 0
+    [2.44680795 1.36231348 7.22094455] 1
+    [1.28477715 2.20364007 5.19211202] 1
     """
 
-    block_map = {1: 8.0, 2: 9.0, 3: 7.0, 4: 9.5}
+    def __init__(  # noqa: D107
+        self,
+        seed: Optional[int] = None,
+    ) -> None:
+        super().__init__(
+            seed=seed,
+        )
+        self._block_map = {1: 8.0, 2: 9.0, 3: 7.0, 4: 9.5}
 
     @staticmethod
     def _generate_sample(threshold: float, noise: float) -> Tuple[np.ndarray, int]:
@@ -35,17 +58,17 @@ class SEA(BaseDatasetGenerator):
     ) -> Iterator[Tuple[np.ndarray, int]]:
         """Generate dataset.
 
-        :param block: block to generate samples from
+        :param block: block to generate samples from, must be 1, 2, 3 or 4
         :type block: int
-        :param noise: ratio of samples with a noisy class
+        :param noise: ratio of samples with a noisy class, defaults to 0.1
         :type noise: float
-        :param num_samples: number of samples to generate
+        :param num_samples: number of samples to generate, defaults to 12500
         :type num_samples: int
         :return: generator with the samples
         :rtype: Iterator[Tuple[np.ndarray, int]]
         """
         try:
-            threshold = self.block_map[block]
+            threshold = self._block_map[block]
         except KeyError as e:
             raise InvalidBlockError("block must be 1, 2, 3 or 4.") from e
         if num_samples < 1:
