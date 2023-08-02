@@ -55,7 +55,7 @@ notebooks = [
     "scikit-learn>=1.2.0,<1.4",
     "torch>=1.13.0,<2.1",
     "torchvision>=0.14.0,<0.16",
-    "ipywidgets>=8.0.0,<8.1",
+    "ipywidgets>=8.0.0,<8.2",
 ]
 
 [project.urls]
