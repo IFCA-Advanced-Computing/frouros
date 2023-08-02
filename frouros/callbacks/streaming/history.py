@@ -7,14 +7,44 @@ from frouros.utils.stats import BaseStat
 
 
 class HistoryConceptDrift(BaseCallbackStreaming):
-    """HistoryConceptDrift callback class."""
+    """HistoryConceptDrift callback class.
 
-    def __init__(self, name: Optional[str] = None) -> None:
-        """Init method.
+    :param name: name value, defaults to None. If None, the name will be set to `HistoryConceptDrift`.
+    :type name: Optional[str]
 
-        :param name: name value
-        :type name: Optional[str]
-        """
+    :Note:
+    By default the following variables are stored:
+
+    - `value`: list of values received by the detector
+    - `drift`: list of drift flags
+    - `num_instances`: list of number of instances received by the detector
+    Each detector may store additional variables if they are defined in an `additional_vars` dictionary in the detectors `__init__` method.
+    The user can add additional variables by calling the :func:`add_additional_vars` method.
+
+    :Example:
+
+    >>> from frouros.callbacks import HistoryConceptDrift
+    >>> from frouros.detectors.concept_drift import ADWIN
+    >>> import numpy as np
+    >>> np.random.seed(seed=31)
+    >>> dist_a = np.random.normal(loc=0.2, scale=0.01, size=1000)
+    >>> dist_b = np.random.normal(loc=0.8, scale=0.04, size=1000)
+    >>> stream = np.concatenate((dist_a, dist_b))
+    >>> detector = ADWIN(callbacks=[HistoryConceptDrift(name="history")])
+    >>> for i, value in enumerate(stream):
+    ...     callbacks_log = detector.update(value=value)
+    ...     if detector.drift:
+    ...         print(f"Change detected at step {i}")
+    ...         break
+    >>> print(callbacks_log["history"]["drift"])
+    Change detected at step 1055
+    [False, False, ..., True]
+    """  # noqa: E501  # pylint: disable=line-too-long
+
+    def __init__(  # noqa: D107
+        self,
+        name: Optional[str] = None,
+    ) -> None:
         super().__init__(name=name)
         self.additional_vars: List[str] = []
         self.history: Dict[str, List[Any]] = {
@@ -24,7 +54,7 @@ class HistoryConceptDrift(BaseCallbackStreaming):
         }
 
     def add_additional_vars(self, vars_: List[str]) -> None:
-        """Add addtional variables to track.
+        """Add additional variables to track.
 
         :param vars_: list of variables
         :type vars_: List[str]
