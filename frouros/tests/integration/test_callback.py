@@ -34,6 +34,7 @@ from frouros.detectors.concept_drift.streaming.statistical_process_control.base 
     BaseSPC,
 )
 from frouros.detectors.data_drift.batch import (
+    AndersonDarlingTest,
     BhattacharyyaDistance,
     CVMTest,
     EMD,
@@ -42,6 +43,7 @@ from frouros.detectors.data_drift.batch import (
     JS,
     KL,
     KSTest,
+    MannWhitneyUTest,
     MMD,
     PSI,
     WelchTTest,
@@ -108,7 +110,7 @@ def test_batch_permutation_test_data_univariate_different_distribution(
 
 @pytest.mark.parametrize(
     "detector_class",
-    [CVMTest, KSTest, WelchTTest],
+    [AndersonDarlingTest, CVMTest, KSTest, MannWhitneyUTest, WelchTTest],
 )
 def test_batch_reset_on_statistical_test_data_drift(
     X_ref_univariate,  # noqa: N803
