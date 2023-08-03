@@ -6,6 +6,4 @@ from .warning_samples import WarningSamplesBuffer
 
 __all__ = [
     "HistoryConceptDrift",
-    "mSPRT",
-    "WarningSamplesBuffer",
 ]
