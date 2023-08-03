@@ -7,7 +7,7 @@ from frouros.utils.stats import BaseStat
 
 
 class HistoryConceptDrift(BaseCallbackStreaming):
-    """HistoryConceptDrift callback class.
+    """HistoryConceptDrift callback class that can be applied to :mod:`concept_drift.streaming <frouros.detectors.concept_drift.streaming>` detectors.
 
     :param name: name value, defaults to None. If None, the name will be set to `HistoryConceptDrift`.
     :type name: Optional[str]
