@@ -8,6 +8,11 @@ from frouros.metrics.base import BaseMetric
 class PrequentialError(BaseMetric):
     """Prequential error [dawid1984present]_ using fading factor [gama2009issues]_ metric.
 
+    :param alpha: fading factor value, defaults to 1.0
+    :type alpha: Union[int, float]
+    :param name: name value, defaults to None. If None, the name will be set to `PrequentialError`.
+    :type name: Optional[str]
+
     :References:
 
     .. [dawid1984present] Dawid, A. Philip.
@@ -19,20 +24,30 @@ class PrequentialError(BaseMetric):
         "Issues in evaluation of stream learning algorithms."
         Proceedings of the 15th ACM SIGKDD international conference on Knowledge
         discovery and data mining. 2009.
-    """
 
-    def __init__(
+    :Example:
+
+    >>> from frouros.metrics import PrequentialError
+    >>> metric = PrequentialError(alpha=0.9)
+    >>> X = [1, 1, 0, 1, 0, 0]
+    >>> Y = [1, 0, 0, 0, 1, 1]
+    >>> for i, (X_sample, Y_sample) in enumerate(zip(X, Y)):
+    ...     error_value = 1 - (X_sample == Y_sample)
+    ...     prequential_error = metric(error_value=error_value)
+    ...     print(f"Metric={prequential_error:.5f} at step {i}")
+    Metric=0.00000 at step 0
+    Metric=0.52632 at step 1
+    Metric=0.33210 at step 2
+    Metric=0.52632 at step 3
+    Metric=0.64199 at step 4
+    Metric=0.71839 at step 5
+    """  # noqa: E501  # pylint: disable=line-too-long
+
+    def __init__(  # noqa: D107
         self,
         alpha: Union[int, float] = 1.0,
         name: Optional[str] = None,
     ) -> None:
-        """Init method.
-
-        :param alpha: fading factor value
-        :type alpha: Union[int, float]
-        :param name: metric´s name
-        :type name: Optional[str]
-        """
         super().__init__(name=name)
         self.alpha = alpha
         self.cumulative_error = 0.0
