@@ -15,5 +15,4 @@ The {mod}`frouros.callbacks.streaming` module contains streaming callbacks.
     :template: class.md
 
     HistoryConceptDrift
-    WarningSamplesBuffer
 ```
