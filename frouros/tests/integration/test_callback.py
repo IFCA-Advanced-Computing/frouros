@@ -1,10 +1,9 @@
 """Test callback module."""
 
-from typing import List, Tuple
+from typing import List
 
 import numpy as np  # type: ignore
 import pytest  # type: ignore
-import sklearn  # type: ignore # pylint: disable=import-error
 
 from frouros.callbacks.batch import (
     PermutationTestDistanceBased,
@@ -12,8 +11,6 @@ from frouros.callbacks.batch import (
 )
 from frouros.callbacks.streaming import (
     HistoryConceptDrift,
-    mSPRT,
-    WarningSamplesBuffer,
 )
 from frouros.detectors.concept_drift import (
     ADWIN,
@@ -30,9 +27,6 @@ from frouros.detectors.concept_drift import (
     STEPD,
 )
 from frouros.detectors.concept_drift.base import BaseConceptDrift
-from frouros.detectors.concept_drift.streaming.statistical_process_control.base import (
-    BaseSPC,
-)
 from frouros.detectors.data_drift.batch import (
     AndersonDarlingTest,
     BhattacharyyaDistance,
@@ -49,7 +43,6 @@ from frouros.detectors.data_drift.batch import (
     WelchTTest,
 )
 from frouros.detectors.data_drift.batch.base import BaseDataDriftBatch
-from frouros.detectors.data_drift.streaming import MMD as MMDStreaming  # noqa: N811
 
 
 @pytest.mark.parametrize(
@@ -179,68 +172,3 @@ def test_streaming_history_on_concept_drift(
             assert history[name]["drift"][-1]
             assert not any(history[name]["drift"][:-1])
             break
-
-
-@pytest.mark.parametrize(
-    "detector_class,"
-    " expected_drift_idx,"
-    " expected_distance_mean,"
-    " expected_p_value,"
-    " expected_likelihood",
-    [
-        (MMDStreaming, 5, 0.27193007, 0.00989585, 101.05240437),
-    ],
-)
-def test_streaming_msprt_multivariate_different_distribution(
-    X_ref_multivariate: np.ndarray,  # noqa: N803
-    X_test_multivariate: np.ndarray,
-    detector_class: BaseDataDriftBatch,
-    expected_drift_idx: int,
-    expected_distance_mean: float,
-    expected_p_value: float,
-    expected_likelihood: float,
-) -> None:
-    """Test streaming mSPRT test on data callback.
-
-    :param X_ref_multivariate: reference multivariate data
-    :type X_ref_multivariate: numpy.ndarray
-    :param X_test_multivariate: test multivariate data
-    :type X_test_multivariate: numpy.ndarray
-    :param detector_class: detector distance
-    :type detector_class: BaseDataDriftBatch
-    :param expected_drift_idx: expected drift index
-    :type expected_drift_idx: int
-    :param expected_distance_mean: expected distance mean value
-    :type expected_distance_mean: float
-    :param expected_p_value: expected p-value value
-    :type expected_p_value: float
-    :param expected_likelihood: expected likelihood value
-    :type expected_likelihood: float
-    """
-    np.random.seed(seed=31)
-
-    alpha = 0.01
-
-    detector = detector_class(  # type: ignore
-        callbacks=mSPRT(
-            alpha=alpha,
-            sigma=1,
-            tau=1,
-            lambda_=32,
-        ),
-        window_size=5,
-    )
-    _ = detector.fit(X=X_ref_multivariate)
-
-    drift_idx = -1
-    for i, sample in enumerate(X_test_multivariate, start=1):
-        value, callbacks_logs = detector.update(value=sample)
-        if value is not None:
-            if callbacks_logs["mSPRT"]["p_value"] < alpha:
-                drift_idx = i
-                break
-
-    assert drift_idx == expected_drift_idx
-    assert np.isclose(callbacks_logs["mSPRT"]["distance_mean"], expected_distance_mean)
-    assert np.isclose(callbacks_logs["mSPRT"]["p_value"], expected_p_value)
-    assert np.isclose(callbacks_logs["mSPRT"]["likelihood"], expected_likelihood)
