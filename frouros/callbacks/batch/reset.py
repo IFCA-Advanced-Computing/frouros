@@ -7,16 +7,33 @@ from frouros.utils.logger import logger
 
 
 class ResetStatisticalTest(BaseCallbackBatch):
-    """Reset on statistical test batch callback class."""
+    """Reset callback class that can be applied to :mod:`data_drift.batch.statistical_test <frouros.detectors.data_drift.batch.statistical_test>` detectors.
 
-    def __init__(self, alpha: float, name: Optional[str] = None) -> None:
-        """Init method.
+    :param alpha: significance value
+    :type alpha: float
+    :param name: name value, defaults to None. If None, the name will be set to `ResetStatisticalTest`.
+    :type name: Optional[str]
 
-        :param alpha: significance value
-        :type alpha: float
-        :param name: name to be use
-        :type name: Optional[str]
-        """
+    :Example:
+
+    >>> from frouros.callbacks import ResetStatisticalTest
+    >>> from frouros.detectors.data_drift import KSTest
+    >>> import numpy as np
+    >>> np.random.seed(seed=31)
+    >>> X = np.random.normal(loc=0, scale=1, size=100)
+    >>> Y = np.random.normal(loc=1, scale=1, size=100)
+    >>> detector = KSTest(callbacks=ResetStatisticalTest(alpha=0.01))
+    >>> _ = detector.fit(X=X)
+    >>> detector.compare(X=Y)[0]
+    INFO:frouros:Drift detected. Resetting detector...
+    StatisticalResult(statistic=0.55, p_value=3.0406585087050305e-14)
+    """  # noqa: E501  # pylint: disable=line-too-long
+
+    def __init__(  # noqa: D107
+        self,
+        alpha: float,
+        name: Optional[str] = None,
+    ) -> None:
         super().__init__(name=name)
         self.alpha = alpha
 

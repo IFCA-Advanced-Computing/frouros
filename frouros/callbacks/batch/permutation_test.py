@@ -10,25 +10,49 @@ from frouros.utils.stats import permutation
 
 
 class PermutationTestDistanceBased(BaseCallbackBatch):
-    """Permutation test on distance based batch callback class."""
+    """Permutation test callback class that can be applied to :mod:`data_drift.batch.distance_based <frouros.detectors.data_drift.batch.distance_based>` detectors.
 
-    def __init__(
+    :param num_permutations: number of permutations to obtain the p-value
+    :type num_permutations: int
+    :param num_jobs: number of jobs, defaults to -1
+    :type num_jobs: int
+    :param verbose: verbose flag, defaults to False
+    :type verbose: bool
+    :param name: name value, defaults to None. If None, the name will be set to `PermutationTestDistanceBased`.
+    :type name: Optional[str]
+
+    :Note:
+    Callbacks logs are updated with the following variables:
+
+    - `observed_statistic`: observed statistic obtained from the distance-based detector. Same distance value returned by the `compare` method
+    - `permutation_statistic`: list of statistics obtained from the permutations
+    - `p_value`: p-value obtained from the permutation test
+
+    :Example:
+
+    >>> from frouros.callbacks import PermutationTestDistanceBased
+    >>> from frouros.detectors.data_drift import MMD
+    >>> import numpy as np
+    >>> np.random.seed(seed=31)
+    >>> X = np.random.multivariate_normal(mean=[1, 1], cov=[[2, 0], [0, 2]], size=100)
+    >>> Y = np.random.multivariate_normal(mean=[0, 0], cov=[[2, 1], [1, 2]], size=100)
+    >>> detector = MMD(callbacks=PermutationTestDistanceBased(num_permutations=1000, random_state=31))
+    >>> _ = detector.fit(X=X)
+    >>> distance, callbacks_log = detector.compare(X=Y)
+    >>> distance
+    DistanceResult(distance=0.05643613752975596)
+    >>> callbacks_log["PermutationTestDistanceBased"]["p_value"]
+    0.0
+    """  # noqa: E501  # pylint: disable=line-too-long
+
+    def __init__(  # noqa: D107
         self,
         num_permutations: int,
         num_jobs: int = -1,
-        name: Optional[str] = None,
         verbose: bool = False,
+        name: Optional[str] = None,
         **kwargs,
     ) -> None:
-        """Init method.
-
-        :param num_permutations: number of permutations
-        :type num_permutations: int
-        :param num_jobs: number of jobs
-        :type num_jobs: int
-        :param name: name to be use
-        :type name: Optional[str]
-        """
         super().__init__(name=name)
         self.num_permutations = num_permutations
         self.num_jobs = num_jobs
