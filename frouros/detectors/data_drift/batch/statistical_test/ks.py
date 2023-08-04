@@ -18,8 +18,9 @@ class KSTest(BaseStatisticalTest):
 
     :param callbacks: callbacks, defaults to None
     :type callbacks: Optional[Union[BaseCallbackBatch, List[BaseCallbackBatch]]]
-    :param kwargs: additional keyword arguments to pass to scipy.stats.ks_2samp
-    :type kwargs: Dict[str, Any]
+
+    :Note:
+    - Passing additional arguments to `scipy.stats.ks_2samp <https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.ks_2samp.html>`__ can be done using :func:`compare` kwargs.
 
     :References:
 
@@ -38,28 +39,32 @@ class KSTest(BaseStatisticalTest):
     >>> _ = detector.fit(X=X)
     >>> detector.compare(X=Y)[0]
     StatisticalResult(statistic=0.55, p_value=3.0406585087050305e-14)
-    """
+    """  # noqa: E501  # pylint: disable=line-too-long
 
     def __init__(  # noqa: D107
         self,
         callbacks: Optional[Union[BaseCallbackBatch, List[BaseCallbackBatch]]] = None,
-        **kwargs,
     ) -> None:
         super().__init__(
             data_type=NumericalData(),
             statistical_type=UnivariateData(),
             callbacks=callbacks,
         )
-        self.kwargs = kwargs
 
+    @staticmethod
     def _statistical_test(
-        self, X_ref: np.ndarray, X: np.ndarray, **kwargs  # noqa: N803
+        X_ref: np.ndarray,  # noqa: N803
+        X: np.ndarray,
+        **kwargs,
     ) -> StatisticalResult:
         test = ks_2samp(
             data1=X_ref,
             data2=X,
-            alternative=self.kwargs.get("alternative", "two-sided"),
-            method=self.kwargs.get("method", "auto"),
+            alternative=kwargs.get("alternative", "two-sided"),
+            method=kwargs.get("method", "auto"),
         )
-        test = StatisticalResult(statistic=test.statistic, p_value=test.pvalue)
+        test = StatisticalResult(
+            statistic=test.statistic,
+            p_value=test.pvalue,
+        )
         return test

@@ -18,18 +18,16 @@ class AndersonDarlingTest(BaseStatisticalTest):
 
     :param callbacks: callbacks, defaults to None
     :type callbacks: Optional[Union[BaseCallbackBatch, List[BaseCallbackBatch]]]
-    :param kwargs: additional keyword arguments to pass to scipy.stats.anderson_ksamp
-    :type kwargs: Dict[str, Any]
 
     :Note:
-     p-values are bounded between 0.001 and 0.25 according to scipy documentation [1]_.
+    - Passing additional arguments to `scipy.stats.anderson_ksamp <https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.anderson_ksamp.html>`__ can be done using :func:`compare` kwargs.
+    - p-values are bounded between 0.001 and 0.25 according to `scipy.stats.anderson_ksamp <https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.anderson_ksamp.html>`__.
 
     :References:
 
     .. [scholz1987k] Scholz, Fritz W., and Michael A. Stephens.
         "K-sample Anderson–Darling tests."
         Journal of the American Statistical Association 82.399 (1987): 918-924.
-       [1] https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.anderson_ksamp.html  # noqa: E501 # pylint: disable=line-too-long
 
     :Example:
 
@@ -42,29 +40,30 @@ class AndersonDarlingTest(BaseStatisticalTest):
     >>> _ = detector.fit(X=X)
     >>> detector.compare(X=Y)[0]
     StatisticalResult(statistic=32.40316586267425, p_value=0.001)
-    """
+    """  # noqa: E501  # pylint: disable=line-too-long
 
     def __init__(  # noqa: D107
         self,
         callbacks: Optional[Union[BaseCallbackBatch, List[BaseCallbackBatch]]] = None,
-        **kwargs,
     ) -> None:
         super().__init__(
             data_type=NumericalData(),
             statistical_type=UnivariateData(),
             callbacks=callbacks,
         )
-        self.kwargs = kwargs
 
+    @staticmethod
     def _statistical_test(
-        self, X_ref: np.ndarray, X: np.ndarray, **kwargs  # noqa: N803
+        X_ref: np.ndarray,  # noqa: N803
+        X: np.ndarray,
+        **kwargs,
     ) -> StatisticalResult:
         test = anderson_ksamp(
             samples=[
                 X_ref,
                 X,
             ],
-            **self.kwargs,
+            **kwargs,
         )
         test = StatisticalResult(
             statistic=test.statistic,
