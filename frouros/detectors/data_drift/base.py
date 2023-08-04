@@ -187,17 +187,15 @@ class BaseDataDrift(BaseDetector):
         for callback in self.callbacks:  # type: ignore
             callback.on_fit_start(
                 X=X,
-                **kwargs,
             )
         self._fit(X=X, **kwargs)
         for callback in self.callbacks:  # type: ignore
             callback.on_fit_end(
                 X=X,
-                **kwargs,
             )
 
-        logs = self._get_callbacks_logs()
-        return logs
+        callbacks_logs = self._get_callbacks_logs()
+        return callbacks_logs
 
     def reset(self) -> None:
         """Reset method."""

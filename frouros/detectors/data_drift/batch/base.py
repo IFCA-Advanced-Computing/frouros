@@ -60,7 +60,7 @@ class BaseDataDriftBatch(BaseDataDrift):
     ) -> Tuple[np.ndarray, Dict[str, Any]]:
         """Compare values.
 
-        :param X: feature data
+        :param X: test data
         :type X: numpy.ndarray
         :return: compare result and callbacks logs
         :rtype: Tuple[numpy.ndarray, Dict[str, Any]]
