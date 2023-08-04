@@ -126,7 +126,7 @@ for i, (X, y) in enumerate(zip(X_test, y_test)):
 >> Drift detected at index 44
 ```
 
-More concept drift examples can be found [here](https://frouros.readthedocs.io/en/latest/examples.html#data-drift).
+More concept drift examples can be found [here](https://frouros.readthedocs.io/en/latest/examples/concept_drift.html).
 
 ### Data drift
 
