@@ -168,7 +168,7 @@ More concept drift examples can be found [here](https://frouros.readthedocs.io/e
 
 ### Data drift
 
-As a quick example, we can use the iris dataset to which data drift in order to show the use of a data drift detector like Kolmogorov-Smirnov test.
+As a quick example, we can use the iris dataset to which data drift is induced and show the use of a data drift detector like Kolmogorov-Smirnov test.
 
 ```python
 import numpy as np
@@ -192,11 +192,11 @@ X, y = load_iris(return_X_y=True)
 ) = train_test_split(X, y, train_size=0.7, random_state=31)
 
 # Set the feature index to which detector is applied
-dim_idx = 0
+feature_idx = 0
 
 # IMPORTANT: Induce/simulate data drift in the selected feature of y_test by
 # applying some gaussian noise. Therefore, changing P(X))
-X_test[:, dim_idx] += np.random.normal(
+X_test[:, feature_idx] += np.random.normal(
     loc=0.0,
     scale=3.0,
     size=X_test.shape[0],
@@ -210,14 +210,17 @@ model.fit(X=X_train, y=y_train)
 alpha = 0.001
 # Define and fit detector
 detector = KSTest()
-detector.fit(X=X_train[:, dim_idx])
+_ = detector.fit(X=X_train[:, feature_idx])
 
 # Apply detector to the selected feature of X_test
-result = detector.compare(X=X_test[:, dim_idx])
+result, _ = detector.compare(X=X_test[:, feature_idx])
 
 # Check if drift is taking place
-result[0].p_value < alpha
->> True # Data drift detected.
+if result.p_value <= alpha:
+    print(f"Data drift detected at feature {feature_idx}")
+else:
+    print(f"No data drift detected at feature {feature_idx}")
+# >> Data drift detected at feature 0
 # Therefore, we can reject H0 (both samples come from the same distribution).
 ```
 
