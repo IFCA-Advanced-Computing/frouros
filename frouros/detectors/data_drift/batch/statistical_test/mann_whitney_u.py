@@ -18,8 +18,9 @@ class MannWhitneyUTest(BaseStatisticalTest):
 
     :param callbacks: callbacks, defaults to None
     :type callbacks: Optional[Union[BaseCallbackBatch, List[BaseCallbackBatch]]]
-    :param kwargs: additional keyword arguments to pass to scipy.stats.mannwhitneyu
-    :type kwargs: Dict[str, Any]
+
+    :Note:
+    - Passing additional arguments to `scipy.stats.mannwhitneyu <https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.mannwhitneyu.html>`__ can be done using :func:`compare` kwargs.
 
     :References:
 
@@ -39,29 +40,30 @@ class MannWhitneyUTest(BaseStatisticalTest):
     >>> _ = detector.fit(X=X)
     >>> detector.compare(X=Y)[0]
     StatisticalResult(statistic=2139.0, p_value=2.7623373527697943e-12)
-    """
+    """  # noqa: E501  # pylint: disable=line-too-long
 
     def __init__(  # noqa: D107
         self,
         callbacks: Optional[Union[BaseCallbackBatch, List[BaseCallbackBatch]]] = None,
-        **kwargs,
     ) -> None:
         super().__init__(
             data_type=NumericalData(),
             statistical_type=UnivariateData(),
             callbacks=callbacks,
         )
-        self.kwargs = kwargs
 
+    @staticmethod
     def _statistical_test(
-        self, X_ref: np.ndarray, X: np.ndarray, **kwargs  # noqa: N803
+        X_ref: np.ndarray,  # noqa: N803
+        X: np.ndarray,
+        **kwargs,
     ) -> StatisticalResult:
         test = mannwhitneyu(  # pylint: disable=unexpected-keyword-arg
             x=X_ref,
             y=X,
-            alternative="two-sided",
-            nan_policy="raise",
-            **self.kwargs,
+            alternative=kwargs.get("alternative", "two-sided"),
+            nan_policy=kwargs.get("nan_policy", "raise"),
+            **kwargs,
         )
         test = StatisticalResult(
             statistic=test.statistic,

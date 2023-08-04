@@ -97,7 +97,10 @@ class BaseDataDriftBatch(BaseDataDrift):
 
     @abc.abstractmethod
     def _apply_method(
-        self, X_ref: np.ndarray, X: np.ndarray, **kwargs  # noqa: N803
+        self,
+        X_ref: np.ndarray,  # noqa: N803
+        X: np.ndarray,
+        **kwargs,
     ) -> Any:
         pass
 
@@ -110,9 +113,13 @@ class BaseDataDriftBatch(BaseDataDrift):
         pass
 
     def _get_result(
-        self, X: np.ndarray, **kwargs  # noqa: N803
+        self,
+        X: np.ndarray,  # noqa: N803
+        **kwargs,
     ) -> Union[List[float], List[Tuple[float, float]], Tuple[float, float]]:
         result = self._apply_method(  # type: ignore # pylint: disable=not-callable
-            X_ref=self.X_ref, X=X, **kwargs
+            X_ref=self.X_ref,
+            X=X,
+            **kwargs,
         )
         return result

@@ -19,8 +19,9 @@ class ChiSquareTest(BaseStatisticalTest):
 
     :param callbacks: callbacks, defaults to None
     :type callbacks: Optional[Union[BaseCallbackBatch, List[BaseCallbackBatch]]]
-    :param kwargs: additional keyword arguments to pass to scipy.stats.chi2_contingency
-    :type kwargs: Dict[str, Any]
+
+    :Note:
+    - Passing additional arguments to `scipy.stats.chi2_contingency <https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.chi2_contingency.html>`__ can be done using :func:`compare` kwargs.
 
     :References:
 
@@ -42,34 +43,43 @@ class ChiSquareTest(BaseStatisticalTest):
     >>> _ = detector.fit(X=X)
     >>> detector.compare(X=Y)[0]
     StatisticalResult(statistic=9.81474665685192, p_value=0.0017311812135839511)
-    """
+    """  # noqa: E501  # pylint: disable=line-too-long
 
     def __init__(  # noqa: D107
         self,
         callbacks: Optional[Union[BaseCallbackBatch, List[BaseCallbackBatch]]] = None,
-        **kwargs,
     ) -> None:
         super().__init__(
             data_type=CategoricalData(),
             statistical_type=UnivariateData(),
             callbacks=callbacks,
         )
-        self.kwargs = kwargs
 
+    @staticmethod
     def _statistical_test(
-        self, X_ref: np.ndarray, X: np.ndarray, **kwargs  # noqa: N803
+        X_ref: np.ndarray,  # noqa: N803
+        X: np.ndarray,
+        **kwargs,
     ) -> StatisticalResult:
-        f_exp, f_obs = self._calculate_frequencies(X_ref=X_ref, X=X)
+        f_exp, f_obs = ChiSquareTest._calculate_frequencies(
+            X_ref=X_ref,
+            X=X,
+        )
         statistic, p_value, _, _ = chi2_contingency(
-            observed=np.array([f_obs, f_exp]), **self.kwargs
+            observed=np.array([f_obs, f_exp]),
+            **kwargs,
         )
 
-        test = StatisticalResult(statistic=statistic, p_value=p_value)
+        test = StatisticalResult(
+            statistic=statistic,
+            p_value=p_value,
+        )
         return test
 
     @staticmethod
     def _calculate_frequencies(
-        X_ref: np.ndarray, X: np.ndarray  # noqa: N803
+        X_ref: np.ndarray,  # noqa: N803
+        X: np.ndarray,
     ) -> Tuple[List[int], List[int]]:
         X_ref_counter, X_counter = [  # noqa: N806
             *map(collections.Counter, [X_ref, X])  # noqa: N806

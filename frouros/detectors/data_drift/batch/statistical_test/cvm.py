@@ -19,8 +19,9 @@ class CVMTest(BaseStatisticalTest):
 
     :param callbacks: callbacks, defaults to None
     :type callbacks: Optional[Union[BaseCallbackBatch, List[BaseCallbackBatch]]]
-    :param kwargs: additional keyword arguments to pass to scipy.stats.cramervonmises_2samp
-    :type kwargs: Dict[str, Any]
+
+    :Note:
+    - Passing additional arguments to `scipy.stats.cramervonmises_2samp <https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.cramervonmises_2samp.html>`__ can be done using :func:`compare` kwargs.
 
     :References:
 
@@ -39,19 +40,17 @@ class CVMTest(BaseStatisticalTest):
     >>> _ = detector.fit(X=X)
     >>> detector.compare(X=Y)[0]
     StatisticalResult(statistic=5.331699999999998, p_value=1.7705426014202885e-10)
-    """  # noqa: E501
+    """  # noqa: E501  # pylint: disable=line-too-long
 
     def __init__(  # noqa: D107
         self,
         callbacks: Optional[Union[BaseCallbackBatch, List[BaseCallbackBatch]]] = None,
-        **kwargs,
     ) -> None:
         super().__init__(
             data_type=NumericalData(),
             statistical_type=UnivariateData(),
             callbacks=callbacks,
         )
-        self.kwargs = kwargs
 
     @BaseStatisticalTest.X_ref.setter  # type: ignore[attr-defined]
     def X_ref(self, value: Optional[np.ndarray]) -> None:  # noqa: N802
@@ -75,13 +74,19 @@ class CVMTest(BaseStatisticalTest):
         if X.shape[0] < 2:
             raise InsufficientSamplesError("Number of samples must be at least 2.")
 
+    @staticmethod
     def _statistical_test(
-        self, X_ref: np.ndarray, X: np.ndarray, **kwargs  # noqa: N803
+        X_ref: np.ndarray,  # noqa: N803
+        X: np.ndarray,
+        **kwargs,
     ) -> StatisticalResult:
         test = cramervonmises_2samp(
             x=X_ref,
             y=X,
-            method=self.kwargs.get("method", "auto"),
+            **kwargs,
         )
-        test = StatisticalResult(statistic=test.statistic, p_value=test.pvalue)
+        test = StatisticalResult(
+            statistic=test.statistic,
+            p_value=test.pvalue,
+        )
         return test

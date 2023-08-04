@@ -18,8 +18,9 @@ class WelchTTest(BaseStatisticalTest):
 
     :param callbacks: callbacks, defaults to None
     :type callbacks: Optional[Union[BaseCallbackBatch, List[BaseCallbackBatch]]]
-    :param kwargs: additional keyword arguments to pass to scipy.stats.ttest_ind
-    :type kwargs: Dict[str, Any]
+
+    :Note:
+    - Passing additional arguments to `scipy.stats.ttest_ind <https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.ttest_ind.html>`__ can be done using :func:`compare` kwargs.
 
     :References:
 
@@ -39,22 +40,20 @@ class WelchTTest(BaseStatisticalTest):
     >>> _ = detector.fit(X=X)
     >>> detector.compare(X=Y)[0]
     StatisticalResult(statistic=-7.651304662806378, p_value=8.685225410826823e-13)
-    """
+    """  # noqa: E501  # pylint: disable=line-too-long
 
     def __init__(  # noqa: D107
         self,
         callbacks: Optional[Union[BaseCallbackBatch, List[BaseCallbackBatch]]] = None,
-        **kwargs,
     ) -> None:
         super().__init__(
             data_type=NumericalData(),
             statistical_type=UnivariateData(),
             callbacks=callbacks,
         )
-        self.kwargs = kwargs
 
+    @staticmethod
     def _statistical_test(
-        self,
         X_ref: np.ndarray,  # noqa: N803
         X: np.ndarray,
         **kwargs,
@@ -63,8 +62,8 @@ class WelchTTest(BaseStatisticalTest):
             a=X_ref,
             b=X,
             equal_var=False,
-            alternative="two-sided",
-            **self.kwargs,
+            alternative=kwargs.get("alternative", "two-sided"),
+            **kwargs,
         )
         test = StatisticalResult(
             statistic=test.statistic,
