@@ -183,7 +183,7 @@ result[0].p_value < alpha
 # Therefore, we can reject H0 (both samples come from the same distribution).
 ```
 
-More data drift examples can be found [here](https://frouros.readthedocs.io/en/latest/examples.html#data-drift).
+More data drift examples can be found [here](https://frouros.readthedocs.io/en/latest/examples/data_drift.html).
 
 ## 🛠 Installation
 
