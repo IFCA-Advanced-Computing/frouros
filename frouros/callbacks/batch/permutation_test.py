@@ -148,10 +148,22 @@ class PermutationTestDistanceBased(BaseCallbackBatch):
         p_value = (permuted_statistic >= observed_statistic).mean()  # type: ignore
         return permuted_statistic, p_value
 
-    def on_compare_end(self, **kwargs) -> None:
-        """On compare end method."""
-        X_ref, X_test = kwargs["X_ref"], kwargs["X_test"]  # noqa: N806
-        observed_statistic = kwargs["result"][0]
+    def on_compare_end(
+        self,
+        result: Any,
+        X_ref: np.ndarray,  # noqa: N803
+        X_test: np.ndarray,
+    ) -> None:
+        """On compare end method.
+
+        :param result: result obtained from the `compare` method
+        :type result: Any
+        :param X_ref: reference data
+        :type X_ref: numpy.ndarray
+        :param X_test: test data
+        :type X_test: numpy.ndarray
+        """
+        observed_statistic = result.distance
         permuted_statistics, p_value = self._calculate_p_value(
             X_ref=X_ref,
             X_test=X_test,

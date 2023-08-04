@@ -1,6 +1,8 @@
 """Reset batch callback module."""
 
-from typing import Optional
+from typing import Any, Optional
+
+import numpy as np  # type: ignore
 
 from frouros.callbacks.batch.base import BaseCallbackBatch
 from frouros.utils.logger import logger
@@ -58,10 +60,23 @@ class ResetStatisticalTest(BaseCallbackBatch):
             raise ValueError("value must be greater than 0.")
         self._alpha = value
 
-    def on_compare_end(self, **kwargs) -> None:
-        """On compare end method."""
-        p_value = kwargs["result"].p_value
-        if p_value < self.alpha:
+    def on_compare_end(
+        self,
+        result: Any,
+        X_ref: np.ndarray,  # noqa: N803
+        X_test: np.ndarray,
+    ) -> None:
+        """On compare end method.
+
+        :param result: result obtained from the `compare` method
+        :type result: Any
+        :param X_ref: reference data
+        :type X_ref: numpy.ndarray
+        :param X_test: test data
+        :type X_test: numpy.ndarray
+        """
+        p_value = result.p_value
+        if p_value <= self.alpha:
             logger.info("Drift detected. Resetting detector...")
             self.detector.reset()  # type: ignore
 

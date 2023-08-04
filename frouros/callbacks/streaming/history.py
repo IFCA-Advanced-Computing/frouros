@@ -1,6 +1,6 @@
 """History callback module."""
 
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, List, Optional, Union
 
 from frouros.callbacks.streaming.base import BaseCallbackStreaming
 from frouros.utils.stats import BaseStat
@@ -62,9 +62,13 @@ class HistoryConceptDrift(BaseCallbackStreaming):
         self.additional_vars.extend(vars_)
         self.history = {**self.history, **{var: [] for var in self.additional_vars}}
 
-    def on_update_end(self, **kwargs) -> None:
-        """On update end method."""
-        self.history["value"].append(kwargs["value"])
+    def on_update_end(self, value: Union[int, float]) -> None:
+        """On update end method.
+
+        :param value: value used to update the detector
+        :type value: Union[int, float]
+        """
+        self.history["value"].append(value)
         self.history["num_instances"].append(
             self.detector.num_instances  # type: ignore
         )
