@@ -56,27 +56,29 @@ class BaseDataDriftStreaming(BaseDataDrift):
         self._reset()
 
     def update(
-        self, value: Union[int, float]
+        self,
+        value: Union[int, float],
     ) -> Tuple[Optional[BaseResult], Dict[str, Any]]:
         """Update detector.
 
         :param value: value to use to update the detector
         :type value: Union[int, float]
-        :return: update result
-        :rtype: Optional[BaseResult]
+        :return: update result and callbacks logs
+        :rtype: Tuple[Optional[BaseResult], Dict[str, Any]]
         """
         self._common_checks()  # noqa: N806
         self._specific_checks(X=value)  # noqa: N806
         self.num_instances += 1
 
         for callback in self.callbacks:  # type: ignore
-            callback.on_update_start(value=value)  # type: ignore
+            callback.on_update_start(  # type: ignore
+                value=value,  # type: ignore
+            )
         result = self._update(value=value)
-        if result is not None:
-            for callback in self.callbacks:  # type: ignore
-                callback.on_update_end(  # type: ignore
-                    value=result.distance,  # type: ignore
-                )
+        for callback in self.callbacks:  # type: ignore
+            callback.on_update_end(  # type: ignore
+                value=result,  # type: ignore
+            )
 
         callbacks_logs = self._get_callbacks_logs()
         return result, callbacks_logs

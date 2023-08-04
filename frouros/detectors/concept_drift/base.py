@@ -184,17 +184,17 @@ class BaseConceptDrift(BaseDetector):
 
         :param value: value to update detector
         :type value: Union[int, float]
+        :return: callbacks logs
+        :rtype: Dict[str, Any]]
         """
         for callback in self.callbacks:  # type: ignore
             callback.on_update_start(  # type: ignore
                 value=value,
-                **kwargs,
             )
         self._update(value=value, **kwargs)
         for callback in self.callbacks:  # type: ignore
             callback.on_update_end(  # type: ignore
                 value=value,
-                **kwargs,
             )
 
         callbacks_logs = self._get_callbacks_logs()

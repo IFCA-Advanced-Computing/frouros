@@ -3,6 +3,8 @@
 import abc
 from typing import Optional
 
+import numpy as np  # type: ignore
+
 
 class BaseCallback(abc.ABC):
     """Abstract class representing a callback."""
@@ -55,11 +57,19 @@ class BaseCallback(abc.ABC):
     #         )
     #     self._detector = value
 
-    def on_fit_start(self, **kwargs) -> None:
-        """On fit start method."""
+    def on_fit_start(self, X: np.ndarray) -> None:  # noqa: N803
+        """On fit start method.
 
-    def on_fit_end(self, **kwargs) -> None:
-        """On fit end method."""
+        :param X: reference data
+        :type X: numpy.ndarray
+        """
+
+    def on_fit_end(self, X: np.ndarray) -> None:  # noqa: N803
+        """On fit end method.
+
+        :param X: reference data
+        :type X: numpy.ndarray
+        """
 
     @abc.abstractmethod
     def reset(self) -> None:
