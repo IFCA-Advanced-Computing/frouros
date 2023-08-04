@@ -65,7 +65,7 @@ Frouros is a Python library for drift detection in machine learning systems that
 
 ### Concept drift
 
-As a quick example, we can use the breast cancer dataset to which concept drift it is induced and show the use of a concept drift detector like DDM (Drift Detection Method). We can see how concept drift affects the performance, in terms of accuracy.
+As a quick example, we can use the breast cancer dataset to which concept drift it is induced and show the use of a concept drift detector like DDM (Drift Detection Method). We can see how concept drift affects the performance in terms of accuracy.
 
 ```python
 import numpy as np
