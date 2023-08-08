@@ -58,6 +58,7 @@ class MMD(BaseDistanceBased):
             statistical_method=self._mmd,
             statistical_kwargs={
                 "kernel": kernel,
+                "chunk_size": chunk_size,
             },
             callbacks=callbacks,
         )
