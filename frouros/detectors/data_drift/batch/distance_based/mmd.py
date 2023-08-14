@@ -64,6 +64,7 @@ class MMD(BaseDistanceBased):
         )
         self.kernel = kernel
         self.chunk_size = chunk_size
+        self._expected_k_xx = None
 
     @property
     def chunk_size(self) -> Optional[int]:
@@ -122,10 +123,46 @@ class MMD(BaseDistanceBased):
             Y=X,
             kernel=self.kernel,
             chunk_size=self.chunk_size,
+            expected_k_xx=self._expected_k_xx,
             **kwargs,
         )
         distance_test = DistanceResult(distance=mmd)
         return distance_test
+
+    def _fit(
+        self,
+        X: np.ndarray,  # noqa: N803
+    ) -> None:
+        super()._fit(X=X)
+        # Add dimension only for the kernel calculation (if dim == 1)
+        if X.ndim == 1:
+            X = np.expand_dims(X, axis=1)  # noqa: N806
+        x_num_samples = len(self.X_ref)  # type: ignore # noqa: N806
+
+        chunk_size_x = (
+            x_num_samples
+            if self.chunk_size is None
+            else self.chunk_size  # type: ignore
+        )
+
+        x_chunks = self._get_chunks(  # noqa: N806
+            data=X,
+            chunk_size=chunk_size_x,  # type: ignore
+        )
+        x_chunks_combinations = itertools.product(x_chunks, repeat=2)  # noqa: N806
+
+        k_xx_sum = (
+            self._compute_kernel(
+                chunk_combinations=x_chunks_combinations,  # type: ignore
+                kernel=self.kernel,
+            )
+            # Remove diagonal (j!=i case)
+            - x_num_samples  # type: ignore
+        )
+
+        self._expected_k_xx = k_xx_sum / (  # type: ignore
+            x_num_samples * (x_num_samples - 1)  # type: ignore
+        )
 
     @staticmethod
     def _compute_kernel(chunk_combinations: Generator, kernel: Callable) -> float:
@@ -159,13 +196,39 @@ class MMD(BaseDistanceBased):
             if "chunk_size" in kwargs and kwargs["chunk_size"] is not None
             else x_num_samples
         )
-        x_chunks, x_chunks_copy = itertools.tee(  # noqa: N806
-            MMD._get_chunks(
+
+        # If expected_k_xx is provided, we don't need to compute it again
+        if "expected_k_xx" in kwargs:
+            x_chunks_copy = MMD._get_chunks(  # noqa: N806
                 data=X,
                 chunk_size=chunk_size_x,  # type: ignore
-            ),
-            2,
-        )
+            )
+            expected_k_xx = kwargs["expected_k_xx"]
+        else:
+            # Compute expected_k_xx
+            x_chunks, x_chunks_copy = itertools.tee(  # noqa: N806
+                MMD._get_chunks(
+                    data=X,
+                    chunk_size=chunk_size_x,  # type: ignore
+                ),
+                2,
+            )
+            x_chunks_combinations = itertools.product(  # noqa: N806
+                x_chunks,
+                repeat=2,
+            )
+            k_xx_sum = (
+                    MMD._compute_kernel(
+                        chunk_combinations=x_chunks_combinations,  # type: ignore
+                        kernel=kernel,
+                    )
+                    # Remove diagonal (j!=i case)
+                    - x_num_samples  # type: ignore
+            )
+            expected_k_xx = k_xx_sum / (  # type: ignore
+                x_num_samples * (x_num_samples - 1)  # type: ignore
+            )
+
         y_num_samples = len(Y)  # noqa: N806
         chunk_size_y = (
             kwargs["chunk_size"]
@@ -179,10 +242,6 @@ class MMD(BaseDistanceBased):
             ),
             2,
         )
-        x_chunks_combinations = itertools.product(  # noqa: N806
-            x_chunks,
-            repeat=2,
-        )
         y_chunks_combinations = itertools.product(  # noqa: N806
             y_chunks,
             repeat=2,
@@ -192,35 +251,6 @@ class MMD(BaseDistanceBased):
             y_chunks_copy,
         )
 
-        if kwargs.get("verbose", False):
-            num_chunks_x = math.ceil(x_num_samples / chunk_size_x)  # type: ignore
-            num_chunks_y = math.ceil(y_num_samples / chunk_size_y)  # type: ignore
-            num_chunks_x_combinations = num_chunks_x**2
-            num_chunks_y_combinations = num_chunks_y**2
-            num_chunks_xy = (
-                math.ceil(len(X) / chunk_size_x) * num_chunks_y  # type: ignore
-            )
-            x_chunks_combinations = tqdm.tqdm(
-                x_chunks_combinations,
-                total=num_chunks_x_combinations,
-            )
-            y_chunks_combinations = tqdm.tqdm(
-                y_chunks_combinations,
-                total=num_chunks_y_combinations,
-            )
-            xy_chunks_combinations = tqdm.tqdm(
-                xy_chunks_combinations,
-                total=num_chunks_xy,
-            )
-
-        k_xx_sum = (
-            MMD._compute_kernel(
-                chunk_combinations=x_chunks_combinations,  # type: ignore
-                kernel=kernel,
-            )
-            # Remove diagonal (j!=i case)
-            - x_num_samples  # type: ignore
-        )
         k_yy_sum = (
             MMD._compute_kernel(
                 chunk_combinations=y_chunks_combinations,  # type: ignore
@@ -234,7 +264,7 @@ class MMD(BaseDistanceBased):
             kernel=kernel,
         )
         mmd = (
-            +k_xx_sum / (x_num_samples * (x_num_samples - 1))
+            + expected_k_xx
             + k_yy_sum / (y_num_samples * (y_num_samples - 1))
             - 2 * k_xy_sum / (x_num_samples * y_num_samples)  # type: ignore
         )
