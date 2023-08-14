@@ -1,11 +1,9 @@
 """MMD (Maximum Mean Discrepancy) module."""
 
 import itertools
-import math
 from typing import Callable, Generator, Optional, List, Union
 
 import numpy as np  # type: ignore
-import tqdm  # type: ignore
 
 from frouros.callbacks.batch.base import BaseCallbackBatch
 from frouros.detectors.data_drift.base import MultivariateData
@@ -137,7 +135,7 @@ class MMD(BaseDistanceBased):
         # Add dimension only for the kernel calculation (if dim == 1)
         if X.ndim == 1:
             X = np.expand_dims(X, axis=1)  # noqa: N806
-        x_num_samples = len(self.X_ref)  # type: ignore # noqa: N806
+        x_num_samples = len(self.X_ref)  # type: ignore
 
         chunk_size_x = (
             x_num_samples
@@ -147,7 +145,7 @@ class MMD(BaseDistanceBased):
 
         x_chunks = self._get_chunks(  # noqa: N806
             data=X,
-            chunk_size=chunk_size_x,  # type: ignore
+            chunk_size=chunk_size_x,
         )
         x_chunks_combinations = itertools.product(x_chunks, repeat=2)  # noqa: N806
 
@@ -157,11 +155,11 @@ class MMD(BaseDistanceBased):
                 kernel=self.kernel,
             )
             # Remove diagonal (j!=i case)
-            - x_num_samples  # type: ignore
+            - x_num_samples
         )
 
         self._expected_k_xx = k_xx_sum / (  # type: ignore
-            x_num_samples * (x_num_samples - 1)  # type: ignore
+            x_num_samples * (x_num_samples - 1)
         )
 
     @staticmethod
@@ -201,33 +199,31 @@ class MMD(BaseDistanceBased):
         if "expected_k_xx" in kwargs:
             x_chunks_copy = MMD._get_chunks(  # noqa: N806
                 data=X,
-                chunk_size=chunk_size_x,  # type: ignore
+                chunk_size=chunk_size_x,
             )
             expected_k_xx = kwargs["expected_k_xx"]
         else:
             # Compute expected_k_xx
-            x_chunks, x_chunks_copy = itertools.tee(  # noqa: N806
+            x_chunks, x_chunks_copy = itertools.tee(  # type: ignore
                 MMD._get_chunks(
                     data=X,
-                    chunk_size=chunk_size_x,  # type: ignore
+                    chunk_size=chunk_size_x,
                 ),
                 2,
             )
-            x_chunks_combinations = itertools.product(  # noqa: N806
+            x_chunks_combinations = itertools.product(  # type: ignore
                 x_chunks,
                 repeat=2,
             )
             k_xx_sum = (
-                    MMD._compute_kernel(
-                        chunk_combinations=x_chunks_combinations,  # type: ignore
-                        kernel=kernel,
-                    )
-                    # Remove diagonal (j!=i case)
-                    - x_num_samples  # type: ignore
+                MMD._compute_kernel(
+                    chunk_combinations=x_chunks_combinations,  # type: ignore
+                    kernel=kernel,
+                )
+                # Remove diagonal (j!=i case)
+                - x_num_samples
             )
-            expected_k_xx = k_xx_sum / (  # type: ignore
-                x_num_samples * (x_num_samples - 1)  # type: ignore
-            )
+            expected_k_xx = k_xx_sum / (x_num_samples * (x_num_samples - 1))
 
         y_num_samples = len(Y)  # noqa: N806
         chunk_size_y = (
@@ -238,7 +234,7 @@ class MMD(BaseDistanceBased):
         y_chunks, y_chunks_copy = itertools.tee(  # noqa: N806
             MMD._get_chunks(
                 data=Y,
-                chunk_size=chunk_size_y,  # type: ignore
+                chunk_size=chunk_size_y,
             ),
             2,
         )
@@ -257,15 +253,15 @@ class MMD(BaseDistanceBased):
                 kernel=kernel,
             )
             # Remove diagonal (j!=i case)
-            - y_num_samples  # type: ignore
+            - y_num_samples
         )
         k_xy_sum = MMD._compute_kernel(
             chunk_combinations=xy_chunks_combinations,  # type: ignore
             kernel=kernel,
         )
         mmd = (
-            + expected_k_xx
+            +expected_k_xx
             + k_yy_sum / (y_num_samples * (y_num_samples - 1))
-            - 2 * k_xy_sum / (x_num_samples * y_num_samples)  # type: ignore
+            - 2 * k_xy_sum / (x_num_samples * y_num_samples)
         )
         return mmd

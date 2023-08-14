@@ -93,7 +93,7 @@ def test_mmd_batch_precomputed_expected_k_xx(
     precomputed_distance = detector.compare(X=X_test)[0].distance
 
     # Computes mmd from scratch
-    scratch_distance = MMD._mmd(
+    scratch_distance = MMD._mmd(  # pylint: disable=protected-access
         X=X_ref,
         Y=X_test,
         kernel=kernel,
@@ -101,4 +101,3 @@ def test_mmd_batch_precomputed_expected_k_xx(
     )
 
     assert np.isclose(precomputed_distance, scratch_distance)
-
