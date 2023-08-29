@@ -18,6 +18,8 @@ class PermutationTestDistanceBased(BaseCallbackBatch):
     :type num_jobs: int
     :param conservative: conservative flag, defaults to False. If False, the p-value can be zero `(#permuted_statistics >= observed_statistic) / num_permutations`. If True, uses the conservative approach to avoid non-zero p-values `((#permuted_statistics >= observed_statistic) + 1) / (num_permutations + 1)`.
     :type conservative: bool
+    :param random_state: random state, defaults to None
+    :type random_state: Optional[int]
     :param verbose: verbose flag, defaults to False
     :type verbose: bool
     :param name: name value, defaults to None. If None, the name will be set to `PermutationTestDistanceBased`.
@@ -52,16 +54,16 @@ class PermutationTestDistanceBased(BaseCallbackBatch):
         num_permutations: int,
         num_jobs: int = -1,
         conservative: bool = False,
+        random_state: Optional[int] = None,
         verbose: bool = False,
         name: Optional[str] = None,
-        **kwargs,
     ) -> None:
         super().__init__(name=name)
         self.num_permutations = num_permutations
         self.num_jobs = num_jobs
         self.conservative = conservative
+        self.random_state = random_state
         self.verbose = verbose
-        self.permutation_kwargs = kwargs
 
     @property
     def num_permutations(self) -> int:
@@ -157,7 +159,7 @@ class PermutationTestDistanceBased(BaseCallbackBatch):
         num_permutations: int,
         num_jobs: int,
         conservative: bool,
-        random_state: int,
+        random_state: Optional[int],
         verbose: bool,
     ) -> Tuple[List[float], float]:
         permuted_statistic = permutation(
@@ -204,8 +206,8 @@ class PermutationTestDistanceBased(BaseCallbackBatch):
             num_permutations=self.num_permutations,
             num_jobs=self.num_jobs,
             conservative=self.conservative,
+            random_state=self.random_state,
             verbose=self.verbose,
-            **self.permutation_kwargs,
         )
         self.logs.update(
             {
