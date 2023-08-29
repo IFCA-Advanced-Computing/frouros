@@ -65,7 +65,7 @@ def test_batch_permutation_test_data_univariate_different_distribution(
     expected_distance: float,
     expected_p_value: float,
 ) -> None:
-    """Test batch permutation test on data callback.
+    """Test batch permutation test on data drift callback.
 
     :param X_ref_univariate: reference univariate data
     :type X_ref_univariate: numpy.ndarray
@@ -98,6 +98,40 @@ def test_batch_permutation_test_data_univariate_different_distribution(
     assert np.isclose(
         callback_logs[permutation_test_name]["p_value"],
         expected_p_value,
+    )
+
+
+def test_batch_permutation_test_conservative(
+    X_ref_univariate: np.ndarray,  # noqa: N803
+    X_test_univariate: np.ndarray,
+) -> None:
+    """Test batch permutation test on data drift callback using conservative flag.
+
+    :param X_ref_univariate: reference univariate data
+    :type X_ref_univariate: numpy.ndarray
+    :param X_test_univariate: test univariate data
+    :type X_test_univariate: numpy.ndarray
+    """
+    np.random.seed(seed=31)
+
+    permutation_test_name = "permutation_test"
+    detector = MMD(  # type: ignore
+        callbacks=[
+            PermutationTestDistanceBased(
+                num_permutations=100,
+                conservative=True,
+                random_state=31,
+                num_jobs=-1,
+                name=permutation_test_name,
+            )
+        ]
+    )
+    _ = detector.fit(X=X_ref_univariate)
+    distance, callback_logs = detector.compare(X=X_test_univariate)
+
+    assert np.isclose(
+        callback_logs[permutation_test_name]["p_value"],
+        0.00990099,
     )
 
 
