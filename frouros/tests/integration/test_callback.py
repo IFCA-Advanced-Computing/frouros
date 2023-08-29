@@ -127,7 +127,7 @@ def test_batch_permutation_test_conservative(
         ]
     )
     _ = detector.fit(X=X_ref_univariate)
-    distance, callback_logs = detector.compare(X=X_test_univariate)
+    _, callback_logs = detector.compare(X=X_test_univariate)
 
     assert np.isclose(
         callback_logs[permutation_test_name]["p_value"],
