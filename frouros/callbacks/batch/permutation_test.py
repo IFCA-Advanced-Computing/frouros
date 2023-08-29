@@ -16,7 +16,7 @@ class PermutationTestDistanceBased(BaseCallbackBatch):
     :type num_permutations: int
     :param num_jobs: number of jobs, defaults to -1
     :type num_jobs: int
-    :param conservative: conservative flag, defaults to False. If False, the p-value can be zero `(#permuted_statistics >= observed_statistic) / num_permutations`. If True, uses the conservative approach to avoid non-zero p-values `((#permuted_statistics >= observed_statistic) + 1) / (num_permutations + 1)`.
+    :param conservative: conservative flag, defaults to False. If False, the p-value can be zero `(#permuted_statistics >= observed_statistic) / num_permutations`. If True, uses the conservative approach to avoid zero p-value `((#permuted_statistics >= observed_statistic) + 1) / (num_permutations + 1)`.
     :type conservative: bool
     :param random_state: random state, defaults to None
     :type random_state: Optional[int]
@@ -109,7 +109,7 @@ class PermutationTestDistanceBased(BaseCallbackBatch):
 
     @property
     def conservative(self) -> bool:
-        """Conservative (avoid non-zero p-values) flag property.
+        """Conservative (avoid zero p-value) flag property.
 
         :return: conservative flag
         :rtype: bool
@@ -118,7 +118,7 @@ class PermutationTestDistanceBased(BaseCallbackBatch):
 
     @conservative.setter
     def conservative(self, value: bool) -> None:
-        """Conservative (avoid non-zero p-values) flag setter.
+        """Conservative (avoid zero p-value) flag setter.
 
         :param value: value to be set
         :type value: bool
