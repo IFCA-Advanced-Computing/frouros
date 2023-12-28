@@ -49,7 +49,7 @@ docs = [
     "sphinx-book-theme>=1.0.0,<1.2",
     "sphinxcontrib-bibtex>=2.5.0,<2.7",
     "myst-parser>=0.18.0,<2.1",
-    "myst-nb>=0.17.0,<0.18",
+    "myst-nb>=0.17.0,<1.1",
 ]
 notebooks = [
     "scikit-learn>=1.2.0,<1.4",
