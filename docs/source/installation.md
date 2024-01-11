@@ -1,9 +1,9 @@
 # Installation
 
-`frouros` currently supports Python 3.9, 3.10 and 3.11.
+`frouros` currently supports Python 3.9, 3.10, 3.11 and 3.12.
 
 ```{tip}
-We highly recommend to use a [virtual environment](https://docs.python.org/3.11/tutorial/venv.html).
+We highly recommend to use a [virtual environment](https://docs.python.org/3.12/tutorial/venv.html).
 ```
 
 ## From PyPI
