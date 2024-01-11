@@ -1,6 +1,6 @@
 """Geometric Moving Average module."""
 
-from typing import Optional, List, Union
+from typing import Optional, Union
 
 from frouros.callbacks.streaming.base import BaseCallbackStreaming
 from frouros.detectors.concept_drift.streaming.change_detection.base import (
@@ -46,7 +46,7 @@ class GeometricMovingAverage(BaseCUSUM):
     :param config: configuration object of the detector, defaults to None. If None, the default configuration of :class:`GeometricMovingAverageConfig` is used.
     :type config: Optional[GeometricMovingAverageConfig]
     :param callbacks: callbacks, defaults to None
-    :type callbacks: Optional[Union[BaseCallbackStreaming, List[BaseCallbackStreaming]]]
+    :type callbacks: Optional[Union[BaseCallbackStreaming, list[BaseCallbackStreaming]]]
 
     :References:
 
@@ -78,7 +78,7 @@ class GeometricMovingAverage(BaseCUSUM):
         self,
         config: Optional[GeometricMovingAverageConfig] = None,
         callbacks: Optional[
-            Union[BaseCallbackStreaming, List[BaseCallbackStreaming]]
+            Union[BaseCallbackStreaming, list[BaseCallbackStreaming]]
         ] = None,
     ) -> None:
         super().__init__(

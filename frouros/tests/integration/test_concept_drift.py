@@ -1,6 +1,6 @@
 """Test concept drift detectors."""
 
-from typing import Callable, List, Tuple
+from typing import Callable, Tuple
 
 import numpy as np  # type: ignore
 import pytest  # type: ignore
@@ -299,14 +299,14 @@ change_detection_detectors = [
 @pytest.mark.parametrize("detector_info", change_detection_detectors)
 def test_streaming_change_detection_detector(
     stream_drift: np.ndarray,
-    detector_info: Tuple[BaseChangeDetection, List[int]],
+    detector_info: Tuple[BaseChangeDetection, list[int]],
 ) -> None:
     """Test streaming change detection detector.
 
     :param stream_drift: stream with drift
     :type stream_drift: numpy.ndarray
     :param detector_info: change detection detector and list of expected drift indices
-    :type detector_info: Tuple[BaseChangeDetection, List[int]]
+    :type detector_info: Tuple[BaseChangeDetection, list[int]]
     """
     detector, idx_drifts = detector_info
     idx_detected_drifts = []

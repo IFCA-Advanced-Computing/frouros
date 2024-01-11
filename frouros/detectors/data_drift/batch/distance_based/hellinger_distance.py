@@ -1,6 +1,6 @@
 """Hellinger distance module."""
 
-from typing import List, Optional, Union
+from typing import Optional, Union
 
 import numpy as np  # type: ignore
 
@@ -16,7 +16,7 @@ class HellingerDistance(BaseDistanceBasedBins):
     :param num_bins: number of bins in which to divide probabilities, defaults to 10
     :type num_bins: int
     :param callbacks: callbacks, defaults to None
-    :type callbacks: Optional[Union[BaseCallbackBatch, List[BaseCallbackBatch]]]
+    :type callbacks: Optional[Union[BaseCallbackBatch, list[BaseCallbackBatch]]]
 
     :References:
 
@@ -41,7 +41,7 @@ class HellingerDistance(BaseDistanceBasedBins):
     def __init__(  # noqa: D107
         self,
         num_bins: int = 10,
-        callbacks: Optional[Union[BaseCallbackBatch, List[BaseCallbackBatch]]] = None,
+        callbacks: Optional[Union[BaseCallbackBatch, list[BaseCallbackBatch]]] = None,
     ) -> None:
         sqrt_div = np.sqrt(2)
         super().__init__(

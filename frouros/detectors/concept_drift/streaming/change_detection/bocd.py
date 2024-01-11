@@ -2,7 +2,7 @@
 
 import abc
 import copy
-from typing import List, Union, Optional
+from typing import Union, Optional
 
 import numpy as np  # type: ignore
 from scipy.special import logsumexp  # type: ignore
@@ -185,7 +185,7 @@ class BOCD(BaseChangeDetection):
     :param config: configuration object of the detector, defaults to None. If None, the default configuration of :class:`BOCDConfig` is used.
     :type config: Optional[BOCDConfig]
     :param callbacks: callbacks, defaults to None
-    :type callbacks: Optional[Union[BaseCallbackStreaming, List[BaseCallbackStreaming]]]
+    :type callbacks: Optional[Union[BaseCallbackStreaming, list[BaseCallbackStreaming]]]
 
     :Note:
      Adapted from the implementation in https://github.com/gwgundersen/bocd.
@@ -219,7 +219,7 @@ class BOCD(BaseChangeDetection):
         self,
         config: Optional[BOCDConfig] = None,
         callbacks: Optional[
-            Union[BaseCallbackStreaming, List[BaseCallbackStreaming]]
+            Union[BaseCallbackStreaming, list[BaseCallbackStreaming]]
         ] = None,
     ) -> None:
         super().__init__(

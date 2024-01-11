@@ -1,7 +1,7 @@
 """Base concept drift module."""
 
 import abc
-from typing import Any, Dict, List, Optional, Union
+from typing import Any, Optional, Union
 
 from frouros.callbacks import HistoryConceptDrift
 from frouros.callbacks.streaming.base import BaseCallbackStreaming
@@ -66,7 +66,7 @@ class BaseConceptDrift(BaseDetector):
         self,
         config: Optional[BaseConceptDriftConfig] = None,
         callbacks: Optional[
-            Union[BaseCallbackStreaming, List[BaseCallbackStreaming]]
+            Union[BaseCallbackStreaming, list[BaseCallbackStreaming]]
         ] = None,
     ) -> None:
         """Init method.
@@ -75,7 +75,7 @@ class BaseConceptDrift(BaseDetector):
         :type config: Optional[BaseConceptDriftConfig]
         :param callbacks: callbacks
         :type callbacks: Optional[Union[BaseCallbackStreaming,
-        List[BaseCallbackStreaming]]]
+        list[BaseCallbackStreaming]]]
         """
         check_callbacks(
             callbacks=callbacks,
@@ -99,20 +99,20 @@ class BaseConceptDrift(BaseDetector):
                 )
 
     @property
-    def additional_vars(self) -> Optional[Dict[str, Any]]:
+    def additional_vars(self) -> Optional[dict[str, Any]]:
         """Additional variables property.
 
         :return: additional variables
-        :rtype: Optional[Dict[str, Any]]
+        :rtype: Optional[dict[str, Any]]
         """
         return self._additional_vars
 
     @additional_vars.setter
-    def additional_vars(self, value: Optional[Dict[str, Any]]) -> None:
+    def additional_vars(self, value: Optional[dict[str, Any]]) -> None:
         """Additional variables setter.
 
         :param value: value to be set
-        :type value: Optional[Dict[str, Any]]
+        :type value: Optional[dict[str, Any]]
         """
         self._additional_vars = value if value is not None else {}
 
@@ -171,21 +171,21 @@ class BaseConceptDrift(BaseDetector):
             callback.reset()
 
     @property
-    def status(self) -> Dict[str, bool]:
+    def status(self) -> dict[str, bool]:
         """Status property.
 
         :return: status dict
-        :rtype: Dict[str, bool]
+        :rtype: dict[str, bool]
         """
         return {"drift": self.drift}
 
-    def update(self, value: Union[int, float], **kwargs) -> Dict[str, Any]:
+    def update(self, value: Union[int, float], **kwargs) -> dict[str, Any]:
         """Update method.
 
         :param value: value to update detector
         :type value: Union[int, float]
         :return: callbacks logs
-        :rtype: Dict[str, Any]]
+        :rtype: dict[str, Any]]
         """
         for callback in self.callbacks:  # type: ignore
             callback.on_update_start(  # type: ignore
@@ -200,7 +200,7 @@ class BaseConceptDrift(BaseDetector):
         callbacks_logs = self._get_callbacks_logs()
         return callbacks_logs
 
-    def _get_callbacks_logs(self) -> Dict[str, Any]:
+    def _get_callbacks_logs(self) -> dict[str, Any]:
         logs = {
             callback.name: callback.logs for callback in self.callbacks  # type: ignore
         }

@@ -1,7 +1,7 @@
 """Base data drift batch module."""
 
 import abc
-from typing import Any, Dict, Optional, List, Tuple, Union
+from typing import Any, Optional, Tuple, Union
 
 import numpy as np  # type: ignore
 
@@ -23,7 +23,7 @@ class BaseDataDriftStreaming(BaseDataDrift):
         data_type: BaseDataType,
         statistical_type: BaseStatisticalType,
         callbacks: Optional[
-            Union[BaseCallbackStreaming, List[BaseCallbackStreaming]]
+            Union[BaseCallbackStreaming, list[BaseCallbackStreaming]]
         ] = None,
     ) -> None:
         """Init method.
@@ -34,7 +34,7 @@ class BaseDataDriftStreaming(BaseDataDrift):
         :type statistical_type: BaseStatisticalType
         :param callbacks: callbacks
         :type callbacks: Optional[Union[BaseCallbackStreaming],
-        List[BaseCallbackStreaming]]
+        list[BaseCallbackStreaming]]
         """
         check_callbacks(
             callbacks=callbacks,
@@ -58,13 +58,13 @@ class BaseDataDriftStreaming(BaseDataDrift):
     def update(
         self,
         value: Union[int, float],
-    ) -> Tuple[Optional[BaseResult], Dict[str, Any]]:
+    ) -> Tuple[Optional[BaseResult], dict[str, Any]]:
         """Update detector.
 
         :param value: value to use to update the detector
         :type value: Union[int, float]
         :return: update result and callbacks logs
-        :rtype: Tuple[Optional[BaseResult], Dict[str, Any]]
+        :rtype: Tuple[Optional[BaseResult], dict[str, Any]]
         """
         self._common_checks()  # noqa: N806
         self._specific_checks(X=value)  # noqa: N806

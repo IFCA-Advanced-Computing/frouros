@@ -1,7 +1,5 @@
 """Test callback module."""
 
-from typing import List
-
 import numpy as np  # type: ignore
 import pytest  # type: ignore
 
@@ -65,7 +63,7 @@ def test_batch_permutation_test_data_univariate_different_distribution(
     expected_distance: float,
     expected_p_value: float,
 ) -> None:
-    """Test batch permutation test on data callback.
+    """Test batch permutation test on data drift callback.
 
     :param X_ref_univariate: reference univariate data
     :type X_ref_univariate: numpy.ndarray
@@ -98,6 +96,40 @@ def test_batch_permutation_test_data_univariate_different_distribution(
     assert np.isclose(
         callback_logs[permutation_test_name]["p_value"],
         expected_p_value,
+    )
+
+
+def test_batch_permutation_test_conservative(
+    X_ref_univariate: np.ndarray,  # noqa: N803
+    X_test_univariate: np.ndarray,
+) -> None:
+    """Test batch permutation test on data drift callback using conservative flag.
+
+    :param X_ref_univariate: reference univariate data
+    :type X_ref_univariate: numpy.ndarray
+    :param X_test_univariate: test univariate data
+    :type X_test_univariate: numpy.ndarray
+    """
+    np.random.seed(seed=31)
+
+    permutation_test_name = "permutation_test"
+    detector = MMD(  # type: ignore
+        callbacks=[
+            PermutationTestDistanceBased(
+                num_permutations=100,
+                conservative=True,
+                random_state=31,
+                num_jobs=-1,
+                name=permutation_test_name,
+            )
+        ]
+    )
+    _ = detector.fit(X=X_ref_univariate)
+    _, callback_logs = detector.compare(X=X_test_univariate)
+
+    assert np.isclose(
+        callback_logs[permutation_test_name]["p_value"],
+        0.00990099,
     )
 
 
@@ -152,13 +184,13 @@ def test_batch_reset_on_statistical_test_data_drift(
     ],
 )
 def test_streaming_history_on_concept_drift(
-    model_errors: List[int],
+    model_errors: list[int],
     detector_class: BaseConceptDrift,
 ):
     """Test streaming history on concept drift callback.
 
     :param model_errors: model errors
-    :type model_errors: List[int]
+    :type model_errors: list[int]
     :param detector_class: concept drift detector
     :type detector_class: BaseConceptDrift
     """

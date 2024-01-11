@@ -1,7 +1,7 @@
 """Base concept drift ChangeDetection based module."""
 
 import abc
-from typing import List, Optional, Union
+from typing import Optional, Union
 
 from frouros.callbacks.streaming.base import BaseCallbackStreaming
 from frouros.detectors.concept_drift.streaming.base import (
@@ -142,7 +142,7 @@ class BaseCUSUM(BaseChangeDetection):
     :param config: configuration parameters, defaults to None
     :type config: Optional[BaseCUSUMConfig]
     :param callbacks: callbacks, defaults to None
-    :type callbacks: Optional[Union[BaseCallbackStreaming, List[BaseCallbackStreaming]]]
+    :type callbacks: Optional[Union[BaseCallbackStreaming, list[BaseCallbackStreaming]]]
     """  # noqa: E501
 
     config_type = BaseCUSUMConfig
@@ -151,7 +151,7 @@ class BaseCUSUM(BaseChangeDetection):
         self,
         config: Optional[BaseCUSUMConfig] = None,
         callbacks: Optional[
-            Union[BaseCallbackStreaming, List[BaseCallbackStreaming]]
+            Union[BaseCallbackStreaming, list[BaseCallbackStreaming]]
         ] = None,
     ) -> None:
         super().__init__(

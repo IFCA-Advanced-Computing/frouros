@@ -1,7 +1,7 @@
 """ChiSquareTest (Chi-square test) module."""
 
 import collections
-from typing import Optional, List, Tuple, Union
+from typing import Optional, Tuple, Union
 
 import numpy as np  # type: ignore
 from scipy.stats import chi2_contingency  # type: ignore
@@ -18,7 +18,7 @@ class ChiSquareTest(BaseStatisticalTest):
     """ChiSquareTest (Chi-square test) [pearson1900x]_ detector.
 
     :param callbacks: callbacks, defaults to None
-    :type callbacks: Optional[Union[BaseCallbackBatch, List[BaseCallbackBatch]]]
+    :type callbacks: Optional[Union[BaseCallbackBatch, list[BaseCallbackBatch]]]
 
     :Note:
     - Passing additional arguments to `scipy.stats.chi2_contingency <https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.chi2_contingency.html>`__ can be done using :func:`compare` kwargs.
@@ -47,7 +47,7 @@ class ChiSquareTest(BaseStatisticalTest):
 
     def __init__(  # noqa: D107
         self,
-        callbacks: Optional[Union[BaseCallbackBatch, List[BaseCallbackBatch]]] = None,
+        callbacks: Optional[Union[BaseCallbackBatch, list[BaseCallbackBatch]]] = None,
     ) -> None:
         super().__init__(
             data_type=CategoricalData(),
@@ -80,7 +80,7 @@ class ChiSquareTest(BaseStatisticalTest):
     def _calculate_frequencies(
         X_ref: np.ndarray,  # noqa: N803
         X: np.ndarray,
-    ) -> Tuple[List[int], List[int]]:
+    ) -> Tuple[list[int], list[int]]:
         X_ref_counter, X_counter = [  # noqa: N806
             *map(collections.Counter, [X_ref, X])  # noqa: N806
         ]

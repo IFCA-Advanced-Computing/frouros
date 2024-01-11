@@ -28,16 +28,15 @@ classifiers = [
     "Topic :: Scientific/Engineering :: Mathematics",
     "Topic :: Software Development",
     "Topic :: Software Development :: Libraries :: Python Modules",
-    "Programming Language :: Python :: 3.8",
     "Programming Language :: Python :: 3.9",
     "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3 :: Only",
 ]
-requires-python = ">=3.8,<3.12"
+requires-python = ">=3.9,<3.12"
 dependencies = [
-    "matplotlib>=3.6.0,<3.8",
-    "numpy>=1.24.0,<1.26",
+    "matplotlib>=3.6.0,<3.9",
+    "numpy>=1.24.0,<1.27",
     "requests>=2.31.0,<2.32",
     "scipy>=1.10.0,<1.11",
     "tqdm>=4.65,<5",
@@ -46,15 +45,15 @@ dependencies = [
 [project.optional-dependencies]
 docs = [
     "sphinx>=5.3.0,<7.3",
-    "sphinx-book-theme>=1.0.0,<1.1",
-    "sphinxcontrib-bibtex>=2.5.0,<2.6",
+    "sphinx-book-theme>=1.0.0,<1.2",
+    "sphinxcontrib-bibtex>=2.5.0,<2.7",
     "myst-parser>=0.18.0,<2.1",
-    "myst-nb>=0.17.0,<0.18",
+    "myst-nb>=0.17.0,<1.1",
 ]
 notebooks = [
     "scikit-learn>=1.2.0,<1.4",
-    "torch>=1.13.0,<2.1",
-    "torchvision>=0.14.0,<0.16",
+    "torch>=1.13.0,<2.2",
+    "torchvision>=0.14.0,<0.17",
     "ipywidgets>=8.0.0,<8.2",
 ]
 

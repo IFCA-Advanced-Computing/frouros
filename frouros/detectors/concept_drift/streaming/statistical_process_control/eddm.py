@@ -1,7 +1,7 @@
 """EDDM (Early drift detection method) module."""
 
 import copy
-from typing import List, Optional, Union
+from typing import Optional, Union
 
 import numpy as np  # type: ignore
 
@@ -136,7 +136,7 @@ class EDDM(BaseSPC):
     :param config: configuration object of the detector, defaults to None. If None, the default configuration of :class:`EDDMConfig` is used.
     :type config: Optional[EDDMConfig]
     :param callbacks: callbacks, defaults to None
-    :type callbacks: Optional[Union[BaseCallbackStreaming, List[BaseCallbackStreaming]]]
+    :type callbacks: Optional[Union[BaseCallbackStreaming, list[BaseCallbackStreaming]]]
 
     :Note:
     :func:`update` method expects to receive a value of 0 if the instance is correctly classified (no error) and 1 otherwise (error).
@@ -175,7 +175,7 @@ class EDDM(BaseSPC):
         self,
         config: Optional[EDDMConfig] = None,
         callbacks: Optional[
-            Union[BaseCallbackStreaming, List[BaseCallbackStreaming]]
+            Union[BaseCallbackStreaming, list[BaseCallbackStreaming]]
         ] = None,
     ) -> None:
         # mean_distance_error = 0.0

@@ -2,7 +2,7 @@
 
 import abc
 from collections import namedtuple
-from typing import Any, Callable, Dict, Optional, List, Tuple, Union
+from typing import Any, Callable, Optional, Tuple, Union
 
 import numpy as np  # type: ignore
 from scipy.stats import rv_histogram  # type: ignore
@@ -25,8 +25,8 @@ class BaseDistanceBased(BaseDataDriftBatch):
         self,
         statistical_type: BaseStatisticalType,
         statistical_method: Callable,
-        statistical_kwargs: Dict[str, Any],
-        callbacks: Optional[Union[BaseCallbackBatch, List[BaseCallbackBatch]]] = None,
+        statistical_kwargs: dict[str, Any],
+        callbacks: Optional[Union[BaseCallbackBatch, list[BaseCallbackBatch]]] = None,
     ) -> None:
         """Init method.
 
@@ -35,9 +35,9 @@ class BaseDistanceBased(BaseDataDriftBatch):
         :param statistical_method: statistical method
         :type statistical_method: Callable
         :param statistical_kwargs: statistical kwargs
-        :type statistical_kwargs: Dict[str, Any]
+        :type statistical_kwargs: dict[str, Any]
         :param callbacks: callbacks
-        :type callbacks: Optional[Union[BaseCallbackBatch, List[BaseCallbackBatch]]]
+        :type callbacks: Optional[Union[BaseCallbackBatch, list[BaseCallbackBatch]]]
         """
         super().__init__(
             data_type=NumericalData(),
@@ -69,20 +69,20 @@ class BaseDistanceBased(BaseDataDriftBatch):
         self._statistical_method = value
 
     @property
-    def statistical_kwargs(self) -> Dict[str, Any]:
+    def statistical_kwargs(self) -> dict[str, Any]:
         """Statistical kwargs property.
 
         :return: statistical kwargs
-        :rtype: Dict[str, Any]
+        :rtype: dict[str, Any]
         """
         return self._statistical_kwargs
 
     @statistical_kwargs.setter
-    def statistical_kwargs(self, value: Dict[str, Any]) -> None:
+    def statistical_kwargs(self, value: dict[str, Any]) -> None:
         """Statistical kwargs setter.
 
         :param value: value to be set
-        :type value: Dict[str, Any]
+        :type value: dict[str, Any]
         """
         self._statistical_kwargs = value
 
@@ -119,7 +119,7 @@ class BaseDistanceBasedBins(BaseDistanceBased):
         self,
         statistical_method,
         statistical_kwargs,
-        callbacks: Optional[Union[BaseCallbackBatch, List[BaseCallbackBatch]]] = None,
+        callbacks: Optional[Union[BaseCallbackBatch, list[BaseCallbackBatch]]] = None,
         num_bins: int = 10,
     ) -> None:
         """Init method.
@@ -127,9 +127,9 @@ class BaseDistanceBasedBins(BaseDistanceBased):
         :param statistical_method: statistical method
         :type statistical_method: Callable
         :param statistical_kwargs: statistical kwargs
-        :type statistical_kwargs: Dict[str, Any]
+        :type statistical_kwargs: dict[str, Any]
         :param callbacks: callbacks
-        :type callbacks: Optional[Union[BaseCallbackBatch, List[BaseCallbackBatch]]]
+        :type callbacks: Optional[Union[BaseCallbackBatch, list[BaseCallbackBatch]]]
         :param num_bins: number of bins in which to divide probabilities
         :type num_bins: int
         """
@@ -201,7 +201,7 @@ class BaseDistanceBasedProbability(BaseDistanceBased):
         self,
         statistical_method,
         statistical_kwargs,
-        callbacks: Optional[Union[BaseCallbackBatch, List[BaseCallbackBatch]]] = None,
+        callbacks: Optional[Union[BaseCallbackBatch, list[BaseCallbackBatch]]] = None,
         num_bins: int = 10,
     ) -> None:
         """Init method.
@@ -209,9 +209,9 @@ class BaseDistanceBasedProbability(BaseDistanceBased):
         :param statistical_method: statistical method
         :type statistical_method: Callable
         :param statistical_kwargs: statistical kwargs
-        :type statistical_kwargs: Dict[str, Any]
+        :type statistical_kwargs: dict[str, Any]
         :param callbacks: callbacks
-        :type callbacks: Optional[Union[BaseCallbackBatch, List[BaseCallbackBatch]]]
+        :type callbacks: Optional[Union[BaseCallbackBatch, list[BaseCallbackBatch]]]
         :param num_bins: number of bins in which to divide probabilities
         :type num_bins: int
         """

@@ -1,7 +1,7 @@
 """Base concept drift SPC (statistical process control) module."""
 
 import abc
-from typing import Dict, List, Optional, Tuple, Union
+from typing import Optional, Tuple, Union
 
 import numpy as np  # type: ignore
 
@@ -91,7 +91,7 @@ class BaseSPC(BaseConceptDriftStreaming):
         self,
         config: Optional[BaseSPCConfig] = None,
         callbacks: Optional[
-            Union[BaseCallbackStreaming, List[BaseCallbackStreaming]]
+            Union[BaseCallbackStreaming, list[BaseCallbackStreaming]]
         ] = None,
     ) -> None:
         """Init method.
@@ -100,7 +100,7 @@ class BaseSPC(BaseConceptDriftStreaming):
         :type config: Optional[BaseSPCConfig]
         :param callbacks: callbacks
         :type callbacks: Optional[Union[BaseCallbackStreaming,
-        List[BaseCallbackStreaming]]]
+        list[BaseCallbackStreaming]]]
         """
         super().__init__(
             config=config,
@@ -135,11 +135,11 @@ class BaseSPC(BaseConceptDriftStreaming):
         self.warning = False
 
     @property
-    def status(self) -> Dict[str, bool]:
+    def status(self) -> dict[str, bool]:
         """Status property.
 
         :return: status dict
-        :rtype: Dict[str, bool]
+        :rtype: dict[str, bool]
         """
         return {**super().status, "warning": self.warning}
 
@@ -157,7 +157,7 @@ class BaseSPCError(BaseSPC):
         self,
         config: Optional[BaseSPCConfig] = None,
         callbacks: Optional[
-            Union[BaseCallbackStreaming, List[BaseCallbackStreaming]]
+            Union[BaseCallbackStreaming, list[BaseCallbackStreaming]]
         ] = None,
     ) -> None:
         """Init method.
@@ -166,7 +166,7 @@ class BaseSPCError(BaseSPC):
         :type config: Optional[BaseSPCConfig]
         :param callbacks: callbacks
         :type callbacks: Optional[Union[BaseCallbackStreaming,
-        List[BaseCallbackStreaming]]]
+        list[BaseCallbackStreaming]]]
         """
         super().__init__(
             config=config,

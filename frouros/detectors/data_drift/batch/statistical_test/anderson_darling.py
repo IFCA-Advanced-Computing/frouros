@@ -1,6 +1,6 @@
 """Anderson-Darling test module."""
 
-from typing import Optional, List, Union
+from typing import Optional, Union
 
 import numpy as np  # type: ignore
 from scipy.stats import anderson_ksamp  # type: ignore
@@ -17,7 +17,7 @@ class AndersonDarlingTest(BaseStatisticalTest):
     """Anderson-Darling test [scholz1987k]_ detector.
 
     :param callbacks: callbacks, defaults to None
-    :type callbacks: Optional[Union[BaseCallbackBatch, List[BaseCallbackBatch]]]
+    :type callbacks: Optional[Union[BaseCallbackBatch, list[BaseCallbackBatch]]]
 
     :Note:
     - Passing additional arguments to `scipy.stats.anderson_ksamp <https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.anderson_ksamp.html>`__ can be done using :func:`compare` kwargs.
@@ -44,7 +44,7 @@ class AndersonDarlingTest(BaseStatisticalTest):
 
     def __init__(  # noqa: D107
         self,
-        callbacks: Optional[Union[BaseCallbackBatch, List[BaseCallbackBatch]]] = None,
+        callbacks: Optional[Union[BaseCallbackBatch, list[BaseCallbackBatch]]] = None,
     ) -> None:
         super().__init__(
             data_type=NumericalData(),

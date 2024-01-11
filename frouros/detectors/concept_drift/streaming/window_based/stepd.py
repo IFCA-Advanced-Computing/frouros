@@ -1,6 +1,6 @@
 """STEPD (Statistical test of equal proportions) module."""
 
-from typing import List, Optional, Union
+from typing import Optional, Union
 
 import numpy as np  # type: ignore
 from scipy.stats import norm  # type: ignore
@@ -91,7 +91,7 @@ class STEPD(BaseWindow):
     :param config: configuration object of the detector, defaults to None. If None, the default configuration of :class:`STEPDConfig` is used.
     :type config: Optional[STEPDConfig]
     :param callbacks: callbacks, defaults to None
-    :type callbacks: Optional[Union[BaseCallbackStreaming, List[BaseCallbackStreaming]]]
+    :type callbacks: Optional[Union[BaseCallbackStreaming, list[BaseCallbackStreaming]]]
 
     :References:
 
@@ -127,7 +127,7 @@ class STEPD(BaseWindow):
         self,
         config: Optional[STEPDConfig] = None,
         callbacks: Optional[
-            Union[BaseCallbackStreaming, List[BaseCallbackStreaming]]
+            Union[BaseCallbackStreaming, list[BaseCallbackStreaming]]
         ] = None,
     ) -> None:
         super().__init__(

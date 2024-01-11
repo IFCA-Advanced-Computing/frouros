@@ -1,7 +1,7 @@
 """Permutation test batch callback module."""
 
 import multiprocessing
-from typing import Any, Callable, Dict, List, Optional, Tuple
+from typing import Any, Callable, Optional, Tuple
 
 import numpy as np  # type: ignore
 
@@ -16,6 +16,10 @@ class PermutationTestDistanceBased(BaseCallbackBatch):
     :type num_permutations: int
     :param num_jobs: number of jobs, defaults to -1
     :type num_jobs: int
+    :param conservative: conservative flag, defaults to False. If False, the p-value can be zero `(#permuted_statistics >= observed_statistic) / num_permutations`. If True, uses the conservative approach to avoid zero p-value `((#permuted_statistics >= observed_statistic) + 1) / (num_permutations + 1)`.
+    :type conservative: bool
+    :param random_state: random state, defaults to None
+    :type random_state: Optional[int]
     :param verbose: verbose flag, defaults to False
     :type verbose: bool
     :param name: name value, defaults to None. If None, the name will be set to `PermutationTestDistanceBased`.
@@ -49,15 +53,17 @@ class PermutationTestDistanceBased(BaseCallbackBatch):
         self,
         num_permutations: int,
         num_jobs: int = -1,
+        conservative: bool = False,
+        random_state: Optional[int] = None,
         verbose: bool = False,
         name: Optional[str] = None,
-        **kwargs,
     ) -> None:
         super().__init__(name=name)
         self.num_permutations = num_permutations
         self.num_jobs = num_jobs
+        self.conservative = conservative
+        self.random_state = random_state
         self.verbose = verbose
-        self.permutation_kwargs = kwargs
 
     @property
     def num_permutations(self) -> int:
@@ -102,6 +108,27 @@ class PermutationTestDistanceBased(BaseCallbackBatch):
         self._num_jobs = multiprocessing.cpu_count() if value == -1 else value
 
     @property
+    def conservative(self) -> bool:
+        """Conservative (avoid zero p-value) flag property.
+
+        :return: conservative flag
+        :rtype: bool
+        """
+        return self._conservative
+
+    @conservative.setter
+    def conservative(self, value: bool) -> None:
+        """Conservative (avoid zero p-value) flag setter.
+
+        :param value: value to be set
+        :type value: bool
+        :raises TypeError: Type error exception
+        """
+        if not isinstance(value, bool):
+            raise TypeError("value must of type bool.")
+        self._conservative = value
+
+    @property
     def verbose(self) -> bool:
         """Verbose flag property.
 
@@ -127,13 +154,14 @@ class PermutationTestDistanceBased(BaseCallbackBatch):
         X_ref: np.ndarray,  # noqa: N803
         X_test: np.ndarray,
         statistic: Callable,
-        statistic_args: Dict[str, Any],
+        statistic_args: dict[str, Any],
         observed_statistic: float,
         num_permutations: int,
         num_jobs: int,
-        random_state: int,
+        conservative: bool,
+        random_state: Optional[int],
         verbose: bool,
-    ) -> Tuple[List[float], float]:
+    ) -> Tuple[list[float], float]:
         permuted_statistic = permutation(
             X=X_ref,
             Y=X_test,
@@ -145,7 +173,12 @@ class PermutationTestDistanceBased(BaseCallbackBatch):
             verbose=verbose,
         )
         permuted_statistic = np.array(permuted_statistic)
-        p_value = (permuted_statistic >= observed_statistic).mean()  # type: ignore
+        p_value = (
+            ((permuted_statistic >= observed_statistic).sum() + 1)  # type: ignore
+            / (num_permutations + 1)
+            if conservative
+            else (permuted_statistic >= observed_statistic).mean()  # type: ignore
+        )
         return permuted_statistic, p_value
 
     def on_compare_end(
@@ -172,8 +205,9 @@ class PermutationTestDistanceBased(BaseCallbackBatch):
             observed_statistic=observed_statistic,
             num_permutations=self.num_permutations,
             num_jobs=self.num_jobs,
+            conservative=self.conservative,
+            random_state=self.random_state,
             verbose=self.verbose,
-            **self.permutation_kwargs,
         )
         self.logs.update(
             {
