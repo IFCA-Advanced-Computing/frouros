@@ -114,7 +114,7 @@ myst_url_schemes = ("http", "https", "mailto")
 myst_heading_anchors = 3
 
 # MyST-NB configuration
-nb_execution_timeout = 240
+nb_execution_timeout = 480
 nb_execution_raise_on_error = True
 nb_merge_streams = True
 
