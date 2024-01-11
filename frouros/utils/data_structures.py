@@ -1,6 +1,6 @@
 """Data structures module."""
 
-from typing import Any, Optional, List, Union, Dict, Tuple
+from typing import Any, Optional, Union, Tuple
 
 import numpy as np  # type: ignore
 
@@ -13,14 +13,14 @@ class EmptyQueueError(Exception):
     :param msg: exception message, defaults to "Queue is empty."
     :type msg: str
     :param kwargs: exception keyword arguments
-    :type kwargs: Dict[str, Dict[str, Any]]
+    :type kwargs: dict[str, dict[str, Any]]
     """
 
     def __init__(  # noqa: D107
         self,
         *args: Tuple[Any, ...],
         msg: str = "Queue is empty.",
-        **kwargs: Dict[str, Dict[str, Any]],
+        **kwargs: dict[str, dict[str, Any]],
     ) -> None:
         super().__init__(
             msg,
@@ -128,20 +128,20 @@ class CircularQueue:
         self._max_len = value
 
     @property
-    def queue(self) -> List[Optional[Any]]:
+    def queue(self) -> list[Optional[Any]]:
         """Queue property.
 
         :return: queue
-        :rtype: List[Optional[Any]]
+        :rtype: list[Optional[Any]]
         """
         return self._queue
 
     @queue.setter
-    def queue(self, value: List[Optional[Any]]) -> None:
+    def queue(self, value: list[Optional[Any]]) -> None:
         """Queue setter.
 
         :param value: value to be set
-        :type value: List[Optional[Any]]
+        :type value: list[Optional[Any]]
         :raises ValueError: Value error exception
         """
         if not isinstance(value, list):
@@ -679,20 +679,20 @@ class AccuracyQueue(CircularQueue):
 #         self._r = value
 #
 #     @property
-#     def num_samples(self) -> List[int]:
+#     def num_samples(self) -> list[int]:
 #         """Number of samples property.
 #
 #         :return: number of samples
-#         :rtype: List[int]
+#         :rtype: list[int]
 #         """
 #         return self._num_samples
 #
 #     @num_samples.setter
-#     def num_samples(self, value: List[int]) -> None:
+#     def num_samples(self, value: list[int]) -> None:
 #         """Number of samples value setter.
 #
 #         :param value: value to be set
-#         :type value: List[int]
+#         :type value: list[int]
 #         :raises ValueError: Value error exception
 #         """
 #         if value[0] < 0 and value[1] < 0:

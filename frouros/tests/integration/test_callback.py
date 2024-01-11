@@ -1,7 +1,5 @@
 """Test callback module."""
 
-from typing import List
-
 import numpy as np  # type: ignore
 import pytest  # type: ignore
 
@@ -186,13 +184,13 @@ def test_batch_reset_on_statistical_test_data_drift(
     ],
 )
 def test_streaming_history_on_concept_drift(
-    model_errors: List[int],
+    model_errors: list[int],
     detector_class: BaseConceptDrift,
 ):
     """Test streaming history on concept drift callback.
 
     :param model_errors: model errors
-    :type model_errors: List[int]
+    :type model_errors: list[int]
     :param detector_class: concept drift detector
     :type detector_class: BaseConceptDrift
     """

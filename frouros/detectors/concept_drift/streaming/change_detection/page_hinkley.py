@@ -1,6 +1,6 @@
 """Page Hinkley module."""
 
-from typing import Optional, Union, List
+from typing import Optional, Union
 
 from frouros.callbacks.streaming.base import BaseCallbackStreaming
 from frouros.detectors.concept_drift.streaming.change_detection.base import (
@@ -50,7 +50,7 @@ class PageHinkley(BaseCUSUM):
     :param config: configuration object of the detector, defaults to None. If None, the default configuration of :class:`PageHinkleyConfig` is used.
     :type config: Optional[PageHinkleyConfig]
     :param callbacks: callbacks, defaults to None
-    :type callbacks: Optional[Union[BaseCallbackStreaming, List[BaseCallbackStreaming]]]
+    :type callbacks: Optional[Union[BaseCallbackStreaming, list[BaseCallbackStreaming]]]
 
     :References:
 
@@ -81,7 +81,7 @@ class PageHinkley(BaseCUSUM):
         self,
         config: Optional[PageHinkleyConfig] = None,
         callbacks: Optional[
-            Union[BaseCallbackStreaming, List[BaseCallbackStreaming]]
+            Union[BaseCallbackStreaming, list[BaseCallbackStreaming]]
         ] = None,
     ) -> None:
         super().__init__(

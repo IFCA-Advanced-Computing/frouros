@@ -1,7 +1,7 @@
 """ADWIN (ADaptive WINdowing) module."""
 
 from collections import deque
-from typing import List, Optional, Union
+from typing import Optional, Union
 
 import numpy as np  # type: ignore
 
@@ -280,7 +280,7 @@ class ADWIN(BaseWindow):
     :param config: configuration object of the detector, defaults to None. If None, the default configuration of :class:`ADWINConfig` is used.
     :type config: Optional[ADWINConfig]
     :param callbacks: callbacks, defaults to None
-    :type callbacks: Optional[Union[BaseCallbackStreaming, List[BaseCallbackStreaming]]]
+    :type callbacks: Optional[Union[BaseCallbackStreaming, list[BaseCallbackStreaming]]]
 
     :References:
 
@@ -312,7 +312,7 @@ class ADWIN(BaseWindow):
         self,
         config: Optional[ADWINConfig] = None,
         callbacks: Optional[
-            Union[BaseCallbackStreaming, List[BaseCallbackStreaming]]
+            Union[BaseCallbackStreaming, list[BaseCallbackStreaming]]
         ] = None,
     ) -> None:
         super().__init__(

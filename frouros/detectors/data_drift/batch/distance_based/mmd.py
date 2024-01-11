@@ -1,7 +1,7 @@
 """MMD (Maximum Mean Discrepancy) module."""
 
 import itertools
-from typing import Callable, Generator, Optional, List, Union
+from typing import Callable, Generator, Optional, Union
 
 import numpy as np  # type: ignore
 
@@ -22,7 +22,7 @@ class MMD(BaseDistanceBased):
     :param chunk_size: chunk size value, defaults to None
     :type chunk_size: Optional[int]
     :param callbacks: callbacks, defaults to None
-    :type callbacks: Optional[Union[BaseCallbackBatch, List[BaseCallbackBatch]]]
+    :type callbacks: Optional[Union[BaseCallbackBatch, list[BaseCallbackBatch]]]
 
     :References:
 
@@ -49,7 +49,7 @@ class MMD(BaseDistanceBased):
         self,
         kernel: Callable = rbf_kernel,
         chunk_size: Optional[int] = None,
-        callbacks: Optional[Union[BaseCallbackBatch, List[BaseCallbackBatch]]] = None,
+        callbacks: Optional[Union[BaseCallbackBatch, list[BaseCallbackBatch]]] = None,
     ) -> None:
         super().__init__(
             statistical_type=MultivariateData(),

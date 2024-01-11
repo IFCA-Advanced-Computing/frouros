@@ -1,6 +1,6 @@
 """KL (Kullback-Leibler divergence distance) module."""
 
-from typing import Any, Dict, List, Optional, Union
+from typing import Any, Optional, Union
 
 import numpy as np  # type: ignore
 from scipy.special import rel_entr  # type: ignore
@@ -18,9 +18,9 @@ class KL(BaseDistanceBasedProbability):
     :param num_bins: number of bins in which to divide probabilities, defaults to 10
     :type num_bins: int
     :param callbacks: number of bins in which to divide probabilities, defaults to None
-    :type callbacks: Optional[Union[BaseCallbackBatch, List[BaseCallbackBatch]]]
+    :type callbacks: Optional[Union[BaseCallbackBatch, list[BaseCallbackBatch]]]
     :param kwargs: additional keyword arguments to pass to scipy.special.rel_entr
-    :type kwargs: Dict[str, Any]
+    :type kwargs: dict[str, Any]
 
     :References:
 
@@ -44,7 +44,7 @@ class KL(BaseDistanceBasedProbability):
     def __init__(  # noqa: D107
         self,
         num_bins: int = 10,
-        callbacks: Optional[Union[BaseCallbackBatch, List[BaseCallbackBatch]]] = None,
+        callbacks: Optional[Union[BaseCallbackBatch, list[BaseCallbackBatch]]] = None,
         **kwargs,
     ) -> None:
         super().__init__(
@@ -71,7 +71,7 @@ class KL(BaseDistanceBasedProbability):
         Y: np.ndarray,
         *,
         num_bins: int,
-        **kwargs: Dict[str, Any],
+        **kwargs: dict[str, Any],
     ) -> float:
         (  # noqa: N806
             X_ref_rvs,

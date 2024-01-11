@@ -1,6 +1,6 @@
 """ECDD (EWMA for Concept Drift Detection) module."""
 
-from typing import List, Optional, Union
+from typing import Optional, Union
 
 import numpy as np  # type: ignore
 
@@ -52,7 +52,7 @@ class ECDDWT(BaseSPC):
     :param config: configuration object of the detector, defaults to None. If None, the default configuration of :class:`ECDDWTConfig` is used.
     :type config: Optional[ECDDWTConfig]
     :param callbacks: callbacks, defaults to None
-    :type callbacks: Optional[Union[BaseCallbackStreaming, List[BaseCallbackStreaming]]]
+    :type callbacks: Optional[Union[BaseCallbackStreaming, list[BaseCallbackStreaming]]]
 
     :Note:
     :func:`update` method expects to receive a value of 0 if the instance is correctly classified (no error) and 1 otherwise (error).
@@ -89,7 +89,7 @@ class ECDDWT(BaseSPC):
         self,
         config: Optional[ECDDWTConfig] = None,
         callbacks: Optional[
-            Union[BaseCallbackStreaming, List[BaseCallbackStreaming]]
+            Union[BaseCallbackStreaming, list[BaseCallbackStreaming]]
         ] = None,
     ) -> None:
         super().__init__(

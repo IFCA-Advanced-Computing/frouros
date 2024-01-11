@@ -1,6 +1,6 @@
 """History callback module."""
 
-from typing import Any, Dict, List, Optional, Union
+from typing import Any, Optional, Union
 
 from frouros.callbacks.streaming.base import BaseCallbackStreaming
 from frouros.utils.stats import BaseStat
@@ -46,18 +46,18 @@ class HistoryConceptDrift(BaseCallbackStreaming):
         name: Optional[str] = None,
     ) -> None:
         super().__init__(name=name)
-        self.additional_vars: List[str] = []
-        self.history: Dict[str, List[Any]] = {
+        self.additional_vars: list[str] = []
+        self.history: dict[str, list[Any]] = {
             "value": [],
             "num_instances": [],
             "drift": [],
         }
 
-    def add_additional_vars(self, vars_: List[str]) -> None:
+    def add_additional_vars(self, vars_: list[str]) -> None:
         """Add additional variables to track.
 
         :param vars_: list of variables
-        :type vars_: List[str]
+        :type vars_: list[str]
         """
         self.additional_vars.extend(vars_)
         self.history = {**self.history, **{var: [] for var in self.additional_vars}}

@@ -1,6 +1,6 @@
 """Configuration file for the tests."""
 
-from typing import List, Optional, Tuple
+from typing import Optional, Tuple
 
 import numpy as np  # type: ignore
 import pytest  # type: ignore
@@ -454,7 +454,7 @@ def concept_drift_model(
 def concept_drift_model_errors_simple(
     dataset_simple: Tuple[Tuple[np.ndarray, np.ndarray], Tuple[np.ndarray, np.ndarray]],
     model: sklearn.pipeline.Pipeline,
-) -> List[int]:
+) -> list[int]:
     """Compute model errors given a dataset with concept drift.
 
     :param dataset_simple: dataset with concept drift
@@ -463,7 +463,7 @@ def concept_drift_model_errors_simple(
     :param model: trained model
     :type model: sklearn.pipeline.Pipeline
     :return: model errors
-    :rtype: List[int]
+    :rtype: list[int]
     """
     _, (X_test, y_test) = dataset_simple  # noqa: N806
 

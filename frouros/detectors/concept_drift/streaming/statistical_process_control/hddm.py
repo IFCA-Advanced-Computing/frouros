@@ -1,7 +1,7 @@
 """HDDM (Hoeffding's inequality drift detection method) module."""
 
 import copy
-from typing import List, Optional, Tuple, Union
+from typing import Optional, Tuple, Union
 
 import numpy as np  # type: ignore
 
@@ -344,7 +344,7 @@ class HDDMA(BaseSPC):
     :param config: configuration object of the detector, defaults to None. If None, the default configuration of :class:`HDDMAConfig` is used.
     :type config: Optional[HDDMAConfig]
     :param callbacks: callbacks, defaults to None
-    :type callbacks: Optional[Union[BaseCallbackStreaming, List[BaseCallbackStreaming]]]
+    :type callbacks: Optional[Union[BaseCallbackStreaming, list[BaseCallbackStreaming]]]
 
     :Note:
     :func:`update` method expects to receive a value of 0 if the instance is correctly classified (no error) and 1 otherwise (error).
@@ -384,7 +384,7 @@ class HDDMA(BaseSPC):
         self,
         config: Optional[HDDMAConfig] = None,
         callbacks: Optional[
-            Union[BaseCallbackStreaming, List[BaseCallbackStreaming]]
+            Union[BaseCallbackStreaming, list[BaseCallbackStreaming]]
         ] = None,
     ) -> None:
         super().__init__(
@@ -664,7 +664,7 @@ class HDDMW(BaseSPC):
     :param config: configuration object of the detector, defaults to None. If None, the default configuration of :class:`HDDMWConfig` is used.
     :type config: Optional[HDDMWConfig]
     :param callbacks: callbacks, defaults to None
-    :type callbacks: Optional[Union[BaseCallbackStreaming, List[BaseCallbackStreaming]]]
+    :type callbacks: Optional[Union[BaseCallbackStreaming, list[BaseCallbackStreaming]]]
 
     :Note:
     :func:`update` method expects to receive a value of 0 if the instance is correctly classified (no error) and 1 otherwise (error).
@@ -704,7 +704,7 @@ class HDDMW(BaseSPC):
         self,
         config: Optional[HDDMWConfig] = None,
         callbacks: Optional[
-            Union[BaseCallbackStreaming, List[BaseCallbackStreaming]]
+            Union[BaseCallbackStreaming, list[BaseCallbackStreaming]]
         ] = None,
     ) -> None:
         super().__init__(

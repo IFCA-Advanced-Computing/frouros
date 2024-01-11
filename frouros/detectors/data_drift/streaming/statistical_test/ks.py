@@ -4,7 +4,7 @@
 #  the commented code lines when that is solved.
 
 # from copy import deepcopy
-from typing import Optional, List, Union
+from typing import Optional, Union
 
 import numpy as np  # type: ignore
 from scipy.stats._stats_py import (  # type: ignore
@@ -33,7 +33,7 @@ class IncrementalKSTest(BaseStatisticalTest):
     :param window_size: window size value
     :type window_size: int
     :param callbacks: callbacks, defaults to None
-    :type callbacks: Optional[Union[BaseCallbackStreaming, List[BaseCallbackStreaming]]]
+    :type callbacks: Optional[Union[BaseCallbackStreaming, list[BaseCallbackStreaming]]]
 
     :References:
 
@@ -62,7 +62,7 @@ class IncrementalKSTest(BaseStatisticalTest):
         self,
         window_size: int,
         callbacks: Optional[
-            Union[BaseCallbackStreaming, List[BaseCallbackStreaming]]
+            Union[BaseCallbackStreaming, list[BaseCallbackStreaming]]
         ] = None,
     ) -> None:
         super().__init__(

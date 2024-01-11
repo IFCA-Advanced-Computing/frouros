@@ -1,7 +1,7 @@
 """Base detector module."""
 
 import abc
-from typing import Any, Dict, List, Optional, Union
+from typing import Any, Optional, Union
 
 import numpy as np  # type: ignore
 
@@ -13,33 +13,33 @@ class BaseDetector(abc.ABC):
 
     def __init__(
         self,
-        callbacks: Optional[Union[BaseCallback, List[BaseCallback]]] = None,
+        callbacks: Optional[Union[BaseCallback, list[BaseCallback]]] = None,
     ) -> None:
         """Init method.
 
         :param callbacks: callbacks
-        :type callbacks: Optional[Union[BaseCallback, List[Callback]]]
+        :type callbacks: Optional[Union[BaseCallback, list[Callback]]]
         """
         self.callbacks = callbacks  # type: ignore
 
     @property
-    def callbacks(self) -> Optional[List[BaseCallback]]:
+    def callbacks(self) -> Optional[list[BaseCallback]]:
         """Callbacks property.
 
         :return: callbacks
-        :rtype: Optional[List[BaseCallback]]
+        :rtype: Optional[list[BaseCallback]]
         """
         return self._callbacks  # type: ignore
 
     @callbacks.setter
     def callbacks(
         self,
-        value: Optional[Union[BaseCallback, List[BaseCallback]]],
+        value: Optional[Union[BaseCallback, list[BaseCallback]]],
     ) -> None:
         """Callbacks setter.
 
         :param value: value to be set
-        :type value: Optional[Union[BaseCallback, List[Callback]]]
+        :type value: Optional[Union[BaseCallback, list[Callback]]]
         :raises TypeError: Type error exception
         """
         if value is not None:
@@ -58,7 +58,7 @@ class BaseDetector(abc.ABC):
     def reset(self) -> None:
         """Reset method."""
 
-    def _get_callbacks_logs(self) -> Dict[str, Any]:
+    def _get_callbacks_logs(self) -> dict[str, Any]:
         logs = {
             callback.name: callback.logs for callback in self.callbacks  # type: ignore
         }
