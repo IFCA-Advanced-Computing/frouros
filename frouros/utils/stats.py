@@ -4,7 +4,7 @@ import abc
 import itertools
 from functools import partial
 from multiprocessing import Pool
-from typing import Any, Callable, Dict, Optional, List, Union
+from typing import Any, Callable, Optional, Union
 
 import numpy as np  # type: ignore
 from tqdm import tqdm  # type: ignore
@@ -217,12 +217,12 @@ def permutation(  # pylint: disable=too-many-arguments,too-many-locals
     X: np.ndarray,  # noqa: N803
     Y: np.ndarray,
     statistic: Callable,
-    statistical_args: Dict[str, Any],
+    statistical_args: dict[str, Any],
     num_permutations: int,
     num_jobs: int,
     random_state: Optional[int] = None,
     verbose: bool = False,
-) -> List[float]:
+) -> list[float]:
     """Permutation method.
 
     :param X: reference data
@@ -232,7 +232,7 @@ def permutation(  # pylint: disable=too-many-arguments,too-many-locals
     :param statistic: statistic to use
     :type statistic: Callable
     :param statistical_args: args to pass to statistic method
-    :type statistical_args: Dict[str, Any]
+    :type statistical_args: dict[str, Any]
     :param num_permutations: number of permutations to use
     :type num_permutations: int
     :param num_jobs: number of jobs to use
@@ -242,7 +242,7 @@ def permutation(  # pylint: disable=too-many-arguments,too-many-locals
     :param verbose: verbose flag, defaults to False
     :type verbose: bool
     :return: permuted statistics
-    :rtype: List[float]
+    :rtype: list[float]
     """
     np.random.seed(seed=random_state)
     X_num_samples, Y_num_samples = X.shape[0], Y.shape[0]  # noqa: N806

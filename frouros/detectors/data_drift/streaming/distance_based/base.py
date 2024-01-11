@@ -1,7 +1,7 @@
 """Base data drift distance based module."""
 
 import abc
-from typing import Any, Dict, Optional, Tuple, Union
+from typing import Any, Optional, Tuple, Union
 
 import numpy as np  # type: ignore
 
@@ -63,13 +63,13 @@ class BaseDistanceBased(BaseDataDriftStreaming):
     def compare(
         self,
         X: np.ndarray,  # noqa: N803
-    ) -> Tuple[Optional[DistanceResult], Dict[str, Any]]:
+    ) -> Tuple[Optional[DistanceResult], dict[str, Any]]:
         """Compare detector.
 
         :param X: data to use to compare the detector
         :type X: np.ndarray
         :return: update result
-        :rtype: Tuple[Optional[DistanceResult], Dict[str, Any]]
+        :rtype: Tuple[Optional[DistanceResult], dict[str, Any]]
         """
         result = self._compare(X=X)
         return result
@@ -78,5 +78,5 @@ class BaseDistanceBased(BaseDataDriftStreaming):
     def _compare(
         self,
         X: np.ndarray,  # noqa: N803
-    ) -> Tuple[Optional[DistanceResult], Dict[str, Any]]:
+    ) -> Tuple[Optional[DistanceResult], dict[str, Any]]:
         pass

@@ -1,6 +1,6 @@
 """RDDM (Reactive Drift detection method) module."""
 
-from typing import List, Optional, Union
+from typing import Optional, Union
 
 from frouros.callbacks.streaming.base import BaseCallbackStreaming
 from frouros.detectors.concept_drift.streaming.statistical_process_control.base import (
@@ -113,7 +113,7 @@ class RDDM(BaseSPCError):
     :param config: configuration object of the detector, defaults to None. If None, the default configuration of :class:`RDDMConfig` is used.
     :type config: Optional[RDDMConfig]
     :param callbacks: callbacks, defaults to None
-    :type callbacks: Optional[Union[BaseCallbackStreaming, List[BaseCallbackStreaming]]]
+    :type callbacks: Optional[Union[BaseCallbackStreaming, list[BaseCallbackStreaming]]]
 
     :Note:
     :func:`update` method expects to receive a value of 0 if the instance is correctly classified (no error) and 1 otherwise (error).
@@ -152,7 +152,7 @@ class RDDM(BaseSPCError):
         self,
         config: Optional[RDDMConfig] = None,
         callbacks: Optional[
-            Union[BaseCallbackStreaming, List[BaseCallbackStreaming]]
+            Union[BaseCallbackStreaming, list[BaseCallbackStreaming]]
         ] = None,
     ) -> None:
         super().__init__(

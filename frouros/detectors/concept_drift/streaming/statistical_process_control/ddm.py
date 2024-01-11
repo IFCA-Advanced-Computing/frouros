@@ -1,7 +1,7 @@
 """DDM (Drift detection method) module."""
 
 from contextlib import suppress
-from typing import Union, Optional, List
+from typing import Union, Optional
 
 from frouros.callbacks.streaming.base import BaseCallbackStreaming
 from frouros.detectors.concept_drift.streaming.statistical_process_control.base import (
@@ -48,7 +48,7 @@ class DDM(BaseSPCError):
     :param config: configuration object of the detector, defaults to None. If None, the default configuration of :class:`DDMConfig` is used.
     :type config: Optional[DDMConfig]
     :param callbacks: callbacks, defaults to None
-    :type callbacks: Optional[Union[BaseCallbackStreaming, List[BaseCallbackStreaming]]]
+    :type callbacks: Optional[Union[BaseCallbackStreaming, list[BaseCallbackStreaming]]]
 
     :Note:
     :func:`update` method expects to receive a value of 0 if the instance is correctly classified (no error) and 1 otherwise (error).
@@ -89,7 +89,7 @@ class DDM(BaseSPCError):
         self,
         config: Optional[DDMConfig] = None,
         callbacks: Optional[
-            Union[BaseCallbackStreaming, List[BaseCallbackStreaming]]
+            Union[BaseCallbackStreaming, list[BaseCallbackStreaming]]
         ] = None,
     ) -> None:
         super().__init__(

@@ -1,7 +1,7 @@
 """Permutation test batch callback module."""
 
 import multiprocessing
-from typing import Any, Callable, Dict, List, Optional, Tuple
+from typing import Any, Callable, Optional, Tuple
 
 import numpy as np  # type: ignore
 
@@ -154,14 +154,14 @@ class PermutationTestDistanceBased(BaseCallbackBatch):
         X_ref: np.ndarray,  # noqa: N803
         X_test: np.ndarray,
         statistic: Callable,
-        statistic_args: Dict[str, Any],
+        statistic_args: dict[str, Any],
         observed_statistic: float,
         num_permutations: int,
         num_jobs: int,
         conservative: bool,
         random_state: Optional[int],
         verbose: bool,
-    ) -> Tuple[List[float], float]:
+    ) -> Tuple[list[float], float]:
         permuted_statistic = permutation(
             X=X_ref,
             Y=X_test,

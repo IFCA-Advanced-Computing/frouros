@@ -1,7 +1,7 @@
 """Base data drift batch module."""
 
 import abc
-from typing import Any, Dict, Optional, List, Tuple, Union
+from typing import Any, Optional, Tuple, Union
 
 import numpy as np  # type: ignore
 
@@ -24,7 +24,7 @@ class BaseDataDriftBatch(BaseDataDrift):
         self,
         data_type: BaseDataType,
         statistical_type: BaseStatisticalType,
-        callbacks: Optional[Union[BaseCallbackBatch, List[BaseCallbackBatch]]] = None,
+        callbacks: Optional[Union[BaseCallbackBatch, list[BaseCallbackBatch]]] = None,
     ) -> None:
         """Init method.
 
@@ -33,7 +33,7 @@ class BaseDataDriftBatch(BaseDataDrift):
         :param statistical_type: statistical type
         :type statistical_type: BaseStatisticalType
         :param callbacks: callbacks
-        :type callbacks: Optional[Union[BaseCallbackBatch], List[BaseCallbackBatch]]
+        :type callbacks: Optional[Union[BaseCallbackBatch], list[BaseCallbackBatch]]
         """
         check_callbacks(
             callbacks=callbacks,
@@ -57,13 +57,13 @@ class BaseDataDriftBatch(BaseDataDrift):
         self,
         X: np.ndarray,  # noqa: N803
         **kwargs,
-    ) -> Tuple[np.ndarray, Dict[str, Any]]:
+    ) -> Tuple[np.ndarray, dict[str, Any]]:
         """Compare values.
 
         :param X: test data
         :type X: numpy.ndarray
         :return: compare result and callbacks logs
-        :rtype: Tuple[numpy.ndarray, Dict[str, Any]]
+        :rtype: Tuple[numpy.ndarray, dict[str, Any]]
         """
         for callback in self.callbacks:  # type: ignore
             callback.on_compare_start(  # type: ignore
@@ -116,7 +116,7 @@ class BaseDataDriftBatch(BaseDataDrift):
         self,
         X: np.ndarray,  # noqa: N803
         **kwargs,
-    ) -> Union[List[float], List[Tuple[float, float]], Tuple[float, float]]:
+    ) -> Union[list[float], list[Tuple[float, float]], Tuple[float, float]]:
         result = self._apply_method(  # type: ignore # pylint: disable=not-callable
             X_ref=self.X_ref,
             X=X,

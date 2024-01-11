@@ -2,7 +2,7 @@
 
 import itertools
 from collections import deque
-from typing import List, Optional, Union
+from typing import Optional, Union
 
 import numpy as np  # type: ignore
 from scipy.stats import ks_2samp  # type: ignore
@@ -103,7 +103,7 @@ class KSWIN(BaseWindow):
     :param config: configuration object of the detector, defaults to None. If None, the default configuration of :class:`KSWINConfig` is used.
     :type config: Optional[KSWINConfig]
     :param callbacks: callbacks, defaults to None
-    :type callbacks: Optional[Union[BaseCallbackStreaming, List[BaseCallbackStreaming]]]
+    :type callbacks: Optional[Union[BaseCallbackStreaming, list[BaseCallbackStreaming]]]
 
     :References:
 
@@ -134,7 +134,7 @@ class KSWIN(BaseWindow):
         self,
         config: Optional[KSWINConfig] = None,
         callbacks: Optional[
-            Union[BaseCallbackStreaming, List[BaseCallbackStreaming]]
+            Union[BaseCallbackStreaming, list[BaseCallbackStreaming]]
         ] = None,
     ) -> None:
         super().__init__(

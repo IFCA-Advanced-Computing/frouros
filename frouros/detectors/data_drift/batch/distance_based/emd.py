@@ -1,6 +1,6 @@
 """EMD (Earth Mover's Distance) module."""
 
-from typing import List, Optional, Union
+from typing import Optional, Union
 
 import numpy as np  # type: ignore
 from scipy.stats import wasserstein_distance  # type: ignore
@@ -17,7 +17,7 @@ class EMD(BaseDistanceBased):
     """EMD (Earth Mover's Distance) [rubner2000earth]_ detector.
 
     :param callbacks: callbacks, defaults to None
-    :type callbacks: Optional[Union[BaseCallbackBatch, List[BaseCallbackBatch]]]
+    :type callbacks: Optional[Union[BaseCallbackBatch, list[BaseCallbackBatch]]]
     :param kwargs: additional keyword arguments to pass to scipy.stats.wasserstein_distance
     :type kwargs: Dict[str, Any]
 
@@ -42,7 +42,7 @@ class EMD(BaseDistanceBased):
 
     def __init__(  # noqa: D107
         self,
-        callbacks: Optional[Union[BaseCallbackBatch, List[BaseCallbackBatch]]] = None,
+        callbacks: Optional[Union[BaseCallbackBatch, list[BaseCallbackBatch]]] = None,
         **kwargs,
     ) -> None:
         super().__init__(

@@ -1,6 +1,6 @@
 """MMD (Maximum Mean Discrepancy) module."""
 
-from typing import Any, Callable, Dict, Optional, List, Tuple, Union
+from typing import Any, Callable, Optional, Tuple, Union
 
 import numpy as np  # type: ignore
 
@@ -26,7 +26,7 @@ class MMD(BaseDistanceBased):
     :type chunk_size: Optional[int]
     :param callbacks: callbacks, defaults to None
     :type callbacks: Optional[Union[BaseCallbackStreaming,
-    List[BaseCallbackStreaming]]]
+    list[BaseCallbackStreaming]]]
 
     :References:
 
@@ -57,7 +57,7 @@ class MMD(BaseDistanceBased):
         kernel: Callable = rbf_kernel,
         chunk_size: Optional[int] = None,
         callbacks: Optional[
-            Union[BaseCallbackStreaming, List[BaseCallbackStreaming]]
+            Union[BaseCallbackStreaming, list[BaseCallbackStreaming]]
         ] = None,
     ) -> None:
         super().__init__(
@@ -114,5 +114,5 @@ class MMD(BaseDistanceBased):
     def _compare(
         self,
         X: np.ndarray,  # noqa: N803
-    ) -> Tuple[Optional[DistanceResult], Dict[str, Any]]:  # noqa: N803
+    ) -> Tuple[Optional[DistanceResult], dict[str, Any]]:  # noqa: N803
         return self.mmd.compare(X=X)

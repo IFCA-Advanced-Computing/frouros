@@ -4,7 +4,7 @@ import abc
 import tempfile
 import urllib.parse
 from pathlib import Path
-from typing import Any, List, Optional, Union
+from typing import Any, Optional, Union
 
 import numpy as np  # type: ignore
 import requests
@@ -22,13 +22,13 @@ class BaseDatasetDownload(abc.ABC):
 
     def __init__(
         self,
-        url: Union[str, List[str]],
+        url: Union[str, list[str]],
         file_path: Optional[str] = None,
     ) -> None:
         """Init method.
 
         :param url: url or url mirrors from where dataset will be downloaded
-        :type url: Union[str, List[str]]
+        :type url: Union[str, list[str]]
         :param file_path: file path for the downloaded file
         :type file_path: str
         """
@@ -58,20 +58,20 @@ class BaseDatasetDownload(abc.ABC):
         self._file_path = value
 
     @property
-    def url(self) -> Union[str, List[str]]:
+    def url(self) -> Union[str, list[str]]:
         """URL property.
 
         :return: URL from where dataset will be downloaded
-        :rtype: Union[str, List[str]]
+        :rtype: Union[str, list[str]]
         """
         return self._url
 
     @url.setter
-    def url(self, value: Union[str, List[str]]) -> None:
+    def url(self, value: Union[str, list[str]]) -> None:
         """URL setter.
 
         :param value: value to be set
-        :type value: Union[str, List[str]]
+        :type value: Union[str, list[str]]
         :raises InvalidURLError: Invalid URL exception
         """
         urls = [value] if isinstance(value, str) else value

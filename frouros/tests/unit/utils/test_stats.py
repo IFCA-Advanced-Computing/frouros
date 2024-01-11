@@ -1,6 +1,6 @@
 """Test stats module."""
 
-from typing import List, Union
+from typing import Union
 
 import numpy as np  # type: ignore
 import pytest  # type: ignore
@@ -18,17 +18,17 @@ from frouros.utils.stats import CircularMean, Mean
 )
 def test_circular_mean(
     size: int,
-    values: List[Union[int, float]],
-    expected_mean_steps: List[Union[int, float]],
+    values: list[Union[int, float]],
+    expected_mean_steps: list[Union[int, float]],
 ) -> None:
     """Test circular mean.
 
     :param size: size value
     :type size: int
     :param values: values
-    :type values: List[Union[int, float]]
+    :type values: list[Union[int, float]]
     :param expected_mean_steps: expected mean step values
-    :type expected_mean_steps: List[Union[int, float]]
+    :type expected_mean_steps: list[Union[int, float]]
     """
     mean = CircularMean(size=size)
 
@@ -45,15 +45,15 @@ def test_circular_mean(
     ],
 )
 def test_mean(
-    values: List[Union[int, float]],
-    expected_mean_steps: List[Union[int, float]],
+    values: list[Union[int, float]],
+    expected_mean_steps: list[Union[int, float]],
 ) -> None:
     """Test mean.
 
     :param values: values
-    :type values: List[Union[int, float]]
+    :type values: list[Union[int, float]]
     :param expected_mean_steps: expected mean step values
-    :type expected_mean_steps: List[Union[int, float]]
+    :type expected_mean_steps: list[Union[int, float]]
     """
     mean = Mean()
 

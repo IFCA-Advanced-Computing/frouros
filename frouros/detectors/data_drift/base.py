@@ -3,7 +3,7 @@
 
 import abc
 import operator
-from typing import Any, Dict, List, Optional, Union
+from typing import Any, Optional, Union
 
 import numpy as np  # type: ignore
 
@@ -97,7 +97,7 @@ class BaseDataDrift(BaseDetector):
         self,
         data_type: BaseDataType,
         statistical_type: BaseStatisticalType,
-        callbacks: Optional[Union[BaseCallback, List[BaseCallback]]] = None,
+        callbacks: Optional[Union[BaseCallback, list[BaseCallback]]] = None,
     ) -> None:
         """Init method.
 
@@ -106,7 +106,7 @@ class BaseDataDrift(BaseDetector):
         :param statistical_type: statistical type
         :type statistical_type: BaseStatisticalType
         :param callbacks: callbacks
-        :type callbacks: Optional[Union[BaseCallback, List[Callback]]]
+        :type callbacks: Optional[Union[BaseCallback, list[Callback]]]
         """
         super().__init__(callbacks=callbacks)
         self.data_type = data_type
@@ -175,13 +175,13 @@ class BaseDataDrift(BaseDetector):
             self._check_array(X=value)
         self._X_ref = value
 
-    def fit(self, X: np.ndarray, **kwargs) -> Dict[str, Any]:  # noqa: N803
+    def fit(self, X: np.ndarray, **kwargs) -> dict[str, Any]:  # noqa: N803
         """Fit detector.
 
         :param X: feature data
         :type X: numpy.ndarray
         :return: callbacks logs
-        :rtype: Dict[str, Any]
+        :rtype: dict[str, Any]
         """
         self._check_fit_dimensions(X=X)
         for callback in self.callbacks:  # type: ignore
