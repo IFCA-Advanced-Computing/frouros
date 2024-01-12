@@ -60,7 +60,7 @@ notebooks = [
 
 [project.urls]
 homepage = "https://frouros.readthedocs.io"
-repository = "https://github.com/IFCA/frouros"
+repository = "https://github.com/IFCA-Advanced-Computing/frouros"
 documentation = "https://frouros.readthedocs.io"
 download = "https://pypi.org/project/frouros/"
 
