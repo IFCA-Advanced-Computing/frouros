@@ -175,7 +175,7 @@ class BaseDatasetDownload(abc.ABC):
         )
 
 
-class BaseDatasetGenerator(abc.ABC):
+class BaseDatasetGenerator(abc.ABC):  # noqa: B024
     """Abstract class representing a dataset generator."""
 
     def __init__(self, seed: Optional[int] = None) -> None:

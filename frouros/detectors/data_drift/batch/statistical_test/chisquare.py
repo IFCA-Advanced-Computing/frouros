@@ -1,7 +1,8 @@
 """ChiSquareTest (Chi-square test) module."""
 
 import collections
-from typing import Optional, Tuple, Union
+import typing
+from typing import Optional, Set, Tuple, Union
 
 import numpy as np  # type: ignore
 from scipy.stats import chi2_contingency  # type: ignore
@@ -77,6 +78,7 @@ class ChiSquareTest(BaseStatisticalTest):
         return test
 
     @staticmethod
+    @typing.no_type_check  # FIXME: X_ref_counter and X_counter cause mypy errors
     def _calculate_frequencies(
         X_ref: np.ndarray,  # noqa: N803
         X: np.ndarray,
@@ -84,12 +86,12 @@ class ChiSquareTest(BaseStatisticalTest):
         X_ref_counter, X_counter = [  # noqa: N806
             *map(collections.Counter, [X_ref, X])  # noqa: N806
         ]
-        possible_values = set([*X_ref_counter.keys()] + [*X_counter.keys()])
+        possible_values: Set[str] = set(
+            [*X_ref_counter.keys()] + [*X_counter.keys()]
+        )  # noqa: N806
         f_exp, f_obs = {}, {}
         for value in possible_values:
-            f_exp[value] = X_ref_counter.get(value, 0)
-            f_obs[value] = X_counter.get(value, 0)
-        f_exp_values, f_obs_values = [
-            *map(list, [f_exp.values(), f_obs.values()])  # type: ignore
-        ]
-        return f_exp_values, f_obs_values  # type: ignore
+            f_exp[value] = X_ref_counter.get(value, 0)  # noqa: N806
+            f_obs[value] = X_counter.get(value, 0)  # noqa: N806
+        f_exp_values, f_obs_values = [*map(list, [f_exp.values(), f_obs.values()])]
+        return f_exp_values, f_obs_values

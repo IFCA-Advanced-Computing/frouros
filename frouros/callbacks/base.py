@@ -57,14 +57,14 @@ class BaseCallback(abc.ABC):
     #         )
     #     self._detector = value
 
-    def on_fit_start(self, X: np.ndarray) -> None:  # noqa: N803
+    def on_fit_start(self, X: np.ndarray) -> None:  # noqa: N803, B027
         """On fit start method.
 
         :param X: reference data
         :type X: numpy.ndarray
         """
 
-    def on_fit_end(self, X: np.ndarray) -> None:  # noqa: N803
+    def on_fit_end(self, X: np.ndarray) -> None:  # noqa: N803, B027
         """On fit end method.
 
         :param X: reference data

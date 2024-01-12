@@ -389,9 +389,9 @@ def train_prediction_normal(
 
 
 @pytest.fixture(scope="module", name="dataset_simple")
-def concept_drift_dataset_simple() -> Tuple[
-    Tuple[np.ndarray, np.ndarray], Tuple[np.ndarray, np.ndarray]
-]:
+def concept_drift_dataset_simple() -> (
+    Tuple[Tuple[np.ndarray, np.ndarray], Tuple[np.ndarray, np.ndarray]]
+):
     """Dataset with multiple concepts to induce concept drift.
 
     :return: dataset split in reference and test
