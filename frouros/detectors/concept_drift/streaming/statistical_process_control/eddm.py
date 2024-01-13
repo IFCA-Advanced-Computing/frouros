@@ -367,7 +367,6 @@ class EDDM(BaseSPC):
                 self.num_instances
                 >= self.config.min_num_misclassified_instances  # type: ignore
             ):
-
                 distance_threshold = (
                     self.mean_distance_error
                     + self.config.level * self.std_distance_error  # type: ignore

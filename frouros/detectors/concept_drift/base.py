@@ -9,7 +9,7 @@ from frouros.detectors.base import BaseDetector
 from frouros.utils.checks import check_callbacks
 
 
-class BaseConceptDriftConfig(abc.ABC):
+class BaseConceptDriftConfig(abc.ABC):  # noqa: B024
     """Abstract class representing a concept drift configuration class."""
 
     def __init__(
