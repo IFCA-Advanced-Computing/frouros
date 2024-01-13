@@ -78,7 +78,7 @@ class ChiSquareTest(BaseStatisticalTest):
         return test
 
     @staticmethod
-    @typing.no_type_check  # FIXME: X_ref_counter and X_counter cause mypy errors
+    @typing.no_type_check  # FIXME: X_ref_counter and X_counter cause mypy errors  # pylint: disable=fixme  # noqa: E501
     def _calculate_frequencies(
         X_ref: np.ndarray,  # noqa: N803
         X: np.ndarray,

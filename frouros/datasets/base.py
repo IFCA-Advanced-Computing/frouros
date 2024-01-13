@@ -99,10 +99,17 @@ class BaseDatasetDownload(abc.ABC):
 
     def _request_file(self, url: str) -> requests.models.Response:
         logger.info("Trying to download data from %s to %s", url, self._file_path)
-        request_head = requests.head(url=url)
+        request_head = requests.head(
+            url=url,
+            timeout=10,
+        )
         if not request_head.ok:
             raise requests.exceptions.RequestException()
-        request_response = requests.get(url=url, stream=True)
+        request_response = requests.get(
+            url=url,
+            stream=True,
+            timeout=10,
+        )
         request_response.raise_for_status()
         return request_response
 
