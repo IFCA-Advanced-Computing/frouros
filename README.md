@@ -1,5 +1,5 @@
 <p align="center">
-  <img height="115px" src="https://raw.githubusercontent.com/IFCA/frouros/main/images/logo.png" alt="logo">
+  <img height="115px" src="https://raw.githubusercontent.com/IFCA-Advanced-Computing/frouros/main/images/logo.png" alt="logo">
 </p>
 
 ---
