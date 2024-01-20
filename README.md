@@ -6,8 +6,8 @@
 
 <p align="center">
   <!-- CI -->
-  <a href="https://github.com/IFCA/frouros/actions/workflows/ci.yml">
-    <img src="https://github.com/IFCA/frouros/actions/workflows/ci.yml/badge.svg?style=flat-square" alt="ci"/>
+  <a href="https://github.com/IFCA-Advanced-Computing/frouros/actions/workflows/ci.yml">
+    <img src="https://github.com/IFCA-Advanced-Computing/frouros/actions/workflows/ci.yml/badge.svg?style=flat-square" alt="ci"/>
   </a>
   <!-- Code coverage -->
   <a href="https://codecov.io/gh/IFCA-Advanced-Computing/frouros">
