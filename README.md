@@ -10,8 +10,8 @@
     <img src="https://github.com/IFCA/frouros/actions/workflows/ci.yml/badge.svg?style=flat-square" alt="ci"/>
   </a>
   <!-- Code coverage -->
-  <a href="https://codecov.io/gh/IFCA/frouros">
-    <img src="https://codecov.io/gh/IFCA/frouros/branch/main/graph/badge.svg?token=DLKQSWYTYM" alt="coverage"/>
+  <a href="https://codecov.io/gh/IFCA-Advanced-Computing/frouros">
+    <img src="https://codecov.io/gh/IFCA-Advanced-Computing/frouros/graph/badge.svg?token=DLKQSWYTYM" alt="coverage"/>
   </a>
   <!-- Documentation -->
   <a href="https://frouros.readthedocs.io/">
