@@ -77,6 +77,8 @@ body:
       ```python
       import platform; print(f"'{platform.python_version()}'")
       ```
+  validations:
+    required: true
 - type: textarea
   attributes:
     label: Frouros version
