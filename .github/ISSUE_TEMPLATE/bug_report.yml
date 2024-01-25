@@ -70,7 +70,16 @@ body:
     required: true
 - type: textarea
   attributes:
-    label: Versions
+    label: Python version
+    render: shell
+    description: |
+      Please run the following and paste the output below.
+      ```python
+      import platform; print(f"'{platform.python_version()}'")
+      ```
+- type: textarea
+  attributes:
+    label: Frouros version
     render: shell
     description: |
       Please run the following and paste the output below.
