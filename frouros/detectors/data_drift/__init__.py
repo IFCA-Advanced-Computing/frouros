@@ -3,6 +3,7 @@
 from .batch import (  # noqa: F401
     AndersonDarlingTest,
     BhattacharyyaDistance,
+    BWSTest,
     ChiSquareTest,
     CVMTest,
     EMD,
