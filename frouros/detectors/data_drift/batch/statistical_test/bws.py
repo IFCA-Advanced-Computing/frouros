@@ -25,12 +25,12 @@ class BWSTest(BaseStatisticalTest):
     :References:
 
     .. [baumgartner1998nonparametric] Baumgartner, W., P. Weiß, and H. Schindler.
-    "A nonparametric test for the general two-sample problem."
-    Biometrics (1998): 1129-1135.
+        "A nonparametric test for the general two-sample problem."
+        Biometrics (1998): 1129-1135.
 
     :Example:
 
-    >>> from frouros.detectors.data_drift import KSTest
+    >>> from frouros.detectors.data_drift import BWSTest
     >>> import numpy as np
     >>> np.random.seed(seed=31)
     >>> X = np.random.normal(loc=0, scale=1, size=100)
@@ -38,7 +38,7 @@ class BWSTest(BaseStatisticalTest):
     >>> detector = BWSTest()
     >>> _ = detector.fit(X=X)
     >>> detector.compare(X=Y)[0]
-    StatisticalResult(statistic=0.55, p_value=3.0406585087050305e-14)
+    StatisticalResult(statistic=29.942072035675395, p_value=0.0001)
     """  # noqa: E501  # pylint: disable=line-too-long
 
     def __init__(  # noqa: D107
