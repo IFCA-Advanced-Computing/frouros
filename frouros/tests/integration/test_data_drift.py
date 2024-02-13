@@ -18,6 +18,7 @@ from frouros.detectors.data_drift.batch import (
 )
 from frouros.detectors.data_drift.batch import (
     AndersonDarlingTest,
+    BWSTest,
     ChiSquareTest,
     CVMTest,
     KSTest,
@@ -29,6 +30,8 @@ from frouros.detectors.data_drift.streaming import (  # noqa: N811
     IncrementalKSTest,
     MMD as MMDStreaming,
 )
+
+from scipy.stats import PermutationMethod
 
 
 @pytest.mark.parametrize(
@@ -161,13 +164,24 @@ def test_batch_distance_bins_based_univariate_same_distribution(
 
 
 @pytest.mark.parametrize(
-    "detector, expected_statistic, expected_p_value",
+    "detector, expected_statistic, expected_p_value, kwargs",
     [
-        (AndersonDarlingTest(), 23171.19994366, 0.001),
-        (CVMTest(), 3776.09848103, 5.38105056e-07),
-        (KSTest(), 0.99576271, 0.0),
-        (MannWhitneyUTest(), 6912.0, 0.0),
-        (WelchTTest(), -287.92032554, 0.0),
+        (AndersonDarlingTest(), 23171.19994366, 0.001, {}),
+        (
+            BWSTest(),
+            108757.63520694,
+            0.00990099,
+            {
+                "method": PermutationMethod(
+                    n_resamples=100,
+                    random_state=31,
+                ),
+            },
+        ),
+        (CVMTest(), 3776.09848103, 5.38105056e-07, {}),
+        (KSTest(), 0.99576271, 0.0, {}),
+        (MannWhitneyUTest(), 6912.0, 0.0, {}),
+        (WelchTTest(), -287.92032554, 0.0, {}),
     ],
 )
 def test_batch_statistical_univariate(
@@ -175,6 +189,7 @@ def test_batch_statistical_univariate(
     detector: BaseDataDriftBatch,
     expected_statistic: float,
     expected_p_value: float,
+    kwargs: dict,
 ) -> None:
     """Test statistical univariate method.
 
@@ -186,11 +201,13 @@ def test_batch_statistical_univariate(
     :type expected_statistic: float
     :param expected_p_value: expected p-value value
     :type expected_p_value: float
+    :param kwargs: additional arguments
+    :type kwargs: dict
     """
     X_ref, _, X_test = elec2_dataset  # noqa: N806
 
     _ = detector.fit(X=X_ref[:, 0])
-    (statistic, p_value), _ = detector.compare(X=X_test[:, 0])
+    (statistic, p_value), _ = detector.compare(X=X_test[:, 0], **kwargs)
 
     assert np.isclose(statistic, expected_statistic)
     assert np.isclose(p_value, expected_p_value)

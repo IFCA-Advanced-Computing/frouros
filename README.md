@@ -335,8 +335,8 @@ The currently implemented detectors are listed in the following table.
     <td style="text-align: center; border: 1px solid grey; padding: 8px;"><a href="https://doi.org/10.1007/978-3-540-75488-6_27">Nishida and Yamauchi (2007)</a></td>
   </tr>
   <tr>
-    <td rowspan="17" style="text-align: center; border: 1px solid grey; padding: 8px;">Data drift</td>
-    <td rowspan="15" style="text-align: center; border: 1px solid grey; padding: 8px;">Batch</td>
+    <td rowspan="18" style="text-align: center; border: 1px solid grey; padding: 8px;">Data drift</td>
+    <td rowspan="16" style="text-align: center; border: 1px solid grey; padding: 8px;">Batch</td>
     <td rowspan="10" style="text-align: center; border: 1px solid grey; padding: 8px;">Distance based</td>
     <td style="text-align: center; border: 1px solid grey; padding: 8px;">U</td>
     <td style="text-align: center; border: 1px solid grey; padding: 8px;">N</td>
@@ -398,11 +398,17 @@ The currently implemented detectors are listed in the following table.
     <td style="text-align: center; border: 1px solid grey; padding: 8px;"><a href="https://doi.org/10.1057/jors.2008.144">Wu and Olson (2010)</a></td>
   </tr>
   <tr>
-    <td rowspan="5" style="text-align: center; border: 1px solid grey; padding: 8px;">Statistical test</td>
+    <td rowspan="6" style="text-align: center; border: 1px solid grey; padding: 8px;">Statistical test</td>
     <td style="text-align: center; border: 1px solid grey; padding: 8px;">U</td>
     <td style="text-align: center; border: 1px solid grey; padding: 8px;">C</td>
     <td style="text-align: center; border: 1px solid grey; padding: 8px;">Chi-square test</td>
     <td style="text-align: center; border: 1px solid grey; padding: 8px;"><a href="https://doi.org/10.1080/14786440009463897">Pearson (1900)</a></td>
+  </tr>
+  <tr>
+    <td style="text-align: center; border: 1px solid grey; padding: 8px;">U</td>
+    <td style="text-align: center; border: 1px solid grey; padding: 8px;">N</td>
+    <td style="text-align: center; border: 1px solid grey; padding: 8px;">Baumgartner-Weiss-Schindler test</td>
+    <td style="text-align: center; border: 1px solid grey; padding: 8px;"><a href="https://doi.org/10.2307/2533862">Baumgartner et al. (1998)</a></td>
   </tr>
   <tr>
     <td style="text-align: center; border: 1px solid grey; padding: 8px;">U</td>

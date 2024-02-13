@@ -13,6 +13,7 @@ from .distance_based import (
 )
 from .statistical_test import (
     AndersonDarlingTest,
+    BWSTest,
     ChiSquareTest,
     CVMTest,
     KSTest,
@@ -22,6 +23,7 @@ from .statistical_test import (
 
 __all__ = [
     "AndersonDarlingTest",
+    "BWSTest",
     "BhattacharyyaDistance",
     "ChiSquareTest",
     "CVMTest",

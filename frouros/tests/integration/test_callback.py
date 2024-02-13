@@ -27,6 +27,7 @@ from frouros.detectors.concept_drift import (
 from frouros.detectors.concept_drift.base import BaseConceptDrift
 from frouros.detectors.data_drift.batch import (
     AndersonDarlingTest,
+    BWSTest,
     BhattacharyyaDistance,
     CVMTest,
     EMD,
@@ -137,7 +138,14 @@ def test_batch_permutation_test_conservative(
 
 @pytest.mark.parametrize(
     "detector_class",
-    [AndersonDarlingTest, CVMTest, KSTest, MannWhitneyUTest, WelchTTest],
+    [
+        AndersonDarlingTest,
+        BWSTest,
+        CVMTest,
+        KSTest,
+        MannWhitneyUTest,
+        WelchTTest,
+    ],
 )
 def test_batch_reset_on_statistical_test_data_drift(
     X_ref_univariate,  # noqa: N803
@@ -153,6 +161,8 @@ def test_batch_reset_on_statistical_test_data_drift(
     :type X_test_univariate: numpy.ndarray
     :param detector_class: detector distance
     :type detector_class: BaseDataDriftBatch
+    :param mocker: mocker
+    :type mocker: pytest_mock.mocker
     """
     mocker.patch("frouros.detectors.data_drift.batch.base.BaseDataDriftBatch.reset")
 
