@@ -31,7 +31,7 @@ from frouros.detectors.data_drift.streaming import (  # noqa: N811
     MMD as MMDStreaming,
 )
 
-from scipy.stats import PermutationMethod
+from scipy.stats import PermutationMethod  # type: ignore
 
 
 @pytest.mark.parametrize(
