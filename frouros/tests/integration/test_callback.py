@@ -30,6 +30,7 @@ from frouros.detectors.data_drift.batch import (
     BhattacharyyaDistance,
     CVMTest,
     EMD,
+    EnergyDistance,
     HellingerDistance,
     HINormalizedComplement,
     JS,
@@ -48,6 +49,7 @@ from frouros.detectors.data_drift.batch.base import BaseDataDriftBatch
     [
         (BhattacharyyaDistance, 0.55516059, 0.0),
         (EMD, 3.85346006, 0.0),
+        (EnergyDistance, 2.11059982, 0.0),
         (HellingerDistance, 0.74509099, 0.0),
         (HINormalizedComplement, 0.78, 0.0),
         (JS, 0.67010107, 0.0),
