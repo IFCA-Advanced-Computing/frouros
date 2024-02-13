@@ -49,6 +49,7 @@ The {mod}`frouros.detectors.data_drift.batch` module contains batch data drift d
     :template: class.md
 
     AndersonDarlingTest
+    BWSTest
     ChiSquareTest
     CVMTest
     KSTest
