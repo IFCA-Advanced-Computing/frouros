@@ -3,6 +3,7 @@
 from .distance_based import (
     BhattacharyyaDistance,
     EMD,
+    EnergyDistance,
     HellingerDistance,
     HINormalizedComplement,
     JS,
@@ -25,6 +26,7 @@ __all__ = [
     "ChiSquareTest",
     "CVMTest",
     "EMD",
+    "EnergyDistance",
     "HellingerDistance",
     "HINormalizedComplement",
     "JS",

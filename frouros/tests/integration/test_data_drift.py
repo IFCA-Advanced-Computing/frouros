@@ -8,6 +8,7 @@ import pytest  # type: ignore
 from frouros.detectors.data_drift.batch import (
     BhattacharyyaDistance,
     EMD,
+    EnergyDistance,
     HellingerDistance,
     HINormalizedComplement,
     PSI,
@@ -64,6 +65,7 @@ def test_batch_distance_based_categorical(
     "detector, expected_distance",
     [
         (EMD(), 3.85346006),
+        (EnergyDistance(), 2.11059982),
         (JS(), 0.67010107),
         (KL(), np.inf),
         (HINormalizedComplement(), 0.78),
