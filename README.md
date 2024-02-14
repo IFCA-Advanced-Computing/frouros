@@ -337,13 +337,7 @@ The currently implemented detectors are listed in the following table.
   <tr>
     <td rowspan="18" style="text-align: center; border: 1px solid grey; padding: 8px;">Data drift</td>
     <td rowspan="16" style="text-align: center; border: 1px solid grey; padding: 8px;">Batch</td>
-    <td rowspan="10" style="text-align: center; border: 1px solid grey; padding: 8px;">Distance based</td>
-    <td style="text-align: center; border: 1px solid grey; padding: 8px;">U</td>
-    <td style="text-align: center; border: 1px solid grey; padding: 8px;">N</td>
-    <td style="text-align: center; border: 1px solid grey; padding: 8px;">Anderson-Darling test</td>
-    <td style="text-align: center; border: 1px solid grey; padding: 8px;"><a href="https://doi.org/10.2307/2288805">Scholz and Stephens (1987)</a></td>
-  </tr>
-  <tr>
+    <td rowspan="9" style="text-align: center; border: 1px solid grey; padding: 8px;">Distance based</td>
     <td style="text-align: center; border: 1px solid grey; padding: 8px;">U</td>
     <td style="text-align: center; border: 1px solid grey; padding: 8px;">N</td>
     <td style="text-align: center; border: 1px solid grey; padding: 8px;">Bhattacharyya distance</td>
@@ -398,7 +392,12 @@ The currently implemented detectors are listed in the following table.
     <td style="text-align: center; border: 1px solid grey; padding: 8px;"><a href="https://doi.org/10.1057/jors.2008.144">Wu and Olson (2010)</a></td>
   </tr>
   <tr>
-    <td rowspan="6" style="text-align: center; border: 1px solid grey; padding: 8px;">Statistical test</td>
+    <td rowspan="7" style="text-align: center; border: 1px solid grey; padding: 8px;">Statistical test</td>
+    <td style="text-align: center; border: 1px solid grey; padding: 8px;">U</td>
+    <td style="text-align: center; border: 1px solid grey; padding: 8px;">N</td>
+    <td style="text-align: center; border: 1px solid grey; padding: 8px;">Anderson-Darling test</td>
+    <td style="text-align: center; border: 1px solid grey; padding: 8px;"><a href="https://doi.org/10.2307/2288805">Scholz and Stephens (1987)</a></td>
+</tr>
     <td style="text-align: center; border: 1px solid grey; padding: 8px;">U</td>
     <td style="text-align: center; border: 1px solid grey; padding: 8px;">C</td>
     <td style="text-align: center; border: 1px solid grey; padding: 8px;">Chi-square test</td>
