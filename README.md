@@ -382,13 +382,13 @@ The currently implemented detectors are listed in the following table.
   <tr>
     <td style="text-align: center; border: 1px solid grey; padding: 8px;">M</td>
     <td style="text-align: center; border: 1px solid grey; padding: 8px;">N</td>
-    <td style="text-align: center; border: 1px solid grey; padding: 8px;">MMD</td>
+    <td style="text-align: center; border: 1px solid grey; padding: 8px;">Maximum Mean Discrepancy</td>
     <td style="text-align: center; border: 1px solid grey; padding: 8px;"><a href="https://dl.acm.org/doi/10.5555/2188385.2188410">Gretton et al. (2012)</a></td>
   </tr>
   <tr>
     <td style="text-align: center; border: 1px solid grey; padding: 8px;">U</td>
     <td style="text-align: center; border: 1px solid grey; padding: 8px;">N</td>
-    <td style="text-align: center; border: 1px solid grey; padding: 8px;">PSI</td>
+    <td style="text-align: center; border: 1px solid grey; padding: 8px;">Population Stability Index</td>
     <td style="text-align: center; border: 1px solid grey; padding: 8px;"><a href="https://doi.org/10.1057/jors.2008.144">Wu and Olson (2010)</a></td>
   </tr>
   <tr>
@@ -438,7 +438,7 @@ The currently implemented detectors are listed in the following table.
     <td style="text-align: center; border: 1px solid grey; padding: 8px;">Distance based</td>
     <td style="text-align: center; border: 1px solid grey; padding: 8px;">M</td>
     <td style="text-align: center; border: 1px solid grey; padding: 8px;">N</td>
-    <td style="text-align: center; border: 1px solid grey; padding: 8px;">MMD</td>
+    <td style="text-align: center; border: 1px solid grey; padding: 8px;">Maximum Mean Discrepancy</td>
     <td style="text-align: center; border: 1px solid grey; padding: 8px;"><a href="https://dl.acm.org/doi/10.5555/2188385.2188410">Gretton et al. (2012)</a></td>
   </tr>
   <tr>
