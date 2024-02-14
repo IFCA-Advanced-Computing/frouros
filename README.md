@@ -397,17 +397,17 @@ The currently implemented detectors are listed in the following table.
     <td style="text-align: center; border: 1px solid grey; padding: 8px;">N</td>
     <td style="text-align: center; border: 1px solid grey; padding: 8px;">Anderson-Darling test</td>
     <td style="text-align: center; border: 1px solid grey; padding: 8px;"><a href="https://doi.org/10.2307/2288805">Scholz and Stephens (1987)</a></td>
-</tr>
-    <td style="text-align: center; border: 1px solid grey; padding: 8px;">U</td>
-    <td style="text-align: center; border: 1px solid grey; padding: 8px;">C</td>
-    <td style="text-align: center; border: 1px solid grey; padding: 8px;">Chi-square test</td>
-    <td style="text-align: center; border: 1px solid grey; padding: 8px;"><a href="https://doi.org/10.1080/14786440009463897">Pearson (1900)</a></td>
   </tr>
   <tr>
     <td style="text-align: center; border: 1px solid grey; padding: 8px;">U</td>
     <td style="text-align: center; border: 1px solid grey; padding: 8px;">N</td>
     <td style="text-align: center; border: 1px solid grey; padding: 8px;">Baumgartner-Weiss-Schindler test</td>
     <td style="text-align: center; border: 1px solid grey; padding: 8px;"><a href="https://doi.org/10.2307/2533862">Baumgartner et al. (1998)</a></td>
+  </tr>
+    <td style="text-align: center; border: 1px solid grey; padding: 8px;">U</td>
+    <td style="text-align: center; border: 1px solid grey; padding: 8px;">C</td>
+    <td style="text-align: center; border: 1px solid grey; padding: 8px;">Chi-square test</td>
+    <td style="text-align: center; border: 1px solid grey; padding: 8px;"><a href="https://doi.org/10.1080/14786440009463897">Pearson (1900)</a></td>
   </tr>
   <tr>
     <td style="text-align: center; border: 1px solid grey; padding: 8px;">U</td>
