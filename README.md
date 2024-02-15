@@ -335,8 +335,8 @@ The currently implemented detectors are listed in the following table.
     <td style="text-align: center; border: 1px solid grey; padding: 8px;"><a href="https://doi.org/10.1007/978-3-540-75488-6_27">Nishida and Yamauchi (2007)</a></td>
   </tr>
   <tr>
-    <td rowspan="18" style="text-align: center; border: 1px solid grey; padding: 8px;">Data drift</td>
-    <td rowspan="16" style="text-align: center; border: 1px solid grey; padding: 8px;">Batch</td>
+    <td rowspan="19" style="text-align: center; border: 1px solid grey; padding: 8px;">Data drift</td>
+    <td rowspan="17" style="text-align: center; border: 1px solid grey; padding: 8px;">Batch</td>
     <td rowspan="9" style="text-align: center; border: 1px solid grey; padding: 8px;">Distance based</td>
     <td style="text-align: center; border: 1px solid grey; padding: 8px;">U</td>
     <td style="text-align: center; border: 1px solid grey; padding: 8px;">N</td>
@@ -392,7 +392,7 @@ The currently implemented detectors are listed in the following table.
     <td style="text-align: center; border: 1px solid grey; padding: 8px;"><a href="https://doi.org/10.1057/jors.2008.144">Wu and Olson (2010)</a></td>
   </tr>
   <tr>
-    <td rowspan="7" style="text-align: center; border: 1px solid grey; padding: 8px;">Statistical test</td>
+    <td rowspan="8" style="text-align: center; border: 1px solid grey; padding: 8px;">Statistical test</td>
     <td style="text-align: center; border: 1px solid grey; padding: 8px;">U</td>
     <td style="text-align: center; border: 1px solid grey; padding: 8px;">N</td>
     <td style="text-align: center; border: 1px solid grey; padding: 8px;">Anderson-Darling test</td>
@@ -420,6 +420,12 @@ The currently implemented detectors are listed in the following table.
     <td style="text-align: center; border: 1px solid grey; padding: 8px;">N</td>
     <td style="text-align: center; border: 1px solid grey; padding: 8px;">Kolmogorov-Smirnov test</td>
     <td style="text-align: center; border: 1px solid grey; padding: 8px;"><a href="https://doi.org/10.2307/2280095">Massey Jr (1951)</a></td>
+  </tr>
+  <tr>
+    <td style="text-align: center; border: 1px solid grey; padding: 8px;">U</td>
+    <td style="text-align: center; border: 1px solid grey; padding: 8px;">N</td>
+    <td style="text-align: center; border: 1px solid grey; padding: 8px;">Kuiper's test</td>
+    <td style="text-align: center; border: 1px solid grey; padding: 8px;"><a href="https://doi.org/10.1016/S1385-7258(60)50006-0">Kuiper (1960)</a></td>
   </tr>
   <tr>
     <td style="text-align: center; border: 1px solid grey; padding: 8px;">U</td>

@@ -5,6 +5,7 @@ from .bws import BWSTest
 from .chisquare import ChiSquareTest
 from .cvm import CVMTest
 from .ks import KSTest
+from .kuiper_test import KuiperTest
 from .mann_whitney_u import MannWhitneyUTest
 from .welch_t_test import WelchTTest
 
@@ -14,6 +15,7 @@ __all__ = [
     "ChiSquareTest",
     "CVMTest",
     "KSTest",
+    "KuiperTest",
     "MannWhitneyUTest",
     "WelchTTest",
 ]
