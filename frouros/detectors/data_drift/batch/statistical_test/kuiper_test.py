@@ -115,8 +115,7 @@ class KuiperTest(BaseStatisticalTest):
             # large values, so we set them to zero manually when they would be
             # multiplied by zero anyway
             term1[(term1 == np.inf) & (term2 == 0)] = 0.0
-            final_term = Tt * term1 * term2
-            return final_term.sum()
+            return (Tt * term1 * term2).sum()
 
         z = D * np.sqrt(N)
         # When m*z>18.82 (sqrt(-log(finfo(double))/2)), exp(-2m**2z**2)
