@@ -17,6 +17,7 @@ from .statistical_test import (
     ChiSquareTest,
     CVMTest,
     KSTest,
+    KuiperTest,
     MannWhitneyUTest,
     WelchTTest,
 )
@@ -34,6 +35,7 @@ __all__ = [
     "JS",
     "KL",
     "KSTest",
+    "KuiperTest",
     "PSI",
     "MannWhitneyUTest",
     "MMD",
