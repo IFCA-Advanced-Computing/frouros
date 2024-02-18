@@ -4,9 +4,13 @@ import multiprocessing
 from typing import Any, Callable, Optional, Tuple
 
 import numpy as np  # type: ignore
+from scipy.integrate import quad  # type: ignore
+from scipy.stats import binom  # type: ignore
 
 from frouros.callbacks.batch.base import BaseCallbackBatch
 from frouros.utils.stats import permutation
+
+MAX_NUM_PERM: int = 1000000  # maximum number of permutations
 
 
 class PermutationTestDistanceBased(BaseCallbackBatch):
@@ -14,10 +18,17 @@ class PermutationTestDistanceBased(BaseCallbackBatch):
 
     :param num_permutations: number of permutations to obtain the p-value
     :type num_permutations: int
+    :param total_num_permutations: total number of permutations to obtain the p-value, defaults to None. If None, the total number of permutations will be set to the maximum number of permutations, the minimum between all possible permutations or the global maximum number of permutations
+    :type total_num_permutations: Optional[int]
     :param num_jobs: number of jobs, defaults to -1
     :type num_jobs: int
-    :param conservative: conservative flag, defaults to False. If False, the p-value can be zero `(#permuted_statistics >= observed_statistic) / num_permutations`. If True, uses the conservative approach to avoid zero p-value `((#permuted_statistics >= observed_statistic) + 1) / (num_permutations + 1)`.
-    :type conservative: bool
+    :param method: method to compute the p-value, defaults to "auto".
+        "`auto`": if the number of permutations is greater than the maximum number of permutations, the method will be set to "approximate". Otherwise, the method will be set to "exact".
+        "`conservative`": p-value is computed as (number of permutations greater or equal than the observed statistic + 1) / (number of permutations + 1).
+        "`exact`": p-value is computed as the mean of the binomial cumulative distribution function as stated :cite:`phipson2010permutation`.
+        "`approximate`": p-value is computed using the integral of the binomial cumulative distribution function as stated :cite:`phipson2010permutation`.
+        "`estimate`": p-value is computed as the mean of the extreme statistic. p-value can be zero.
+    :type method: str
     :param random_state: random state, defaults to None
     :type random_state: Optional[int]
     :param verbose: verbose flag, defaults to False
@@ -31,6 +42,12 @@ class PermutationTestDistanceBased(BaseCallbackBatch):
     - `observed_statistic`: observed statistic obtained from the distance-based detector. Same distance value returned by the `compare` method
     - `permutation_statistic`: list of statistics obtained from the permutations
     - `p_value`: p-value obtained from the permutation test
+
+    :References:
+
+    .. [phipson2010permutation] Phipson, Belinda, and Gordon K. Smyth.
+        "Permutation P-values should never be zero: calculating exact P-values when permutations are randomly drawn."
+        Statistical applications in genetics and molecular biology 9.1 (2010).
 
     :Example:
 
@@ -46,22 +63,24 @@ class PermutationTestDistanceBased(BaseCallbackBatch):
     >>> distance
     DistanceResult(distance=0.05643613752975596)
     >>> callbacks_log["PermutationTestDistanceBased"]["p_value"]
-    0.0
+    0.0009985010823343311
     """  # noqa: E501  # pylint: disable=line-too-long
 
-    def __init__(  # noqa: D107
+    def __init__(  # noqa: D107  # pylint: disable=too-many-arguments
         self,
         num_permutations: int,
+        total_num_permutations: Optional[int] = None,
         num_jobs: int = -1,
-        conservative: bool = False,
+        method: str = "auto",
         random_state: Optional[int] = None,
         verbose: bool = False,
         name: Optional[str] = None,
     ) -> None:
         super().__init__(name=name)
         self.num_permutations = num_permutations
+        self.total_num_permutations = total_num_permutations
         self.num_jobs = num_jobs
-        self.conservative = conservative
+        self.method = method
         self.random_state = random_state
         self.verbose = verbose
 
@@ -84,7 +103,33 @@ class PermutationTestDistanceBased(BaseCallbackBatch):
         """
         if value < 1:
             raise ValueError("value must be greater of equal than 1.")
+        if value > MAX_NUM_PERM:
+            raise ValueError(f"value must be less than or equal to {MAX_NUM_PERM}.")
         self._num_permutations = value
+
+    @property
+    def total_num_permutations(self) -> Optional[int]:
+        """Number of total permutations' property.
+
+        :return: number of total permutations
+        :rtype: Optional[int]
+        """
+        return self._total_permutations
+
+    @total_num_permutations.setter
+    def total_num_permutations(self, value: Optional[int]) -> None:
+        """Number of total permutations method setter.
+
+        :param value: value to be set
+        :type value: Optional[int]
+        :raises ValueError: Value error exception
+        """
+        if value is not None:
+            if value < 1:
+                raise ValueError("value must be greater of equal than 1.")
+            if value > MAX_NUM_PERM:
+                raise ValueError(f"value must be less than or equal to {MAX_NUM_PERM}.")
+        self._total_permutations = value
 
     @property
     def num_jobs(self) -> int:
@@ -108,25 +153,28 @@ class PermutationTestDistanceBased(BaseCallbackBatch):
         self._num_jobs = multiprocessing.cpu_count() if value == -1 else value
 
     @property
-    def conservative(self) -> bool:
-        """Conservative (avoid zero p-value) flag property.
+    def method(self) -> str:
+        """Method to compute the p-value property.
 
-        :return: conservative flag
-        :rtype: bool
+        :return: method to compute the p-value
+        :rtype: str
         """
-        return self._conservative
+        return self._method
 
-    @conservative.setter
-    def conservative(self, value: bool) -> None:
-        """Conservative (avoid zero p-value) flag setter.
+    @method.setter
+    def method(self, value: str) -> None:
+        """Method to compute the p-value setter.
 
         :param value: value to be set
-        :type value: bool
-        :raises TypeError: Type error exception
+        :type value: str
+        :raises ValueError: Value error exception
         """
-        if not isinstance(value, bool):
-            raise TypeError("value must of type bool.")
-        self._conservative = value
+        if value not in ["auto", "conservative", "exact", "approximate", "estimate"]:
+            raise ValueError(
+                "value must be one of "
+                "'auto', 'conservative', 'exact', 'approximate', 'estimate'.",
+            )
+        self._method = value
 
     @property
     def verbose(self) -> bool:
@@ -157,12 +205,13 @@ class PermutationTestDistanceBased(BaseCallbackBatch):
         statistic_args: dict[str, Any],
         observed_statistic: float,
         num_permutations: int,
+        total_num_permutations: Optional[int],
         num_jobs: int,
-        conservative: bool,
+        method: str,
         random_state: Optional[int],
         verbose: bool,
-    ) -> Tuple[list[float], float]:
-        permuted_statistic = permutation(
+    ) -> Tuple[np.ndarray, float]:
+        permuted_statistic, max_num_permutations = permutation(
             X=X_ref,
             Y=X_test,
             statistic=statistic,
@@ -173,13 +222,99 @@ class PermutationTestDistanceBased(BaseCallbackBatch):
             verbose=verbose,
         )
         permuted_statistic = np.array(permuted_statistic)
-        p_value = (
-            ((permuted_statistic >= observed_statistic).sum() + 1)  # type: ignore
-            / (num_permutations + 1)
-            if conservative
-            else (permuted_statistic >= observed_statistic).mean()  # type: ignore
-        )
+        extreme_statistic = permuted_statistic >= observed_statistic  # type: ignore
+
+        if total_num_permutations is None:
+            # Set the total number of permutations to the maximum number of
+            # permutations, the minimum between all possible permutations or
+            # the global maximum number of permutations
+            total_num_permutations = np.min([max_num_permutations, MAX_NUM_PERM])
+
+        if method == "auto":
+            method = "approximate" if num_permutations > MAX_NUM_PERM else "exact"
+        if method == "conservative":
+            p_value = PermutationTestDistanceBased._compute_conservative(
+                num_permutations=num_permutations,
+                observed_statistic=observed_statistic,
+                permuted_statistic=permuted_statistic,
+            )
+        elif method == "exact":
+            p_value = PermutationTestDistanceBased._compute_exact(
+                extreme_statistic=extreme_statistic,
+                total_num_permutations=total_num_permutations,
+                permuted_statistic=permuted_statistic,
+            )
+        elif method == "approximate":
+            p_value = PermutationTestDistanceBased._compute_approximate(
+                extreme_statistic=extreme_statistic,
+                total_num_permutations=total_num_permutations,
+                permuted_statistic=permuted_statistic,
+            )
+        else:  # method == "estimate"
+            p_value = PermutationTestDistanceBased._compute_estimate(
+                extreme_statistic=extreme_statistic,
+            )
+
         return permuted_statistic, p_value
+
+    @staticmethod
+    def _compute_estimate(
+        extreme_statistic: np.ndarray,
+    ) -> float:
+        p_value = extreme_statistic.mean()  # type: ignore
+        return p_value
+
+    @staticmethod
+    def _compute_approximate(
+        extreme_statistic: np.ndarray,
+        total_num_permutations: int,
+        permuted_statistic: np.ndarray,
+    ) -> float:
+        num_extreme_statistic = extreme_statistic.sum()
+        num_permutations = len(permuted_statistic)
+        integral, _ = quad(
+            func=lambda p: binom.cdf(
+                num_extreme_statistic,
+                num_permutations,
+                p,
+            ),
+            a=0,
+            b=0.5 / total_num_permutations,
+        )
+        p_value = (num_extreme_statistic + 1) / (
+            num_permutations + 1
+        ) - 0.5 / total_num_permutations * integral
+        return p_value
+
+    @staticmethod
+    def _compute_exact(
+        extreme_statistic: np.ndarray,
+        total_num_permutations: int,
+        permuted_statistic: np.ndarray,
+    ) -> float:
+        num_extreme_statistic = extreme_statistic.sum()
+        num_permutations = len(permuted_statistic)
+        p = np.arange(1, total_num_permutations + 1) / total_num_permutations
+        y = binom.cdf(
+            num_extreme_statistic,
+            num_permutations,
+            p,
+        )
+        p_value = np.mean(y)
+        return p_value
+
+    @staticmethod
+    def _compute_conservative(
+        num_permutations: int,
+        observed_statistic: float,
+        permuted_statistic: np.ndarray,
+    ) -> float:
+        p_value = (
+            (permuted_statistic >= observed_statistic).sum() + 1
+        ) / (  # type: ignore
+            num_permutations + 1
+        )
+        return p_value
 
     def on_compare_end(
         self,
@@ -204,8 +339,9 @@ class PermutationTestDistanceBased(BaseCallbackBatch):
             statistic_args=self.detector.statistical_kwargs,  # type: ignore
             observed_statistic=observed_statistic,
             num_permutations=self.num_permutations,
+            total_num_permutations=self.total_num_permutations,
             num_jobs=self.num_jobs,
-            conservative=self.conservative,
+            method=self.method,
             random_state=self.random_state,
             verbose=self.verbose,
         )
