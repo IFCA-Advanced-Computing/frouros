@@ -4,7 +4,7 @@ import abc
 import itertools
 from functools import partial
 from multiprocessing import Pool
-from typing import Any, Callable, Optional, Union
+from typing import Any, Callable, Optional, Union, Tuple
 
 import numpy as np  # type: ignore
 from tqdm import tqdm  # type: ignore
@@ -222,7 +222,7 @@ def permutation(  # pylint: disable=too-many-arguments,too-many-locals
     num_jobs: int,
     random_state: Optional[int] = None,
     verbose: bool = False,
-) -> list[float]:
+) -> Tuple[list[float], int]:
     """Permutation method.
 
     :param X: reference data
@@ -241,8 +241,8 @@ def permutation(  # pylint: disable=too-many-arguments,too-many-locals
     :type random_state: Optional[int]
     :param verbose: verbose flag, defaults to False
     :type verbose: bool
-    :return: permuted statistics
-    :rtype: list[float]
+    :return: permuted statistics and max number of permutations
+    :rtype: list[float], int
     """
     np.random.seed(seed=random_state)
     X_num_samples, Y_num_samples = X.shape[0], Y.shape[0]  # noqa: N806
@@ -271,4 +271,4 @@ def permutation(  # pylint: disable=too-many-arguments,too-many-locals
             iterable=tqdm(permuted_data) if verbose else permuted_data,
         ).get()
 
-    return permuted_statistics
+    return permuted_statistics, max_num_permutations

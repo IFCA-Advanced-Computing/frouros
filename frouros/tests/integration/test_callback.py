@@ -87,6 +87,7 @@ def test_batch_permutation_test_data_univariate_different_distribution(
         callbacks=[
             PermutationTestDistanceBased(
                 num_permutations=100,
+                method="estimate",
                 random_state=31,
                 num_jobs=-1,
                 name=permutation_test_name,
@@ -103,16 +104,32 @@ def test_batch_permutation_test_data_univariate_different_distribution(
     )
 
 
-def test_batch_permutation_test_conservative(
+@pytest.mark.parametrize(
+    "method, expected_p_value",
+    [
+        ("auto", 0.009900490107343236),
+        ("conservative", 0.009900990099009901),
+        ("exact", 0.009900490107343236),
+        ("approximate", 0.009900990098759907),
+        ("estimate", 0.0),
+    ],
+)
+def test_batch_permutation_test_method(
     X_ref_univariate: np.ndarray,  # noqa: N803
     X_test_univariate: np.ndarray,
+    method: str,
+    expected_p_value: float,
 ) -> None:
-    """Test batch permutation test on data drift callback using conservative flag.
+    """Test batch permutation test on data drift callback using method.
 
     :param X_ref_univariate: reference univariate data
     :type X_ref_univariate: numpy.ndarray
     :param X_test_univariate: test univariate data
     :type X_test_univariate: numpy.ndarray
+    :param method: method
+    :type method: str
+    :param expected_p_value: expected p-value value
+    :type expected_p_value: float
     """
     np.random.seed(seed=31)
 
@@ -121,7 +138,7 @@ def test_batch_permutation_test_conservative(
         callbacks=[
             PermutationTestDistanceBased(
                 num_permutations=100,
-                conservative=True,
+                method=method,
                 random_state=31,
                 num_jobs=-1,
                 name=permutation_test_name,
@@ -133,7 +150,7 @@ def test_batch_permutation_test_conservative(
 
     assert np.isclose(
         callback_logs[permutation_test_name]["p_value"],
-        0.00990099,
+        expected_p_value,
     )
 
 

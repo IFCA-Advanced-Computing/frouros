@@ -43,7 +43,7 @@ def test_permutation(
     :param expected_permutation_mean: expected permutation mean
     :type expected_permutation_mean: float
     """
-    permutations = permutation(
+    permutations, _ = permutation(
         X=X,
         Y=Y,
         statistic=statistic,
