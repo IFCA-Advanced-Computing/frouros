@@ -22,11 +22,11 @@ class PermutationTestDistanceBased(BaseCallbackBatch):
     :type total_num_permutations: Optional[int]
     :param num_jobs: number of jobs, defaults to -1
     :type num_jobs: int
-    :param method: method to compute the p-value, defaults to "auto". 
-        "`auto`": if the number of permutations is greater than the maximum number of permutations, the method will be set to "approximate". Otherwise, the method will be set to "exact". 
-        "`conservative`": p-value is computed as (number of permutations greater or equal than the observed statistic + 1) / (number of permutations + 1). 
-        "`exact`": p-value is computed as the mean of the binomial cumulative distribution function as stated :cite:`phipson2010permutation`. 
-        "`approximate`": p-value is computed using the integral of the binomial cumulative distribution function as stated :cite:`phipson2010permutation`. 
+    :param method: method to compute the p-value, defaults to "auto".
+        "`auto`": if the number of permutations is greater than the maximum number of permutations, the method will be set to "approximate". Otherwise, the method will be set to "exact".
+        "`conservative`": p-value is computed as (number of permutations greater or equal than the observed statistic + 1) / (number of permutations + 1).
+        "`exact`": p-value is computed as the mean of the binomial cumulative distribution function as stated :cite:`phipson2010permutation`.
+        "`approximate`": p-value is computed using the integral of the binomial cumulative distribution function as stated :cite:`phipson2010permutation`.
         "`estimate`": p-value is computed as the mean of the extreme statistic. p-value can be zero.
     :type method: str
     :param random_state: random state, defaults to None
