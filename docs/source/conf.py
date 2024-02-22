@@ -112,6 +112,7 @@ myst_enable_extensions = [
 ]
 myst_url_schemes = ("http", "https", "mailto")
 myst_heading_anchors = 3
+myst_all_links_external = True
 
 # MyST-NB configuration
 nb_execution_timeout = 480
