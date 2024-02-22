@@ -30,12 +30,6 @@ The different types of changes that are considered as a form of drift can be cat
 ${P_{[0, t]}(X) \neq P_{[t+1, \infty)}(X)}$. [Data drift methods](#data-drift) are designed to try to detect this type drift. Unlike *concept drift* taking place, the presence of *data drift* does not guarantee that model's performance is being affected, but it is highly probable that is happening. We have renamed *dataset shift* {cite}`rabanser2019failing` to *data drift*
 in order to maintain consistency with the *concept drift* definition. These *data drift* methods can also be used to detect *label drift*, also known as *prior probability shift* {cite}`storkey2009training`, where the label distribution ${P(Y)}$ is the one that changes over time, in such a way that ${P_{[0, t]}(Y) \neq P_{[t+1, \infty)}(Y)}$.
 
-## Why do I need to use a drift detector?
-
-One of the main mistakes when deploying a machine learning model for consumption is to assume that the data used for inference will come from the same distribution as the data on which the model was trained, i.e. that the data will be stationary. It may also be the case that the data use at inference time is still similar to those used for training, but the concept of what was learned in the first instance has changed over time, making the model obsolete in terms of performance.
-
-Drift detectors make it possible to monitor model performance or feature distributions in order to detect significant deviations that can cause model performance decay. By using them it is possible to know when it is necessary to replace the current model with a new one trained on more recent data.
-
 ## Verification latency or delay
 
 According to {cite}`dos2016fast`, is defined as the period between a model's prediction and the availability of the ground-truth label (in case of a classification problem) or the target value (in case of a regression problem).
