@@ -8,5 +8,6 @@ The {mod}`frouros.utils` module contains auxiliary classes, functions or excepti
 utils/checks
 utils/data_structures
 utils/kernels
+utils/persistence
 utils/stats
 ```

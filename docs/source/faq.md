@@ -83,3 +83,10 @@ including guidelines for reporting issues, submitting feature requests, and cont
 
 Frouros does not currently provide built-in visualization tools for drift detection results, but it is planned to 
 include them in future releases.
+
+## How can I persist a detector or callback for later use?
+
+Frouros provides a [persistence module](./api_reference/utils/persistence.html) that allows you to persist a detector 
+or callback for later use. It offers [save](api_reference/utils/persistence.html#frouros.utils.persistence.save) and 
+[load](api_reference/utils/persistence.html#frouros.utils.persistence.load) methods to save and load the detector or 
+callback to and from disk, respectively.
