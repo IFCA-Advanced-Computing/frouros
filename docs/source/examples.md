@@ -5,4 +5,5 @@
 
 examples/concept_drift
 examples/data_drift
+examples/utils
 ```
