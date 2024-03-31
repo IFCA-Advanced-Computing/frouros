@@ -7,13 +7,20 @@ on:
 
 jobs:
   python-version:
-    runs-on: ubuntu-22.04
+    runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        python-version: ['3.9',
-                         '3.10',
-                         '3.11',
-                         '3.12',]
+        os: [
+          ubuntu-22.04,
+          windows-2022,
+          macos-12,
+        ]
+        python-version: [
+          '3.9',
+          '3.10',
+          '3.11',
+          '3.12',
+        ]
 
     steps:
       - name: Checkout
