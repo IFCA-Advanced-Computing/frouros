@@ -1,7 +1,9 @@
 """Test real datasets module."""
 
-import numpy as np  # type: ignore
-import pytest  # type: ignore
+import sys
+
+import numpy as np
+import pytest
 
 from frouros.datasets.exceptions import ReadFileError
 from frouros.datasets.real import Elec2
@@ -21,6 +23,10 @@ def test_elec2_file_not_found_error(elec2_raw: Elec2) -> None:
         _ = elec2_raw.load()
 
 
+# FIXME: PermissionError not raised on Windows
+@pytest.mark.skipif(
+    sys.platform.startswith("win"), reason="PermissionError not raised on Windows.r"
+)
 def test_elec2_permission_error() -> None:
     """Test Elec2 permission error."""
     with pytest.raises(PermissionError):

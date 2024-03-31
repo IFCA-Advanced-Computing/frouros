@@ -4,10 +4,10 @@ import abc
 import itertools
 from functools import partial
 from multiprocessing import Pool
-from typing import Any, Callable, Optional, Union, Tuple
+from typing import Any, Callable, Optional, Tuple, Union
 
-import numpy as np  # type: ignore
-from tqdm import tqdm  # type: ignore
+import numpy as np
+from tqdm import tqdm
 
 from frouros.utils.data_structures import CircularQueue
 from frouros.utils.logger import logger
@@ -216,7 +216,7 @@ class EWMA(IncrementalStat):
 def permutation(  # pylint: disable=too-many-arguments,too-many-locals
     X: np.ndarray,  # noqa: N803
     Y: np.ndarray,
-    statistic: Callable,
+    statistic: Callable,  # type: ignore
     statistical_args: dict[str, Any],
     num_permutations: int,
     num_jobs: int,
@@ -268,7 +268,7 @@ def permutation(  # pylint: disable=too-many-arguments,too-many-locals
     with Pool(processes=num_jobs) as pool:
         permuted_statistics = pool.starmap_async(
             partial(statistic, **statistical_args),
-            iterable=tqdm(permuted_data) if verbose else permuted_data,
+            iterable=tqdm(permuted_data) if verbose else permuted_data,  # type: ignore
         ).get()
 
     return permuted_statistics, max_num_permutations

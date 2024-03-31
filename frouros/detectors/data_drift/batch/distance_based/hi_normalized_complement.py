@@ -2,7 +2,7 @@
 
 from typing import Optional, Union
 
-import numpy as np  # type: ignore
+import numpy as np
 
 from frouros.callbacks.batch.base import BaseCallbackBatch
 from frouros.detectors.data_drift.batch.distance_based.base import (
@@ -73,7 +73,9 @@ class HINormalizedComplement(BaseDistanceBasedBins):
             np.max([np.max(X), np.max(Y)]),
         )
         X_hist, _ = np.histogram(  # noqa: N806
-            X, bins=num_bins, range=hist_range  # noqa: N806
+            X,
+            bins=num_bins,
+            range=hist_range,  # noqa: N806
         )
         X_hist = X_hist / X.shape[0]  # noqa: N806
         Y_hist, _ = np.histogram(Y, bins=num_bins, range=hist_range)  # noqa: N806

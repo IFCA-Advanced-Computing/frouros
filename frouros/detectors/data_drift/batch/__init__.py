@@ -1,15 +1,15 @@
 """Data drift batch detection methods init."""
 
 from .distance_based import (
-    BhattacharyyaDistance,
     EMD,
+    JS,
+    KL,
+    MMD,
+    PSI,
+    BhattacharyyaDistance,
     EnergyDistance,
     HellingerDistance,
     HINormalizedComplement,
-    JS,
-    KL,
-    PSI,
-    MMD,
 )
 from .statistical_test import (
     AndersonDarlingTest,

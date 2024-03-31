@@ -2,7 +2,7 @@
 
 from typing import Any
 
-import pytest  # type: ignore
+import pytest
 
 from frouros.callbacks.base import BaseCallback
 from frouros.callbacks.batch import PermutationTestDistanceBased, ResetStatisticalTest

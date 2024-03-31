@@ -4,14 +4,14 @@
 #  the commented code lines when that is solved.
 
 # from copy import deepcopy
-from typing import Optional, Union
+from typing import Any, Optional, Union
 
-import numpy as np  # type: ignore
-from scipy.stats._stats_py import (  # type: ignore
-    _compute_prob_outside_square,
+import numpy as np
+from scipy.stats._stats_py import (
     _compute_outer_prob_inside_method,
+    _compute_prob_outside_square,
 )
-from scipy.stats.distributions import kstwo  # type: ignore
+from scipy.stats.distributions import kstwo
 
 from frouros.callbacks.streaming.base import BaseCallbackStreaming
 from frouros.detectors.data_drift.base import NumericalData, UnivariateData
@@ -71,7 +71,7 @@ class IncrementalKSTest(BaseStatisticalTest):
             callbacks=callbacks,
         )
         self.window_size = window_size
-        self.gcd = None
+        self.gcd: Optional[int] = None
         # self.treap = None
         self.X_queue = CircularQueue(max_len=self.window_size)
 
@@ -98,7 +98,7 @@ class IncrementalKSTest(BaseStatisticalTest):
 
     def _fit(self, X: np.ndarray) -> None:  # noqa: N803
         if max(X.shape[0], self.window_size) <= MAX_AUTO_N:
-            self.gcd = np.gcd(X.shape[0], self.window_size)
+            self.gcd = int(np.gcd(X.shape[0], self.window_size))
 
         # r = X.shape[0] / self.window_size
         # self.treap = Treap(r=r)  # type: ignore
@@ -133,7 +133,7 @@ class IncrementalKSTest(BaseStatisticalTest):
     def _statistical_test(
         X_ref: np.ndarray,  # noqa: N803
         X: np.ndarray,
-        **kwargs,
+        **kwargs: Any,
     ) -> StatisticalResult:
         # treap, p_value = kwargs["treap"], kwargs["p_value"]
 

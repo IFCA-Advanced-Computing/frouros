@@ -2,13 +2,13 @@
 
 import pickle
 
-import pytest  # type: ignore
+import pytest
 
 from frouros.callbacks import HistoryConceptDrift, PermutationTestDistanceBased
 from frouros.callbacks.base import BaseCallback
 from frouros.detectors.base import BaseDetector
 from frouros.detectors.concept_drift import DDM, DDMConfig
-from frouros.detectors.data_drift import MMD
+from frouros.detectors.data_drift import MMD  # type: ignore
 from frouros.utils import load, save
 
 

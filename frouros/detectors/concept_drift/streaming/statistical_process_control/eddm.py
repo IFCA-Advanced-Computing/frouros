@@ -1,14 +1,14 @@
 """EDDM (Early drift detection method) module."""
 
 import copy
-from typing import Optional, Union
+from typing import Any, Optional, Union
 
-import numpy as np  # type: ignore
+import numpy as np
 
 from frouros.callbacks.streaming.base import BaseCallbackStreaming
 from frouros.detectors.concept_drift.streaming.statistical_process_control.base import (
-    BaseSPCConfig,
     BaseSPC,
+    BaseSPCConfig,
 )
 
 
@@ -342,7 +342,7 @@ class EDDM(BaseSPC):
             raise ValueError("variance must be great or equal than 0.")
         self._additional_vars["variance_distance_error"] = value
 
-    def _update(self, value: Union[int, float], **kwargs) -> None:
+    def _update(self, value: Union[int, float], **kwargs: Any) -> None:
         self.num_instances += 1
 
         if value == 1:
@@ -364,8 +364,7 @@ class EDDM(BaseSPC):
             self.last_distance_error = self.num_instances
 
             if (
-                self.num_instances
-                >= self.config.min_num_misclassified_instances  # type: ignore
+                self.num_instances >= self.config.min_num_misclassified_instances  # type: ignore # noqa: E501
             ):
                 distance_threshold = (
                     self.mean_distance_error

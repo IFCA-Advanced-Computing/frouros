@@ -1,14 +1,15 @@
 """Test PermutationTestDistanceBased module."""
 
 import multiprocessing
+from typing import Any
 
-import numpy as np  # type: ignore
-import pytest  # type: ignore
+import numpy as np
+import pytest
 
 from frouros.callbacks.batch.permutation_test import PermutationTestDistanceBased
 
 
-def test_initialization_with_valid_input_parameters():
+def test_initialization_with_valid_input_parameters() -> None:
     """Test the initialization with valid input parameters."""
     num_permutations = 1000
     total_num_permutations = None
@@ -37,15 +38,24 @@ def test_initialization_with_valid_input_parameters():
     assert callback.name == name
 
 
-def test_calculate_p_value_with_valid_input_parameters(mocker):
+def test_calculate_p_value_with_valid_input_parameters(mocker: Any) -> None:
     """Test the calculation of p-value with valid input parameters."""
 
-    def statistic(x, y):
+    def statistic(x: Any, y: Any) -> float:
+        """Statistical function.
+
+        :param x: input data
+        :type x: Any
+        :param y: input data
+        :type y: Any
+        :return: statistical value
+        :rtype: float
+        """
         return np.abs(np.mean(x) - np.mean(y))
 
     X_ref = np.array([1, 2, 3, 4, 5])  # noqa: N806
     X_test = np.array([6, 7, 8, 9, 10])  # noqa: N806
-    statistic_args = {}
+    statistic_args: dict[str, Any] = {}
     observed_statistic = 1.0
     num_permutations = 1000
     total_num_permutations = None
@@ -79,7 +89,7 @@ def test_calculate_p_value_with_valid_input_parameters(mocker):
     np.testing.assert_allclose(result[1], p_value, rtol=1e-6)
 
 
-def test_compute_estimate_with_valid_input_parameters():
+def test_compute_estimate_with_valid_input_parameters() -> None:
     """Test the computation of estimate with valid input parameters."""
     extreme_statistic = np.array([True, False, True, True, False])
 
@@ -88,7 +98,7 @@ def test_compute_estimate_with_valid_input_parameters():
     np.testing.assert_allclose(p_value, 0.6, rtol=1e-6)
 
 
-def test_initialization_with_invalid_num_permutations():
+def test_initialization_with_invalid_num_permutations() -> None:
     """Test the initialization with invalid number of permutations."""
     num_permutations = 0
     total_num_permutations = None
@@ -110,7 +120,7 @@ def test_initialization_with_invalid_num_permutations():
         )
 
 
-def test_initialization_with_invalid_num_permutations_exceeding_max():
+def test_initialization_with_invalid_num_permutations_exceeding_max() -> None:
     """Test the initialization with number of permutations exceeding the maximum."""
     num_permutations = 1000001
     total_num_permutations = None
@@ -132,7 +142,7 @@ def test_initialization_with_invalid_num_permutations_exceeding_max():
         )
 
 
-def test_compute_approximate_valid_input():
+def test_compute_approximate_valid_input() -> None:
     """Test the computation of approximate value with valid input parameters."""
     extreme_statistic = np.array([True, False, True, True, False])
     total_num_permutations = 1000
@@ -145,7 +155,7 @@ def test_compute_approximate_valid_input():
     np.testing.assert_allclose(p_value, 0.6666664166666666, rtol=1e-9)
 
 
-def test_compute_exact_valid_input():
+def test_compute_exact_valid_input() -> None:
     """Test the computation of exact value with valid input parameters."""
     extreme_statistic = np.array([True, False, True, True, False])
     total_num_permutations = 1000
@@ -158,7 +168,7 @@ def test_compute_exact_valid_input():
     np.testing.assert_allclose(p_value, 0.6661666666665, rtol=1e-9)
 
 
-def test_compute_conservative_valid_input():
+def test_compute_conservative_valid_input() -> None:
     """Test the computation of conservative value with valid input parameters."""
     num_permutations = 1000
     observed_statistic = 0.5
@@ -171,7 +181,7 @@ def test_compute_conservative_valid_input():
     np.testing.assert_allclose(p_value, 0.002997002997002997, rtol=1e-9)
 
 
-def test_compute_estimate_valid_input():
+def test_compute_estimate_valid_input() -> None:
     """Test the computation of estimate with valid input parameters."""
     extreme_statistic = np.array([True, False, True, True, False])
 

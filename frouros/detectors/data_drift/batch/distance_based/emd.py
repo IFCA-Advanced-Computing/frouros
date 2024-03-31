@@ -1,9 +1,9 @@
 """EMD (Earth Mover's Distance) module."""
 
-from typing import Optional, Union
+from typing import Any, Optional, Union
 
-import numpy as np  # type: ignore
-from scipy.stats import wasserstein_distance  # type: ignore
+import numpy as np
+from scipy.stats import wasserstein_distance
 
 from frouros.callbacks.batch.base import BaseCallbackBatch
 from frouros.detectors.data_drift.base import UnivariateData
@@ -43,7 +43,7 @@ class EMD(BaseDistanceBased):
     def __init__(  # noqa: D107
         self,
         callbacks: Optional[Union[BaseCallbackBatch, list[BaseCallbackBatch]]] = None,
-        **kwargs,
+        **kwargs: Any,
     ) -> None:
         super().__init__(
             statistical_type=UnivariateData(),
@@ -57,14 +57,14 @@ class EMD(BaseDistanceBased):
         self,
         X_ref: np.ndarray,  # noqa: N803
         X: np.ndarray,  # noqa: N803
-        **kwargs,
+        **kwargs: Any,
     ) -> DistanceResult:
         emd = self._emd(X=X_ref, Y=X, **self.kwargs)
         distance = DistanceResult(distance=emd)
         return distance
 
     @staticmethod
-    def _emd(X: np.ndarray, Y: np.ndarray, **kwargs) -> float:  # noqa: N803
+    def _emd(X: np.ndarray, Y: np.ndarray, **kwargs: Any) -> float:  # noqa: N803
         emd = wasserstein_distance(
             u_values=X.flatten(),
             v_values=Y.flatten(),

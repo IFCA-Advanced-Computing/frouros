@@ -1,9 +1,9 @@
 """CVMTest (Cramér-von Mises test) module."""
 
-from typing import Optional, Union
+from typing import Any, Optional, Union
 
-import numpy as np  # type: ignore
-from scipy.stats import cramervonmises_2samp  # type: ignore
+import numpy as np
+from scipy.stats import cramervonmises_2samp
 
 from frouros.callbacks.batch.base import BaseCallbackBatch
 from frouros.detectors.data_drift.base import NumericalData, UnivariateData
@@ -78,7 +78,7 @@ class CVMTest(BaseStatisticalTest):
     def _statistical_test(
         X_ref: np.ndarray,  # noqa: N803
         X: np.ndarray,
-        **kwargs,
+        **kwargs: Any,
     ) -> StatisticalResult:
         test = cramervonmises_2samp(
             x=X_ref,

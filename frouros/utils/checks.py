@@ -22,9 +22,7 @@ def check_callbacks(
         or isinstance(callbacks, expected_cls)  # type: ignore
         or (
             isinstance(callbacks, list)
-            and all(
-                isinstance(item, expected_cls) for item in callbacks  # type: ignore
-            )
+            and all(isinstance(item, expected_cls) for item in callbacks)  # type: ignore # noqa: E501
         )
     ):
         raise TypeError(

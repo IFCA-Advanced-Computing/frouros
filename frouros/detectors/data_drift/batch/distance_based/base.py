@@ -4,13 +4,13 @@ import abc
 from collections import namedtuple
 from typing import Any, Callable, Optional, Tuple, Union
 
-import numpy as np  # type: ignore
-from scipy.stats import rv_histogram  # type: ignore
+import numpy as np
+from scipy.stats import rv_histogram
 
 from frouros.callbacks.batch.base import BaseCallbackBatch
 from frouros.detectors.data_drift.base import (
-    NumericalData,
     BaseStatisticalType,
+    NumericalData,
     UnivariateData,
 )
 from frouros.detectors.data_drift.batch.base import BaseDataDriftBatch
@@ -24,7 +24,7 @@ class BaseDistanceBased(BaseDataDriftBatch):
     def __init__(
         self,
         statistical_type: BaseStatisticalType,
-        statistical_method: Callable,
+        statistical_method: Callable,  # type: ignore
         statistical_kwargs: dict[str, Any],
         callbacks: Optional[Union[BaseCallbackBatch, list[BaseCallbackBatch]]] = None,
     ) -> None:
@@ -48,7 +48,7 @@ class BaseDistanceBased(BaseDataDriftBatch):
         self.statistical_kwargs = statistical_kwargs
 
     @property
-    def statistical_method(self) -> Callable:
+    def statistical_method(self) -> Callable:  # type: ignore
         """Statistical method property.
 
         :return: statistical method
@@ -57,7 +57,7 @@ class BaseDistanceBased(BaseDataDriftBatch):
         return self._statistical_method
 
     @statistical_method.setter
-    def statistical_method(self, value: Callable) -> None:
+    def statistical_method(self, value: Callable) -> None:  # type: ignore
         """Statistical method setter.
 
         :param value: value to be set
@@ -87,7 +87,10 @@ class BaseDistanceBased(BaseDataDriftBatch):
         self._statistical_kwargs = value
 
     def _apply_method(
-        self, X_ref: np.ndarray, X: np.ndarray, **kwargs  # noqa: N803
+        self,
+        X_ref: np.ndarray,  # noqa: N803
+        X: np.ndarray,
+        **kwargs: Any,
     ) -> DistanceResult:
         distance = self._distance_measure(X_ref=X_ref, X=X, **kwargs)
         return distance
@@ -95,19 +98,19 @@ class BaseDistanceBased(BaseDataDriftBatch):
     def _compare(
         self,
         X: np.ndarray,  # noqa: N803
-        **kwargs,
-    ) -> DistanceResult:
+        **kwargs: Any,
+    ) -> Union[list[float], list[Tuple[float, float]], Tuple[float, float]]:
         self._common_checks()  # noqa: N806
         self._specific_checks(X=X)  # noqa: N806
-        distance = self._get_result(X=X, **kwargs)  # type: ignore
-        return distance  # type: ignore
+        distance = self._get_result(X=X, **kwargs)
+        return distance
 
     @abc.abstractmethod
     def _distance_measure(
         self,
         X_ref: np.ndarray,  # noqa: N803
         X: np.ndarray,  # noqa: N803
-        **kwargs,
+        **kwargs: Any,
     ) -> DistanceResult:
         pass
 
@@ -117,8 +120,8 @@ class BaseDistanceBasedBins(BaseDistanceBased):
 
     def __init__(
         self,
-        statistical_method,
-        statistical_kwargs,
+        statistical_method: Callable,  # type: ignore
+        statistical_kwargs: dict[str, Any],
         callbacks: Optional[Union[BaseCallbackBatch, list[BaseCallbackBatch]]] = None,
         num_bins: int = 10,
     ) -> None:
@@ -166,7 +169,7 @@ class BaseDistanceBasedBins(BaseDistanceBased):
         self,
         X_ref: np.ndarray,  # noqa: N803
         X: np.ndarray,  # noqa: N803
-        **kwargs,
+        **kwargs: Any,
     ) -> DistanceResult:
         distance_bins = self._distance_measure_bins(X_ref=X_ref, X=X)
         distance = DistanceResult(distance=distance_bins)
@@ -174,7 +177,9 @@ class BaseDistanceBasedBins(BaseDistanceBased):
 
     @staticmethod
     def _calculate_bins_values(
-        X_ref: np.ndarray, X: np.ndarray, num_bins: int = 10  # noqa: N803
+        X_ref: np.ndarray,  # noqa: N803
+        X: np.ndarray,
+        num_bins: int = 10,
     ) -> np.ndarray:
         bins = np.histogram(np.hstack((X_ref, X)), bins=num_bins)[  # get the bin edges
             1
@@ -199,8 +204,8 @@ class BaseDistanceBasedProbability(BaseDistanceBased):
 
     def __init__(
         self,
-        statistical_method,
-        statistical_kwargs,
+        statistical_method: Callable,  # type: ignore
+        statistical_kwargs: dict[str, Any],
         callbacks: Optional[Union[BaseCallbackBatch, list[BaseCallbackBatch]]] = None,
         num_bins: int = 10,
     ) -> None:
@@ -249,7 +254,7 @@ class BaseDistanceBasedProbability(BaseDistanceBased):
         self,
         X_ref: np.ndarray,  # noqa: N803
         X: np.ndarray,  # noqa: N803
-        **kwargs,
+        **kwargs: Any,
     ) -> DistanceResult:
         pass
 
@@ -266,8 +271,7 @@ class BaseDistanceBasedProbability(BaseDistanceBased):
         X_merge = np.concatenate([X_ref, X])  # noqa: N806
         bins = np.linspace(np.min(X_merge), np.max(X_merge), num_bins)
         X_ref_rvs = [  # noqa: N806
-            X_ref_rv_histogram.cdf(bins[i])
-            - X_ref_rv_histogram.cdf(bins[i - 1])  # noqa: N806
+            X_ref_rv_histogram.cdf(bins[i]) - X_ref_rv_histogram.cdf(bins[i - 1])  # noqa: N806
             for i in range(1, len(bins[1:]) + 1)
         ]
         X_rvs = [  # noqa: N806

@@ -2,11 +2,11 @@
 
 import codecs
 
-from setuptools import find_packages, setup
 import toml
+from setuptools import find_packages, setup
 
 
-def long_description():
+def long_description() -> str:
     """Read and return README as long description."""
     with codecs.open("README.md", encoding="utf-8-sig") as f:
         return f.read()
@@ -19,7 +19,7 @@ def long_description():
 pyproject = toml.load("pyproject.toml")
 
 
-def setup_package():
+def setup_package() -> None:
     """Set up package."""
     setup(
         author_email=pyproject["project"]["authors"][0]["email"],

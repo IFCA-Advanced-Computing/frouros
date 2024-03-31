@@ -6,7 +6,7 @@ import urllib.parse
 from pathlib import Path
 from typing import Any, Optional, Union
 
-import numpy as np  # type: ignore
+import numpy as np
 import requests
 
 from frouros.datasets.exceptions import (
@@ -32,7 +32,7 @@ class BaseDatasetDownload(abc.ABC):
         :param file_path: file path for the downloaded file
         :type file_path: str
         """
-        self.url = url  # type: ignore
+        self.url = url
         self.file_path: Optional[Path] = (
             Path(file_path)
             if file_path
@@ -137,11 +137,11 @@ class BaseDatasetDownload(abc.ABC):
         else:
             raise DownloadError("File cannot be downloaded from any of the urls.")
 
-    def load(self, **kwargs) -> Any:
+    def load(self, **kwargs: Any) -> Any:
         """Load dataset.
 
-        :param kwargs: dict of kwargs
-        :type kwargs: dict
+        :param kwargs: additional arguments
+        :type kwargs: Any
         :raises FileNotFoundError: File not found exception
         :raises ReadFileError: Read file exception
         :return: loaded dataset
@@ -161,11 +161,11 @@ class BaseDatasetDownload(abc.ABC):
         return dataset
 
     @abc.abstractmethod
-    def read_file(self, **kwargs) -> Any:
+    def read_file(self, **kwargs: Any) -> Any:
         """Read file abstract method.
 
-        :param kwargs: dict of kwargs
-        :type kwargs: dict
+        :param kwargs: additional arguments
+        :type kwargs: Any
         :return: read file
         :rtype: Any
         """

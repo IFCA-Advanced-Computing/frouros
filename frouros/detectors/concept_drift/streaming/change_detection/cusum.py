@@ -2,7 +2,7 @@
 
 from typing import Optional, Union
 
-import numpy as np  # type: ignore
+import numpy as np
 
 from frouros.callbacks.streaming.base import BaseCallbackStreaming
 from frouros.detectors.concept_drift.streaming.change_detection.base import (
@@ -89,8 +89,5 @@ class CUSUM(BaseCUSUM):
     def _update_sum(self, error_rate: float) -> None:
         self.sum_ = np.maximum(
             0,
-            self.sum_
-            + error_rate
-            - self.mean_error_rate.mean
-            - self.config.delta,  # type: ignore
+            self.sum_ + error_rate - self.mean_error_rate.mean - self.config.delta,  # type: ignore # noqa: E501
         )

@@ -3,7 +3,7 @@
 import abc
 from typing import Any, Optional, Tuple, Union
 
-import numpy as np  # type: ignore
+import numpy as np
 
 from frouros.detectors.data_drift.base import BaseResult
 from frouros.detectors.data_drift.streaming.base import (

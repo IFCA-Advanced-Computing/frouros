@@ -2,12 +2,14 @@
 
 from typing import Any, Callable, Optional, Tuple, Union
 
-import numpy as np  # type: ignore
+import numpy as np
 
 from frouros.callbacks.streaming.base import BaseCallbackStreaming
-from frouros.detectors.data_drift.base import NumericalData, MultivariateData
+from frouros.detectors.data_drift.base import MultivariateData, NumericalData
 from frouros.detectors.data_drift.batch import MMD as MMDBatch  # noqa: N811
-from frouros.detectors.data_drift.batch.distance_based.mmd import rbf_kernel
+from frouros.detectors.data_drift.batch.distance_based.mmd import (  # type: ignore
+    rbf_kernel,
+)
 from frouros.detectors.data_drift.streaming.distance_based.base import (
     BaseDistanceBased,
     DistanceResult,
@@ -54,7 +56,7 @@ class MMD(BaseDistanceBased):
     def __init__(  # noqa: D107
         self,
         window_size: int,
-        kernel: Callable = rbf_kernel,
+        kernel: Callable = rbf_kernel,  # type: ignore
         chunk_size: Optional[int] = None,
         callbacks: Optional[
             Union[BaseCallbackStreaming, list[BaseCallbackStreaming]]

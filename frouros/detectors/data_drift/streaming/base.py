@@ -3,7 +3,7 @@
 import abc
 from typing import Any, Optional, Tuple, Union
 
-import numpy as np  # type: ignore
+import numpy as np
 
 from frouros.callbacks.streaming.base import BaseCallbackStreaming
 from frouros.detectors.data_drift.base import (
@@ -72,12 +72,12 @@ class BaseDataDriftStreaming(BaseDataDrift):
 
         for callback in self.callbacks:  # type: ignore
             callback.on_update_start(  # type: ignore
-                value=value,  # type: ignore
+                value=value,
             )
         result = self._update(value=value)
         for callback in self.callbacks:  # type: ignore
             callback.on_update_end(  # type: ignore
-                value=result,  # type: ignore
+                value=result,
             )
 
         callbacks_logs = self._get_callbacks_logs()

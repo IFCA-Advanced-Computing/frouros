@@ -2,7 +2,7 @@
 
 from typing import Any, Optional
 
-import numpy as np  # type: ignore
+import numpy as np
 
 from frouros.callbacks.batch.base import BaseCallbackBatch
 from frouros.utils.logger import logger

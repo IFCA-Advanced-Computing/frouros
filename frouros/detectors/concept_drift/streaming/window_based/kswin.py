@@ -2,15 +2,15 @@
 
 import itertools
 from collections import deque
-from typing import Optional, Union
+from typing import Any, Optional, Union
 
-import numpy as np  # type: ignore
-from scipy.stats import ks_2samp  # type: ignore
+import numpy as np
+from scipy.stats import ks_2samp
 
 from frouros.callbacks.streaming.base import BaseCallbackStreaming
 from frouros.detectors.concept_drift.streaming.window_based.base import (
-    BaseWindowConfig,
     BaseWindow,
+    BaseWindowConfig,
 )
 
 
@@ -147,7 +147,7 @@ class KSWIN(BaseWindow):
         self._set_additional_vars_callback()
 
     @property
-    def window(self) -> deque:
+    def window(self) -> deque:  # type: ignore
         """Window queue property.
 
         :return: window queue
@@ -156,7 +156,7 @@ class KSWIN(BaseWindow):
         return self._additional_vars["window"]
 
     @window.setter
-    def window(self, value: deque) -> None:
+    def window(self, value: deque) -> None:  # type: ignore
         """Window queue setter.
 
         :param value: value to be set
@@ -167,7 +167,7 @@ class KSWIN(BaseWindow):
             raise TypeError("value must be of type deque.")
         self._additional_vars["window"] = value
 
-    def _update(self, value: Union[int, float], **kwargs) -> None:
+    def _update(self, value: Union[int, float], **kwargs: Any) -> None:
         self.num_instances += 1
 
         self.window.append(value)

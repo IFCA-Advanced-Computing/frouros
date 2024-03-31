@@ -2,7 +2,7 @@
 
 from typing import Optional, Union
 
-import numpy as np  # type: ignore
+import numpy as np
 
 from frouros.callbacks.batch.base import BaseCallbackBatch
 from frouros.detectors.data_drift.batch.distance_based.base import (
@@ -70,7 +70,11 @@ class HellingerDistance(BaseDistanceBasedBins):
 
     @staticmethod
     def _hellinger(
-        X: np.ndarray, Y: np.ndarray, *, num_bins: int, sqrt_div: float  # noqa: N803
+        X: np.ndarray,  # noqa: N803
+        Y: np.ndarray,
+        *,
+        num_bins: int,
+        sqrt_div: float,
     ) -> float:
         (  # noqa: N806
             X_percents,

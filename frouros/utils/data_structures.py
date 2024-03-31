@@ -1,8 +1,8 @@
 """Data structures module."""
 
-from typing import Any, Optional, Union, Tuple
+from typing import Any, Optional, Tuple, Union
 
-import numpy as np  # type: ignore
+import numpy as np
 
 
 class EmptyQueueError(Exception):
@@ -175,7 +175,7 @@ class CircularQueue:
         element = self.queue[self.first]
         self.first = (self.first + 1) % self.max_len
         self.count -= 1
-        return element  # type: ignore
+        return element
 
     def enqueue(self, value: Union[np.ndarray, int, float]) -> Optional[Any]:
         """Enqueue element/s.
@@ -187,7 +187,7 @@ class CircularQueue:
         """
         element = self.dequeue() if self.is_full() else None
         self.last = (self.last + 1) % self.max_len
-        self.queue[self.last] = value  # type: ignore
+        self.queue[self.last] = value
         self.count += 1
         return element
 
@@ -228,7 +228,7 @@ class CircularQueue:
         :return: queue item
         :rtype: Any
         """
-        return self.queue[idx]  # type: ignore
+        return self.queue[idx]
 
 
 class AccuracyQueue(CircularQueue):
@@ -246,7 +246,7 @@ class AccuracyQueue(CircularQueue):
         self.num_true = 0
 
     @property
-    def num_false(self):
+    def num_false(self) -> int:
         """Number of false label property.
 
         :return: number of false labels

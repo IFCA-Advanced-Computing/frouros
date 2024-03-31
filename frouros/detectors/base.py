@@ -3,7 +3,7 @@
 import abc
 from typing import Any, Optional, Union
 
-import numpy as np  # type: ignore
+import numpy as np
 
 from frouros.callbacks.base import BaseCallback
 
@@ -18,7 +18,7 @@ class BaseDetector(abc.ABC):
         """Init method.
 
         :param callbacks: callbacks
-        :type callbacks: Optional[Union[BaseCallback, list[Callback]]]
+        :type callbacks: Optional[Union[BaseCallback, list[BaseCallback]]]
         """
         self.callbacks = callbacks  # type: ignore
 
@@ -29,7 +29,7 @@ class BaseDetector(abc.ABC):
         :return: callbacks
         :rtype: Optional[list[BaseCallback]]
         """
-        return self._callbacks  # type: ignore
+        return self._callbacks
 
     @callbacks.setter
     def callbacks(
@@ -45,12 +45,10 @@ class BaseDetector(abc.ABC):
         if value is not None:
             if isinstance(value, BaseCallback):
                 self._callbacks = [value]
-            elif not all(
-                isinstance(callback, BaseCallback) for callback in value  # type: ignore
-            ):
+            elif not all(isinstance(callback, BaseCallback) for callback in value):
                 raise TypeError("value must be of type None or a list of BaseCallback.")
             else:
-                self._callbacks = value  # type: ignore
+                self._callbacks = value
         else:
             self._callbacks = []
 
@@ -60,7 +58,8 @@ class BaseDetector(abc.ABC):
 
     def _get_callbacks_logs(self) -> dict[str, Any]:
         logs = {
-            callback.name: callback.logs for callback in self.callbacks  # type: ignore
+            callback.name: callback.logs
+            for callback in self.callbacks  # type: ignore
         }
         return logs
 

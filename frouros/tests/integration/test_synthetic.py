@@ -2,7 +2,7 @@
 
 from typing import Any
 
-import pytest  # type: ignore
+import pytest
 
 from frouros.datasets.exceptions import InvalidBlockError
 from frouros.datasets.synthetic import SEA

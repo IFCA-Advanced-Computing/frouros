@@ -2,8 +2,8 @@
 
 from typing import Any, Optional, Union
 
-import numpy as np  # type: ignore
-from scipy.special import rel_entr  # type: ignore
+import numpy as np
+from scipy.special import rel_entr
 
 from frouros.callbacks.batch.base import BaseCallbackBatch
 from frouros.detectors.data_drift.batch.distance_based.base import (
@@ -45,7 +45,7 @@ class KL(BaseDistanceBasedProbability):
         self,
         num_bins: int = 10,
         callbacks: Optional[Union[BaseCallbackBatch, list[BaseCallbackBatch]]] = None,
-        **kwargs,
+        **kwargs: Any,
     ) -> None:
         super().__init__(
             statistical_method=self._kl,
@@ -59,7 +59,7 @@ class KL(BaseDistanceBasedProbability):
         self,
         X_ref: np.ndarray,  # noqa: N803
         X: np.ndarray,  # noqa: N803
-        **kwargs,
+        **kwargs: Any,
     ) -> DistanceResult:
         kl = self._kl(X=X_ref, Y=X, num_bins=self.num_bins, **self.kwargs)
         distance = DistanceResult(distance=kl)

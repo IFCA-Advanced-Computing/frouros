@@ -1,14 +1,14 @@
 """STEPD (Statistical test of equal proportions) module."""
 
-from typing import Optional, Union
+from typing import Any, Optional, Union
 
-import numpy as np  # type: ignore
-from scipy.stats import norm  # type: ignore
+import numpy as np
+from scipy.stats import norm
 
 from frouros.callbacks.streaming.base import BaseCallbackStreaming
 from frouros.detectors.concept_drift.streaming.window_based.base import (
-    BaseWindowConfig,
     BaseWindow,
+    BaseWindowConfig,
 )
 from frouros.utils.data_structures import AccuracyQueue
 
@@ -121,7 +121,7 @@ class STEPD(BaseWindow):
     Change detected at step 1024
     """  # noqa: E501  # pylint: disable=line-too-long
 
-    config_type = STEPDConfig  # type: ignore
+    config_type = STEPDConfig
 
     def __init__(  # noqa: D107
         self,
@@ -238,7 +238,7 @@ class STEPD(BaseWindow):
             raise TypeError("value must be of type AccuracyQueue")
         self._additional_vars["window_accuracy"] = value
 
-    def _calculate_statistic(self):
+    def _calculate_statistic(self) -> float:
         p_hat = self.correct_total / self.num_instances
         num_instances_inv = (
             1 / self.num_instances_overall + 1 / self.num_instances_window
@@ -258,7 +258,7 @@ class STEPD(BaseWindow):
         self.correct_total = 0
         self.window_accuracy.clear()
 
-    def _update(self, value: Union[int, float], **kwargs) -> None:
+    def _update(self, value: Union[int, float], **kwargs: Any) -> None:
         self.num_instances += 1
 
         self.correct_total += np.sum(value)

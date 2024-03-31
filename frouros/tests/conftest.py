@@ -1,15 +1,17 @@
 """Configuration file for the tests."""
 
-from typing import Optional, Tuple
+from __future__ import annotations
 
-import numpy as np  # type: ignore
-import pytest  # type: ignore
-import sklearn.linear_model  # type: ignore # pylint: disable=import-error
-import sklearn.pipeline  # type: ignore # pylint: disable=import-error
-import sklearn.preprocessing  # type: ignore # pylint: disable=import-error
+from typing import Any, Optional, Tuple
+
+import numpy as np
+import pytest
+import sklearn.linear_model  # pylint: disable=import-error
+import sklearn.pipeline  # pylint: disable=import-error
+import sklearn.preprocessing  # pylint: disable=import-error
 
 from frouros.datasets.real import Elec2
-from frouros.datasets.synthetic import Dummy, SEA
+from frouros.datasets.synthetic import SEA, Dummy
 from frouros.metrics import PrequentialError
 
 
@@ -216,7 +218,7 @@ def multivariate_distribution_q() -> Tuple[np.ndarray, np.ndarray]:
 def X_ref_multivariate(  # noqa: N802
     multivariate_distribution_p: Tuple[  # pylint: disable=redefined-outer-name
         np.ndarray, np.ndarray
-    ]
+    ],
 ) -> np.ndarray:
     """Reference multivariate data.
 
@@ -236,7 +238,7 @@ def X_ref_multivariate(  # noqa: N802
 def X_test_multivariate(  # noqa: N802
     multivariate_distribution_q: Tuple[  # pylint: disable=redefined-outer-name
         np.ndarray, np.ndarray
-    ]
+    ],
 ) -> np.ndarray:
     """Test multivariate data.
 
@@ -288,7 +290,7 @@ def _generate_univariate_normal_samples(
 def X_ref_univariate(  # noqa: N802
     univariate_distribution_p: Tuple[  # pylint: disable=redefined-outer-name
         float, float
-    ]
+    ],
 ) -> np.ndarray:
     """Reference univariate data.
 
@@ -306,7 +308,7 @@ def X_ref_univariate(  # noqa: N802
 def X_test_univariate(  # noqa: N802
     univariate_distribution_q: Tuple[  # pylint: disable=redefined-outer-name
         float, float
-    ]
+    ],
 ) -> np.ndarray:
     """Test multivariate data.
 
@@ -321,7 +323,7 @@ def X_test_univariate(  # noqa: N802
 
 
 @pytest.fixture(scope="module")
-def prequential_error():
+def prequential_error() -> PrequentialError:
     """Prequential error.
 
     :return: prequential error
@@ -342,15 +344,25 @@ class DummyClassificationModel:
         self.num_classes = num_classes
         np.random.seed(seed=seed)
 
-    def fit(self, X: np.ndarray, y: np.ndarray, *args, **kwargs):  # noqa: N803, W0613
+    def fit(
+        self,
+        X: np.ndarray,  # noqa: N803
+        y: np.ndarray,
+        *args: Any,
+        **kwargs: Any,
+    ) -> DummyClassificationModel:
         """Fit method.
 
         :param X: feature data
         :type X: numpy.ndarray
         :param y: target data
+        :param args: additional arguments
+        :type args: Any
+        :param kwargs: additional keyword arguments
+        :type kwargs: Any
         :type y: numpy.ndarray
-        :return: random class prediction
-        :rtype: numpy.ndarray
+        :return: fitted model
+        :rtype: DummyClassificationModel
         """
         _ = (X, y, args, kwargs)
         return self

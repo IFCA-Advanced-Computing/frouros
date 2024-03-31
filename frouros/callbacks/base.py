@@ -1,9 +1,9 @@
 """Base callback module."""
 
 import abc
-from typing import Optional
+from typing import Any, Optional
 
-import numpy as np  # type: ignore
+import numpy as np
 
 
 class BaseCallback(abc.ABC):
@@ -15,9 +15,9 @@ class BaseCallback(abc.ABC):
         :param name: name value
         :type name: Optional[str]
         """
-        self.name = name  # type: ignore
+        self.name: str = name  # type: ignore
         self.detector = None
-        self.logs = {}  # type: ignore
+        self.logs: dict[str, Any] = {}
 
     @property
     def name(self) -> str:
@@ -40,7 +40,7 @@ class BaseCallback(abc.ABC):
             raise TypeError("name must be of type str or None.")
         self._name = self.__class__.__name__ if value is None else value
 
-    def set_detector(self, detector) -> None:
+    def set_detector(self, detector) -> None:  # type: ignore
         """Set detector method."""
         self.detector = detector
 

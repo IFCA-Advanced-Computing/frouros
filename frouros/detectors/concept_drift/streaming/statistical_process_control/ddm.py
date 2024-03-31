@@ -1,7 +1,7 @@
 """DDM (Drift detection method) module."""
 
 from contextlib import suppress
-from typing import Union, Optional
+from typing import Any, Optional, Union
 
 from frouros.callbacks.streaming.base import BaseCallbackStreaming
 from frouros.detectors.concept_drift.streaming.statistical_process_control.base import (
@@ -97,7 +97,7 @@ class DDM(BaseSPCError):
             callbacks=callbacks,
         )
 
-    def _update(self, value: Union[int, float], **kwargs) -> None:
+    def _update(self, value: Union[int, float], **kwargs: Any) -> None:
         self.num_instances += 1
         self.error_rate.update(value=value)
 

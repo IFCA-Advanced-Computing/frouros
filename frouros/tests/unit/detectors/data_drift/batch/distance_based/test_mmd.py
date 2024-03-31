@@ -3,10 +3,10 @@
 from functools import partial
 from typing import Optional, Tuple
 
-import numpy as np  # type: ignore
-import pytest  # type: ignore
+import numpy as np
+import pytest
 
-from frouros.detectors.data_drift import MMD
+from frouros.detectors.data_drift import MMD  # type: ignore
 from frouros.utils.kernels import rbf_kernel
 
 

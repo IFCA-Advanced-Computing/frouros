@@ -5,9 +5,9 @@
 :end-before: ⚡️ Quickstart
 ```
 
-In order to start using `frouros`, we highly recommend to check {doc}`concepts <concepts>` and 
-{doc}`FAQ <faq>` sections to get a quick idea of what `frouros` is capable of, and what it is not yet capable 
-of. Subsequently, we recommend taking a look at the {doc}`examples <examples>` section since it is the best way to 
+In order to start using `frouros`, we highly recommend to check {doc}`concepts <concepts>` and
+{doc}`FAQ <faq>` sections to get a quick idea of what `frouros` is capable of, and what it is not yet capable
+of. Subsequently, we recommend taking a look at the {doc}`examples <examples>` section since it is the best way to
 start using `frouros`.
 
 Read {doc}`installation <installation>` instructions to start using `frouros`.

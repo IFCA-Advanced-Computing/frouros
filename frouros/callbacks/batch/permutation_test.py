@@ -3,9 +3,9 @@
 import multiprocessing
 from typing import Any, Callable, Optional, Tuple
 
-import numpy as np  # type: ignore
-from scipy.integrate import quad  # type: ignore
-from scipy.stats import binom  # type: ignore
+import numpy as np
+from scipy.integrate import quad
+from scipy.stats import binom
 
 from frouros.callbacks.batch.base import BaseCallbackBatch
 from frouros.utils.stats import permutation
@@ -201,7 +201,7 @@ class PermutationTestDistanceBased(BaseCallbackBatch):
     def _calculate_p_value(  # pylint: disable=too-many-arguments
         X_ref: np.ndarray,  # noqa: N803
         X_test: np.ndarray,
-        statistic: Callable,
+        statistic: Callable,  # type: ignore
         statistic_args: dict[str, Any],
         observed_statistic: float,
         num_permutations: int,
@@ -261,7 +261,7 @@ class PermutationTestDistanceBased(BaseCallbackBatch):
     def _compute_estimate(
         extreme_statistic: np.ndarray,
     ) -> float:
-        p_value = extreme_statistic.mean()  # type: ignore
+        p_value = extreme_statistic.mean()
         return p_value
 
     @staticmethod
@@ -309,9 +309,7 @@ class PermutationTestDistanceBased(BaseCallbackBatch):
         observed_statistic: float,
         permuted_statistic: np.ndarray,
     ) -> float:
-        p_value = (
-            (permuted_statistic >= observed_statistic).sum() + 1
-        ) / (  # type: ignore
+        p_value = ((permuted_statistic >= observed_statistic).sum() + 1) / (
             num_permutations + 1
         )
         return p_value

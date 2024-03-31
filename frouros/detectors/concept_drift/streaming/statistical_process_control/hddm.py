@@ -1,14 +1,14 @@
 """HDDM (Hoeffding's inequality drift detection method) module."""
 
 import copy
-from typing import Optional, Tuple, Union
+from typing import Any, Optional, Tuple, Union
 
-import numpy as np  # type: ignore
+import numpy as np
 
 from frouros.callbacks.streaming.base import BaseCallbackStreaming
 from frouros.detectors.concept_drift.streaming.statistical_process_control.base import (
-    BaseSPCConfig,
     BaseSPC,
+    BaseSPCConfig,
 )
 from frouros.utils.stats import EWMA, Mean
 
@@ -416,7 +416,7 @@ class HDDMA(BaseSPC):
         """
         return self._additional_vars["test_type"]
 
-    def _update(self, value: Union[int, float], **kwargs) -> None:
+    def _update(self, value: Union[int, float], **kwargs: Any) -> None:
         self.num_instances += 1
 
         self.test_type.z.update(value=value)
@@ -738,11 +738,12 @@ class HDDMW(BaseSPC):
         """
         return self._additional_vars["test_type"]
 
-    def _update(self, value: Union[int, float], **kwargs) -> None:
+    def _update(self, value: Union[int, float], **kwargs: Any) -> None:
         self.num_instances += 1
 
         self.test_type.update_stats(
-            value=value, alpha=self.config.lambda_  # type: ignore
+            value=value,
+            alpha=self.config.lambda_,  # type: ignore
         )
 
         if self.num_instances >= self.config.min_num_instances:

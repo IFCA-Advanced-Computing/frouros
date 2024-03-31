@@ -13,7 +13,7 @@ for detecting *dataset shift* using only the feature/covariate distributions.
 
 Therefore, the problem statement can be defined as follows:
 
-Given a time period ${[0, t]}$, a set of sample-pairs ${D=\{(X_{0}, y_{0}),...,(X_{t}, y_{t})\}}$, where ${X_{i} \in \mathbb{R}^{m}}$ is the ${m}$-dimensional feature vector and ${y_{i} \in \mathbb{R}^{k}}$ is the ${k}$-class vector (using *one-hot encoding*) if we are dealing with a classification problem or ${y_{i} \in \mathbb{R}}$ is a scalar if it is a regression problem, ${D}$ is used to fit ${\hat{f} \colon X \to Y}$ (known as model) to be as close as possible to the unknown ${{f} \colon X \to Y}$. *Machine learning* algorithms are typically used for this fitting procedure. 
+Given a time period ${[0, t]}$, a set of sample-pairs ${D=\{(X_{0}, y_{0}),...,(X_{t}, y_{t})\}}$, where ${X_{i} \in \mathbb{R}^{m}}$ is the ${m}$-dimensional feature vector and ${y_{i} \in \mathbb{R}^{k}}$ is the ${k}$-class vector (using *one-hot encoding*) if we are dealing with a classification problem or ${y_{i} \in \mathbb{R}}$ is a scalar if it is a regression problem, ${D}$ is used to fit ${\hat{f} \colon X \to Y}$ (known as model) to be as close as possible to the unknown ${{f} \colon X \to Y}$. *Machine learning* algorithms are typically used for this fitting procedure.
 ${(X_{i}, y_{i}) \notin D}$ samples obtained in ${[t+1, \infty)}$ and used by ${\hat{f}}$ may start to differ with respect to ${D}$ pairs from a statistical point of view. It is also possible that some changes occur in terms of concept of the problem (change in ${f}$).
 
 Since ${P(y, X) = P(y|X) P(X)}$ {cite}`moreno2012unifying`, a change in the joint distribution between two different times that can produce some performance degradation can be described as follows:
@@ -41,9 +41,9 @@ Drift detection methods can be classified according to the type of drift they ca
 
 ### Concept drift
 
-Their main objective is to **detect concept drift**. They are closely related to data stream mining, online and incremental learning. 
+Their main objective is to **detect concept drift**. They are closely related to data stream mining, online and incremental learning.
 
-At the time of writing this, Frouros only implements *concept drift* detectors that work in a {doc}`streaming </api_reference/detectors/concept_drift/streaming>` manner. This means that the detector can only be updated with a single sample each time. 
+At the time of writing this, Frouros only implements *concept drift* detectors that work in a {doc}`streaming </api_reference/detectors/concept_drift/streaming>` manner. This means that the detector can only be updated with a single sample each time.
 
 ### Data drift
 

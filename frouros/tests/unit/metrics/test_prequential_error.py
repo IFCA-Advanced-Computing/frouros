@@ -1,7 +1,7 @@
 """Test prequential error module."""
 
-import numpy as np  # type: ignore
-import pytest  # type: ignore
+import numpy as np
+import pytest
 
 from frouros.metrics import PrequentialError
 

@@ -1,9 +1,9 @@
 """Real datasets module."""
 
-from typing import Optional
+from typing import Any, Optional
 
-import numpy as np  # type: ignore
-from scipy.io import arff  # type: ignore
+import numpy as np
+from scipy.io import arff
 
 from frouros.datasets.base import BaseDatasetDownload
 
@@ -55,11 +55,11 @@ class Elec2(BaseDatasetDownload):
             file_path=file_path,
         )
 
-    def read_file(self, **kwargs) -> np.ndarray:
+    def read_file(self, **kwargs: Any) -> np.ndarray:
         """Read file.
 
-        :param kwargs: dict of kwargs
-        :type kwargs: dict
+        :param kwargs: additional arguments
+        :type kwargs: Any
         :return: read file
         :rtype: numpy.ndarray
         """
