@@ -36,11 +36,23 @@ jobs:
           python -m pip install --upgrade pip
           python -m pip install setuptools==68.2.2 tox==4.12.0 tox-gh-actions==3.2.0
 
+      - name: Create virtual environment
+        run: |
+          python -m venv .venv
+
+      - name: Activate virtual environment (Windows)
+        if: matrix.os == windows-2022
+        run: |
+          .venv\Scripts\activate
+
+      - name: Activate virtual environment (Linux/macOS)
+        if: matrix.os != windows-2022
+        run: |
+          source .venv/bin/activate
+
       - name: Optional - Install frouros (only used by linters)
         if: matrix.python-version == 3.9
         run: |
-          python -m venv .venv
-          source .venv/bin/activate
           pip install "pytest>=7.4.4,<7.5"
           pip install -e .
 
