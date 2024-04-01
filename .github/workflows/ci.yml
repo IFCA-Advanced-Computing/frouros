@@ -50,8 +50,7 @@ jobs:
         run: |
           source .venv/bin/activate
 
-      - name: Optional - Install frouros (only used by linters)
-        if: matrix.python-version == 3.9
+      - name: Install frouros
         run: |
           pip install "pytest>=7.4.4,<7.5"
           pip install -e .
