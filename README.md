@@ -21,6 +21,10 @@
   <a href="https://pepy.tech/project/frouros">
     <img src="https://static.pepy.tech/badge/frouros" alt="downloads"/>
   </a>
+  <!-- Platform -->
+  <a href="https://github.com/IFCA-Advanced-Computing/frouros">
+    <img src="https://img.shields.io/badge/platform-Linux%20%7C%20macOS%20%7C%20Windows-blue.svg" alt="downloads"/>
+  </a>
   <!-- PyPI -->
   <a href="https://pypi.org/project/frouros">
     <img src="https://img.shields.io/pypi/v/frouros.svg?label=release&color=blue" alt="pypi">
