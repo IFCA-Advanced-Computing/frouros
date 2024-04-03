@@ -6,7 +6,7 @@ on:
       - "*"
 
 jobs:
-  python-version:
+  version:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
