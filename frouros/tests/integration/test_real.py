@@ -23,12 +23,14 @@ def test_elec2_file_not_found_error(elec2_raw: Elec2) -> None:
         _ = elec2_raw.load()
 
 
-# FIXME: PermissionError not raised on Windows or MacOS.
+# FIXME: PermissionError not raised on Windows and MacOS.
 @pytest.mark.skipif(
-    sys.platform.startswith("win"), reason="PermissionError not raised on Windows.",
+    sys.platform.startswith("win"),
+    reason="PermissionError not raised on Windows.",
 )
 @pytest.mark.skipif(
-    sys.platform.startswith("darwin"), reason="PermissionError not raised on MacOS.",
+    sys.platform.startswith("darwin"),
+    reason="PermissionError not raised on MacOS.",
 )
 def test_elec2_permission_error() -> None:
     """Test Elec2 permission error."""
