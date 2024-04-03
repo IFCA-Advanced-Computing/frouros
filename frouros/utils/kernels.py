@@ -1,11 +1,13 @@
 """Kernels module."""
 
-import numpy as np  # type: ignore
-from scipy.spatial.distance import cdist  # type: ignore
+import numpy as np
+from scipy.spatial.distance import cdist
 
 
 def rbf_kernel(
-    X: np.ndarray, Y: np.ndarray, sigma: float = 1.0  # noqa: N803
+    X: np.ndarray,  # noqa: N803
+    Y: np.ndarray,
+    sigma: float = 1.0,
 ) -> np.ndarray:
     """Radial basis function kernel between X and Y matrices.
 

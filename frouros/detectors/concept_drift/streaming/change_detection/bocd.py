@@ -2,11 +2,11 @@
 
 import abc
 import copy
-from typing import Union, Optional
+from typing import Any, Optional, Union
 
-import numpy as np  # type: ignore
-from scipy.special import logsumexp  # type: ignore
-from scipy.stats import norm  # type: ignore
+import numpy as np
+from scipy.special import logsumexp
+from scipy.stats import norm
 
 from frouros.callbacks.streaming.base import BaseCallbackStreaming
 from frouros.detectors.concept_drift.streaming.change_detection.base import (
@@ -31,11 +31,13 @@ class BaseBOCDModel(abc.ABC):
         """
 
     @abc.abstractmethod
-    def update(self, value: Union[int, float], **kwargs) -> None:
+    def update(self, value: Union[int, float], **kwargs: Any) -> None:
         """Update model.
 
         :param value: value
         :type value: Union[int, float]
+        :param kwargs: additional arguments
+        :type kwargs: Any
         """
 
 
@@ -101,11 +103,13 @@ class GaussianUnknownMean(BaseBOCDModel):
         post_stds = np.sqrt(self.var_params[:idx])
         return norm(post_means, post_stds).logpdf(value)
 
-    def update(self, value: Union[int, float], **kwargs) -> None:
+    def update(self, value: Union[int, float], **kwargs: Any) -> None:
         """Update model.
 
         :param value: value
         :type value: Union[int, float]
+        :param kwargs: additional arguments
+        :type kwargs: Any
         """
         new_param_prec = self.precision_params + (1 / self.data_var)
         self.precision_params = np.append([self.precision_params[0]], new_param_prec)
@@ -115,7 +119,7 @@ class GaussianUnknownMean(BaseBOCDModel):
         self.mean_params = np.append([self.mean_params[0]], new_param_mean)
 
     @property
-    def var_params(self):
+    def var_params(self) -> np.ndarray:
         """Helper function for computing the posterior variance."""
         return 1 / self.precision_params + self.data_var
 
@@ -141,7 +145,7 @@ class BOCDConfig(BaseChangeDetectionConfig):
 
     def __init__(  # noqa: D107
         self,
-        model: Optional[BaseBOCDModel] = None,  # type: ignore
+        model: Optional[BaseBOCDModel] = None,
         hazard: float = 0.01,
         min_num_instances: int = 30,
     ) -> None:
@@ -213,7 +217,7 @@ class BOCD(BaseChangeDetection):
     Change detected at step 1031
     """  # noqa: E501  # pylint: disable=line-too-long
 
-    config_type = BOCDConfig  # type: ignore
+    config_type = BOCDConfig
 
     def __init__(  # noqa: D107
         self,
@@ -307,7 +311,7 @@ class BOCD(BaseChangeDetection):
         """
         self._additional_vars["log_message"] = value
 
-    def _update(self, value: Union[int, float], **kwargs) -> None:
+    def _update(self, value: Union[int, float], **kwargs: Any) -> None:
         self.num_instances += 1
         current_idx = self.num_instances - 1
 

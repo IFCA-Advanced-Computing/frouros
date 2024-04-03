@@ -2,9 +2,9 @@
 
 import abc
 from collections import namedtuple
-from typing import Tuple
+from typing import Any, Tuple
 
-import numpy as np  # type: ignore
+import numpy as np
 
 from frouros.detectors.data_drift.batch.base import BaseDataDriftBatch
 
@@ -18,7 +18,7 @@ class BaseStatisticalTest(BaseDataDriftBatch):
         self,
         X_ref: np.ndarray,  # noqa: N803
         X: np.ndarray,
-        **kwargs,
+        **kwargs: Any,
     ) -> Tuple[float, float]:
         statistical_test = self._statistical_test(
             X_ref=X_ref,
@@ -30,7 +30,7 @@ class BaseStatisticalTest(BaseDataDriftBatch):
     def _compare(
         self,
         X: np.ndarray,  # noqa: N803
-        **kwargs,
+        **kwargs: Any,
     ) -> StatisticalResult:
         self._common_checks()  # noqa: N806
         self._specific_checks(X=X)  # noqa: N806
@@ -42,6 +42,6 @@ class BaseStatisticalTest(BaseDataDriftBatch):
     def _statistical_test(
         X_ref: np.ndarray,  # noqa: N803
         X: np.ndarray,
-        **kwargs,
+        **kwargs: Any,
     ) -> StatisticalResult:
         pass

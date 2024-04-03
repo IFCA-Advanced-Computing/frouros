@@ -104,5 +104,5 @@ class HistoryConceptDrift(BaseCallbackStreaming):
 
     def reset(self) -> None:
         """Reset method."""
-        for key in self.history.keys():
+        for key in self.history:
             self.history[key].clear()

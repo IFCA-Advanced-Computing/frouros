@@ -1,13 +1,13 @@
 """ECDD (EWMA for Concept Drift Detection) module."""
 
-from typing import Optional, Union
+from typing import Any, Optional, Union
 
-import numpy as np  # type: ignore
+import numpy as np
 
 from frouros.callbacks.streaming.base import BaseCallbackStreaming
 from frouros.detectors.concept_drift.streaming.statistical_process_control.base import (
-    BaseSPC,
     BaseECDDConfig,
+    BaseSPC,
 )
 from frouros.utils.stats import EWMA, Mean
 
@@ -159,7 +159,7 @@ class ECDDWT(BaseSPC):
         self.p = Mean()
         self.z = EWMA(alpha=self.config.lambda_)  # type: ignore
 
-    def _update(self, value: Union[int, float], **kwargs) -> None:
+    def _update(self, value: Union[int, float], **kwargs: Any) -> None:
         self.num_instances += 1
 
         self.p.update(value=value)

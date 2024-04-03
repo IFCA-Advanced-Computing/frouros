@@ -114,7 +114,7 @@ class BaseConceptDrift(BaseDetector):
         :param value: value to be set
         :type value: Optional[dict[str, Any]]
         """
-        self._additional_vars = value if value is not None else {}
+        self._additional_vars: dict[str, Any] = value if value is not None else {}
 
     @property
     def config(self) -> BaseConceptDriftConfig:
@@ -179,11 +179,13 @@ class BaseConceptDrift(BaseDetector):
         """
         return {"drift": self.drift}
 
-    def update(self, value: Union[int, float], **kwargs) -> dict[str, Any]:
+    def update(self, value: Union[int, float], **kwargs: Any) -> dict[str, Any]:
         """Update method.
 
         :param value: value to update detector
         :type value: Union[int, float]
+        :param kwargs: additional keyword arguments
+        :type kwargs: Any
         :return: callbacks logs
         :rtype: dict[str, Any]]
         """
@@ -202,12 +204,13 @@ class BaseConceptDrift(BaseDetector):
 
     def _get_callbacks_logs(self) -> dict[str, Any]:
         logs = {
-            callback.name: callback.logs for callback in self.callbacks  # type: ignore
+            callback.name: callback.logs
+            for callback in self.callbacks  # type: ignore
         }
         return logs
 
     @abc.abstractmethod
-    def _update(self, value: Union[int, float], **kwargs) -> None:
+    def _update(self, value: Union[int, float], **kwargs: Any) -> None:
         pass
 
     def __repr__(self) -> str:

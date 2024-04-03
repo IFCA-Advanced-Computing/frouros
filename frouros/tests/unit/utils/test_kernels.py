@@ -1,10 +1,9 @@
 """Test kernels module."""
 
-import numpy as np  # type: ignore
-import pytest  # type: ignore
+import numpy as np
+import pytest
 
 from frouros.utils.kernels import rbf_kernel
-
 
 # TODO: Create fixtures for the matrices and the expected kernel values
 

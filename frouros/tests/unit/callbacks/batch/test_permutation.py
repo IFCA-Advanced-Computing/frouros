@@ -1,7 +1,7 @@
 """Test permutation module."""
 
-import numpy as np  # type: ignore
-import pytest  # type: ignore
+import numpy as np
+import pytest
 
 from frouros.utils.stats import permutation
 

@@ -1,10 +1,10 @@
 """Kuiper's test module."""
 
-from typing import Optional, Union
+from typing import Any, Optional, Union
 
-import numpy as np  # type: ignore
-from scipy.special import comb, factorial  # type: ignore
-from scipy.stats import ks_2samp  # type: ignore
+import numpy as np
+from scipy.special import comb, factorial
+from scipy.stats import ks_2samp
 
 from frouros.callbacks.batch.base import BaseCallbackBatch
 from frouros.detectors.data_drift.base import NumericalData, UnivariateData
@@ -53,7 +53,7 @@ class KuiperTest(BaseStatisticalTest):
     def _statistical_test(
         X_ref: np.ndarray,  # noqa: N803
         X: np.ndarray,
-        **kwargs,
+        **kwargs: Any,
     ) -> StatisticalResult:
         statistic, p_value = KuiperTest._kuiper(
             X=X_ref,
@@ -76,7 +76,7 @@ class KuiperTest(BaseStatisticalTest):
 
         NOTE: This function is a modified version of the
         `kuiper_false_positive_probability` function from the
-        `astropy.stats` <https://docs.astropy.org/en/stable/api/astropy.stats.kuiper_false_positive_probability.html#astropy.stats.kuiper_false_positive_probability> package.  # noqa: E501
+        `astropy.stats` <https://docs.astropy.org/en/stable/api/astropy.stats.kuiper_false_positive_probability.html#astropy.stats.kuiper_false_positive_probability> package.
 
         :param D: Kuiper's statistic
         :param D: float
@@ -84,7 +84,7 @@ class KuiperTest(BaseStatisticalTest):
         :type N: float
         :return: false positive probability
         :rtype: float
-        """
+        """  # noqa: E501
         if D < 2.0 / N:
             return 1.0 - factorial(N) * (D - 1.0 / N) ** (N - 1)
 

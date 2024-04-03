@@ -3,7 +3,7 @@
 import abc
 from typing import Any
 
-import numpy as np  # type: ignore
+import numpy as np
 
 from frouros.callbacks.base import BaseCallback
 

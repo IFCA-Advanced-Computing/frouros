@@ -20,11 +20,16 @@ Recommended steps for first time contributors:
     git pull
     pip install -e .
    ```
-4. After adding and committing your fix or feature, ensure that code coverage is at least 90% (otherwise the PR will be rejected) and that linting is successfully executed using the following command:
+4. (Optional but recommended) Install pre-commit hooks:
+    ```bash
+    pip install pre-commit
+    pre-commit install
+    ```
+5. After adding and committing your fix or feature, ensure that code coverage is at least 90% (otherwise the PR will be rejected) and that linting is successfully executed using the following command:
     ```bash
    tox
    ```
-5. Create pull request to the original repository.
+6. Create a pull request to the original repository.
 
 ## Reporting a bug
 

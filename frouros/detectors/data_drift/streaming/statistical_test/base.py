@@ -1,9 +1,9 @@
 """Data drift statistical test base module."""
 
 import abc
-from typing import Optional, Union
+from typing import Any, Optional, Union
 
-import numpy as np  # type: ignore
+import numpy as np
 
 from frouros.detectors.data_drift.base import BaseResult
 from frouros.detectors.data_drift.streaming.base import (
@@ -87,6 +87,8 @@ class BaseStatisticalTest(BaseDataDriftStreaming):
     @staticmethod
     @abc.abstractmethod
     def _statistical_test(
-        X_ref: np.ndarray, X: np.ndarray, **kwargs  # noqa: N803
+        X_ref: np.ndarray,  # noqa: N803
+        X: np.ndarray,
+        **kwargs: Any,
     ) -> StatisticalResult:
         pass

@@ -1,9 +1,9 @@
 """Anderson-Darling test module."""
 
-from typing import Optional, Union
+from typing import Any, Optional, Union
 
-import numpy as np  # type: ignore
-from scipy.stats import anderson_ksamp  # type: ignore
+import numpy as np
+from scipy.stats import anderson_ksamp
 
 from frouros.callbacks.batch.base import BaseCallbackBatch
 from frouros.detectors.data_drift.base import NumericalData, UnivariateData
@@ -56,7 +56,7 @@ class AndersonDarlingTest(BaseStatisticalTest):
     def _statistical_test(
         X_ref: np.ndarray,  # noqa: N803
         X: np.ndarray,
-        **kwargs,
+        **kwargs: Any,
     ) -> StatisticalResult:
         test = anderson_ksamp(
             samples=[

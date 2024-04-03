@@ -3,7 +3,7 @@
 import abc
 from typing import Any, Optional, Tuple, Union
 
-import numpy as np  # type: ignore
+import numpy as np
 
 from frouros.callbacks.batch.base import BaseCallbackBatch
 from frouros.detectors.data_drift.base import (
@@ -51,12 +51,12 @@ class BaseDataDriftBatch(BaseDataDrift):
         self,
         X: np.ndarray,  # noqa: N803
     ) -> None:
-        self.X_ref = X  # type: ignore
+        self.X_ref = X
 
     def compare(
         self,
         X: np.ndarray,  # noqa: N803
-        **kwargs,
+        **kwargs: Any,
     ) -> Tuple[np.ndarray, dict[str, Any]]:
         """Compare values.
 
@@ -100,7 +100,7 @@ class BaseDataDriftBatch(BaseDataDrift):
         self,
         X_ref: np.ndarray,  # noqa: N803
         X: np.ndarray,
-        **kwargs,
+        **kwargs: Any,
     ) -> Any:
         pass
 
@@ -108,16 +108,16 @@ class BaseDataDriftBatch(BaseDataDrift):
     def _compare(
         self,
         X: np.ndarray,  # noqa: N803
-        **kwargs,
+        **kwargs: Any,
     ) -> np.ndarray:
         pass
 
     def _get_result(
         self,
         X: np.ndarray,  # noqa: N803
-        **kwargs,
+        **kwargs: Any,
     ) -> Union[list[float], list[Tuple[float, float]], Tuple[float, float]]:
-        result = self._apply_method(  # type: ignore # pylint: disable=not-callable
+        result = self._apply_method(  # pylint: disable=not-callable
             X_ref=self.X_ref,
             X=X,
             **kwargs,

@@ -26,7 +26,7 @@ copyright = "2023, Spanish National Research Council (CSIC)"
 author = "Spanish National Research Council (CSIC)"
 
 # The full version, including alpha/beta/rc tags
-CURRENT_VERSION = f'v{frouros.__version__}'
+CURRENT_VERSION = f"v{frouros.__version__}"
 
 # -- General configuration ---------------------------------------------------
 

@@ -1,35 +1,36 @@
 """Test concept drift detectors."""
 
-from typing import Callable, Tuple
+from typing import Any, Callable, Tuple
 
-import numpy as np  # type: ignore
-import pytest  # type: ignore
+import numpy as np
+import pytest
 
-from frouros.detectors.concept_drift import ADWIN, ADWINConfig, KSWIN, KSWINConfig
 from frouros.detectors.concept_drift import (
+    ADWIN,
     BOCD,
-    BOCDConfig,
     CUSUM,
+    DDM,
+    ECDDWT,
+    EDDM,
+    HDDMA,
+    HDDMW,
+    KSWIN,
+    RDDM,
+    STEPD,
+    ADWINConfig,
+    BOCDConfig,
     CUSUMConfig,
+    DDMConfig,
+    ECDDWTConfig,
+    EDDMConfig,
     GeometricMovingAverage,
     GeometricMovingAverageConfig,
+    HDDMAConfig,
+    HDDMWConfig,
+    KSWINConfig,
     PageHinkley,
     PageHinkleyConfig,
-)
-from frouros.detectors.concept_drift import (
-    DDM,
-    DDMConfig,
-    ECDDWT,
-    ECDDWTConfig,
-    EDDM,
-    EDDMConfig,
-    HDDMA,
-    HDDMAConfig,
-    HDDMW,
-    HDDMWConfig,
-    RDDM,
     RDDMConfig,
-    STEPD,
     STEPDConfig,
 )
 from frouros.detectors.concept_drift.base import BaseConceptDrift
@@ -69,8 +70,16 @@ HDDMW_ARGS = {
 }
 
 
-def error_scorer(y_true, y_pred):
-    """Error scorer function."""
+def error_scorer(y_true: Any, y_pred: Any) -> int:
+    """Error scorer function.
+
+    :param y_true: true value
+    :type y_true: Any
+    :param y_pred: predicted value
+    :type y_pred: Any
+    :return: error value
+    :rtype: int
+    """
     return int(1 - y_true == y_pred)
 
 
@@ -234,7 +243,7 @@ detectors = [
 def test_streaming_detector_normal(
     clf_dataset: Tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray],
     train_prediction_normal: np.ndarray,
-    detector_info: Tuple[BaseConceptDrift, Callable],
+    detector_info: Tuple[BaseConceptDrift, Callable],  # type: ignore
 ) -> None:
     """Test streaming detector.
 

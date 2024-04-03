@@ -1,9 +1,9 @@
 """Mann-Whitney U test module."""
 
-from typing import Optional, Union
+from typing import Any, Optional, Union
 
-import numpy as np  # type: ignore
-from scipy.stats import mannwhitneyu  # type: ignore
+import numpy as np
+from scipy.stats import mannwhitneyu
 
 from frouros.callbacks.batch.base import BaseCallbackBatch
 from frouros.detectors.data_drift.base import NumericalData, UnivariateData
@@ -56,7 +56,7 @@ class MannWhitneyUTest(BaseStatisticalTest):
     def _statistical_test(
         X_ref: np.ndarray,  # noqa: N803
         X: np.ndarray,
-        **kwargs,
+        **kwargs: Any,
     ) -> StatisticalResult:
         test = mannwhitneyu(  # pylint: disable=unexpected-keyword-arg
             x=X_ref,

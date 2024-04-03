@@ -1,14 +1,14 @@
 """ADWIN (ADaptive WINdowing) module."""
 
 from collections import deque
-from typing import Optional, Union
+from typing import Any, Optional, Union
 
-import numpy as np  # type: ignore
+import numpy as np
 
 from frouros.callbacks.streaming.base import BaseCallbackStreaming
 from frouros.detectors.concept_drift.streaming.window_based.base import (
-    BaseWindowConfig,
     BaseWindow,
+    BaseWindowConfig,
 )
 
 
@@ -100,7 +100,7 @@ class Bucket:
         return self._idx
 
     @idx.setter
-    def idx(self, value: int):
+    def idx(self, value: int) -> None:
         """Current index setter.
 
         :param value: value to be set
@@ -332,7 +332,7 @@ class ADWIN(BaseWindow):
         self._min_instances = self.config.min_num_instances + 1
 
     @property
-    def buckets(self) -> deque:
+    def buckets(self) -> deque:  # type: ignore
         """Buckets queue property.
 
         :return: buckets queue
@@ -341,7 +341,7 @@ class ADWIN(BaseWindow):
         return self._additional_vars["buckets"]
 
     @buckets.setter
-    def buckets(self, value: deque):
+    def buckets(self, value: deque) -> None:  # type: ignore
         """Buckets queue setter.
 
         :param value: value to be set
@@ -564,7 +564,7 @@ class ADWIN(BaseWindow):
         )
         return epsilon
 
-    def _update(self, value: Union[int, float], **kwargs) -> None:
+    def _update(self, value: Union[int, float], **kwargs: Any) -> None:
         # pylint: disable=too-many-locals, too-many-nested-blocks
         # NOTE: Refactor function
         self.num_instances += 1
@@ -572,7 +572,7 @@ class ADWIN(BaseWindow):
 
         if (
             self.num_instances % self.config.clock == 0  # type: ignore
-            and self.width > self.config.min_num_instances  # type: ignore
+            and self.width > self.config.min_num_instances
         ):
             flag_reduce_width = True
 
@@ -603,8 +603,7 @@ class ADWIN(BaseWindow):
                         if (
                             w1_instances > self.config.min_window_size  # type: ignore
                             and (
-                                w0_instances
-                                > self.config.min_window_size  # type: ignore
+                                w0_instances > self.config.min_window_size  # type: ignore # noqa: E501
                             )
                         ):
                             w0_mean = w0_total / w0_instances

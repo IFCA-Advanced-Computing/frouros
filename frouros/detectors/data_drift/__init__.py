@@ -1,26 +1,26 @@
 """Data drift detection methods init."""
 
 from .batch import (  # noqa: F401
+    EMD,
+    JS,
+    KL,
+    MMD,
+    PSI,
     AndersonDarlingTest,
     BhattacharyyaDistance,
     BWSTest,
     ChiSquareTest,
     CVMTest,
-    EMD,
     EnergyDistance,
     HellingerDistance,
     HINormalizedComplement,
-    JS,
-    KL,
     KSTest,
     KuiperTest,
-    PSI,
     MannWhitneyUTest,
-    MMD,
     WelchTTest,
 )
-
-from .streaming import IncrementalKSTest, MMD as MMDStreaming  # noqa: N811
+from .streaming import MMD as MMDStreaming
+from .streaming import IncrementalKSTest  # noqa: N811
 
 __all__ = [
     "AndersonDarlingTest",

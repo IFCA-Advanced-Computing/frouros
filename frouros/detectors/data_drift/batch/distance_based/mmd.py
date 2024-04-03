@@ -1,9 +1,9 @@
 """MMD (Maximum Mean Discrepancy) module."""
 
 import itertools
-from typing import Callable, Generator, Optional, Union
+from typing import Any, Callable, Generator, Optional, Union
 
-import numpy as np  # type: ignore
+import numpy as np
 
 from frouros.callbacks.batch.base import BaseCallbackBatch
 from frouros.detectors.data_drift.base import MultivariateData
@@ -47,7 +47,7 @@ class MMD(BaseDistanceBased):
 
     def __init__(  # noqa: D107
         self,
-        kernel: Callable = rbf_kernel,
+        kernel: Callable = rbf_kernel,  # type: ignore
         chunk_size: Optional[int] = None,
         callbacks: Optional[Union[BaseCallbackBatch, list[BaseCallbackBatch]]] = None,
     ) -> None:
@@ -82,7 +82,7 @@ class MMD(BaseDistanceBased):
         :raises TypeError: Type error exception
         """
         if value is not None:
-            if isinstance(value, int):  # type: ignore
+            if isinstance(value, int):
                 if value <= 0:
                     raise ValueError("chunk_size must be greater than 0 or None.")
             else:
@@ -90,7 +90,7 @@ class MMD(BaseDistanceBased):
         self._chunk_size = value
 
     @property
-    def kernel(self) -> Callable:
+    def kernel(self) -> Callable:  # type: ignore
         """Kernel property.
 
         :return: kernel function to use
@@ -99,7 +99,7 @@ class MMD(BaseDistanceBased):
         return self._kernel
 
     @kernel.setter
-    def kernel(self, value: Callable) -> None:
+    def kernel(self, value: Callable) -> None:  # type: ignore
         """Kernel method setter.
 
         :param value: value to be set
@@ -114,7 +114,7 @@ class MMD(BaseDistanceBased):
         self,
         X_ref: np.ndarray,  # noqa: N803
         X: np.ndarray,  # noqa: N803
-        **kwargs,
+        **kwargs: Any,
     ) -> DistanceResult:
         mmd = self._mmd(
             X=X_ref,
@@ -137,11 +137,7 @@ class MMD(BaseDistanceBased):
             X = np.expand_dims(X, axis=1)  # noqa: N806
         x_num_samples = len(self.X_ref)  # type: ignore
 
-        chunk_size_x = (
-            x_num_samples
-            if self.chunk_size is None
-            else self.chunk_size  # type: ignore
-        )
+        chunk_size_x = x_num_samples if self.chunk_size is None else self.chunk_size
 
         x_chunks = self._get_chunks(  # noqa: N806
             data=X,
@@ -163,12 +159,15 @@ class MMD(BaseDistanceBased):
         )
 
     @staticmethod
-    def _compute_kernel(chunk_combinations: Generator, kernel: Callable) -> float:
+    def _compute_kernel(
+        chunk_combinations: Generator,  # type: ignore
+        kernel: Callable,  # type: ignore
+    ) -> float:
         k_sum = np.array([kernel(*chunk).sum() for chunk in chunk_combinations]).sum()
         return k_sum
 
     @staticmethod
-    def _get_chunks(data: np.ndarray, chunk_size: int) -> Generator:
+    def _get_chunks(data: np.ndarray, chunk_size: int) -> Generator:  # type: ignore
         chunks = (
             data[i : i + chunk_size]  # noqa: E203
             for i in range(0, len(data), chunk_size)
@@ -180,8 +179,8 @@ class MMD(BaseDistanceBased):
         X: np.ndarray,  # noqa: N803
         Y: np.ndarray,
         *,
-        kernel: Callable,
-        **kwargs,
+        kernel: Callable,  # type: ignore
+        **kwargs: Any,
     ) -> float:  # noqa: N803
         # Only check for X dimension (X == Y dim comparison has been already made)
         if X.ndim == 1:
@@ -211,7 +210,7 @@ class MMD(BaseDistanceBased):
                 ),
                 2,
             )
-            x_chunks_combinations = itertools.product(  # type: ignore
+            x_chunks_combinations = itertools.product(
                 x_chunks,
                 repeat=2,
             )

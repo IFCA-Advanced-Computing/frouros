@@ -72,3 +72,23 @@ requires = [
     "build>=1.0.3,<1.1",
 ]
 build-backend = "setuptools.build_meta"
+
+[tool.ruff]
+extend-include = ["*.ipynb"]
+
+[tool.ruff.lint]
+select = [
+    "E",  # pycodestyle
+    "F",  # Pyflakes
+    "B",  # flake8-bugbear
+    "SIM",  # flake8-simplify
+    "I",  # isort
+]
+
+[tool.mypy]
+disable_error_code = [
+    "misc",
+    "no-any-return",
+]
+ignore_missing_imports = true
+strict = true

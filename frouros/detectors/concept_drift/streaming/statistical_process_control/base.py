@@ -1,15 +1,15 @@
 """Base concept drift SPC (statistical process control) module."""
 
 import abc
-from typing import Optional, Tuple, Union
+from typing import Any, Optional, Tuple, Union
 
-import numpy as np  # type: ignore
+import numpy as np
 
 from frouros.callbacks.streaming.base import BaseCallbackStreaming
 from frouros.detectors.concept_drift.exceptions import InvalidAverageRunLengthError
 from frouros.detectors.concept_drift.streaming.base import (
-    BaseConceptDriftStreamingConfig,
     BaseConceptDriftStreaming,
+    BaseConceptDriftStreamingConfig,
 )
 from frouros.utils.stats import Mean
 
@@ -144,7 +144,7 @@ class BaseSPC(BaseConceptDriftStreaming):
         return {**super().status, "warning": self.warning}
 
     @abc.abstractmethod
-    def _update(self, value: Union[int, float], **kwargs) -> None:
+    def _update(self, value: Union[int, float], **kwargs: Any) -> None:
         pass
 
 
@@ -275,7 +275,7 @@ class BaseSPCError(BaseSPC):
         self.min_std = float("inf")
 
     @abc.abstractmethod
-    def _update(self, value: Union[int, float], **kwargs) -> None:
+    def _update(self, value: Union[int, float], **kwargs: Any) -> None:
         pass
 
 

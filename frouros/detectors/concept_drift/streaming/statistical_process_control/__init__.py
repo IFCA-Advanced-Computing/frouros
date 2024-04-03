@@ -3,7 +3,7 @@
 from .ddm import DDM, DDMConfig
 from .ecdd import ECDDWT, ECDDWTConfig
 from .eddm import EDDM, EDDMConfig
-from .hddm import HDDMA, HDDMAConfig, HDDMW, HDDMWConfig
+from .hddm import HDDMA, HDDMW, HDDMAConfig, HDDMWConfig
 from .rddm import RDDM, RDDMConfig
 
 __all__ = [

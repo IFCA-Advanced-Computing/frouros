@@ -1,7 +1,7 @@
 """Base concept drift ChangeDetection based module."""
 
 import abc
-from typing import Optional, Union
+from typing import Any, Optional, Union
 
 from frouros.callbacks.streaming.base import BaseCallbackStreaming
 from frouros.detectors.concept_drift.streaming.base import (
@@ -21,7 +21,7 @@ class BaseChangeDetection(BaseConceptDriftStreaming):
     config_type = BaseChangeDetectionConfig
 
     @abc.abstractmethod
-    def _update(self, value: Union[int, float], **kwargs) -> None:
+    def _update(self, value: Union[int, float], **kwargs: Any) -> None:
         pass
 
 
@@ -210,14 +210,14 @@ class BaseCUSUM(BaseChangeDetection):
         self.mean_error_rate = Mean()
         self.sum_ = 0.0
 
-    def _update(self, value: Union[int, float], **kwargs) -> None:
+    def _update(self, value: Union[int, float], **kwargs: Any) -> None:
         self.num_instances += 1
 
         self.mean_error_rate.update(value=value)
         self._update_sum(error_rate=value)
 
         if (
-            self.num_instances >= self.config.min_num_instances  # type: ignore
+            self.num_instances >= self.config.min_num_instances
             and self.sum_ > self.config.lambda_  # type: ignore
         ):
             self.drift = True

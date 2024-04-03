@@ -4,10 +4,10 @@ from typing import Optional, Union
 
 from frouros.callbacks.streaming.base import BaseCallbackStreaming
 from frouros.detectors.concept_drift.streaming.change_detection.base import (
+    AlphaConfig,
     BaseCUSUM,
     BaseCUSUMConfig,
     DeltaConfig,
-    AlphaConfig,
 )
 
 

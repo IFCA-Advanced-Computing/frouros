@@ -1,8 +1,8 @@
 """Synthetic datasets module."""
 
-from typing import Tuple, Iterator, Optional
+from typing import Iterator, Optional, Tuple
 
-import numpy as np  # type: ignore
+import numpy as np
 
 from frouros.datasets.base import BaseDatasetGenerator
 from frouros.datasets.exceptions import InvalidBlockError

@@ -1,9 +1,9 @@
 """KSTest (Kolmogorov-Smirnov test) module."""
 
-from typing import Optional, Union
+from typing import Any, Optional, Union
 
-import numpy as np  # type: ignore
-from scipy.stats import ks_2samp  # type: ignore
+import numpy as np
+from scipy.stats import ks_2samp
 
 from frouros.callbacks.batch.base import BaseCallbackBatch
 from frouros.detectors.data_drift.base import NumericalData, UnivariateData
@@ -55,7 +55,7 @@ class KSTest(BaseStatisticalTest):
     def _statistical_test(
         X_ref: np.ndarray,  # noqa: N803
         X: np.ndarray,
-        **kwargs,
+        **kwargs: Any,
     ) -> StatisticalResult:
         test = ks_2samp(
             data1=X_ref,

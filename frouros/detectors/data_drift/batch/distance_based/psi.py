@@ -1,9 +1,9 @@
 """PSI (Population Stability Index) module."""
 
 import sys
-from typing import Optional, Union
+from typing import Any, Optional, Union
 
-import numpy as np  # type: ignore
+import numpy as np
 
 from frouros.callbacks.batch.base import BaseCallbackBatch
 from frouros.detectors.data_drift.batch.distance_based.base import (
@@ -54,7 +54,10 @@ class PSI(BaseDistanceBasedBins):
         self.num_bins = num_bins
 
     def _apply_method(
-        self, X_ref: np.ndarray, X: np.ndarray, **kwargs  # noqa: N803
+        self,
+        X_ref: np.ndarray,  # noqa: N803
+        X: np.ndarray,
+        **kwargs: Any,
     ) -> DistanceResult:
         distance = self._distance_measure(X_ref=X_ref, X=X, **kwargs)
         return distance

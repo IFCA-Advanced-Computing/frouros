@@ -1,11 +1,10 @@
 """Base data drift module."""
 
-
 import abc
 import operator
 from typing import Any, Optional, Union
 
-import numpy as np  # type: ignore
+import numpy as np
 
 from frouros.callbacks.base import BaseCallback
 from frouros.detectors.base import BaseDetector
@@ -14,6 +13,10 @@ from frouros.detectors.data_drift.exceptions import DimensionError, MissingFitEr
 
 class BaseResult(abc.ABC):
     """Abstract class representing a result."""
+
+    @abc.abstractmethod
+    def __init__(self) -> None:
+        """Init method."""
 
 
 class BaseDataType(abc.ABC):
@@ -111,7 +114,7 @@ class BaseDataDrift(BaseDetector):
         super().__init__(callbacks=callbacks)
         self.data_type = data_type
         self.statistical_type = statistical_type
-        self.X_ref = None  # type: ignore
+        self.X_ref = None
 
     @property
     def data_type(self) -> BaseDataType:
@@ -162,9 +165,9 @@ class BaseDataDrift(BaseDetector):
         :return: reference data
         :rtype: Optional[numpy.ndarray]
         """
-        return self._X_ref  # type: ignore # pylint: disable=E1101
+        return self._X_ref  # pylint: disable=E1101
 
-    @X_ref.setter  # type: ignore
+    @X_ref.setter
     def X_ref(self, value: Optional[np.ndarray]) -> None:  # noqa: N802
         """Reference data setter.
 
@@ -175,11 +178,13 @@ class BaseDataDrift(BaseDetector):
             self._check_array(X=value)
         self._X_ref = value
 
-    def fit(self, X: np.ndarray, **kwargs) -> dict[str, Any]:  # noqa: N803
+    def fit(self, X: np.ndarray, **kwargs: Any) -> dict[str, Any]:  # noqa: N803
         """Fit detector.
 
         :param X: feature data
         :type X: numpy.ndarray
+        :param kwargs: additional fit parameters
+        :type kwargs: Any
         :return: callbacks logs
         :rtype: dict[str, Any]
         """
@@ -209,7 +214,7 @@ class BaseDataDrift(BaseDetector):
             if not self.statistical_type.dim_check(X.ndim, 1):  # type: ignore
                 raise DimensionError(f"Dimensions of X ({X.ndim})") from e
 
-    def _check_is_fitted(self):
+    def _check_is_fitted(self) -> None:
         if self.X_ref is None:
             raise MissingFitError("fit method has not been called")
 

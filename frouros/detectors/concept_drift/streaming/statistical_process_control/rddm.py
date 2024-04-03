@@ -1,6 +1,6 @@
 """RDDM (Reactive Drift detection method) module."""
 
-from typing import Optional, Union
+from typing import Any, Optional, Union
 
 from frouros.callbacks.streaming.base import BaseCallbackStreaming
 from frouros.detectors.concept_drift.streaming.statistical_process_control.base import (
@@ -234,7 +234,7 @@ class RDDM(BaseSPCError):
     def _update(  # pylint: disable=too-many-branches
         self,
         value: Union[int, float],
-        **kwargs,
+        **kwargs: Any,
     ) -> None:
         self.num_instances += 1
 
@@ -272,8 +272,7 @@ class RDDM(BaseSPCError):
                 )
                 if warning_flag:
                     if (
-                        self.num_warnings
-                        >= self.config.max_num_instances_warning  # type: ignore
+                        self.num_warnings >= self.config.max_num_instances_warning  # type: ignore # noqa: E501
                     ):
                         self.rddm_drift = True
                         self.drift = True
@@ -316,7 +315,7 @@ class RDDM(BaseSPCError):
         self.rddm_drift = False
         self.drift = False
 
-    def _reset_stats(self):
+    def _reset_stats(self) -> None:
         self.error_rate = Mean()
         self.min_error_rate = float("inf")
         self.min_std = float("inf")

@@ -1,9 +1,9 @@
 """Welch's t-test module."""
 
-from typing import Optional, Union
+from typing import Any, Optional, Union
 
-import numpy as np  # type: ignore
-from scipy.stats import ttest_ind  # type: ignore
+import numpy as np
+from scipy.stats import ttest_ind
 
 from frouros.callbacks.batch.base import BaseCallbackBatch
 from frouros.detectors.data_drift.base import NumericalData, UnivariateData
@@ -56,7 +56,7 @@ class WelchTTest(BaseStatisticalTest):
     def _statistical_test(
         X_ref: np.ndarray,  # noqa: N803
         X: np.ndarray,
-        **kwargs,
+        **kwargs: Any,
     ) -> StatisticalResult:
         test = ttest_ind(
             a=X_ref,

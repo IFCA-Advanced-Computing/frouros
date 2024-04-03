@@ -1,7 +1,7 @@
 """Base concept drift streaming module."""
 
 import abc
-from typing import Union
+from typing import Any, Union
 
 from frouros.detectors.concept_drift.base import (
     BaseConceptDrift,
@@ -17,5 +17,5 @@ class BaseConceptDriftStreaming(BaseConceptDrift):
     """Abstract class representing a concept drift streaming detector."""
 
     @abc.abstractmethod
-    def _update(self, value: Union[int, float], **kwargs) -> None:
+    def _update(self, value: Union[int, float], **kwargs: Any) -> None:
         pass

@@ -1,36 +1,36 @@
 """Test data drift detectors."""
 
-from typing import Tuple, Union
+from typing import Any, Tuple, Union
 
-import numpy as np  # type: ignore
-import pytest  # type: ignore
-from scipy.stats import PermutationMethod  # type: ignore
+import numpy as np
+import pytest
+from scipy.stats import PermutationMethod
 
 from frouros.detectors.data_drift.batch import (
+    EMD,
+    JS,
+    KL,
+    MMD,
+    PSI,
     AndersonDarlingTest,
+    BhattacharyyaDistance,
     BWSTest,
     ChiSquareTest,
     CVMTest,
+    EnergyDistance,
+    HellingerDistance,
+    HINormalizedComplement,
     KSTest,
     KuiperTest,
     MannWhitneyUTest,
     WelchTTest,
 )
-from frouros.detectors.data_drift.batch import (
-    BhattacharyyaDistance,
-    EMD,
-    EnergyDistance,
-    HellingerDistance,
-    HINormalizedComplement,
-    PSI,
-    JS,
-    KL,
-    MMD,
-)
 from frouros.detectors.data_drift.batch.base import BaseDataDriftBatch
+from frouros.detectors.data_drift.streaming import (
+    MMD as MMDStreaming,
+)
 from frouros.detectors.data_drift.streaming import (  # noqa: N811
     IncrementalKSTest,
-    MMD as MMDStreaming,
 )
 
 
@@ -190,7 +190,7 @@ def test_batch_statistical_univariate(
     detector: BaseDataDriftBatch,
     expected_statistic: float,
     expected_p_value: float,
-    kwargs: dict,
+    kwargs: Any,
 ) -> None:
     """Test statistical univariate method.
 
@@ -203,7 +203,7 @@ def test_batch_statistical_univariate(
     :param expected_p_value: expected p-value value
     :type expected_p_value: float
     :param kwargs: additional arguments
-    :type kwargs: dict
+    :type kwargs: Any
     """
     X_ref, _, X_test = elec2_dataset  # noqa: N806
 

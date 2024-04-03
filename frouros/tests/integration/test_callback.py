@@ -1,7 +1,9 @@
 """Test callback module."""
 
-import numpy as np  # type: ignore
-import pytest  # type: ignore
+from typing import Any
+
+import numpy as np
+import pytest
 
 from frouros.callbacks.batch import (
     PermutationTestDistanceBased,
@@ -16,31 +18,31 @@ from frouros.detectors.concept_drift import (
     DDM,
     ECDDWT,
     EDDM,
-    GeometricMovingAverage,
     HDDMA,
     HDDMW,
     KSWIN,
-    PageHinkley,
     RDDM,
     STEPD,
+    GeometricMovingAverage,
+    PageHinkley,
 )
 from frouros.detectors.concept_drift.base import BaseConceptDrift
 from frouros.detectors.data_drift.batch import (
-    AndersonDarlingTest,
-    BWSTest,
-    BhattacharyyaDistance,
-    CVMTest,
     EMD,
+    JS,
+    KL,
+    MMD,
+    PSI,
+    AndersonDarlingTest,
+    BhattacharyyaDistance,
+    BWSTest,
+    CVMTest,
     EnergyDistance,
     HellingerDistance,
     HINormalizedComplement,
-    JS,
-    KL,
     KSTest,
     KuiperTest,
     MannWhitneyUTest,
-    MMD,
-    PSI,
     WelchTTest,
 )
 from frouros.detectors.data_drift.batch.base import BaseDataDriftBatch
@@ -134,7 +136,7 @@ def test_batch_permutation_test_method(
     np.random.seed(seed=31)
 
     permutation_test_name = "permutation_test"
-    detector = MMD(  # type: ignore
+    detector = MMD(
         callbacks=[
             PermutationTestDistanceBased(
                 num_permutations=100,
@@ -167,10 +169,10 @@ def test_batch_permutation_test_method(
     ],
 )
 def test_batch_reset_on_statistical_test_data_drift(
-    X_ref_univariate,  # noqa: N803
-    X_test_univariate,
+    X_ref_univariate: np.ndarray,  # noqa: N803
+    X_test_univariate: np.ndarray,
     detector_class: BaseDataDriftBatch,
-    mocker,
+    mocker: Any,
 ) -> None:
     """Test batch reset on statistical test data drift callback.
 
@@ -181,7 +183,7 @@ def test_batch_reset_on_statistical_test_data_drift(
     :param detector_class: detector distance
     :type detector_class: BaseDataDriftBatch
     :param mocker: mocker
-    :type mocker: pytest_mock.mocker
+    :type mocker: Any
     """
     mocker.patch("frouros.detectors.data_drift.batch.base.BaseDataDriftBatch.reset")
 
@@ -194,7 +196,7 @@ def test_batch_reset_on_statistical_test_data_drift(
     )
     _ = detector.fit(X=X_ref_univariate)
     _ = detector.compare(X=X_test_univariate)
-    detector.reset.assert_called_once()  # type: ignore # pylint: disable=no-member
+    detector.reset.assert_called_once()  # pylint: disable=no-member
 
 
 @pytest.mark.parametrize(
@@ -217,7 +219,7 @@ def test_batch_reset_on_statistical_test_data_drift(
 def test_streaming_history_on_concept_drift(
     model_errors: list[int],
     detector_class: BaseConceptDrift,
-):
+) -> None:
     """Test streaming history on concept drift callback.
 
     :param model_errors: model errors

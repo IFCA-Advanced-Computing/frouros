@@ -1,9 +1,9 @@
 """Energy Distance module."""
 
-from typing import Optional, Union
+from typing import Any, Optional, Union
 
-import numpy as np  # type: ignore
-from scipy.stats import energy_distance  # type: ignore
+import numpy as np
+from scipy.stats import energy_distance
 
 from frouros.callbacks.batch.base import BaseCallbackBatch
 from frouros.detectors.data_drift.base import UnivariateData
@@ -43,7 +43,7 @@ class EnergyDistance(BaseDistanceBased):
     def __init__(  # noqa: D107
         self,
         callbacks: Optional[Union[BaseCallbackBatch, list[BaseCallbackBatch]]] = None,
-        **kwargs,
+        **kwargs: Any,
     ) -> None:
         super().__init__(
             statistical_type=UnivariateData(),
@@ -57,7 +57,7 @@ class EnergyDistance(BaseDistanceBased):
         self,
         X_ref: np.ndarray,  # noqa: N803
         X: np.ndarray,  # noqa: N803
-        **kwargs,
+        **kwargs: Any,
     ) -> DistanceResult:
         emd = self._energy_distance(X=X_ref, Y=X, **self.kwargs)
         distance = DistanceResult(distance=emd)
@@ -67,7 +67,7 @@ class EnergyDistance(BaseDistanceBased):
     def _energy_distance(
         X: np.ndarray,  # noqa: N803
         Y: np.ndarray,
-        **kwargs,
+        **kwargs: Any,
     ) -> float:
         energy = energy_distance(
             u_values=X.flatten(),
