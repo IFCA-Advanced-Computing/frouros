@@ -1,18 +1,46 @@
 cff-version: 1.2.0
-message: "If you use this software, please cite it as below."
-preferred-citation:
-  type: article
-  authors:
-  - family-names: "Céspedes-Sisniega"
-    given-names: "Jaime"
-    email: "cespedes@ifca.unican.es"
-    affiliation: "Instituto de Física de Cantabria (CSIC-UC)"
-    orcid: "https://orcid.org/0000-0002-6010-1212"
-  - family-names: "López-García"
-    given-names: "Álvaro"
-    email: "aloga@ifca.unican.es"
-    affiliation: "Instituto de Física de Cantabria (CSIC-UC)"
-    orcid: "https://orcid.org/0000-0002-0013-4602"
-  journal: "arXiv preprint arXiv:2208.06868"
-  title: "Frouros: A Python library for drift detection in machine learning systems"
-  year: 2022
+title: >-
+  Frouros: An open-source Python library for drift detection
+  in machine learning systems
+message: >-
+  If you use this software, please cite it using the
+  metadata from this file.
+type: software
+authors:
+  - given-names: Jaime
+    family-names: Céspedes Sisniega
+    email: cespedes@ifca.unican.es
+    orcid: 'https://orcid.org/0000-0002-6010-1212'
+    affiliation: >-
+      Institute of Physics of Cantabria, Spanish National
+      Research Council — IFCA (CSIC—UC)
+  - given-names: Álvaro
+    family-names: López García
+    email: aloga@ifca.unican.es
+    orcid: 'https://orcid.org/0000-0002-0013-4602'
+    affiliation: >-
+      Institute of Physics of Cantabria, Spanish National
+      Research Council — IFCA (CSIC—UC)
+identifiers:
+  - type: doi
+    value: 10.1016/j.softx.2024.101733
+    description: SoftwareX
+  - type: doi
+    value: 10.48550/arXiv.2208.06868
+    description: arXiv
+repository-code: 'https://github.com/IFCA-Advanced-Computing/frouros'
+url: 'https://frouros.readthedocs.io'
+repository: 'https://github.com/ElsevierSoftwareX/SOFTX-D-24-00119'
+repository-artifact: 'https://pypi.org/project/frouros'
+abstract: >-
+  Frouros is an open-source Python library capable of detecting drift in machine learning systems. It provides a combination of classical and more recent algorithms for drift detection, covering both concept and data drift. We have designed it to be compatible with any machine learning framework and easily adaptable to real-world use cases. The library is developed following best development and continuous integration practices to ensure ease of maintenance and extensibility.
+keywords:
+  - Machine learning
+  - Drift detection
+  - Concept drift
+  - Data drift
+  - Python
+license: BSD-3-Clause
+commit: 4e1e27ee73507b15090f0038d8dda7c67485b728
+version: 0.8.0
+date-released: '2024-04-03'

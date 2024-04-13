@@ -37,9 +37,9 @@
   <a href="https://opensource.org/licenses/BSD-3-Clause">
     <img src="https://img.shields.io/badge/license-BSD%203--Clause-blue.svg" alt="bsd_3_license">
   </a>
-  <!-- arXiv -->
-  <a href="https://arxiv.org/abs/2208.06868">
-    <img src="https://img.shields.io/badge/arXiv-2208.06868-blue.svg" alt="arxiv">
+  <!-- Journal -->
+  <a href="https://doi.org/10.1016/j.softx.2024.101733">
+    <img src="https://img.shields.io/badge/SoftwareX-10.1016%2Fj.softx.2024.101733-blue.svg" alt="SoftwareX">
   </a>
 </p>
 
@@ -483,14 +483,21 @@ Check out the [contribution](https://github.com/IFCA/frouros/blob/main/CONTRIBUT
 
 ## 💬 Citation
 
-Although Frouros paper is still in preprint, if you want to cite it you can use the [preprint](https://arxiv.org/abs/2208.06868) version (to be replaced by the paper once is published).
+If you want to cite Frouros you can use the [SoftwareX publication](https://doi.org/10.1016/j.softx.2024.101733).
 
 ```bibtex
-@article{cespedes2022frouros,
-  title={Frouros: A Python library for drift detection in machine learning systems},
-  author={C{\'e}spedes-Sisniega, Jaime and L{\'o}pez-Garc{\'\i}a, {\'A}lvaro },
-  journal={arXiv preprint arXiv:2208.06868},
-  year={2022}
+@article{CESPEDESSISNIEGA2024101733,
+title = {Frouros: An open-source Python library for drift detection in machine learning systems},
+journal = {SoftwareX},
+volume = {26},
+pages = {101733},
+year = {2024},
+issn = {2352-7110},
+doi = {https://doi.org/10.1016/j.softx.2024.101733},
+url = {https://www.sciencedirect.com/science/article/pii/S2352711024001043},
+author = {Jaime {Céspedes Sisniega} and Álvaro {López García}},
+keywords = {Machine learning, Drift detection, Concept drift, Data drift, Python},
+abstract = {Frouros is an open-source Python library capable of detecting drift in machine learning systems. It provides a combination of classical and more recent algorithms for drift detection, covering both concept and data drift. We have designed it to be compatible with any machine learning framework and easily adaptable to real-world use cases. The library is developed following best development and continuous integration practices to ensure ease of maintenance and extensibility.}
 }
 ```
 
