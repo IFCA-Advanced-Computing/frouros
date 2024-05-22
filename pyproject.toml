@@ -52,7 +52,7 @@ docs = [
     "myst-nb>=1.0.0,<1.2",
 ]
 notebooks = [
-    "scikit-learn>=1.3.2,<1.5",
+    "scikit-learn>=1.3.2,<1.6",
     "torch>=2.1.2,<2.4",
     "torchvision>=0.16.2,<0.19",
     "ipywidgets>=8.1.1,<8.2",
