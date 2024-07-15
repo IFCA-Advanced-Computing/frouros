@@ -45,7 +45,7 @@ dependencies = [
 
 [project.optional-dependencies]
 docs = [
-    "sphinx>=7.2.6,<7.4",
+    "sphinx>=7.2.6,<7.5",
     "sphinx-book-theme>=1.1.0,<1.2",
     "sphinxcontrib-bibtex>=2.6.2,<2.7",
     "myst-parser>=2.0.0,<3.1",
