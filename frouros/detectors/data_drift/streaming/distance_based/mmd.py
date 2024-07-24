@@ -100,7 +100,6 @@ class MMD(BaseDistanceBased):
         self.X_ref = self.mmd.X_ref
 
     def _reset(self) -> None:
-        super()._reset()
         self.mmd.reset()
 
     def _update(self, value: Union[int, float]) -> Optional[DistanceResult]:

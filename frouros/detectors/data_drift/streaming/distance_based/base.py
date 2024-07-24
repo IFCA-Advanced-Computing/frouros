@@ -23,7 +23,6 @@ class DistanceResult(BaseResult):
         :param distance: distance value
         :type distance: Union[int, float]
         """
-        super().__init__()
         self.distance = distance
 
     @property
