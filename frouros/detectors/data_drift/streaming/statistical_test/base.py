@@ -26,7 +26,6 @@ class StatisticalResult(BaseResult):
         :param p_value: p-value
         :type p_value: Union[int, float]
         """
-        super().__init__()
         self.statistic = statistic
         self.p_value = p_value
 
