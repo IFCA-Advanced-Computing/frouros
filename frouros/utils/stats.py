@@ -2,6 +2,7 @@
 
 import abc
 import itertools
+import math
 from functools import partial
 from multiprocessing import Pool
 from typing import Any, Callable, Optional, Tuple, Union
@@ -248,7 +249,7 @@ def permutation(  # pylint: disable=too-many-arguments,too-many-locals
     X_num_samples, Y_num_samples = X.shape[0], Y.shape[0]  # noqa: N806
     data = np.concatenate([X, Y])
 
-    max_num_permutations = np.math.factorial(data.shape[0])
+    max_num_permutations = math.factorial(data.shape[0])
     if num_permutations >= max_num_permutations:
         logger.warning(
             "Number of permutations (%s) is greater or equal "
