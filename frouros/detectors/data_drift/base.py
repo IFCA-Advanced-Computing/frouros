@@ -43,7 +43,6 @@ class CategoricalData(BaseDataType):
 
     def __init__(self) -> None:
         """Init method."""
-        super().__init__()
         self.output_type = None
 
 
@@ -52,7 +51,6 @@ class NumericalData(BaseDataType):
 
     def __init__(self) -> None:
         """Init method."""
-        super().__init__()
         self.output_type = np.float32
 
 
@@ -80,7 +78,6 @@ class UnivariateData(BaseStatisticalType):
 
     def __init__(self) -> None:
         """Init method."""
-        super().__init__()
         self.dim_check = operator.eq
 
 
@@ -89,7 +86,6 @@ class MultivariateData(BaseStatisticalType):
 
     def __init__(self) -> None:
         """Init method."""
-        super().__init__()
         self.dim_check = operator.ge
 
 
