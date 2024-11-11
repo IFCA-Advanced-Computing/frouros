@@ -67,7 +67,7 @@ download = "https://pypi.org/project/frouros/"
 [build-system]
 requires = [
     "setuptools>=61.0,<69.0",
-    "wheel>=0.42.0,<0.43",
+    "wheel>=0.42.0,<0.46",
     "toml>=0.10.2,<0.11",
     "build>=1.0.3,<1.1",
 ]
