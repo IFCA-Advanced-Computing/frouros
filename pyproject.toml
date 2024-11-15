@@ -8,6 +8,7 @@ authors = [
 maintainers = [
     {name = "Jaime Céspedes Sisniega", email = "cespedes@ifca.unican.es"}
 ]
+license = {text = "BSD-3-Clause"}
 readme = "README.md"
 keywords = [
     "drift-detection",
