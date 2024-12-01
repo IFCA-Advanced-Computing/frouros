@@ -120,6 +120,7 @@ class BaseDistanceBasedBins(BaseDistanceBased):
 
     def __init__(
         self,
+        statistical_type: BaseStatisticalType,
         statistical_method: Callable,  # type: ignore
         statistical_kwargs: dict[str, Any],
         callbacks: Optional[Union[BaseCallbackBatch, list[BaseCallbackBatch]]] = None,
@@ -137,9 +138,12 @@ class BaseDistanceBasedBins(BaseDistanceBased):
         :type num_bins: int
         """
         super().__init__(
-            statistical_type=UnivariateData(),
+            statistical_type=statistical_type,
             statistical_method=statistical_method,
-            statistical_kwargs={**statistical_kwargs, "num_bins": num_bins},
+            statistical_kwargs={
+                **statistical_kwargs,
+                "num_bins": num_bins,
+            },
             callbacks=callbacks,
         )
         self.num_bins = num_bins
@@ -171,8 +175,13 @@ class BaseDistanceBasedBins(BaseDistanceBased):
         X: np.ndarray,  # noqa: N803
         **kwargs: Any,
     ) -> DistanceResult:
-        distance_bins = self._distance_measure_bins(X_ref=X_ref, X=X)
-        distance = DistanceResult(distance=distance_bins)
+        distance_bins = self._distance_measure_bins(
+            X_ref=X_ref,
+            X=X,
+        )
+        distance = DistanceResult(
+            distance=distance_bins,
+        )
         return distance
 
     @staticmethod
@@ -180,14 +189,26 @@ class BaseDistanceBasedBins(BaseDistanceBased):
         X_ref: np.ndarray,  # noqa: N803
         X: np.ndarray,
         num_bins: int = 10,
-    ) -> np.ndarray:
-        bins = np.histogram(np.hstack((X_ref, X)), bins=num_bins)[  # get the bin edges
-            1
+    ) -> Tuple[np.ndarray, np.ndarray]:
+        # Add a new axis if X_ref and X are 1D
+        if X_ref.ndim == 1:
+            X_ref = X_ref[:, np.newaxis]
+            X = X[:, np.newaxis]
+
+        min_edge = np.min(np.vstack((X_ref, X)), axis=0)
+        max_edge = np.max(np.vstack((X_ref, X)), axis=0)
+        bins = [
+            np.linspace(min_edge[i], max_edge[i], num_bins + 1)
+            for i in range(X_ref.shape[1])
         ]
-        X_ref_percents = (  # noqa: N806
-            np.histogram(a=X_ref, bins=bins)[0] / X_ref.shape[0]
-        )  # noqa: N806
-        X_percents = np.histogram(a=X, bins=bins)[0] / X.shape[0]  # noqa: N806
+
+        X_ref_hist, _ = np.histogramdd(X_ref, bins=bins)
+        X_hist, _ = np.histogramdd(X, bins=bins)
+
+        # Normalize histograms
+        X_ref_percents = X_ref_hist / X_ref.shape[0]
+        X_percents = X_hist / X.shape[0]
+
         return X_ref_percents, X_percents
 
     @abc.abstractmethod
