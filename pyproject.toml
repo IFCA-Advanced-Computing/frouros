@@ -58,6 +58,27 @@ notebooks = [
     "torchvision>=0.16.2,<0.21",
     "ipywidgets>=8.1.1,<8.2",
 ]
+dev-tests = [
+    "pytest>=8.3.1,<8.4",
+    "pytest-cov>=5.0.0,<5.1",
+    "pytest-mock>=3.14.0,<3.15",
+    "scikit-learn>=1.5.1,<1.6",
+]
+dev-ruff = [
+    "ruff>=0.5.6,<0.6",
+]
+dev-mypy = [
+    "mypy>=1.11.0,<1.12",
+    "types-requests>=2.32.0,<2.33",
+    "types-toml>=0.10.0,<0.11",
+    "types-tqdm>=4.66,<4.67",
+]
+dev-linters = [
+    "frouros[dev-ruff, dev-mypy]",
+]
+dev = [
+    "frouros[dev-tests, dev-linters]",
+]
 
 [project.urls]
 homepage = "https://frouros.readthedocs.io"
