@@ -5,6 +5,7 @@ from typing import Optional, Union
 import numpy as np
 
 from frouros.callbacks.batch.base import BaseCallbackBatch
+from frouros.detectors.data_drift.base import UnivariateData
 from frouros.detectors.data_drift.batch.distance_based.base import (
     BaseDistanceBasedBins,
 )
@@ -43,6 +44,7 @@ class HINormalizedComplement(BaseDistanceBasedBins):
         callbacks: Optional[Union[BaseCallbackBatch, list[BaseCallbackBatch]]] = None,
     ) -> None:
         super().__init__(
+            statistical_type=UnivariateData(),
             statistical_method=self._hi_normalized_complement,
             statistical_kwargs={
                 "num_bins": num_bins,
