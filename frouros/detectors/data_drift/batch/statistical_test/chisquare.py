@@ -2,13 +2,20 @@
 
 import collections
 import typing
-from typing import Any, Optional, Set, Tuple, Union
+from typing import (
+    Any,
+    Optional,
+    Union,
+)
 
 import numpy as np
 from scipy.stats import chi2_contingency
 
 from frouros.callbacks.batch.base import BaseCallbackBatch
-from frouros.detectors.data_drift.base import CategoricalData, UnivariateData
+from frouros.detectors.data_drift.base import (
+    CategoricalData,
+    UnivariateData,
+)
 from frouros.detectors.data_drift.batch.statistical_test.base import (
     BaseStatisticalTest,
     StatisticalResult,
@@ -82,11 +89,11 @@ class ChiSquareTest(BaseStatisticalTest):
     def _calculate_frequencies(
         X_ref: np.ndarray,  # noqa: N803
         X: np.ndarray,
-    ) -> Tuple[list[int], list[int]]:
+    ) -> tuple[list[int], list[int]]:
         X_ref_counter, X_counter = [  # noqa: N806
             *map(collections.Counter, [X_ref, X])  # noqa: N806
         ]
-        possible_values: Set[str] = set([*X_ref_counter.keys()] + [*X_counter.keys()])  # noqa: N806
+        possible_values: set[str] = set([*X_ref_counter.keys()] + [*X_counter.keys()])  # noqa: N806
         f_exp, f_obs = {}, {}
         for value in possible_values:
             f_exp[value] = X_ref_counter.get(value, 0)  # noqa: N806
