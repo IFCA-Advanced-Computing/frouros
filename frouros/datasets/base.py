@@ -33,11 +33,11 @@ class BaseDatasetDownload(abc.ABC):
         :type file_path: str
         """
         self.url = url
-        self.file_path: Optional[Path] = (
-            Path(file_path)
-            if file_path
-            else Path(tempfile.NamedTemporaryFile(delete=False).name)
-        )
+        if file_path:
+            self.file_path = Path(file_path)
+        else:
+            with tempfile.NamedTemporaryFile(delete=False) as temp_file:
+                self.file_path = Path(temp_file.name)
 
     @property
     def file_path(self) -> Optional[Path]:
