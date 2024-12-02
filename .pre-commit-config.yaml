@@ -34,10 +34,8 @@ repos:
     hooks:
       - id: mypy
         args: [
-          --strict,
-          --ignore-missing-imports,
-          --disable-error-code=misc,
-          --disable-error-code=no-any-return,
+          --config-file,
+          pyproject.toml,
         ]
         additional_dependencies: [
           types-requests<2.33,
