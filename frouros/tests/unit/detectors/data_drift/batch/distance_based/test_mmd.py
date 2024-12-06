@@ -3,6 +3,7 @@
 from functools import partial
 from typing import (
     Any,
+    Callable,
     Optional,
     Tuple,
 )
@@ -174,7 +175,7 @@ def test_mmd_chunk_size_equivalence(
         2,
     ],
 )
-def test_mmd_chunk_size_initialization_valid(
+def test_mmd_chunk_size_valid(
     chunk_size: Optional[int],
 ) -> None:
     """Test MMD initialization with valid chunk sizes.
@@ -229,4 +230,59 @@ def test_mmd_chunk_size_invalid(
         MMD(
             kernel=kernel,
             chunk_size=chunk_size,
+        )
+
+
+@pytest.mark.parametrize(
+    "kernel",
+    [
+        partial(
+            rbf_kernel,
+            sigma=DEFAULT_SIGMA,
+        ),
+        lambda X, Y: X + Y,  # simple kernel
+    ],
+)
+def test_mmd_kernel_valid(
+    kernel: Callable,  # type: ignore
+) -> None:
+    """Test MMD initialization with valid kernels.
+
+    :param kernel: kernel to test
+    :type kernel: Callable
+    """
+    np.random.seed(seed=RANDOM_SEED)
+    X_ref = np.random.normal(0, 1, 100)
+    X_test = np.random.normal(0, 1, 100)
+
+    detector = MMD(
+        kernel=kernel,
+    )
+    _ = detector.fit(X=X_ref)
+    result = detector.compare(X=X_test)[0]
+
+    assert result is not None
+
+
+@pytest.mark.parametrize(
+    "kernel",
+    [
+        None,
+        "invalid",
+        123,
+        [1, 2],
+        {1: 2},
+    ],
+)
+def test_mmd_kernel_invalid(
+    kernel: Any,
+) -> None:
+    """Test MMD initialization with invalid kernels.
+
+    :param kernel: kernel to test
+    :type kernel: Any
+    """
+    with pytest.raises((TypeError, ValueError)):
+        MMD(
+            kernel=kernel,
         )
