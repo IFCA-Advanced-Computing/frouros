@@ -9,6 +9,9 @@ import pytest
 from frouros.detectors.data_drift import MMD  # type: ignore
 from frouros.utils.kernels import rbf_kernel
 
+RANDOM_SEED = 31
+DEFAULT_SIGMA = 0.5
+
 
 @pytest.mark.parametrize(
     "distribution_p, distribution_q, expected_distance",
@@ -35,12 +38,15 @@ def test_mmd_batch_univariate(
     :param expected_distance: expected distance value
     :type expected_distance: float
     """
-    np.random.seed(seed=31)
+    np.random.seed(seed=RANDOM_SEED)
     X_ref = np.random.normal(*distribution_p)  # noqa: N806
     X_test = np.random.normal(*distribution_q)  # noqa: N806
 
     detector = MMD(
-        kernel=partial(rbf_kernel, sigma=0.5),
+        kernel=partial(
+            rbf_kernel,
+            sigma=DEFAULT_SIGMA,
+        ),
     )
     _ = detector.fit(X=X_ref)
 
@@ -77,11 +83,14 @@ def test_mmd_batch_precomputed_expected_k_xx(
     :param chunk_size: chunk size
     :type chunk_size: Optional[int]
     """
-    np.random.seed(seed=31)
+    np.random.seed(seed=RANDOM_SEED)
     X_ref = np.random.normal(*distribution_p)  # noqa: N806
     X_test = np.random.normal(*distribution_q)  # noqa: N806
 
-    kernel = partial(rbf_kernel, sigma=0.5)
+    kernel = partial(
+        rbf_kernel,
+        sigma=DEFAULT_SIGMA,
+    )
 
     detector = MMD(
         kernel=kernel,
@@ -101,3 +110,53 @@ def test_mmd_batch_precomputed_expected_k_xx(
     )
 
     assert np.isclose(precomputed_distance, scratch_distance)
+
+
+@pytest.mark.parametrize(
+    "distribution_p, distribution_q, chunk_size",
+    [
+        ((0, 1, size), (2, 1, size), chunk_size)
+        for size in [10, 100]
+        for chunk_size in list(range(1, 11))
+    ],
+)
+def test_mmd_chunk_size_equivalence(
+    distribution_p: Tuple[float, float, int],
+    distribution_q: Tuple[float, float, int],
+    chunk_size: int,
+) -> None:
+    """Test MMD with chunk_size=None vs specific chunk_size.
+
+    :param distribution_p: mean, std and size of samples from distribution p
+    :type distribution_p: Tuple[float, float, int]
+    :param distribution_q: mean, std and size of samples from distribution q
+    :type distribution_q: Tuple[float, float, int]
+    :param chunk_size: specific chunk size to compare with None
+    :type chunk_size: int
+    """
+    np.random.seed(seed=RANDOM_SEED)
+    X_ref = np.random.normal(*distribution_p)  # noqa: N806
+    X_test = np.random.normal(*distribution_q)  # noqa: N806
+
+    kernel = partial(
+        rbf_kernel,
+        sigma=DEFAULT_SIGMA,
+    )
+
+    # Detector with chunk_size=None
+    detector_none = MMD(
+        kernel=kernel,
+        chunk_size=None,
+    )
+    _ = detector_none.fit(X=X_ref)
+    result_none = detector_none.compare(X=X_test)[0].distance
+
+    # Detector with specific chunk_size
+    detector_chunk = MMD(
+        kernel=kernel,
+        chunk_size=chunk_size,
+    )
+    _ = detector_chunk.fit(X=X_ref)
+    result_chunk = detector_chunk.compare(X=X_test)[0].distance
+
+    assert np.isclose(result_none, result_chunk)
