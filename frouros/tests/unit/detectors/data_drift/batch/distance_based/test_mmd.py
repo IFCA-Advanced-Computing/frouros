@@ -1,7 +1,7 @@
 """Test MMD."""
 
 from functools import partial
-from typing import Optional, Tuple
+from typing import Any, Optional, Tuple
 
 import numpy as np
 import pytest
@@ -160,3 +160,63 @@ def test_mmd_chunk_size_equivalence(
     result_chunk = detector_chunk.compare(X=X_test)[0].distance
 
     assert np.isclose(result_none, result_chunk)
+
+
+@pytest.mark.parametrize(
+    "chunk_size",
+    [
+        None,
+        1,
+        2,
+    ],
+)
+def test_mmd_chunk_size_initialization_valid(
+    chunk_size: Optional[int],
+) -> None:
+    """Test MMD initialization with valid chunk sizes.
+
+    :param chunk_size: chunk size to test
+    :type chunk_size: Optional[int]
+    """
+    np.random.seed(seed=RANDOM_SEED)
+    X_ref = np.random.normal(0, 1, 100)
+    X_test = np.random.normal(0, 1, 100)
+
+    kernel = partial(rbf_kernel, sigma=DEFAULT_SIGMA)
+
+    detector = MMD(
+        kernel=kernel,
+        chunk_size=chunk_size,
+    )
+    _ = detector.fit(X=X_ref)
+    result = detector.compare(X=X_test)[0]
+
+    assert result is not None
+
+
+@pytest.mark.parametrize(
+    "chunk_size",
+    [
+        0,
+        -1,
+        "invalid",
+        1.5,
+        [1, 2],
+        {1: 2},
+    ],
+)
+def test_mmd_chunk_size_invalid(
+    chunk_size: Any,
+) -> None:
+    """Test MMD initialization with invalid chunk sizes.
+
+    :param chunk_size: chunk size to test
+    :type chunk_size: Any
+    """
+    kernel = partial(rbf_kernel, sigma=0.5)
+
+    with pytest.raises((TypeError, ValueError)):
+        MMD(
+            kernel=kernel,
+            chunk_size=chunk_size,
+        )
