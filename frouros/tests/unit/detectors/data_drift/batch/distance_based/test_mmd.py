@@ -39,8 +39,8 @@ def test_mmd_batch_univariate(
     :type expected_distance: float
     """
     np.random.seed(seed=RANDOM_SEED)
-    X_ref = np.random.normal(*distribution_p)  # noqa: N806
-    X_test = np.random.normal(*distribution_q)  # noqa: N806
+    X_ref = np.random.normal(*distribution_p)
+    X_test = np.random.normal(*distribution_q)
 
     detector = MMD(
         kernel=partial(
@@ -84,8 +84,8 @@ def test_mmd_batch_precomputed_expected_k_xx(
     :type chunk_size: Optional[int]
     """
     np.random.seed(seed=RANDOM_SEED)
-    X_ref = np.random.normal(*distribution_p)  # noqa: N806
-    X_test = np.random.normal(*distribution_q)  # noqa: N806
+    X_ref = np.random.normal(*distribution_p)
+    X_test = np.random.normal(*distribution_q)
 
     kernel = partial(
         rbf_kernel,
@@ -102,7 +102,7 @@ def test_mmd_batch_precomputed_expected_k_xx(
     precomputed_distance = detector.compare(X=X_test)[0].distance
 
     # Computes mmd from scratch
-    scratch_distance = MMD._mmd(  # pylint: disable=protected-access
+    scratch_distance = MMD._mmd(
         X=X_ref,
         Y=X_test,
         kernel=kernel,
@@ -135,8 +135,8 @@ def test_mmd_chunk_size_equivalence(
     :type chunk_size: int
     """
     np.random.seed(seed=RANDOM_SEED)
-    X_ref = np.random.normal(*distribution_p)  # noqa: N806
-    X_test = np.random.normal(*distribution_q)  # noqa: N806
+    X_ref = np.random.normal(*distribution_p)
+    X_test = np.random.normal(*distribution_q)
 
     kernel = partial(
         rbf_kernel,
