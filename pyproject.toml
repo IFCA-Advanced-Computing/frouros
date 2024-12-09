@@ -38,7 +38,7 @@ classifiers = [
 requires-python = ">=3.9,<3.13"
 dependencies = [
     "matplotlib>=3.8.2,<3.10",
-    "numpy>=1.26.3,<2.2",
+    "numpy>=1.26.3,<2.3",
     "requests>=2.31.0,<2.33",
     "scipy>=1.12.0,<1.15",
     "tqdm>=4.66.1,<5.0",
