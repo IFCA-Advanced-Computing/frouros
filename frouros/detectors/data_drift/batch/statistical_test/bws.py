@@ -61,7 +61,7 @@ class BWSTest(BaseStatisticalTest):
             x=X_ref,
             y=X,
             alternative=kwargs.get("alternative", "two-sided"),
-            method=kwargs.get("method", None),
+            method=kwargs.get("method"),
         )
         test = StatisticalResult(
             statistic=test.statistic,
