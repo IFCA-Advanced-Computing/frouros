@@ -6,6 +6,7 @@ from typing import Any, Optional, Union
 import numpy as np
 
 from frouros.callbacks.batch.base import BaseCallbackBatch
+from frouros.detectors.data_drift.base import UnivariateData
 from frouros.detectors.data_drift.batch.distance_based.base import (
     BaseDistanceBasedBins,
     DistanceResult,
@@ -45,6 +46,7 @@ class PSI(BaseDistanceBasedBins):
         callbacks: Optional[Union[BaseCallbackBatch, list[BaseCallbackBatch]]] = None,
     ) -> None:
         super().__init__(
+            statistical_type=UnivariateData(),
             statistical_method=self._psi,
             statistical_kwargs={
                 "num_bins": num_bins,

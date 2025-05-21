@@ -51,7 +51,7 @@ from frouros.detectors.data_drift.batch.base import BaseDataDriftBatch
 @pytest.mark.parametrize(
     "detector_class, expected_distance, expected_p_value",
     [
-        (BhattacharyyaDistance, 0.55516059, 0.0),
+        (BhattacharyyaDistance, 0.81004188, 0.0),
         (EMD, 3.85346006, 0.0),
         (EnergyDistance, 2.11059982, 0.0),
         (HellingerDistance, 0.74509099, 0.0),

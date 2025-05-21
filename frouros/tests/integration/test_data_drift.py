@@ -1,6 +1,10 @@
 """Test data drift detectors."""
 
-from typing import Any, Tuple, Union
+from typing import (
+    Any,
+    Tuple,
+    Union,
+)
 
 import numpy as np
 import pytest
@@ -26,12 +30,8 @@ from frouros.detectors.data_drift.batch import (
     WelchTTest,
 )
 from frouros.detectors.data_drift.batch.base import BaseDataDriftBatch
-from frouros.detectors.data_drift.streaming import (
-    MMD as MMDStreaming,
-)
-from frouros.detectors.data_drift.streaming import (  # noqa: N811
-    IncrementalKSTest,
-)
+from frouros.detectors.data_drift.streaming import MMD as MMDStreaming
+from frouros.detectors.data_drift.streaming import IncrementalKSTest
 
 
 @pytest.mark.parametrize(
@@ -102,7 +102,7 @@ def test_batch_distance_based_univariate(
     [
         (PSI(), 461.20379435),
         (HellingerDistance(), 0.74509099),
-        (BhattacharyyaDistance(), 0.55516059),
+        (BhattacharyyaDistance(), 0.810041883),
     ],
 )
 def test_batch_distance_bins_based_univariate_different_distribution(
@@ -133,7 +133,7 @@ def test_batch_distance_bins_based_univariate_different_distribution(
     [
         (PSI(), 0.01840072),
         (HellingerDistance(), 0.04792538),
-        (BhattacharyyaDistance(), 0.00229684),
+        (BhattacharyyaDistance(), 0.00229948),
     ],
 )
 def test_batch_distance_bins_based_univariate_same_distribution(
@@ -214,7 +214,13 @@ def test_batch_statistical_univariate(
     assert np.isclose(p_value, expected_p_value)
 
 
-@pytest.mark.parametrize("detector, expected_distance", [(MMD(), 0.10163633)])
+@pytest.mark.parametrize(
+    "detector, expected_distance",
+    [
+        (BhattacharyyaDistance(), 0.39327743),
+        (MMD(), 0.10163633),
+    ],
+)
 def test_batch_distance_based_multivariate_different_distribution(
     X_ref_multivariate: np.ndarray,  # noqa: N803
     X_test_multivariate: np.ndarray,  # noqa: N803
@@ -238,7 +244,13 @@ def test_batch_distance_based_multivariate_different_distribution(
     assert np.isclose(statistic, expected_distance)
 
 
-@pytest.mark.parametrize("detector, expected_distance", [(MMD(), 0.01570397)])
+@pytest.mark.parametrize(
+    "detector, expected_distance",
+    [
+        (BhattacharyyaDistance(), 0.39772951),
+        (MMD(), 0.01570397),
+    ],
+)
 def test_batch_distance_based_multivariate_same_distribution(
     multivariate_distribution_p: Tuple[np.ndarray, np.ndarray],
     detector: BaseDataDriftBatch,

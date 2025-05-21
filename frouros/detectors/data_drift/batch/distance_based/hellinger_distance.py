@@ -5,6 +5,7 @@ from typing import Optional, Union
 import numpy as np
 
 from frouros.callbacks.batch.base import BaseCallbackBatch
+from frouros.detectors.data_drift.base import UnivariateData
 from frouros.detectors.data_drift.batch.distance_based.base import (
     BaseDistanceBasedBins,
 )
@@ -45,6 +46,7 @@ class HellingerDistance(BaseDistanceBasedBins):
     ) -> None:
         sqrt_div = np.sqrt(2)
         super().__init__(
+            statistical_type=UnivariateData(),
             statistical_method=self._hellinger,
             statistical_kwargs={
                 "num_bins": num_bins,

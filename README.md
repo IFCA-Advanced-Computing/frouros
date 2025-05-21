@@ -342,7 +342,7 @@ The currently implemented detectors are listed in the following table.
     <td rowspan="19" style="text-align: center; border: 1px solid grey; padding: 8px;">Data drift</td>
     <td rowspan="17" style="text-align: center; border: 1px solid grey; padding: 8px;">Batch</td>
     <td rowspan="9" style="text-align: center; border: 1px solid grey; padding: 8px;">Distance based</td>
-    <td style="text-align: center; border: 1px solid grey; padding: 8px;">U</td>
+    <td style="text-align: center; border: 1px solid grey; padding: 8px;">M</td>
     <td style="text-align: center; border: 1px solid grey; padding: 8px;">N</td>
     <td style="text-align: center; border: 1px solid grey; padding: 8px;">Bhattacharyya distance</td>
     <td style="text-align: center; border: 1px solid grey; padding: 8px;"><a href="https://www.jstor.org/stable/25047882">Bhattacharyya (1946)</a></td>
