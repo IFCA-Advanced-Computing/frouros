@@ -269,7 +269,7 @@ def permutation(  # pylint: disable=too-many-arguments,too-many-locals
     with Pool(processes=num_jobs) as pool:
         permuted_statistics = pool.starmap_async(
             partial(statistic, **statistical_args),
-            iterable=tqdm(permuted_data) if verbose else permuted_data,  # type: ignore
+            iterable=tqdm(permuted_data) if verbose else permuted_data,
         ).get()
 
     return permuted_statistics, max_num_permutations
