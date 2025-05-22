@@ -54,7 +54,7 @@ docs = [
 ]
 notebooks = [
     "scikit-learn>=1.5.1,<1.6",
-    "torch>=2.1.2,<2.6",
+    "torch>=2.1.2,<2.8",
     "torchvision>=0.16.2,<0.22",
     "ipywidgets>=8.1.1,<8.2",
 ]
