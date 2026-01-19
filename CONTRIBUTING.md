@@ -18,7 +18,7 @@ Recommended steps for first time contributors:
     cd frouros
     git checkout main
     git pull
-    pip install -e .
+    pip install -e '.[dev]'
    ```
 4. (Optional but recommended) Install pre-commit hooks:
     ```bash
@@ -33,5 +33,5 @@ Recommended steps for first time contributors:
 
 ## Reporting a bug
 
-1. Check that there is not an [issue](https://github.com/IFCA/frouros/issues) that currently highlights the bug or a [pull request](https://github.com/IFCA/frouros/pulls) that solves it.
-2. Create an [issue](https://github.com/IFCA/frouros/issues/new) in GitHub.
+1. Check that there is not an [issue](https://github.com/IFCA-Advanced-Computing/frouros/issues) that currently highlights the bug or a [pull request](https://github.com/IFCA-Advanced-Computing/frouros/pulls) that solves it.
+2. Create an [issue](https://github.com/IFCA-Advanced-Computing/frouros/issues/new) in GitHub.
