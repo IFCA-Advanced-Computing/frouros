@@ -11,9 +11,7 @@ jobs:
     strategy:
       matrix:
         os: [
-          ubuntu-22.04,
-          windows-2022,
-          macos-14,
+          ubuntu-24.04,
         ]
         python-version: [
           '3.9',
@@ -42,13 +40,12 @@ jobs:
         run: |
           python -m venv .venv
 
-      - name: Activate virtual environment (Windows)
-        if: matrix.os == 'windows-2022'
+      - name: Install additional dependencies
         run: |
-          .venv\Scripts\activate
+          sudo apt-get update
+          sudo apt install -y libopenblas-dev 
 
-      - name: Activate virtual environment (Linux/macOS)
-        if: matrix.os != 'windows-2022'
+      - name: Activate virtual environment
         run: |
           source .venv/bin/activate
 
