@@ -67,7 +67,7 @@ dev-tests = [
     "scikit-learn>=1.5.1,<1.6",
 ]
 dev-ruff = [
-    "ruff>=0.8.1,<0.9",
+    "ruff>=0.8.1,<0.15",
 ]
 dev-mypy = [
     "mypy>=1.13.0,<1.14",
