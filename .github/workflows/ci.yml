@@ -12,8 +12,8 @@ jobs:
       matrix:
         os: [
           ubuntu-24.04,
-          # windows-2025,
-          # macos-14,
+          windows-2025,
+          macos-14,
         ]
         python-version: [
           '3.9',
@@ -42,12 +42,21 @@ jobs:
         run: |
           python -m venv .venv
 
-      - name: Install additional dependencies
+      - name: Install additional dependencies (Linux)
         if: matrix.os == 'ubuntu-24.04'
         run: |
           sudo apt-get update
           sudo apt install -y libopenblas-dev 
 
+      - name: Install additional dependencies (macOS)
+        if: matrix.os == 'macos-14'
+        run: |
+          brew install openblas
+
+      - name: Install additional dependencies (Windows)
+        if: matrix.os == 'windows-2025'
+        run: |
+          choco install openblas
 
       - name: Activate virtual environment (Windows)
         if: matrix.os == 'windows-2025'
