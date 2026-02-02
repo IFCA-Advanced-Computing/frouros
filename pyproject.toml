@@ -55,7 +55,7 @@ docs = [
     "myst-nb>=1.0.0,<1.2",
 ]
 notebooks = [
-    "scikit-learn>=1.5.1,<1.6",
+    "scikit-learn>=1.5.1,<1.7",
     "torch>=2.1.2,<2.6",
     "torchvision>=0.16.2,<0.22",
     "ipywidgets>=8.1.1,<8.2",
@@ -64,7 +64,7 @@ dev-tests = [
     "pytest>=8.3.1,<8.4",
     "pytest-cov>=6.0.0,<6.1",
     "pytest-mock>=3.14.0,<3.15",
-    "scikit-learn>=1.5.1,<1.6",
+    "scikit-learn>=1.5.1,<1.7",
 ]
 dev-ruff = [
     "ruff>=0.8.1,<0.9",
