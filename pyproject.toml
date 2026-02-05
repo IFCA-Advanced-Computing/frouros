@@ -77,7 +77,7 @@ dev-mypy = [
 ]
 dev = [
     "frouros[docs,notebooks,dev-tests,dev-ruff,dev-mypy]",
-    "tox>=4.23.2,<4.24",
+    "tox>=4.23.2,<4.31",
 ]
 
 [project.urls]
