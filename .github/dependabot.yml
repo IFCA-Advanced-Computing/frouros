@@ -9,7 +9,6 @@ updates:
     labels:
       - "dependencies"
     reviewers:
-      - "jaime-cespedes-sisniega"
       - "alvarolopez"
 
   # Maintain depedencies for GitHub Actions
@@ -20,5 +19,4 @@ updates:
     labels:
       - "dependencies"
     reviewers:
-      - "jaime-cespedes-sisniega"
       - "alvarolopez"
