@@ -231,6 +231,9 @@ class HoeffdingOneSidedTest:
         :rtype: Tuple[bool, bool]
         """
         m = self.z.num_values - self.x.num_values
+        if m == 0:
+            # Cut point covers the whole sequence: no second sample to compare
+            return False, False
         if self._check_mean_increase(m=m, alpha=self.alpha_d):
             drift = True
             warning = False
@@ -307,7 +310,11 @@ class HoeffdingTwoSidedTest(HoeffdingOneSidedTest):
         """
         drift_increase, warning_increase = super().check_cases()
         m = self.z.num_values - self.y.num_values
-        if self._check_mean_decrease(m=m, alpha=self.alpha_d):
+        if m == 0:
+            # Cut point covers the whole sequence: no second sample to compare
+            drift_decrease = False
+            warning_decrease = False
+        elif self._check_mean_decrease(m=m, alpha=self.alpha_d):
             drift_decrease = True
             warning_decrease = False
         elif self._check_mean_decrease(m=m, alpha=self.alpha_w):
@@ -428,11 +435,7 @@ class HDDMA(BaseSPC):
         self.test_type.update_cut_point(epsilon_z=epsilon_z)
 
         if self.num_instances >= self.config.min_num_instances:
-            drift_flag, warning_flag = (
-                self.test_type.check_cases()
-                if self.test_type.z.num_values != self.test_type.x.num_values
-                else (False, False)
-            )
+            drift_flag, warning_flag = self.test_type.check_cases()
             if drift_flag:
                 # Out-of-Control
                 self.drift = True
@@ -449,6 +452,11 @@ class HDDMA(BaseSPC):
         else:
             self.drift, self.warning = False, False
 
+    def reset(self) -> None:
+        """Reset method."""
+        super().reset()
+        self.test_type.reset()
+
 
 class SampleInfo:
     """Sample information class."""
@@ -461,6 +469,7 @@ class SampleInfo:
         """
         self.ewma = EWMA(alpha=lambda_)
         self.independent_bound_condition = 1.0
+        self.num_values = 0
         self.lambda_squared = lambda_ * lambda_
         self.one_minus_lambda_squared = (
             self.ewma.one_minus_alpha * self.ewma.one_minus_alpha
@@ -498,6 +507,7 @@ class SampleInfo:
             self.lambda_squared
             + self.one_minus_lambda_squared * self.independent_bound_condition
         )
+        self.num_values += 1
 
 
 class McDiarmidOneSidedTest:
@@ -524,6 +534,9 @@ class McDiarmidOneSidedTest:
     def _check_threshold(
         self, sample_1: SampleInfo, sample_2: SampleInfo, alpha: float
     ) -> bool:
+        if sample_1.num_values == 0 or sample_2.num_values == 0:
+            # An empty sample cannot be compared
+            return False
         independent_bound_condition_sum = (
             sample_1.independent_bound_condition + sample_2.independent_bound_condition
         )
@@ -605,8 +618,8 @@ class McDiarmidTwoSidedTest(McDiarmidOneSidedTest):
 
     def _check_mean_decrease(self, alpha: float) -> bool:
         return self._check_threshold(
-            sample_1=self.sample_increase_2,
-            sample_2=self.sample_increase_1,
+            sample_1=self.sample_decrease_2,
+            sample_2=self.sample_decrease_1,
             alpha=alpha,
         )
 
@@ -618,7 +631,7 @@ class McDiarmidTwoSidedTest(McDiarmidOneSidedTest):
         """
         drift_increase, warning_increase = super().check_changes()
         drift_decrease = (
-            False if drift_increase else self._check_mean_decrease(alpha=self.alpha_d),
+            False if drift_increase else self._check_mean_decrease(alpha=self.alpha_d)
         )
         warning_decrease = (
             False
@@ -763,3 +776,8 @@ class HDDMW(BaseSPC):
                 self.drift = False
         else:
             self.drift, self.warning = False, False
+
+    def reset(self) -> None:
+        """Reset method."""
+        super().reset()
+        self.test_type.reset()
